@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Firebase configuration & logs
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# System files & IDE configs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local media backups & large assets
+*.mp4
+*.zip
+*.mov
+*.avi
+flowmd_clean_extracted.png
+flowmd_extracted_clean_logo.png
+flowmd_extracted_clean_logo.svg
+flowmd_mark.png

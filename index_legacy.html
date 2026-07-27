@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarrowFlow - NEET-PG Planner</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <meta name="theme-color" content="#00317e">
+  <!-- Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=1.8">
+  <link rel="stylesheet" href="profile.css?v=1.5">
+  <link rel="stylesheet" href="device-mode.css?v=1.8">
+  <style>
+    /* FORCE CACHE BUST FOR LAYOUT */
+    .react-task-row, .react-subtask-item { align-items: flex-start !important; }
+    .react-task-left, .react-task-right, .react-subtask-row { align-items: flex-start !important; }
+    .react-pill { white-space: nowrap !important; }
+    .text-muted { color: var(--text-muted) !important; }
+  </style>
+</head>
+<body class="app-body">
+
+  <!-- ============================================================
+       DEVICE SELECTION SCREEN
+       Shown on first launch. Hidden once user picks a mode.
+       ============================================================ -->
+  <div id="device-select-screen" class="hidden">
+    <div class="device-select-header">
+      <div class="device-select-logo">
+        <div class="brand-avatar" style="width:48px;height:48px;flex-shrink:0;">
+          <div class="brand-icon-inner">
+            <span class="material-symbols-outlined brand-icon" style="font-size:22px;">medical_services</span>
+          </div>
+        </div>
+        <span class="device-select-logo-name">MarrowFlow</span>
+      </div>
+      <h2 class="device-select-title">What are you studying on?</h2>
+      <p class="device-select-subtitle">Pick your device to get a perfectly tuned experience. You can always change this in Settings.</p>
+    </div>
+
+    <div class="device-select-cards">
+      <div class="device-select-card" data-mode="desktop">
+        <span class="device-card-icon">🖥️</span>
+        <div class="device-card-name">Desktop / PC</div>
+        <div class="device-card-desc">Laptop or desktop computer with a mouse and keyboard</div>
+      </div>
+      <div class="device-select-card" data-mode="android">
+        <span class="device-card-icon">📱</span>
+        <div class="device-card-name">Android Phone</div>
+        <div class="device-card-desc">Mobile phone with touch-first bottom navigation</div>
+      </div>
+      <div class="device-select-card" data-mode="tablet">
+        <span class="device-card-icon">📟</span>
+        <div class="device-card-name">Tablet</div>
+        <div class="device-card-desc">iPad or Android tablet with slim sidebar navigation</div>
+      </div>
+    </div>
+
+    <button class="device-select-confirm-btn" id="device-confirm-btn" disabled>
+      <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;margin-right:6px;">check_circle</span>
+      Continue with this device
+    </button>
+    <p class="device-select-footer">Your choice is saved locally and never shared.</p>
+  </div>
+
+  <!-- Mobile Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-avatar">
+        <div class="brand-icon-inner">
+          <span class="material-symbols-outlined brand-icon" style="font-size:22px;">medical_services</span>
+        </div>
+      </div>
+      <div class="brand-text">
+        <h1 class="brand-title">MarrowFlow</h1>
+        <span class="brand-subtitle">NEET-PG Planner</span>
+      </div>
+      <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Close menu">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Navigation</div>
+
+    <div class="sidebar-nav-links">
+      <button class="nav-item active" data-view="dashboard">
+        <span class="nav-icon material-symbols-outlined">dashboard</span>
+        <span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="curriculum">
+        <span class="nav-icon material-symbols-outlined">menu_book</span>
+        <span class="nav-label">Curriculum &amp; Subjects</span>
+      </button>
+      <button class="nav-item" data-view="analytics">
+        <span class="nav-icon material-symbols-outlined">insights</span>
+        <span class="nav-label">Analytics</span>
+      </button>
+      <button class="nav-item" data-view="goals">
+        <span class="nav-icon material-symbols-outlined">ads_click</span>
+        <span class="nav-label">Personal Goals</span>
+      </button>
+      <button class="nav-item" data-view="profile">
+        <span class="nav-icon material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+        <span class="nav-label">Profile</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Wrapper -->
+  <div class="app-layout">
+    
+    <!-- Top Bar Header -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="topbar-brand-mobile">MarrowFlow</div>
+        
+        <!-- Search bar -->
+        <div class="search-box">
+          <span class="material-symbols-outlined search-icon">search</span>
+          <input type="text" id="global-search-input" placeholder="Search subjects, chapters, topics..." autocomplete="off">
+          <button id="clear-search-btn" class="clear-search-btn" style="display: none;">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+
+
+        <div class="theme-switch-wrapper" title="Toggle Light/Dark Theme" style="display: flex; align-items: center;">
+          <label class="theme-switch">
+            <input type="checkbox" class="theme-switch__checkbox" id="theme-toggle" />
+            <div class="theme-switch__container">
+              <div class="theme-switch__clouds"></div>
+              <div class="theme-switch__stars-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 55" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z" fill="currentColor"></path>
+                </svg>
+              </div>
+              <div class="theme-switch__circle-container">
+                <div class="theme-switch__sun-moon-container">
+                  <div class="theme-switch__moon">
+                    <div class="theme-switch__spot"></div>
+                    <div class="theme-switch__spot"></div>
+                    <div class="theme-switch__spot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <button class="user-profile" id="topbar-user-profile" title="Profile & Settings">
+          <div class="avatar-ring">
+            <span class="avatar-initials" id="topbar-avatar-initials">s</span>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="app-main" id="app-main">
+      <!-- Dynamic Views rendered by app.js -->
+    </main>
+
+  </div>
+
+  <!-- Sleek Goal Setting Modal with Custom Controls -->
+  <div id="goal-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-compact">
+      <div class="modal-header">
+        <h2><span class="material-symbols-outlined">tune</span> Personalize Study Goals</h2>
+        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+      </div>
+
+      <!-- Segmented Mode Switcher -->
+      <div class="goal-mode-tabs">
+        <button type="button" class="goal-tab-btn active" id="tab-btn-video" data-mode="video">
+          <span class="material-symbols-outlined">movie</span> Videos Mode
+        </button>
+        <button type="button" class="goal-tab-btn" id="tab-btn-hours" data-mode="hours">
+          <span class="material-symbols-outlined">schedule</span> Hours Mode
+        </button>
+      </div>
+
+      <!-- Smart Pace Banner -->
+      <div class="smart-math-banner">
+        <span class="material-symbols-outlined" style="font-size: 18px;">calculate</span>
+        <span id="smart-math-text">Deadline & targets automatically synchronized!</span>
+      </div>
+
+      <form id="goal-form" class="goal-form-compact">
+        <!-- Priority Subject Custom Dropdown -->
+        <div class="form-group-compact">
+          <label>Priority Target Subject</label>
+          <div class="custom-select-container" id="custom-subject-select">
+            <button type="button" class="custom-select-trigger" id="custom-subject-trigger">
+              <span id="custom-subject-label">Medicine (202 Videos � 133.2h)</span>
+              <span class="material-symbols-outlined dropdown-chevron">expand_more</span>
+            </button>
+            <div class="custom-select-dropdown" id="custom-subject-dropdown" style="display: none;">
+              <div class="custom-select-search">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" id="custom-subject-filter" placeholder="Search subjects..." autocomplete="off">
+              </div>
+              <div class="custom-select-options" id="custom-subject-options">
+                <!-- Populated dynamically by app.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Calendar Date Picker Container -->
+        <div class="form-group-compact">
+          <div class="form-label-row">
+            <label>Target Completion Date</label>
+            <span id="days-remaining-badge" class="unit-tag" style="width: auto; font-weight: 700; color: var(--primary);">26 Days Left</span>
+          </div>
+          <div class="custom-date-container" id="custom-date-container">
+            <button type="button" class="custom-date-trigger" id="custom-date-trigger">
+              <span class="material-symbols-outlined" style="color: var(--primary); font-size: 18px;">calendar_today</span>
+              <span id="custom-date-label">2026-08-15</span>
+              <span class="material-symbols-outlined dropdown-chevron">expand_more</span>
+            </button>
+
+            <!-- Custom Calendar Popover Card -->
+            <div class="custom-calendar-popover" id="custom-calendar-popover" style="display: none;">
+              <div class="calendar-header">
+                <button type="button" class="cal-nav-btn" id="cal-prev-month">&larr;</button>
+                <span class="cal-month-title" id="cal-month-title">August 2026</span>
+                <button type="button" class="cal-nav-btn" id="cal-next-month">&rarr;</button>
+              </div>
+              <div class="calendar-weekdays">
+                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+              </div>
+              <div class="calendar-days-grid" id="calendar-days-grid">
+                <!-- Rendered by app.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Goals List -->
+        <div id="fields-video-mode" class="goal-fields-list">
+          <div class="goal-row">
+            <label class="goal-row-label">
+              <input type="checkbox" id="toggle-card-daily" checked> Daily Pace
+            </label>
+            <div class="goal-row-input">
+              <input type="number" min="1" id="input-videos-per-day" value="8">
+              <span class="unit-tag">vids/day</span>
+            </div>
+          </div>
+
+          <div class="goal-row">
+            <label class="goal-row-label">
+              <input type="checkbox" id="toggle-card-weekly" checked> Weekly Pace
+            </label>
+            <div class="goal-row-input">
+              <input type="number" min="1" id="input-videos-per-week" value="56">
+              <span class="unit-tag">vids/week</span>
+            </div>
+          </div>
+
+          <div class="goal-row">
+            <label class="goal-row-label">
+              <input type="checkbox" id="toggle-card-monthly" checked> Monthly Pace
+            </label>
+            <div class="goal-row-input">
+              <input type="number" min="1" id="input-videos-per-month" value="202">
+              <span class="unit-tag">vids/month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hours Goals List -->
+        <div id="fields-hours-mode" class="goal-fields-list" style="display: none;">
+          <div class="goal-row">
+            <label class="goal-row-label">
+              <input type="checkbox" id="toggle-card-daily-h" checked> Daily Pace
+            </label>
+            <div class="goal-row-input">
+              <input type="number" step="0.5" min="0.5" max="24" id="input-daily-target" value="6.5">
+              <span class="unit-tag">hours/day</span>
+            </div>
+          </div>
+
+          <div class="goal-row">
+            <label class="goal-row-label">
+              <input type="checkbox" id="toggle-card-weekly-h" checked> Weekly Pace
+            </label>
+            <div class="goal-row-input">
+              <input type="number" step="1" min="1" max="168" id="input-weekly-target" value="45.5">
+              <span class="unit-tag">hours/week</span>
+            </div>
+          </div>
+
+          <div class="goal-row">
+            <label class="goal-row-label">
+              <input type="checkbox" id="toggle-card-monthly-h" checked> Monthly Pace
+            </label>
+            <div class="goal-row-input">
+              <input type="number" step="5" min="5" max="720" id="input-monthly-target" value="160">
+              <span class="unit-tag">hours/month</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions-compact">
+          <button type="button" class="btn-secondary" id="modal-cancel-btn">Cancel</button>
+          <button type="button" class="btn-primary" id="btn-apply-goals">Apply Synchronized Pace</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Personalize Welcome Header Modal -->
+  <div id="header-customize-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-compact">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="material-symbols-outlined" style="color: var(--primary); font-size: 24px;">tune</span>
+          <h2 class="modal-title">Personalize Welcome Header</h2>
+        </div>
+        <button class="modal-close-btn" id="header-modal-close-btn">&times;</button>
+      </div>
+      <form id="header-customize-form">
+        <div class="form-group" style="margin-top: 12px;">
+          <label class="form-label" for="input-doctor-name">Doctor / Aspirant Name</label>
+          <input type="text" id="input-doctor-name" class="form-input" placeholder="e.g. Dr. Aspirant">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="input-hero-title">Command Center Title</label>
+          <input type="text" id="input-hero-title" class="form-input" placeholder="e.g. ASPIRANT STUDY COMMAND CENTER">
+          <span class="form-help" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; display: block;">Leave blank to auto-generate from Doctor Name</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="input-hero-tagline">Custom Subtitle / Motto</label>
+          <input type="text" id="input-hero-tagline" class="form-input" placeholder="e.g. 19 Subjects • 1 Dream • Target AIR < 100">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="input-target-exam">Target Exam Badge</label>
+          <input type="text" id="input-target-exam" class="form-input" placeholder="e.g. NEET PG 2026 / INICET 2026">
+        </div>
+        <div class="modal-actions-compact" style="margin-top: 20px;">
+          <button type="button" class="btn-secondary" id="header-modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn-primary">Save Personalization</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Privacy & Security Modal -->
+  <div id="privacy-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-compact">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="material-symbols-outlined" style="color: var(--primary); font-size: 24px;">security</span>
+          <h2 class="modal-title">Privacy & Security</h2>
+        </div>
+        <button class="modal-close-btn" id="privacy-modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="padding-top:16px;">
+        <div class="premium-settings-group">
+          <div class="premium-setting-row" style="cursor: default;">
+            <div class="premium-setting-text">
+              <div class="premium-setting-title">Automatic Cloud Backup</div>
+              <div class="premium-setting-desc">Securely sync your progress across devices when signed in.</div>
+            </div>
+            <label class="premium-toggle">
+              <input type="checkbox" id="toggle-cloud-sync" checked disabled>
+              <span class="premium-toggle-slider"></span>
+            </label>
+          </div>
+          <div class="premium-setting-row" style="cursor: default;">
+            <div class="premium-setting-text">
+              <div class="premium-setting-title">Anonymous Analytics</div>
+              <div class="premium-setting-desc">Help us improve the planner by sharing anonymous usage data.</div>
+            </div>
+            <label class="premium-toggle">
+              <input type="checkbox" id="toggle-analytics" checked>
+              <span class="premium-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <h4 style="font-size: 0.85rem; font-family: var(--font-headline); color: var(--text-secondary); margin-bottom: 12px; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Data Management</h4>
+          <button class="premium-btn-outline" id="btn-export-data">
+            <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Download My Data
+          </button>
+          <button class="premium-btn-danger" id="btn-reset-data">
+            <span class="material-symbols-outlined" style="font-size: 18px;">delete_forever</span> Erase All Local Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Modal -->
+
+  <!-- Support Modal -->
+  <div id="support-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content modal-compact">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="material-symbols-outlined" style="color: var(--primary); font-size: 24px;">support_agent</span>
+          <h2 class="modal-title">Contact Support</h2>
+        </div>
+        <button class="modal-close-btn" id="support-modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="padding-top:16px;">
+        <form id="support-form" class="premium-support-form">
+          <div class="premium-form-group">
+            <label class="premium-form-label" for="support-name">Your Name</label>
+            <input type="text" id="support-name" class="premium-form-input" placeholder="e.g. Dr. Aspirant" required>
+          </div>
+          <div class="premium-form-group">
+            <label class="premium-form-label" for="support-email">Email Address</label>
+            <input type="email" id="support-email" class="premium-form-input" placeholder="name@example.com" required>
+          </div>
+          <div class="premium-form-group">
+            <label class="premium-form-label" for="support-category">Issue Type</label>
+            <select id="support-category" class="premium-form-select" required>
+              <option value="bug">Report a Bug</option>
+              <option value="feature">Feature Request</option>
+              <option value="account">Account Issue</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="premium-form-group">
+            <label class="premium-form-label" for="support-message">Message</label>
+            <textarea id="support-message" class="premium-form-textarea" rows="4" placeholder="How can we help you today?" style="resize:vertical;" required></textarea>
+          </div>
+          <div style="margin-top: 10px;">
+            <button type="submit" class="premium-btn-primary" id="btn-submit-support">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="data.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js?v=1.5"></script>
+  <script src="app.js?v=1.5"></script>
+
+  <!-- Android Bottom Navigation Bar (hidden on desktop/tablet) -->
+  <nav class="android-bottom-nav" id="android-bottom-nav" aria-label="Bottom Navigation">
+    <button class="android-nav-item active" data-view="dashboard" id="anav-dashboard">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="nav-bar-label">Home</span>
+    </button>
+    <button class="android-nav-item" data-view="curriculum" id="anav-curriculum">
+      <span class="material-symbols-outlined">menu_book</span>
+      <span class="nav-bar-label">Syllabus</span>
+    </button>
+    <button class="android-nav-item" data-view="analytics" id="anav-analytics">
+      <span class="material-symbols-outlined">bar_chart</span>
+      <span class="nav-bar-label">Analytics</span>
+    </button>
+    <button class="android-nav-item" data-view="goals" id="anav-progress">
+      <span class="material-symbols-outlined">track_changes</span>
+      <span class="nav-bar-label">Progress</span>
+    </button>
+    <button class="android-nav-item" data-view="profile" id="anav-settings">
+      <span class="material-symbols-outlined">settings</span>
+      <span class="nav-bar-label">Settings</span>
+    </button>
+  </nav>
+
+  <!-- Tablet Sidebar Toggle Button (hidden on desktop/android) -->
+  <button class="tablet-sidebar-toggle" id="tablet-sidebar-toggle" title="Expand Navigation">
+    <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
+  </button>
+
+</body>
+</html>
+
+

@@ -1,0 +1,7 @@
+{
+  "svgProps": {
+    "shapeRendering": "crispEdges"
+  },
+  "icon": true,
+  "typescript": true
+}

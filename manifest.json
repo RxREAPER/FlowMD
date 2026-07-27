@@ -1,0 +1,17 @@
+{
+  "name": "FlowMD — Plan. Study. Track. Succeed.",
+  "short_name": "FlowMD",
+  "description": "FlowMD - Medical exam study planner and tracker.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "icons": [
+    {
+      "src": "assets/APP LOGO.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

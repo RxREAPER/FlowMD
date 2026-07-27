@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 850" width="1600" height="850">
+  <!-- Top-Left Scatter Particles -->
+  <rect x="80" y="100" width="40" height="40" fill="#000000" />
+  <rect x="140" y="50" width="45" height="45" fill="#000000" />
+  <rect x="40" y="180" width="45" height="45" fill="#000000" />
+  <rect x="110" y="230" width="40" height="40" fill="#000000" />
+
+  <!-- Pixelated Letter F Outline -->
+  <path d="M 180 160 H 640 V 260 H 330 V 410 H 580 V 500 H 330 V 780 H 180 Z" fill="none" stroke="#000000" stroke-width="36" stroke-linejoin="miter" />
+
+  <!-- 16-Bit Pixel Heart -->
+  <path d="M 740 270 H 820 V 220 H 920 V 270 H 1000 V 360 H 940 V 450 H 890 V 530 H 870 V 580 H 800 V 530 H 780 V 450 H 730 V 360 H 670 V 270 Z" fill="none" stroke="#ff3b5c" stroke-width="30" stroke-linecap="square" />
+  
+  <!-- ECG Pulse Line -->
+  <path d="M 260 450 H 670 L 710 330 L 770 560 L 820 400 L 860 450 H 1280" fill="none" stroke="#ff3b5c" stroke-width="34" stroke-linecap="square" stroke-linejoin="miter" />
+
+  <!-- Pixelated Letter M -->
+  <path d="M 1030 160 H 1140 L 1270 390 L 1400 160 H 1510 V 780 H 1400 V 440 L 1270 660 L 1140 440 V 780 H 1030 Z" fill="none" stroke="#ff3b5c" stroke-width="34" stroke-linejoin="miter" />
+
+  <!-- Bottom-Right Scatter Particles -->
+  <rect x="1440" y="580" width="45" height="45" fill="#ff3b5c" />
+  <rect x="1510" y="660" width="45" height="45" fill="#ff1f46" />
+  <rect x="1380" y="720" width="40" height="40" fill="#ff3b5c" />
+  <rect x="1560" y="720" width="45" height="45" fill="#ff3b5c" />
+</svg>

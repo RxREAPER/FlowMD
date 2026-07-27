@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FlowMD — Plan. Study. Track. Succeed.</title>
+  
+  <!-- PWA & Mobile Web App Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/svg+xml" href="assets/APP LOGO.svg">
+  
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  
+  <!-- Unified Mobile-First Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=95.0">
+</head>
+<body>
+  
+  <!-- Main App Shell Container -->
+  <div class="app-container">
+    
+    <!-- Topbar Navigation -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-brand" id="brand-home-link" style="display: flex; align-items: center; gap: 10px; cursor: pointer;" title="FlowMD Home">
+          <!-- MD Retro App Icon Badge -->
+          <div class="flowmd-app-icon-badge">MD</div>
+          <!-- Cool Retro FlowMD Wordmark -->
+          <div class="flowmd-wordmark">
+            <span class="flowmd-word-flow">Flow</span><span class="flowmd-word-md">MD</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Theme Toggle -->
+        <div class="retro-theme-toggle" id="theme-toggle-btn" title="Toggle Light / Dark Mode">
+          <div class="retro-theme-track">
+            <span class="material-symbols-outlined icon-sun">light_mode</span>
+            <span class="material-symbols-outlined icon-moon">dark_mode</span>
+            <div class="retro-theme-thumb" id="theme-slider-thumb"></div>
+          </div>
+        </div>
+
+        <!-- Profile Avatar -->
+        <div class="pxl-avatar pxl-avatar-sm pxl-avatar-cyan" id="topbar-user-profile" title="Account & Profile" style="cursor: pointer;">
+          <span id="topbar-avatar-initials">DA</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dedicated Sub-Topbar Retro Search Bar Component (Below Topbar) -->
+    <div class="v2-subtopbar-search-container">
+      <div class="v2-subtopbar-search-box" id="btn-toggle-search" title="Click to Search">
+        <span class="material-symbols-outlined search-icon" style="font-size: 20px; color: var(--accent-primary);">search</span>
+        <input type="text" id="topbar-search-input" placeholder="Search 19 subjects, chapters, topics..." readonly>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="app-main" id="app-main">
+      <!-- Dynamic Views rendered by app.js: dashboard, curriculum, subject_detail, analytics, goals, profile -->
+    </main>
+
+    <!-- Sticky Android Bottom Navigation Bar -->
+    <!-- Sticky Android Bottom Navigation Bar (PxlKit Floating Arcade Dock) -->
+    <nav class="android-bottom-nav">
+      <button class="android-nav-item active" data-view="dashboard">
+        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
+          <path fill="currentColor" d="M3 3h4v2H3zM9 3h4v2H9zM1 5h8v2H1zM9 5h6v2H9zM1 7h14v2H1zM3 9h10v2H3zM5 11h6v2H5zM7 13h2v2H7z"/>
+        </svg>
+        <span class="nav-bar-label">Dashboard</span>
+      </button>
+      <button class="android-nav-item" data-view="curriculum">
+        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
+          <rect x="2" y="2" width="12" height="12" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="4" y="3" width="8" height="10" fill="currentColor"/>
+          <rect x="6" y="5" width="4" height="2" fill="#eab308"/>
+          <rect x="7" y="7" width="2" height="2" fill="#eab308"/>
+        </svg>
+        <span class="nav-bar-label">Curriculum</span>
+      </button>
+      <button class="android-nav-item" data-view="analytics">
+        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
+          <rect x="2" y="3" width="4" height="2" fill="#eab308"/>
+          <rect x="2" y="5" width="12" height="8" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="3" y="6" width="6" height="6" fill="currentColor"/>
+        </svg>
+        <span class="nav-bar-label">Analytics</span>
+      </button>
+      <button class="android-nav-item" data-view="profile">
+        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
+          <path fill="currentColor" d="M6 3h4v4H6zM4 8h8v2H4zM3 10h10v4H3z"/>
+        </svg>
+        <span class="nav-bar-label">Profile</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Slide-up Bottom Sheet Modal -->
+  <div class="bottom-sheet-overlay" id="bottom-sheet-overlay">
+    <div class="bottom-sheet" id="bottom-sheet">
+      <div class="bottom-sheet-drag-handle"></div>
+      <div class="bottom-sheet-content" id="bottom-sheet-content">
+        <!-- Injected dynamically for Profile, Settings, Filters -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Goal Editing Modal (Dual-Plan Fully Functional) -->
+  <div class="modal-overlay" id="goal-modal" style="display:none; z-index: 9995;">
+    <div class="modal-card v2-pixel-card" style="max-width: 560px; padding: 22px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header" style="border-bottom: 2px solid var(--v2-ink); padding-bottom: 12px; margin-bottom: 16px;">
+        <h2 class="modal-title" style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">Study Plan Configuration</h2>
+        <button class="v2-arcade-btn" id="modal-close-btn" style="width: 32px; height: 32px; padding: 0;"><span class="material-symbols-outlined" style="font-size: 18px;">close</span></button>
+      </div>
+
+      <!-- High-Visibility Dual Plan Tabs Box -->
+      <div class="pxl-plan-tab-nav" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 18px; padding: 10px; background: var(--bg-surface-raised, #1e293b); border: 2px solid var(--v2-ink, #161310); border-radius: 8px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" id="goal-tab-plan-a" class="v2-arcade-btn goal-plan-tab active" data-plan-id="plan_a" style="height: 38px; padding: 0 16px; font-size: 0.92rem; background: #3b82f633; border: 2px solid #3b82f6; color: #60a5fa; font-family: var(--font-display); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+            <span style="display: inline-block; width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></span>
+            <span>Plan A Target</span>
+          </button>
+          <button type="button" id="goal-tab-plan-b" class="v2-arcade-btn goal-plan-tab" data-plan-id="plan_b" style="height: 38px; padding: 0 16px; font-size: 0.92rem; background: transparent; border: 2px solid #f43f5e; color: #fda4af; font-family: var(--font-display); font-weight: 700; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+            <span style="display: inline-block; width: 10px; height: 10px; background: #f43f5e; border-radius: 2px;"></span>
+            <span>Plan B Target</span>
+          </button>
+        </div>
+        <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-hud); font-size: 0.95rem; cursor: pointer; padding: 4px 10px; background: rgba(244, 63, 94, 0.12); border: 1.5px solid #f43f5e; border-radius: 4px;">
+          <input type="checkbox" id="toggle-plan-b" style="width: 17px; height: 17px; accent-color: #f43f5e; cursor: pointer;">
+          <span style="color: #f43f5e; font-weight: 700;">Dual-Track Mode</span>
+        </label>
+      </div>
+
+      <!-- PLAN A FORM -->
+      <div id="goal-plan-a-form">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 8px 12px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; border-radius: 4px;">
+          <span style="font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: #60a5fa;">PLAN A — PRIMARY TARGET</span>
+          <span style="font-family: var(--font-hud); font-size: 0.88rem; color: var(--text-muted);">Main Subject Goal</span>
+        </div>
+        
+        <form id="goal-form-a" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 0;">
+          <!-- Plan A Goal Mode -->
+          <div class="form-group">
+            <label style="font-family: var(--font-hud); font-size: 1rem; text-transform: uppercase;">Plan A — Goal Mode</label>
+            <div class="segmented-control" style="border: 2px solid var(--v2-ink); padding: 3px; background: var(--bg-surface-raised);">
+              <button type="button" class="segment-btn active" id="tab-btn-video" style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;">🎬 Videos Mode</button>
+              <button type="button" class="segment-btn" id="tab-btn-hours" style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;">⏰ Hours Mode</button>
+            </div>
+          </div>
+
+          <!-- Plan A Smart Math Banner -->
+          <div class="v2-pixel-card" style="background: rgba(46, 93, 214, 0.08); border: 2px solid #3b82f6; padding: 12px 14px; margin-bottom: 16px; font-family: var(--font-hud); font-size: 1rem; color: #60a5fa; display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-outlined" style="font-size: 20px;">calculate</span>
+            <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
+          </div>
+
+          <!-- Plan A Subject -->
+          <div class="form-group">
+            <label for="select-target-subject" style="font-family: var(--font-hud); font-size: 1rem; text-transform: uppercase;">Plan A — Priority Target Subject</label>
+            <select id="select-target-subject" class="form-select" style="border: 2px solid #3b82f6; font-family: var(--font-display); font-size: 0.92rem; height: 42px;"></select>
+          </div>
+
+          <!-- Plan A Target Date -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="input-target-date" style="margin-bottom: 0; font-family: var(--font-hud); font-size: 1rem; text-transform: uppercase;">Plan A — Target Deadline</label>
+              <span id="days-remaining-badge" class="v2-hud-badge" style="color: #3b82f6; border-color: #3b82f6;">26 Days Left</span>
+            </div>
+            <input type="date" id="input-target-date" value="2026-08-15" class="form-input" style="border: 2px solid #3b82f6; font-family: var(--font-hud); font-size: 1.1rem; height: 42px;">
+          </div>
+
+          <!-- Plan A Video Pace -->
+          <div id="fields-video-mode">
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-daily" checked style="width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer;"> Daily Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" min="1" id="input-videos-per-day" value="8" class="form-input" style="height: 40px; text-align: center; border: 2px solid #3b82f6; font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">vids/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-weekly" checked style="width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer;"> Weekly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" min="1" id="input-videos-per-week" value="56" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">vids/wk</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-monthly" checked style="width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer;"> Monthly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" min="1" id="input-videos-per-month" value="240" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">vids/mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plan A Hours Pace -->
+          <div id="fields-hours-mode" style="display: none;">
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-daily-h" checked style="width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer;"> Daily Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" step="0.5" min="0.5" max="24" id="input-daily-target" value="3.5" class="form-input" style="height: 40px; text-align: center; border: 2px solid #3b82f6; font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">hrs/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-weekly-h" checked style="width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer;"> Weekly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" step="1" min="1" max="168" id="input-weekly-target" value="24.5" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">hrs/wk</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-monthly-h" checked style="width: 18px; height: 18px; accent-color: #3b82f6; cursor: pointer;"> Monthly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" step="5" min="5" max="720" id="input-monthly-target" value="105" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">hrs/mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plan A Math Guide -->
+          <div class="v2-pixel-card math-guide-card" style="border: 2px solid var(--v2-ink); background: rgba(59, 130, 246, 0.04); margin-top: 14px; padding: 12px 14px;">
+            <div class="math-guide-header" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
+              <span style="font-family: var(--font-display); font-weight: 700; font-size: 0.88rem; color: #3b82f6; display: flex; align-items: center; gap: 6px;">
+                <span class="material-symbols-outlined" style="font-size: 18px;">info</span>
+                How Plan A Date &amp; Pace Auto-Synchronize
+              </span>
+              <span class="material-symbols-outlined math-guide-toggle-icon" style="font-size: 18px; color: var(--text-muted);">expand_more</span>
+            </div>
+            <div class="math-guide-body" style="display: none; margin-top: 10px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px;">
+              ℹ️ <strong>Auto-Synchronization:</strong><br>
+              • Selecting a <strong>Target Date</strong> auto-calculates Plan A <strong>Daily Pace</strong>.<br>
+              • Changing <strong>Daily Pace</strong> auto-updates Plan A <strong>Target Date</strong>.
+            </div>
+          </div>
+
+          <div class="modal-actions-stacked" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <button type="button" class="v2-arcade-btn" id="btn-apply-goals" style="width: 100%; height: 46px; font-size: 1.05rem; justify-content: center; gap: 8px; background: #3b82f622; border-color: #3b82f6; color: #60a5fa;">
+              <span class="material-symbols-outlined" style="font-size: 20px;">check_circle</span>
+              <span>Save &amp; Apply Plan A Target</span>
+            </button>
+            <button type="button" class="v2-arcade-btn" id="btn-cancel-goals" style="width: 100%; height: 42px; justify-content: center; background: var(--bg-surface-raised); color: var(--text-primary);">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PLAN B FORM (FULL FUNCTIONALITY IDENTICAL TO PLAN A) -->
+      <div id="goal-plan-b-form" style="display: none;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 8px 12px; background: rgba(244, 63, 94, 0.1); border-left: 4px solid #f43f5e; border-radius: 4px;">
+          <span style="font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; color: #fda4af;">PLAN B — SECONDARY TARGET</span>
+          <span style="font-family: var(--font-hud); font-size: 0.88rem; color: var(--text-muted);">Parallel Subject Goal</span>
+        </div>
+
+        <form id="goal-form-b" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 0;">
+          <!-- Plan B Goal Mode -->
+          <div class="form-group">
+            <label style="font-family: var(--font-hud); font-size: 1rem; text-transform: uppercase;">Plan B — Goal Mode</label>
+            <div class="segmented-control" style="border: 2px solid var(--v2-ink); padding: 3px; background: var(--bg-surface-raised);">
+              <button type="button" class="segment-btn active" id="tab-btn-video-b" style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;">🎬 Videos Mode</button>
+              <button type="button" class="segment-btn" id="tab-btn-hours-b" style="font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;">⏰ Hours Mode</button>
+            </div>
+          </div>
+
+          <!-- Plan B Smart Math Banner -->
+          <div class="v2-pixel-card" style="background: rgba(244, 63, 94, 0.08); border: 2px solid #f43f5e; padding: 12px 14px; margin-bottom: 16px; font-family: var(--font-hud); font-size: 1rem; color: #fda4af; display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-outlined" style="font-size: 20px;">calculate</span>
+            <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
+          </div>
+
+          <!-- Plan B Subject -->
+          <div class="form-group">
+            <label for="select-target-subject-b" style="font-family: var(--font-hud); font-size: 1rem; text-transform: uppercase;">Plan B — Priority Target Subject</label>
+            <select id="select-target-subject-b" class="form-select" style="border: 2px solid #f43f5e; font-family: var(--font-display); font-size: 0.92rem; height: 42px;"></select>
+          </div>
+
+          <!-- Plan B Target Date -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="input-target-date-b" style="margin-bottom: 0; font-family: var(--font-hud); font-size: 1rem; text-transform: uppercase;">Plan B — Target Deadline</label>
+              <span id="days-remaining-badge-b" class="v2-hud-badge" style="color: #f43f5e; border-color: #f43f5e;">26 Days Left</span>
+            </div>
+            <input type="date" id="input-target-date-b" value="2026-08-15" class="form-input" style="border: 2px solid #f43f5e; font-family: var(--font-hud); font-size: 1.1rem; height: 42px;">
+          </div>
+
+          <!-- Plan B Video Pace -->
+          <div id="fields-video-mode-b">
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-daily-b" checked style="width: 18px; height: 18px; accent-color: #f43f5e; cursor: pointer;"> Daily Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" min="1" id="input-videos-per-day-b" value="8" class="form-input" style="height: 40px; text-align: center; border: 2px solid #f43f5e; font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">vids/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-weekly-b" checked style="width: 18px; height: 18px; accent-color: #f43f5e; cursor: pointer;"> Weekly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" min="1" id="input-videos-per-week-b" value="56" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">vids/wk</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-monthly-b" checked style="width: 18px; height: 18px; accent-color: #f43f5e; cursor: pointer;"> Monthly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" min="1" id="input-videos-per-month-b" value="240" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">vids/mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plan B Hours Pace -->
+          <div id="fields-hours-mode-b" style="display: none;">
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-daily-h-b" checked style="width: 18px; height: 18px; accent-color: #f43f5e; cursor: pointer;"> Daily Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" step="0.5" min="0.5" max="24" id="input-daily-target-b" value="3.5" class="form-input" style="height: 40px; text-align: center; border: 2px solid #f43f5e; font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">hrs/day</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-weekly-h-b" checked style="width: 18px; height: 18px; accent-color: #f43f5e; cursor: pointer;"> Weekly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" step="1" min="1" max="168" id="input-weekly-target-b" value="24.5" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">hrs/wk</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.92rem;">
+                  <input type="checkbox" id="toggle-card-monthly-h-b" checked style="width: 18px; height: 18px; accent-color: #f43f5e; cursor: pointer;"> Monthly Pace
+                </label>
+                <div style="display: flex; align-items: center; gap: 6px; width: 140px;">
+                  <input type="number" step="5" min="5" max="720" id="input-monthly-target-b" value="105" class="form-input" style="height: 40px; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700;">
+                  <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); white-space: nowrap;">hrs/mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plan B Math Guide -->
+          <div class="v2-pixel-card math-guide-card" style="border: 2px solid var(--v2-ink); background: rgba(244, 63, 94, 0.04); margin-top: 14px; padding: 12px 14px;">
+            <div class="math-guide-header" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none;">
+              <span style="font-family: var(--font-display); font-weight: 700; font-size: 0.88rem; color: #f43f5e; display: flex; align-items: center; gap: 6px;">
+                <span class="material-symbols-outlined" style="font-size: 18px;">info</span>
+                How Plan B Date &amp; Pace Auto-Synchronize
+              </span>
+              <span class="material-symbols-outlined math-guide-toggle-icon" style="font-size: 18px; color: var(--text-muted);">expand_more</span>
+            </div>
+            <div class="math-guide-body" style="display: none; margin-top: 10px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 10px;">
+              ℹ️ <strong>Auto-Synchronization:</strong><br>
+              • Selecting a <strong>Target Date</strong> auto-calculates Plan B <strong>Daily Pace</strong>.<br>
+              • Changing <strong>Daily Pace</strong> auto-updates Plan B <strong>Target Date</strong>.
+            </div>
+          </div>
+
+          <div class="modal-actions-stacked" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <button type="button" class="v2-arcade-btn" id="btn-apply-goals-b" style="width: 100%; height: 46px; font-size: 1.05rem; justify-content: center; gap: 8px; border-color: #f43f5e; background: rgba(244, 63, 94, 0.15); color: #fda4af;">
+              <span class="material-symbols-outlined" style="font-size: 20px;">check_circle</span>
+              <span>Save &amp; Apply Plan B Target</span>
+            </button>
+            <button type="button" id="btn-remove-plan-b" class="v2-arcade-btn" style="width: 100%; height: 38px; justify-content: center; background: transparent; color: #f43f5e; border-color: #f43f5e; font-size: 0.88rem;">Disable / Remove Plan B</button>
+            <button type="button" class="v2-arcade-btn" id="btn-cancel-goals-b" style="width: 100%; height: 42px; justify-content: center; background: var(--bg-surface-raised); color: var(--text-primary);">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- PxlKit Interactive Info & Explanation Popover Modal -->
+  <div class="modal-overlay" id="info-popover-modal" style="display:none; z-index: 9999;">
+    <div class="pxl-feature-card-wrapper" style="max-width: 460px; width: 92%;">
+      <div class="pxl-feature-card-header-badges" style="justify-content: flex-end;">
+        <button class="v2-arcade-btn" id="info-modal-close" title="Close" style="width: 28px; height: 28px; padding: 0; background: transparent; border: none; color: #fff;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+        </button>
+      </div>
+
+      <div class="pxl-feature-card" style="padding: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--retro-border, #282f42); padding-bottom: 10px;">
+          <span class="material-symbols-outlined" style="color: var(--retro-cyan, #00f0ff); font-size: 24px;">info</span>
+          <h3 id="info-modal-title" style="color: var(--retro-gold, #ffcc00); font-family: var(--font-display), 'Pixelify Sans', monospace; font-size: 1.15rem; font-weight: 700; margin: 0;">
+            Explanation
+          </h3>
+        </div>
+
+        <div id="info-modal-body" class="pxl-alert-message" style="font-family: var(--font-hud), 'VT323', monospace; font-size: 1.08rem; color: #cbd5e1; line-height: 1.5;">
+          <!-- Explanation content inserted dynamically -->
+        </div>
+
+        <button class="v2-arcade-btn" id="info-modal-ok-btn" style="margin-top: 18px; width: 100%; height: 42px;">
+          <span>Understood</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spotlight Command Search Palette Modal -->
+  <div class="modal-overlay" id="spotlight-search-modal" style="display:none; z-index: 9990; align-items: flex-start; padding-top: 40px;">
+    <div class="modal-card v2-pixel-card spotlight-card" style="max-width: 580px; width: 95%; max-height: 82vh; padding: 0; overflow: hidden; border: 2px solid var(--v2-ink);">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 2px solid var(--v2-ink); background: var(--bg-surface);">
+        <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 22px;">search</span>
+        <input type="text" id="spotlight-search-input" placeholder="SEARCH 19 SUBJECTS, CHAPTERS, OR VIDEO TOPICS..." autocomplete="off" style="flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-family: var(--font-hud); font-size: 1.15rem; letter-spacing: 0.04em;">
+        <button class="v2-arcade-btn" id="spotlight-close-btn" title="Close" style="width: 32px; height: 32px; padding: 0;"><span class="material-symbols-outlined" style="font-size: 18px;">close</span></button>
+      </div>
+      <div id="spotlight-results-container" style="padding: 16px 18px; max-height: calc(82vh - 65px); overflow-y: auto;">
+        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: var(--font-hud); font-size: 1.1rem;">
+          Type to search across 19 MBBS subjects, chapters, and 2,000+ video topics...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive First-Time Onboarding & Target Selection Wizard Modal (OPTIONAL & NON-BLOCKING) -->
+  <div class="modal-overlay" id="onboarding-wizard-modal" style="display:none !important; z-index: 10000;">
+    <div class="modal-card v2-pixel-card" style="max-width: 500px; width: 92%; padding: 22px; max-height: 88vh; overflow-y: auto;">
+      
+      <!-- Modal Header with Optional Close Button [X] -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 2px solid var(--v2-ink); padding-bottom: 10px;">
+        <div>
+          <span class="v2-hud-badge" style="color: var(--retro-gold, #ffcc00); border-color: var(--retro-gold, #ffcc00); font-size: 0.78rem;">OPTIONAL INITIAL SETUP</span>
+          <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin: 4px 0 0 0; color: var(--text-primary);">Setup Preparation Targets</h2>
+        </div>
+        <button type="button" id="btn-close-onboarding-x" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1;" title="Close & Skip Setup">&times;</button>
+      </div>
+
+      <p style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-secondary); margin: 0 0 16px 0;">Configure your target exam, daily video pace, and deadline to enable automated pace tracking.</p>
+
+      <form id="onboarding-form">
+        <!-- Doctor Profile Inputs -->
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="onb-doc-name" style="font-family: var(--font-hud); font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">Doctor Name</label>
+          <input type="text" id="onb-doc-name" value="Dr. Aspirant" class="form-input" style="border: 2px solid var(--v2-ink); font-family: var(--font-display); font-size: 0.95rem; height: 42px;" placeholder="e.g. Dr. Safety">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+          <div class="form-group" style="margin: 0;">
+            <label style="display: block; font-family: var(--font-hud); font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; margin-bottom: 4px;">Target Exam</label>
+            <select id="onb-target-exam" class="form-select" style="border: 2px solid var(--v2-ink); font-family: var(--font-display); font-size: 0.9rem; height: 42px;">
+              <option value="NEET PG 2026" selected>NEET PG 2026</option>
+              <option value="NEET PG 2027">NEET PG 2027</option>
+              <option value="NEET PG 2028">NEET PG 2028</option>
+              <option value="NEET PG 2029">NEET PG 2029</option>
+              <option value="NEET PG 2030">NEET PG 2030</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label style="display: block; font-family: var(--font-hud); font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 700; margin-bottom: 4px;">Target Rank</label>
+            <select id="onb-target-rank" class="form-select" style="border: 2px solid var(--v2-ink); font-family: var(--font-display); font-size: 0.9rem; height: 42px;">
+              <option value="Top 500">Top 500</option>
+              <option value="Top 1000" selected>Top 1000</option>
+              <option value="Top 2000">Top 2000</option>
+              <option value="Top 5000">Top 5000</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Target Date & Velocity -->
+        <div class="form-group" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <label style="margin: 0; font-family: var(--font-hud); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Target Exam Date</label>
+            <span id="onb-days-left-badge" class="v2-hud-badge" style="color: var(--success); border-color: var(--success);">150 Days Left</span>
+          </div>
+          <input type="date" id="onb-target-date" value="2026-08-15" class="form-input" style="border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.05rem; height: 42px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label for="onb-videos-per-day" style="font-family: var(--font-hud); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Daily Video Pace Target</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="number" step="1" min="1" max="50" id="onb-videos-per-day" value="8" class="form-input" style="flex: 1; text-align: center; border: 2px solid var(--v2-ink); font-family: var(--font-hud); font-size: 1.15rem; font-weight: 700; height: 42px;">
+            <span style="font-family: var(--font-hud); font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">vids/day</span>
+          </div>
+        </div>
+
+        <!-- Priority Focus Subject -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label for="onb-target-subject" style="font-family: var(--font-hud); font-size: 0.85rem; text-transform: uppercase; font-weight: 700;">Initial Priority Focus Subject</label>
+          <select id="onb-target-subject" class="form-select" style="border: 2px solid var(--v2-ink); font-family: var(--font-display); font-size: 0.9rem; height: 42px;"></select>
+        </div>
+
+        <!-- PxlKit PixelAlert Smart Synchronization Live Preview Banner -->
+        <div class="pxl-alert pxl-alert-info" style="padding: 12px 14px; margin-bottom: 18px; border-radius: 2px;">
+          <span class="material-symbols-outlined pxl-alert-icon">info</span>
+          <div class="pxl-alert-content">
+            <div class="pxl-alert-title" id="onb-sync-header">Target Pace Configured</div>
+            <div class="pxl-alert-message" id="onb-sync-detail" style="font-size: 0.9rem;">Watching 8 vids/day will finish the 19 MBBS subjects on time.</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px;">
+          <button type="submit" class="v2-arcade-btn" style="flex: 1; height: 46px; font-size: 0.98rem; justify-content: center; gap: 8px; background: var(--accent-primary, #2563eb); color: #ffffff;">
+            <span class="material-symbols-outlined" style="font-size: 20px;">rocket_launch</span>
+            <span>Save Target & Start</span>
+          </button>
+          <button type="button" id="btn-skip-onboarding" class="v2-arcade-btn" style="height: 46px; padding: 0 16px; justify-content: center; background: var(--bg-surface-raised); color: var(--text-primary);">
+            Skip Setup
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Driver.js Interactive Minimalist Tooltip Spotlight Engine -->
+  <div id="guided-tutorial-modal" class="driver-modal-overlay" style="display:none; z-index: 100005;">
+    <!-- Active Target Spotlight Cutout / Highlight Box -->
+    <div id="driver-spotlight-box" class="driver-spotlight-box" style="display:none;"></div>
+    
+    <!-- Floating Minimalist Tooltip Card Container -->
+    <div id="driver-popover-card" class="driver-popover-card">
+      <!-- Dynamic Tooltip Pointer Arrow -->
+      <div id="driver-popover-arrow" class="driver-popover-arrow arrow-down"></div>
+
+      <!-- Tour Content Card Container -->
+      <div id="driver-content-container">
+        <!-- Minimalist Header (Step Counter + Close Button) -->
+        <div class="driver-popover-header">
+          <span class="driver-step-badge" id="tut-step-badge">1 / 7</span>
+          <button type="button" id="tut-btn-close-x" class="driver-close-btn" title="Close Tour">&times;</button>
+        </div>
+
+        <!-- Dynamic Step Body Content -->
+        <div id="tut-step-body" class="driver-step-body">
+          <!-- Dynamic step text inserted by JS -->
+        </div>
+
+        <!-- Compact Footer Bar (Pill Dots + Sleek Action Buttons) -->
+        <div class="driver-popover-footer">
+          <div id="tut-step-dots" class="driver-step-dots"></div>
+          
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button type="button" id="tut-btn-skip" class="driver-btn-skip-text">Skip</button>
+            <button type="button" id="tut-btn-next" class="driver-btn-next-pill" title="Next Step">
+              <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Firebase Scripts (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Application Data & Logic -->
+  <script src="firebase.js?v=120.0"></script>
+  <script src="data.js?v=120.0"></script>
+  <script src="app.js?v=120.0"></script>
+
+</body>
+</html>

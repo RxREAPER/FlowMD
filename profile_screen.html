@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="en" class="light" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Archivo+Narrow:wght@400;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-variant": "#e8e0e9",
+                "on-tertiary-container": "#fffbff",
+                "on-secondary-container": "#6b5a7c",
+                "surface-bright": "#fff7fe",
+                "primary-fixed-dim": "#dab8ff",
+                "on-error": "#ffffff",
+                "primary-container": "#8f61c4",
+                "surface": "#fff7fe",
+                "inverse-primary": "#dab8ff",
+                "on-primary": "#ffffff",
+                "on-error-container": "#93000a",
+                "secondary-fixed": "#efdbff",
+                "secondary-container": "#ebd5fd",
+                "on-background": "#1e1a21",
+                "tertiary-fixed": "#f4daf9",
+                "outline": "#7c7482",
+                "on-surface": "#1e1a21",
+                "on-primary-fixed": "#2b0053",
+                "error-container": "#ffdad6",
+                "secondary": "#685779",
+                "on-primary-container": "#0a001c",
+                "on-tertiary": "#ffffff",
+                "tertiary-fixed-dim": "#d7bedd",
+                "tertiary": "#69556f",
+                "on-secondary-fixed-variant": "#504061",
+                "inverse-surface": "#332f36",
+                "surface-tint": "#7548a9",
+                "on-secondary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed-variant": "#534059",
+                "on-primary-fixed-variant": "#5c2e8f",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#d4bee6",
+                "surface-container-high": "#eee5ef",
+                "on-surface-variant": "#4b4451",
+                "inverse-on-surface": "#f7eef7",
+                "surface-container-low": "#faf1fa",
+                "outline-variant": "#cdc3d2",
+                "surface-dim": "#e0d7e0",
+                "on-tertiary-fixed": "#25152c",
+                "primary-fixed": "#efdbff",
+                "primary": "#7548a9",
+                "tertiary-container": "#836d89",
+                "background": "#fff7fe",
+                "surface-container": "#f4ebf4",
+                "surface-container-highest": "#e8e0e9",
+                "on-secondary-fixed": "#231533"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "0.5rem",
+                "xl": "1.5rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Space Mono"],
+                "display": ["Space Mono"],
+                "body": ["Space Grotesk"],
+                "label": ["Archivo Narrow"]
+            }
+          }
+        }
+      }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="font-body">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 md:px-6 h-16 sticky top-0 z-50 bg-surface shadow-sm">
+<div class="flex items-center gap-4">
+<span class="md:hidden material-symbols-outlined text-primary cursor-pointer">menu</span>
+<span class="font-headline font-bold text-primary tracking-tight text-headline-lg-mobile md:text-headline-lg">Clinical Precision</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex bg-surface-container-high px-3 py-1.5 rounded-full items-center gap-2 border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input type="text" placeholder="Search curriculum..." class="bg-transparent border-none focus:ring-0 text-sm font-body">
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
+<img class="w-full h-full object-cover" data-alt="A professional medical student headshot of a young male doctor in a clean white coat with a stethoscope around his neck, looking directly at the camera with a confident smile. The background is a brightly lit, sterile medical facility with soft purple accents, maintaining a high-key professional atmosphere consistent with the Clinical Precision brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKDxKKECLh9mX1D14DBRucO6ufK8k4OSMbGT5Fm8moyZDwltGARxFYXN9-9AujrW1xbnI7432kSvBjIPIqq7fOZY0mdCv5t1sOoQ2uerS5wjUYk2R5k_t1kLLD2Dw0T6O6OQSxQENVc-uPhittdKhuhwhIb8aQt2IM5cmHrrKlssAvGut3_vjpCuIw0w2v2yIr7mR4CvjeBowrOei1qaemNSBuksfzR_6lBP7iDZ4KH1ifPy37MejWoYnEx-ztyxT97VXue3pn4H-l">
+</div>
+</div>
+</header>
+<div class="flex min-h-screen">
+<!-- SideNavBar (Hidden on mobile) -->
+<aside class="fixed left-0 top-0 h-full z-40 p-4 space-y-6 bg-surface-container-low w-72 hidden md:flex flex-col">
+<div class="mt-16 pt-6 flex flex-col items-center space-y-4">
+<div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-primary">
+<img class="w-full h-full object-cover" data-alt="A close up portrait of Dr. Aman Sharma, a focused NEET PG aspirant, in a modern office setting. The lighting is crisp and cool, highlighting the technical and scholarly aesthetic of the app. The color palette includes shades of lavender and deep midnight, reflecting the professional yet encouraging brand personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu_4SKKmZK1Kmgk4XdW0mJyVkMhvvhqzFzc4s00r6BLgyuJ2KLS3t7tTHmEHdniN_Aw3rageGTcyl9Dc98uRmnJPeg5qebOvyUiCWS4Lp62-Yj84x2C6UZEUkJytRZeDBcgcUJdQx6ejZIGuJI5h0BgvhhCYE-GeYN9FuUqOS9MxS_IBir3iJhEOOm406cWfrdLwRHnwXTy750qS43aMAfQUF9dCI45XrYdsPmo6xTNcyagnJhASUt6mVpmiTK5ZkJS95_9Rs844SW">
+</div>
+<div class="text-center">
+<h2 class="font-headline text-title-md text-primary">Dr. Aman Sharma</h2>
+<p class="font-body text-body-sm text-on-surface-variant">NEET PG Aspirant • Surgery Focus</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2 mt-8">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-body text-body-md">Study Plan</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span class="font-body text-body-md">Question Bank</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-body text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 p-3 bg-secondary-container text-on-secondary-container font-semibold rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined fill-icon" data-icon="account_circle" style="font-variation-settings: &quot;FILL&quot; 1;">account_circle</span>
+<span class="font-body text-body-md">Profile</span>
+</a>
+</nav>
+<div class="border-t border-outline-variant pt-4 space-y-2">
+<button class="w-full flex items-center justify-center gap-2 py-2 px-4 bg-primary text-on-primary rounded-lg font-body font-medium transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="sync">sync</span>
+                    Sync with Google
+                </button>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body text-body-md">Help Center</span>
+</a>
+<a class="flex items-center gap-3 p-3 text-error hover:bg-error-container transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-body text-body-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-72 p-4 md:p-8 pb-24 md:pb-8">
+<div class="max-w-5xl mx-auto">
+<div class="mb-8">
+<h1 class="font-headline text-headline-lg text-on-surface">User Profile</h1>
+<p class="font-body text-body-md text-on-surface-variant">Manage your account precision settings and study sync status.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="bento-grid">
+<!-- Profile Card -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col md:flex-row gap-6 items-center">
+<div class="relative">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary shadow-lg">
+<img class="w-full h-full object-cover" data-alt="Close up high-resolution profile picture of Dr. Aman Sharma, looking intelligent and focused. The image has a clean, white medical background with subtle geometric lavender accents that align with the Clinical Precision branding and aesthetic. Soft, natural lighting enhances the scholarly feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw1J8Q1MFD5d6P8-855ikHHS_P5dotPB_Ycj9ImmBBrQ-vE1uK3pVepSOXy8uvIkLAi1yEAfyHMEkPAAbIG_1iUhDT_sL5LNTK8Ejpa0vu5ZashZt7Sgn1WXyJn33eaT5wAkDEkrxj9Feg2m_SPF8gsu_IuDvXQyLFKSQPkHKrvPysjadzOhuQd8jcFv0gHQ1OVs2FbjM6ibFF4CHL-Kzl-Lw-XGi6tldOowLh2Rua7mFm8fOV4fjYcOJHl0HGSsA1dbFAp34YkigT">
+</div>
+<button class="absolute bottom-0 right-0 p-2 bg-primary text-on-primary rounded-full border-2 border-white shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="text-center md:text-left flex-1">
+<div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+<h2 class="font-headline text-headline-lg-mobile md:text-headline-lg text-primary">Dr. Aman Sharma</h2>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold font-label bg-tertiary-container text-on-tertiary-container uppercase tracking-wider">NEET PG 2024</span>
+</div>
+<p class="font-body text-body-md text-on-surface-variant mb-4">NEET PG Aspirant • Surgery Focus</p>
+<div class="flex flex-wrap gap-2 justify-center md:justify-start">
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-label text-label-caps text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="medical_services">medical_services</span> Surgery
+                                </span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-label text-label-caps text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span> New Delhi, India
+                                </span>
+</div>
+</div>
+</div>
+<!-- Subscription Card -->
+
+<!-- Account Sync Card -->
+<div class="col-span-12 md:col-span-5 glass-card p-6 rounded-xl flex flex-col">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 bg-surface-container-highest rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="sync_saved_locally">sync_saved_locally</span>
+</div>
+<h4 class="font-headline text-title-md">Account Sync</h4>
+</div>
+<p class="font-body text-body-sm text-on-surface-variant mb-6 flex-1">Keep your study progress, bookmarks, and mock tests synced across your phone and tablet.</p>
+<button class="flex items-center justify-center gap-3 w-full py-3 border border-outline rounded-lg bg-white hover:bg-surface-container transition-all active:scale-95">
+<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyc-INZ3y80HU3-zqYUD-aRrXYiq-BDbhAEL6f0g2RpxL59r0-oXXMTFnX6zzKNP6aOlstgEQe0xNYSx4G4Yzesx8gFD6Vz638E5dEGl2fp9ccHSLXw_CaSWC1yyfu1Pb2LjK5vJhwqgvpUX4t4gzSOrHPf_Ilyehq2dgYCSo7D72yEWDQvOmwID6clhr2RQQV1gDOylxGfoP33CJXhXWMBw4mxOu2joRfi5x9LYp0A07IMHoTQS9RvP13TMgDZ6NKkb6D-jnht7vi">
+<span class="font-body font-medium text-on-surface">Connected as amansharma.med@gmail.com</span>
+</button>
+</div>
+<!-- Stats Summary Grid -->
+<div class="col-span-12 md:col-span-7 bg-surface-container-low p-6 rounded-xl border border-outline-variant">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-headline text-title-md">Technical Summary</h4>
+<span class="font-label text-label-caps text-primary">Last 30 Days</span>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-white p-4 rounded-lg border border-outline-variant/30 text-center">
+<p class="font-label text-label-caps text-on-surface-variant mb-1">DAYS ACTIVE</p>
+<p class="font-headline text-metric-num text-primary">124</p>
+<div class="mt-2 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[85%]"></div>
+</div>
+</div>
+<div class="bg-white p-4 rounded-lg border border-outline-variant/30 text-center">
+<p class="font-label text-label-caps text-on-surface-variant mb-1">VIDEOS</p>
+<p class="font-headline text-metric-num text-primary">2,410</p>
+<div class="mt-2 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[60%]"></div>
+</div>
+</div>
+
+</div>
+</div>
+<!-- Settings Section -->
+<div class="col-span-12 bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-6 py-4 bg-surface-container-low border-b border-outline-variant">
+<h4 class="font-headline text-title-md text-primary uppercase tracking-tight">Preferences &amp; Security</h4>
+</div>
+<div class="divide-y divide-outline-variant/30">
+<!-- Preference Item -->
+<div class="flex items-center justify-between p-6 hover:bg-surface-bright transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-surface-container rounded-lg group-hover:bg-primary-container group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+</div>
+<div>
+<p class="font-body font-semibold text-on-surface">Notification Preferences</p>
+<p class="font-body text-body-sm text-on-surface-variant">Daily reminders, goal alerts, and test results.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Preference Item -->
+<div class="flex items-center justify-between p-6 hover:bg-surface-bright transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-surface-container rounded-lg group-hover:bg-primary-container group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="palette">palette</span>
+</div>
+<div>
+<p class="font-body font-semibold text-on-surface">App Theme</p>
+<p class="font-body text-body-sm text-on-surface-variant">Clinical Precision (Light Mode Active)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Preference Item -->
+<div class="flex items-center justify-between p-6 hover:bg-surface-bright transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-surface-container rounded-lg group-hover:bg-primary-container group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+</div>
+<div>
+<p class="font-body font-semibold text-on-surface">Privacy &amp; Security</p>
+<p class="font-body text-body-sm text-on-surface-variant">Manage your data sharing and device sessions.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface shadow-[0_-4px_6px_-1px_rgba(117,72,169,0.1)] md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="book">book</span>
+<span class="font-label text-label-caps">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span class="font-label text-label-caps">Stats</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined fill-icon" data-icon="person" style="font-variation-settings: &quot;FILL&quot; 1;">person</span>
+<span class="font-label text-label-caps">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simple mock sync interaction
+        const syncBtn = document.querySelector('[data-icon="sync"]')?.parentElement;
+        if (syncBtn) {
+            syncBtn.addEventListener('click', () => {
+                const icon = syncBtn.querySelector('span');
+                icon.classList.add('animate-spin');
+                setTimeout(() => {
+                    icon.classList.remove('animate-spin');
+                    alert('Study data synced successfully with Clinical Precision Cloud.');
+                }, 1500);
+            });
+        }
+    </script>
+
+</body></html>
