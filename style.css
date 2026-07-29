@@ -485,135 +485,47 @@ body {
 }
 
 /* --- Native Topbar --- */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  height: 58px;
-  background-color: rgba(11, 15, 25, 0.88);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+/* --- Topbar brand / logo --- */
 .topbar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
   user-select: none;
+  /* Dark mode default: white letter paths */
+  color: #ffffff;
 }
 
-.brand-icon {
-  color: var(--accent-primary);
-  font-size: 24px;
-}
-
-.brand-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 800;
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
-}
-
-/* --- Brand Logo & Name Styling --- */
-.flowmd-app-icon-badge {
-  font-family: 'Pixelify Sans', 'Outfit', monospace;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #ff3b5c 0%, #f43f5e 100%);
-  border: 2px solid #161310;
-  padding: 3px 8px;
-  border-radius: 4px;
-  line-height: 1;
-  text-shadow: 1px 1px 0px #000000;
-  box-shadow: 2px 2px 0px #000000, 0 0 10px rgba(255, 59, 92, 0.4);
-  letter-spacing: 0.05em;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-}
-
-/* Cool Retro/Modern FlowMD Wordmark */
-.flowmd-wordmark {
-  display: flex;
-  align-items: center;
-  font-family: 'Pixelify Sans', 'Outfit', sans-serif;
-  font-size: 1.45rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  user-select: none;
-}
-
-.flowmd-word-flow {
-  color: var(--text-primary, #ffffff);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  transition: color 0.2s ease;
-}
-
-.flowmd-word-md {
-  background: linear-gradient(135deg, #ff3b5c 0%, #ff6b8b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.flowmd-topbar-logo {
+  height: 64px;
+  width: auto;
+  display: block;
   filter: drop-shadow(0 0 8px rgba(255, 59, 92, 0.6));
-  font-weight: 800;
-  margin-left: 2px;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.25s ease;
 }
 
-/* Light Mode Overrides for Wordmark */
-[data-theme="light"] .flowmd-word-flow {
-  color: #0f172a;
-  text-shadow: none;
+.topbar-brand:hover .flowmd-topbar-logo {
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 14px rgba(255, 59, 92, 0.9));
 }
 
-[data-theme="light"] .flowmd-word-md {
-  background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Light mode: flip letter paths to dark navy */
+[data-theme="light"] .topbar {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+[data-theme="light"] .topbar-brand {
+  color: #07152A;
+}
+
+[data-theme="light"] .flowmd-topbar-logo {
   filter: drop-shadow(0 0 4px rgba(225, 29, 72, 0.3));
-}
-
-/* Light Mode Overrides for Badge */
-[data-theme="light"] .flowmd-app-icon-badge {
-  border-color: #0f172a;
-  box-shadow: 2px 2px 0px #0f172a;
-}
-
-/* Hover glow & micro-animation on the brand logo */
-.topbar-brand:hover .flowmd-app-icon-badge {
-  transform: scale(1.08) rotate(-3deg);
-  box-shadow: 2px 2px 0px var(--text-primary, #ffffff), 0 0 14px rgba(255, 59, 92, 0.7);
-}
-
-[data-theme="light"] .topbar-brand:hover .flowmd-app-icon-badge {
-  box-shadow: 2px 2px 0px #0f172a, 0 0 14px rgba(225, 29, 72, 0.4);
-}
-
-.topbar-brand:hover .flowmd-word-flow {
-  color: #00f0ff;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
 }
 
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 /* --- Search Controls (Minimalist Command Search Architecture) --- */
@@ -1513,43 +1425,58 @@ body {
 }
 
 /* --- FLOWMD V2 16-BIT RETRO RPG TOPBAR --- */
+/* === PRIMARY TOPBAR BLOCK === */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  height: 62px;
-  background-color: var(--bg-surface);
-  border-bottom: 2px solid var(--v2-ink, #161310);
-  box-shadow: 0 4px 0 0 var(--v2-ink, #161310);
+  height: 76px;
+  background-color: rgba(11, 15, 25, 0.92);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 14px;
+  padding: 0 20px;
   gap: 10px;
+}
+
+[data-theme="light"] .topbar {
+  background-color: rgba(255, 255, 255, 0.92);
 }
 
 .topbar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
   user-select: none;
   flex-shrink: 0;
 }
 
-.brand-icon {
-  color: var(--v2-sky-cobalt, #2e5dd6);
-  font-size: 26px;
-  filter: drop-shadow(2px 2px 0 var(--v2-ink, #161310));
+/* SVG logo sizing & glow */
+.flowmd-topbar-logo {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(255, 59, 92, 0.75));
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
 }
 
+.topbar-brand:hover .flowmd-topbar-logo {
+  transform: scale(1.07);
+  filter: drop-shadow(0 0 12px rgba(255, 59, 92, 0.85));
+}
+
+[data-theme="light"] .flowmd-topbar-logo {
+  filter: drop-shadow(0 0 4px rgba(225, 29, 72, 0.35));
+}
+
+/* Hide any JS-injected text beside the logo */
+.brand-icon,
 .brand-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--v2-rpg-gold, #ffd700);
-  letter-spacing: 0.02em;
-  text-shadow: 2px 2px 0 var(--v2-ink, #161310);
+  display: none !important;
 }
 
 /* --- Dedicated Sub-Topbar Retro Search Component (Below Topbar) --- */
@@ -2820,13 +2747,7 @@ body {
   --flowmd-pink-glow: rgba(255, 59, 92, 0.4);
 }
 
-.flowmd-topbar-logo {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.topbar-brand:hover .flowmd-topbar-logo {
-  transform: scale(1.08) rotate(-2deg);
-}
+/* flowmd-topbar-logo — defined above near line 1443 */
 
 .flowmd-logo-card {
   display: flex;

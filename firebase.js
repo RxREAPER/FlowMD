@@ -1,13 +1,12 @@
 // Firebase Configuration & Helper Module for MedTracker PG
 (function() {
   const firebaseConfig = {
-    apiKey: "AIzaSyAlHINhNUzrzWWrPAltf8W-RejaiWqudz4",
-    authDomain: "marrowflow.firebaseapp.com",
-    projectId: "marrowflow",
-    storageBucket: "marrowflow.firebasestorage.app",
-    messagingSenderId: "533812169710",
-    appId: "1:533812169710:web:2a2f0ad60ea50829b09cff",
-    measurementId: "G-WV84KDFPVQ"
+    apiKey: "AIzaSyC6tCvOPXQ_tcywhu4f-lkdHmm9ycW0Yuo",
+    authDomain: "flowmd-04.firebaseapp.com",
+    projectId: "flowmd-04",
+    storageBucket: "flowmd-04.firebasestorage.app",
+    messagingSenderId: "386076412890",
+    appId: "1:386076412890:web:3ddbaf1091a16a584b4ee3"
   };
 
   // Initialize Firebase Compat

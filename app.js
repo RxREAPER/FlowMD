@@ -20,6 +20,7 @@
     QUEUE_BATCH: 'marrow_planner_queue_completed_in_batch',
     QUEUE_BATCH_VIDEOS: 'marrow_planner_queue_batch_videos',
     ONBOARDING: 'marrow_planner_onboarding_completed',
+    TUTORIAL_SEEN: 'flowmd_tutorial_seen',
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',
     DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject'
@@ -132,6 +133,7 @@
     queueCompletedInBatch: 0,
     queueBatchVideoIds: [],
     isCompletedOnboarding: false,
+    hasSeenTutorial: false,
     // Dual-Subject Tracking v2
     plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT, 'Entire Syllabus')],
     activePlanId: 'plan_a',
@@ -150,7 +152,7 @@
     startDeadlineCountdownTimer();
     render();
 
-    // Onboarding setup wizard is 100% optional and accessible via the Dashboard link button on demand.
+    // Guided tutorial walk-through only runs once per device
     if (!state.hasSeenTutorial) {
       setTimeout(() => openGuidedTutorial(0), 600);
     }
@@ -190,6 +192,9 @@
 
       const savedOnboarding = localStorage.getItem(STORAGE_KEYS.ONBOARDING);
       state.isCompletedOnboarding = (savedOnboarding === 'true');
+
+      const savedTutorial = localStorage.getItem(STORAGE_KEYS.TUTORIAL_SEEN);
+      state.hasSeenTutorial = (savedTutorial === 'true');
 
       // --- Dual-Subject Tracking v2: load plans ---
       const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
@@ -247,6 +252,7 @@
       localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
       localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
       localStorage.setItem(STORAGE_KEYS.ONBOARDING, state.isCompletedOnboarding ? 'true' : 'false');
+      localStorage.setItem(STORAGE_KEYS.TUTORIAL_SEEN, state.hasSeenTutorial ? 'true' : 'false');
       // Dual-Subject Tracking v2
       localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
       localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
@@ -454,6 +460,7 @@
           if (cloudState.personal) state.personal = { ...state.personal, ...cloudState.personal };
           if (cloudState.dailyHistory) state.dailyHistory = { ...state.dailyHistory, ...cloudState.dailyHistory };
           if (cloudState.isCompletedOnboarding !== undefined) state.isCompletedOnboarding = cloudState.isCompletedOnboarding;
+          if (cloudState.hasSeenTutorial !== undefined) state.hasSeenTutorial = cloudState.hasSeenTutorial;
           saveState();
         } else {
           window.FirebaseSync.syncToCloud(user.uid, state);
@@ -1032,7 +1039,15 @@
       });
     }
 
-    // --- Topbar Tour Trigger Button ---
+    // --- Topbar Feature Action Buttons ---
+    document.getElementById('topbar-btn-search')?.addEventListener('click', () => {
+      openSpotlightModal();
+    });
+
+    document.getElementById('topbar-btn-goals')?.addEventListener('click', () => {
+      openGoalModal();
+    });
+
     document.getElementById('topbar-btn-tour')?.addEventListener('click', () => {
       openGuidedTutorial(0);
     });
@@ -1301,11 +1316,7 @@
       DOM.themeIcon.textContent = curTheme === 'dark' ? 'light_mode' : 'dark_mode';
     }
 
-    // FlowMD Dynamic Neon Vector Logo (Large Size: 56px)
-    const brandLink = document.getElementById('brand-home-link');
-    if (brandLink) {
-      brandLink.innerHTML = getFlowMDLogoSVG(curTheme, 'full', 56);
-    }
+    // FlowMD Logo preserved in topbar (inline SVG with theme-aware currentColor)
 
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {

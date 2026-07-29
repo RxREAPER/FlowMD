@@ -1,0 +1,17 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bump cache version
+        run: node scripts/bump-version.js
+
+      - name: Deploy to Firebase
+        run: npx firebase-tools deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}"
