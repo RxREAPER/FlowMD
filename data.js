@@ -14,634 +14,634 @@ const syllabusData = [
         "hours": 1.8,
         "videos": [
           {
-            "id": "anatomy__embryo___v1",
+            "id": "anat__emb__v1",
             "videoNumber": "#01",
             "title": "How to Approach Anatomy Edition 8",
-            "durationMins": 27,
-            "durationSecs": 38
+            "durationMins": 3,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__embryo___v2",
+            "id": "anat__emb__v2",
             "videoNumber": "#02",
             "title": "Gametogenesis",
-            "durationMins": 27,
-            "durationSecs": 26
+            "durationMins": 33,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__embryo___v3",
+            "id": "anat__emb__v3",
             "videoNumber": "#03",
             "title": "1st and 2nd Week of Development",
-            "durationMins": 24,
-            "durationSecs": 58
+            "durationMins": 38,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__embryo___v4",
+            "id": "anat__emb__v4",
             "videoNumber": "#04",
             "title": "3rd Week Development",
-            "durationMins": 27,
-            "durationSecs": 58
+            "durationMins": 35,
+            "durationSecs": 0
           }
         ]
       },
       {
         "name": "HISTOLOGY",
         "modules": 3,
-        "hours": 2.3,
+        "hours": 2.2,
         "videos": [
           {
-            "id": "anatomy__histo___v1",
+            "id": "anat__his__v1",
             "videoNumber": "#05",
             "title": "Histology: Part 1",
-            "durationMins": 51,
-            "durationSecs": 30
+            "durationMins": 47,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__histo___v2",
+            "id": "anat__his__v2",
             "videoNumber": "#06",
             "title": "Histology: Part 2",
-            "durationMins": 53,
-            "durationSecs": 5
+            "durationMins": 34,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__histo___v3",
+            "id": "anat__his__v3",
             "videoNumber": "#07",
             "title": "Histology: Part 3",
-            "durationMins": 33,
-            "durationSecs": 25
+            "durationMins": 50,
+            "durationSecs": 0
           }
         ]
       },
       {
         "name": "NEUROANATOMY",
         "modules": 11,
-        "hours": 6.6,
+        "hours": 6.9,
         "videos": [
           {
-            "id": "anatomy__neuro_anat___v1",
+            "id": "anat__neuro__v1",
             "videoNumber": "#08",
             "title": "Development of Neural Tube",
-            "durationMins": 38,
-            "durationSecs": 31
+            "durationMins": 21,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v2",
+            "id": "anat__neuro__v2",
             "videoNumber": "#09",
             "title": "Functional Columns of Cranial Nerve Nuclei",
-            "durationMins": 40,
-            "durationSecs": 33
+            "durationMins": 24,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v3",
+            "id": "anat__neuro__v3",
             "videoNumber": "#10",
-            "title": "Neuroanatomy Basics",
-            "durationMins": 34,
-            "durationSecs": 29
+            "title": "Neuroanatomy basics",
+            "durationMins": 7,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v4",
+            "id": "anat__neuro__v4",
             "videoNumber": "#11",
             "title": "CSF and Ventricles",
-            "durationMins": 42,
-            "durationSecs": 33
+            "durationMins": 65,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v5",
+            "id": "anat__neuro__v5",
             "videoNumber": "#12",
             "title": "Spinal Cord",
-            "durationMins": 34,
-            "durationSecs": 5
+            "durationMins": 57,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v6",
+            "id": "anat__neuro__v6",
             "videoNumber": "#13",
             "title": "Brain Stem",
-            "durationMins": 29,
-            "durationSecs": 47
+            "durationMins": 64,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v7",
+            "id": "anat__neuro__v7",
             "videoNumber": "#14",
             "title": "Cerebellum",
-            "durationMins": 35,
-            "durationSecs": 50
+            "durationMins": 22,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v8",
+            "id": "anat__neuro__v8",
             "videoNumber": "#15",
             "title": "Cerebrum",
-            "durationMins": 38,
-            "durationSecs": 43
+            "durationMins": 28,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__neuro_anat___v9",
+            "id": "anat__neuro__v9",
             "videoNumber": "#16",
             "title": "White Matter of Cerebrum",
-            "durationMins": 31,
-            "durationSecs": 3
-          },
-          {
-            "id": "anatomy__neuro_anat___v10",
-            "videoNumber": "#17",
-            "title": "Basal Ganglia",
-            "durationMins": 39,
-            "durationSecs": 59
-          },
-          {
-            "id": "anatomy__neuro_anat___v11",
-            "videoNumber": "#18",
-            "title": "Blood Supply of Brain",
-            "durationMins": 30,
-            "durationSecs": 27
-          }
-        ]
-      },
-      {
-        "name": "HEAD, NECK & FACE",
-        "modules": 17,
-        "hours": 11.5,
-        "videos": [
-          {
-            "id": "anatomy__hnf__v1",
-            "videoNumber": "#19",
-            "title": "Pharyngeal Arches, Clefts and Pouches",
-            "durationMins": 47,
-            "durationSecs": 21
-          },
-          {
-            "id": "anatomy__hnf__v2",
-            "videoNumber": "#20",
-            "title": "Development of Tongue, Pituitary, Face, Palate and Thyroid",
-            "durationMins": 40,
-            "durationSecs": 44
-          },
-          {
-            "id": "anatomy__hnf__v3",
-            "videoNumber": "#21",
-            "title": "Osteology of Head and Neck",
-            "durationMins": 34,
-            "durationSecs": 19
-          },
-          {
-            "id": "anatomy__hnf__v4",
-            "videoNumber": "#22",
-            "title": "Scalp and Face",
             "durationMins": 39,
             "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v5",
+            "id": "anat__neuro__v10",
+            "videoNumber": "#17",
+            "title": "Basal Ganglia",
+            "durationMins": 27,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__neuro__v11",
+            "videoNumber": "#18",
+            "title": "Blood Supply of Brain",
+            "durationMins": 42,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "HEAD AND NECK",
+        "modules": 17,
+        "hours": 10.8,
+        "videos": [
+          {
+            "id": "anat__hn__v1",
+            "videoNumber": "#19",
+            "title": "Pharyngeal Arches, Clefts and Pouches",
+            "durationMins": 36,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__hn__v2",
+            "videoNumber": "#20",
+            "title": "Development of Tongue, Pituitary, Face, Palate and Thyroid",
+            "durationMins": 25,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__hn__v3",
+            "videoNumber": "#21",
+            "title": "Osteology of Head and Neck",
+            "durationMins": 37,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__hn__v4",
+            "videoNumber": "#22",
+            "title": "Scalp and Face",
+            "durationMins": 27,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__hn__v5",
             "videoNumber": "#23",
             "title": "Deep Cervical Fascia and Triangles of Neck",
-            "durationMins": 41,
-            "durationSecs": 24
+            "durationMins": 66,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v6",
+            "id": "anat__hn__v6",
             "videoNumber": "#24",
             "title": "Neurovascular Structures in Neck",
-            "durationMins": 45,
-            "durationSecs": 29
+            "durationMins": 27,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v7",
+            "id": "anat__hn__v7",
             "videoNumber": "#25",
             "title": "Infratemporal Fossa",
-            "durationMins": 36,
-            "durationSecs": 13
+            "durationMins": 74,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v8",
+            "id": "anat__hn__v8",
             "videoNumber": "#26",
             "title": "Pterygopalatine Fossa",
-            "durationMins": 37,
-            "durationSecs": 6
+            "durationMins": 39,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v9",
+            "id": "anat__hn__v9",
             "videoNumber": "#27",
-            "title": "Parotid Gland and Temporomandibular Joint",
-            "durationMins": 35,
-            "durationSecs": 42
+            "title": "Glands in Head and Neck",
+            "durationMins": 53,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v10",
+            "id": "anat__hn__v10",
             "videoNumber": "#28",
             "title": "Dural Folds and Dural Venous Sinuses",
-            "durationMins": 41,
-            "durationSecs": 42
+            "durationMins": 43,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v11",
+            "id": "anat__hn__v11",
             "videoNumber": "#29",
             "title": "Orbit and Extra Ocular Muscles",
-            "durationMins": 34,
-            "durationSecs": 3
+            "durationMins": 43,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v12",
+            "id": "anat__hn__v12",
             "videoNumber": "#30",
             "title": "3rd, 4th and 6th Cranial Nerves",
-            "durationMins": 40,
-            "durationSecs": 33
+            "durationMins": 25,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v13",
+            "id": "anat__hn__v13",
             "videoNumber": "#31",
             "title": "Nose",
-            "durationMins": 38,
-            "durationSecs": 27
+            "durationMins": 20,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v14",
+            "id": "anat__hn__v14",
             "videoNumber": "#32",
-            "title": "Tongue and Hypoglossal Nerve",
-            "durationMins": 47,
-            "durationSecs": 11
+            "title": "Tongue and Hypoglossal nerve",
+            "durationMins": 30,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v15",
+            "id": "anat__hn__v15",
             "videoNumber": "#33",
             "title": "Larynx",
-            "durationMins": 42,
-            "durationSecs": 4
+            "durationMins": 56,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v16",
+            "id": "anat__hn__v16",
             "videoNumber": "#34",
             "title": "Pharynx",
-            "durationMins": 43,
-            "durationSecs": 40
+            "durationMins": 47,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__hnf__v17",
+            "id": "anat__hn__v17",
             "videoNumber": "#35",
-            "title": "Ear",
+            "title": "Facial Nerve, Glossopharyngeal Nerve and Vagus Nerve",
             "durationMins": 45,
-            "durationSecs": 2
+            "durationSecs": 0
           }
         ]
       },
       {
         "name": "UPPER LIMB",
         "modules": 10,
-        "hours": 5.7,
+        "hours": 5.2,
         "videos": [
           {
-            "id": "anatomy__ul__v1",
+            "id": "anat__ul__v1",
             "videoNumber": "#36",
-            "title": "Pectoral Region, Back and Scapular Region",
-            "durationMins": 27,
-            "durationSecs": 26
+            "title": "Introduction to Upper Limb",
+            "durationMins": 12,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ul__v2",
+            "id": "anat__ul__v2",
             "videoNumber": "#37",
-            "title": "Brachial Plexus and Axillary Nerve",
-            "durationMins": 34,
-            "durationSecs": 52
+            "title": "Pectoral Region, Back and Scapular Region",
+            "durationMins": 62,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ul__v3",
+            "id": "anat__ul__v3",
             "videoNumber": "#38",
-            "title": "Radial Nerve, Dorsal Digital Expansion and Anatomical Snuffbox",
-            "durationMins": 28,
-            "durationSecs": 18
-          },
-          {
-            "id": "anatomy__ul__v4",
-            "videoNumber": "#39",
-            "title": "Median Nerve",
-            "durationMins": 36,
-            "durationSecs": 21
-          },
-          {
-            "id": "anatomy__ul__v5",
-            "videoNumber": "#40",
-            "title": "Ulnar Nerve",
-            "durationMins": 32,
-            "durationSecs": 43
-          },
-          {
-            "id": "anatomy__ul__v6",
-            "videoNumber": "#41",
-            "title": "Vessels of Upper Limb",
-            "durationMins": 30,
-            "durationSecs": 46
-          },
-          {
-            "id": "anatomy__ul__v7",
-            "videoNumber": "#42",
-            "title": "Carpal Bones and Flexor Retinaculum",
-            "durationMins": 32,
-            "durationSecs": 8
-          },
-          {
-            "id": "anatomy__ul__v8",
-            "videoNumber": "#43",
-            "title": "Joints of Upper Limb",
-            "durationMins": 33,
-            "durationSecs": 22
-          },
-          {
-            "id": "anatomy__ul__v9",
-            "videoNumber": "#44",
-            "title": "Dermatomes and Cutaneous Innervation",
-            "durationMins": 30,
-            "durationSecs": 53
-          },
-          {
-            "id": "anatomy__ul__v10",
-            "videoNumber": "#45",
-            "title": "Lymphatics of Upper Limb",
+            "title": "Brachial Plexus and Axillary Nerve",
             "durationMins": 55,
-            "durationSecs": 11
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v4",
+            "videoNumber": "#39",
+            "title": "Radial Nerve, Dorsal Digital Expansion and Anatomical Snuffbox",
+            "durationMins": 66,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v5",
+            "videoNumber": "#40",
+            "title": "Median Nerve",
+            "durationMins": 38,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v6",
+            "videoNumber": "#41",
+            "title": "Ulnar Nerve",
+            "durationMins": 30,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v7",
+            "videoNumber": "#42",
+            "title": "Vessels of Upper Limb",
+            "durationMins": 35,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v8",
+            "videoNumber": "#43",
+            "title": "Carpal Bones and Flexor Retinaculum",
+            "durationMins": 17,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v9",
+            "videoNumber": "#44",
+            "title": "Spaces of hand",
+            "durationMins": 15,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__ul__v10",
+            "videoNumber": "#45",
+            "title": "Breast",
+            "durationMins": 14,
+            "durationSecs": 0
           }
         ]
       },
       {
         "name": "THORAX",
         "modules": 12,
-        "hours": 5.2,
+        "hours": 5.4,
         "videos": [
           {
-            "id": "anatomy__thorax__v1",
+            "id": "anat__tho__v1",
             "videoNumber": "#46",
-            "title": "Development of Veins",
-            "durationMins": 29,
-            "durationSecs": 18
-          },
-          {
-            "id": "anatomy__thorax__v2",
-            "videoNumber": "#47",
-            "title": "Development of Arch Arteries",
-            "durationMins": 24,
-            "durationSecs": 48
-          },
-          {
-            "id": "anatomy__thorax__v3",
-            "videoNumber": "#48",
-            "title": "Fetal Circulation",
-            "durationMins": 21,
+            "title": "Heart Tube and Septum Formation",
+            "durationMins": 35,
             "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v4",
+            "id": "anat__tho__v2",
+            "videoNumber": "#47",
+            "title": "Development of Veins",
+            "durationMins": 40,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__tho__v3",
+            "videoNumber": "#48",
+            "title": "Development of arch arteries",
+            "durationMins": 24,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__tho__v4",
             "videoNumber": "#49",
-            "title": "Thorax Osteology",
-            "durationMins": 29,
-            "durationSecs": 53
+            "title": "Fetal circulation",
+            "durationMins": 14,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v5",
+            "id": "anat__tho__v5",
             "videoNumber": "#50",
-            "title": "Intercostal Spaces and its Contents",
-            "durationMins": 25,
-            "durationSecs": 23
+            "title": "Thorax Osteology",
+            "durationMins": 17,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v6",
+            "id": "anat__tho__v6",
             "videoNumber": "#51",
-            "title": "Pericardium and External Features of Heart",
-            "durationMins": 21,
-            "durationSecs": 13
+            "title": "Intercostal Spaces and its Contents",
+            "durationMins": 27,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v7",
+            "id": "anat__tho__v7",
             "videoNumber": "#52",
-            "title": "Blood Supply of Heart",
-            "durationMins": 25,
-            "durationSecs": 10
+            "title": "Pericardium and External Features of Heart",
+            "durationMins": 31,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v8",
+            "id": "anat__tho__v8",
             "videoNumber": "#53",
-            "title": "Internal Features of Heart",
-            "durationMins": 30,
-            "durationSecs": 3
+            "title": "Blood Supply of Heart",
+            "durationMins": 27,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v9",
+            "id": "anat__tho__v9",
             "videoNumber": "#54",
-            "title": "Valves of the Heart",
-            "durationMins": 30,
-            "durationSecs": 41
+            "title": "Right Atrium, Right Ventricle and Nerve Supply",
+            "durationMins": 20,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v10",
+            "id": "anat__tho__v10",
             "videoNumber": "#55",
-            "title": "Mediastinum",
-            "durationMins": 26,
-            "durationSecs": 41
+            "title": "Pleura and Lungs",
+            "durationMins": 34,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v11",
+            "id": "anat__tho__v11",
             "videoNumber": "#56",
-            "title": "Superior Mediastinum",
-            "durationMins": 29,
-            "durationSecs": 10
+            "title": "Mediastinum and Its Contents",
+            "durationMins": 22,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__thorax__v12",
+            "id": "anat__tho__v12",
             "videoNumber": "#57",
             "title": "Diaphragm",
-            "durationMins": 18,
-            "durationSecs": 40
+            "durationMins": 22,
+            "durationSecs": 0
           }
         ]
       },
       {
         "name": "ABDOMEN & PELVIS",
         "modules": 19,
-        "hours": 9.8,
+        "hours": 8.7,
         "videos": [
           {
-            "id": "anatomy__abdo___v1",
+            "id": "anat__abd__v1",
             "videoNumber": "#58",
             "title": "Gut Tube and Respiratory System Development",
-            "durationMins": 29,
-            "durationSecs": 5
+            "durationMins": 19,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v2",
+            "id": "anat__abd__v2",
             "videoNumber": "#59",
             "title": "Foregut Development",
-            "durationMins": 32,
-            "durationSecs": 58
+            "durationMins": 24,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v3",
+            "id": "anat__abd__v3",
             "videoNumber": "#60",
-            "title": "Midgut Development",
-            "durationMins": 32,
-            "durationSecs": 1
+            "title": "Midgut development",
+            "durationMins": 31,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v4",
+            "id": "anat__abd__v4",
             "videoNumber": "#61",
             "title": "Hindgut Development",
-            "durationMins": 29,
-            "durationSecs": 37
+            "durationMins": 11,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v5",
+            "id": "anat__abd__v5",
             "videoNumber": "#62",
-            "title": "Anterior Abdominal Wall",
-            "durationMins": 32,
-            "durationSecs": 56
+            "title": "Anterior Abdominal wall",
+            "durationMins": 24,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v6",
+            "id": "anat__abd__v6",
             "videoNumber": "#63",
-            "title": "Inguinal Region",
-            "durationMins": 28,
-            "durationSecs": 45
+            "title": "Inguinal Canal",
+            "durationMins": 33,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v7",
+            "id": "anat__abd__v7",
             "videoNumber": "#64",
             "title": "Peritoneum",
-            "durationMins": 25,
-            "durationSecs": 25
+            "durationMins": 38,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v8",
+            "id": "anat__abd__v8",
             "videoNumber": "#65",
-            "title": "Stomach",
-            "durationMins": 36,
-            "durationSecs": 20
+            "title": "Anatomy of Stomach",
+            "durationMins": 34,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v9",
+            "id": "anat__abd__v9",
             "videoNumber": "#66",
-            "title": "Small Intestine",
-            "durationMins": 27,
-            "durationSecs": 13
+            "title": "Duodenum and Pancreas",
+            "durationMins": 44,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v10",
+            "id": "anat__abd__v10",
             "videoNumber": "#67",
             "title": "Large Intestine",
-            "durationMins": 24,
-            "durationSecs": 50
+            "durationMins": 10,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v11",
+            "id": "anat__abd__v11",
             "videoNumber": "#68",
-            "title": "Portal Vein",
-            "durationMins": 24,
-            "durationSecs": 49
-          },
-          {
-            "id": "anatomy__abdo___v12",
-            "videoNumber": "#69",
             "title": "Liver",
-            "durationMins": 28,
-            "durationSecs": 7
-          },
-          {
-            "id": "anatomy__abdo___v13",
-            "videoNumber": "#70",
-            "title": "Extrahepatic Biliary Apparatus and Spleen",
             "durationMins": 26,
-            "durationSecs": 42
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v14",
-            "videoNumber": "#71",
+            "id": "anat__abd__v12",
+            "videoNumber": "#69",
+            "title": "Extrahepatic Biliary Apparatus and Spleen",
+            "durationMins": 27,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__abd__v13",
+            "videoNumber": "#70",
             "title": "Blood Supply of Abdomen and Pelvis",
-            "durationMins": 29,
-            "durationSecs": 1
+            "durationMins": 36,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v15",
-            "videoNumber": "#72",
+            "id": "anat__abd__v14",
+            "videoNumber": "#71",
             "title": "Development of Kidneys and Renal Anatomy",
-            "durationMins": 34,
-            "durationSecs": 15
+            "durationMins": 41,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v16",
-            "videoNumber": "#73",
+            "id": "anat__abd__v15",
+            "videoNumber": "#72",
             "title": "Development of Gonads",
-            "durationMins": 25,
-            "durationSecs": 2
+            "durationMins": 32,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v17",
-            "videoNumber": "#74",
-            "title": "Pelvic Joints and Ligaments",
-            "durationMins": 28,
-            "durationSecs": 50
-          },
-          {
-            "id": "anatomy__abdo___v18",
-            "videoNumber": "#75",
+            "id": "anat__abd__v16",
+            "videoNumber": "#73",
             "title": "Perineum: Part 1",
-            "durationMins": 28,
-            "durationSecs": 13
+            "durationMins": 52,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__abdo___v19",
-            "videoNumber": "#76",
+            "id": "anat__abd__v17",
+            "videoNumber": "#74",
             "title": "Perineum: Part 2",
-            "durationMins": 63,
-            "durationSecs": 51
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__abd__v18",
+            "videoNumber": "#75",
+            "title": "Female Internal Genitalia",
+            "durationMins": 45,
+            "durationSecs": 0
+          },
+          {
+            "id": "anat__abd__v19",
+            "videoNumber": "#76",
+            "title": "Rectum and Anal Canal",
+            "durationMins": 25,
+            "durationSecs": 0
           }
         ]
       },
       {
         "name": "LOWER LIMB",
         "modules": 7,
-        "hours": 4.3,
+        "hours": 4.6,
         "videos": [
           {
-            "id": "anatomy__ll__v1",
+            "id": "anat__ll__v1",
             "videoNumber": "#77",
-            "title": "Cutaneous Innervation of Lower Limb, Lumbar Plexus and Great Saphenous Vein",
-            "durationMins": 43,
-            "durationSecs": 47
+            "title": "Cutaneous innervation of lower limb, Lumbar plexus and Great saphenous vein",
+            "durationMins": 16,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ll__v2",
+            "id": "anat__ll__v2",
             "videoNumber": "#78",
-            "title": "Front of Thigh, Adductor Canal and Popliteal Fossa",
-            "durationMins": 41,
-            "durationSecs": 46
+            "title": "Front of thigh, Adductor canal and Popliteal Fossa",
+            "durationMins": 71,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ll__v3",
+            "id": "anat__ll__v3",
             "videoNumber": "#79",
-            "title": "Gluteal Region and Hamstring Muscles",
-            "durationMins": 31,
-            "durationSecs": 25
+            "title": "Gluteal region and Hamstring muscles",
+            "durationMins": 40,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ll__v4",
+            "id": "anat__ll__v4",
             "videoNumber": "#80",
-            "title": "Knee Joint",
-            "durationMins": 37,
-            "durationSecs": 20
+            "title": "Knee joint",
+            "durationMins": 28,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ll__v5",
+            "id": "anat__ll__v5",
             "videoNumber": "#81",
             "title": "Leg and Ankle Joint",
-            "durationMins": 43,
-            "durationSecs": 50
+            "durationMins": 50,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ll__v6",
+            "id": "anat__ll__v6",
             "videoNumber": "#82",
             "title": "Arteries of Lower Limb",
-            "durationMins": 37,
-            "durationSecs": 35
+            "durationMins": 24,
+            "durationSecs": 0
           },
           {
-            "id": "anatomy__ll__v7",
+            "id": "anat__ll__v7",
             "videoNumber": "#83",
             "title": "Layers of the Sole and Arches of the Foot",
-            "durationMins": 22,
-            "durationSecs": 17
+            "durationMins": 27,
+            "durationSecs": 0
           }
         ]
       },
@@ -651,10 +651,10 @@ const syllabusData = [
         "hours": 0.6,
         "videos": [
           {
-            "id": "anatomy__gen__anat___v1",
+            "id": "anat__gen__v1",
             "videoNumber": "#84",
             "title": "General Anatomy",
-            "durationMins": 36,
+            "durationMins": 34,
             "durationSecs": 0
           }
         ]
