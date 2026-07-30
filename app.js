@@ -82,35 +82,13 @@
     obstetrics___gynaecology: 'icons/obstetrics___gynaecology.png'
   };
 
-  const SUBJECT_SVG_ICONS = {
-    anaesthesia: `<svg viewBox="0 0 48 48" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 28c0-6 4-10 10-10s10 4 10 10"/><path d="M18 28v4c0 2 2 4 6 4s6-2 6-4v-4"/><path d="M12 24h-4v8h4"/><path d="M36 24h4v8h-4"/><circle cx="38" cy="18" r="3"/><path d="M36 18h-4"/><path d="M10 18l4-4"/><path d="M14 14v-4h6"/><path d="M34 32l4 4"/></svg>`,
-    anatomy: `<svg viewBox="0 0 48 48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="10" r="4"/><path d="M24 14v10"/><path d="M18 20h12"/><path d="M24 24v10"/><path d="M18 44l6-10 6 10"/><path d="M14 20l-4 6"/><path d="M34 20l4 6"/><path d="M18 34l-6 10"/><path d="M30 34l6 10"/></svg>`,
-    biochemistry: `<svg viewBox="0 0 48 48" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h12"/><path d="M20 8v14l-8 14c-1 2 0 4 2 4h20c2 0 3-2 2-4l-8-14V8"/><circle cx="22" cy="32" r="2"/><circle cx="28" cy="30" r="1.5"/><circle cx="25" cy="34" r="1"/><path d="M14 6l2-2"/><path d="M34 6l-2-2"/></svg>`,
-    community_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="18" r="6"/><circle cx="12" cy="22" r="4"/><circle cx="36" cy="22" r="4"/><path d="M18 36c0-4 3-6 6-6s6 2 6 6"/><path d="M8 38c0-3 2-5 4-5"/><path d="M36 38c0-3 2-5 4-5"/><path d="M24 10v-4"/><path d="M20 14h8"/></svg>`,
-    dermatology: `<svg viewBox="0 0 48 48" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="10"/><path d="M20 18c1-2 3-2 4 0s3 2 4 0"/><path d="M19 24c2 1 4 1 6 0s4-1 6 0"/><circle cx="18" cy="34" r="4"/><path d="M22 34h8"/><circle cx="34" cy="34" r="2"/><path d="M32 10l4-4"/><path d="M36 10l-2-6"/><path d="M38 8l2-4"/></svg>`,
-    forensic_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12l6 6"/><path d="M20 18l16-6"/><path d="M36 12l-6 6"/><path d="M30 18l-4 14"/><path d="M26 32l-6 6"/><path d="M20 38l-4-2"/><path d="M16 36l-2-6"/><path d="M14 30l4-12"/><rect x="28" y="8" width="12" height="6" rx="1"/><path d="M30 14v4h8v-4"/></svg>`,
-    medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="14" r="6"/><path d="M24 20v6"/><circle cx="24" cy="32" r="4"/><path d="M24 36v4"/><path d="M18 40h12"/><path d="M14 14h-4"/><path d="M34 14h4"/><path d="M16 8l-4-4"/><path d="M32 8l4-4"/></svg>`,
-    microbiology: `<svg viewBox="0 0 48 48" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="26" rx="12" ry="10"/><path d="M12 26c0-6 5-10 12-10s12 4 12 10"/><circle cx="20" cy="24" r="2"/><circle cx="28" cy="22" r="1.5"/><circle cx="24" cy="28" r="2.5"/><circle cx="18" cy="30" r="1"/><path d="M24 16v-6"/><circle cx="24" cy="8" r="2"/></svg>`,
-    obstetrics_gynaecology: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="12" r="5"/><path d="M24 17v8"/><path d="M16 25c0 6 3 10 8 10s8-4 8-10"/><path d="M16 25c-4 0-6 3-6 6s2 4 6 4"/><path d="M32 25c4 0 6 3 6 6s-2 4-6 4"/><path d="M20 35l4 6 4-6"/></svg>`,
-    ophthalmology: `<svg viewBox="0 0 48 48" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="24" rx="14" ry="8"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="24" r="1.5"/><path d="M24 4v6"/><path d="M24 38v6"/><path d="M4 24h6"/><path d="M38 24h6"/><path d="M10 10l4 4"/><path d="M34 34l4 4"/><path d="M38 10l-4 4"/><path d="M14 34l-4 4"/></svg>`,
-    orthopaedics: `<svg viewBox="0 0 48 48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6c-4 0-6 4-6 8v8c0 4 2 6 4 8l2 4v8h12v-8l2-4c2-2 4-4 4-8v-8c0-4-2-8-6-8"/><path d="M18 20h12"/><path d="M16 28h16"/><circle cx="24" cy="14" r="3"/></svg>`,
-    otorhinolaryngology_ent: `<svg viewBox="0 0 48 48" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12c4 0 6 3 6 6s-2 6-6 6h-2v8c0 2-2 4-4 4"/><path d="M26 36h-6c-2 0-4-2-4-4v-4"/><ellipse cx="28" cy="20" rx="6" ry="8"/><path d="M22 18c-2-4-6-4-8-2s-2 6 0 8c2 2 4 6 4 10"/><path d="M18 16c-4-2-8 0-8 4"/></svg>`,
-    paediatrics: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><circle cx="21" cy="14" r="1.5"/><circle cx="27" cy="14" r="1.5"/><path d="M21 19c1 1 3 1 4 0"/><path d="M24 24v6c0 4 2 6 4 8h4"/><path d="M24 24v6c0 4-2 6-4 8h-4"/><path d="M16 30l-4 4"/><path d="M32 30l4 4"/><path d="M22 38h4"/></svg>`,
-    pathology: `<svg viewBox="0 0 48 48" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 42V18l-4-8h20l-4 8v24"/><path d="M14 10h20"/><circle cx="24" cy="28" r="4"/><circle cx="20" cy="34" r="2"/><circle cx="28" cy="32" r="1.5"/><path d="M22 18h4"/><path d="M24 18v-4"/><path d="M20 8l-2-4"/><path d="M28 8l2-4"/></svg>`,
-    pharmacology: `<svg viewBox="0 0 48 48" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="16" height="24" rx="2"/><path d="M20 16V10c0-2 2-4 4-4s4 2 4 4v6"/><path d="M16 24h16"/><path d="M20 8h8"/><path d="M22 28h4"/><path d="M24 28v6"/><path d="M36 20l6-6"/><path d="M38 26l4-2"/></svg>`,
-    physiology: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42S8 32 8 20c0-6 4-10 8-10 3 0 5 2 8 6 3-4 5-6 8-6 4 0 8 4 8 10 0 12-16 22-16 22z"/><path d="M4 24h8l4-8 4 16 4-12 4 8 4-4h8"/></svg>`,
-    psychiatry: `<svg viewBox="0 0 48 48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 38c-4-2-6-6-6-12 0-8 6-14 14-14s14 6 14 14c0 6-2 10-6 12"/><path d="M16 26c0-4 4-8 8-8"/><path d="M32 26c0-4-4-8-8-8"/><path d="M20 32c2 2 6 2 8 0"/><path d="M18 20c-2-4-2-8 0-12"/><path d="M30 20c2-4 2-8 0-12"/><path d="M24 8v-4"/></svg>`,
-    radiology: `<svg viewBox="0 0 48 48" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="6" width="28" height="36" rx="2"/><path d="M18 14h12"/><path d="M24 14v20"/><path d="M18 20h12"/><path d="M18 26h12"/><path d="M18 14l-4-4"/><path d="M30 14l4-4"/><path d="M18 34l-4 4"/><path d="M30 34l4 4"/></svg>`,
-    surgery: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40l20-20"/><path d="M28 20l4-4"/><path d="M32 16l4-4"/><path d="M36 12l4-4"/><path d="M28 20c-2-4-2-8 0-12"/><path d="M26 22c-4-2-8-2-12 0"/><path d="M14 22l-4 4"/><path d="M10 26l-2 4"/></svg>`
-  };
-
-  // --- Pxlkit Crisp Pixel SVG Helpers ---
-  const PXL_ICONS = {
-    fire: `<svg viewBox="0 0 16 16" width="18" height="18" class="pxl-icon-svg" fill="none"><path fill="#f59e0b" d="M7 1h2v3H7zM5 4h6v2H5z"/><path fill="#ef4444" d="M4 6h8v4H4z"/><path fill="#ffd700" d="M6 8h4v4H6z"/><path fill="#ef4444" d="M3 10h10v4H3zM5 14h6v2H5z"/></svg>`,
-    trophy: `<svg viewBox="0 0 16 16" width="18" height="18" class="pxl-icon-svg" fill="none"><path fill="#ffd700" d="M3 2h10v2H3zM2 4h12v4H2zM4 8h8v2H4zM6 10h4v2H6zM5 12h6v2H5zM3 14h10v2H3z"/><path fill="#f59e0b" d="M5 5h6v3H5z"/></svg>`,
-    rocket: `<svg viewBox="0 0 16 16" width="18" height="18" class="pxl-icon-svg" fill="none"><path fill="#3b82f6" d="M7 1h2v2H7zM6 3h4v3H6z"/><path fill="#93c5fd" d="M5 6h6v4H5z"/><path fill="#ef4444" d="M3 10h2v3H3zM11 10h2v3h-2z"/><path fill="#ffd700" d="M7 10h2v5H7z"/></svg>`,
-    flag: `<svg viewBox="0 0 16 16" width="18" height="18" class="pxl-icon-svg" fill="none"><path fill="#3b82f6" d="M3 2h8v2H3zM3 4h10v4H3zM3 8h7v2H3z"/><path fill="#64748b" d="M2 1h2v14H2z"/></svg>`,
-    check: `<svg viewBox="0 0 16 16" width="18" height="18" class="pxl-icon-svg" fill="none"><path fill="#10b981" d="M12 4h2v2h-2zM10 6h2v2h-2zM8 8h2v2H8zM6 10h2v2H6zM4 8h2v2H4zM2 6h2v2H2z"/></svg>`
+  const SUBJECT_COLORS = {
+    anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
+    community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
+    medicine: '#3b82f6', microbiology: '#22c55e', obstetrics_gynaecology: '#ef4444',
+    ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology_ent: '#14b8a6',
+    paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
+    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444'
   };
 
   function getSubjectIconSrc(subjectIdOrName) {
@@ -123,29 +101,11 @@
     return 'icons/medicine.png';
   }
 
-  function getSubjectSvgIcon(subjectIdOrName) {
-    if (!subjectIdOrName) return SUBJECT_SVG_ICONS.medicine;
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (SUBJECT_SVG_ICONS[key]) return SUBJECT_SVG_ICONS[key];
-    for (const [id, svg] of Object.entries(SUBJECT_SVG_ICONS)) {
-      if (key.includes(id) || id.includes(key)) return svg;
-    }
-    return SUBJECT_SVG_ICONS.medicine;
-  }
-
   function getSubjectAccentColor(subjectIdOrName) {
-    const colorMap = {
-      anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
-      community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
-      medicine: '#3b82f6', microbiology: '#22c55e', obstetrics_gynaecology: '#ef4444',
-      ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology_ent: '#14b8a6',
-      paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
-      physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444'
-    };
     if (!subjectIdOrName) return '#3b82f6';
     const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (colorMap[key]) return colorMap[key];
-    for (const [id, c] of Object.entries(colorMap)) {
+    if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
+    for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
       if (key.includes(id) || id.includes(key)) return c;
     }
     return '#3b82f6';
@@ -553,7 +513,6 @@
         completedHours: (subCompletedDuration / 60).toFixed(1),
         percentage: subPercentage,
         icon: getSubjectIconSrc(subject.id || subject.subject),
-        svgIcon: getSubjectSvgIcon(subject.id || subject.subject),
         accentColor: getSubjectAccentColor(subject.id || subject.subject),
         raw: subject
       };
@@ -710,7 +669,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 6px;">
           ${(typeof MARROW_CURRICULUM !== 'undefined' ? MARROW_CURRICULUM : []).slice(0, 8).map(s => `
             <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 8px 10px; display: flex; align-items: center; gap: 8px;">
-              <div style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:${getSubjectAccentColor(s.id)};">${getSubjectSvgIcon(s.id)}</div>
+              <img src="${getSubjectIconSrc(s.id)}" style="width:22px;height:22px;object-fit:contain;border-radius:4px;" alt="${s.name}">
               <span style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${s.name}</span>
             </div>
           `).join('')}
@@ -776,7 +735,7 @@
         ${searchData.subjects.map(s => `
           <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:${getSubjectAccentColor(s.id)};">${getSubjectSvgIcon(s.id)}</div>
+              <img src="${getSubjectIconSrc(s.id)}" style="width:28px;height:28px;object-fit:contain;border-radius:6px;" alt="${s.name}">
               <span style="font-weight: 700; font-size: 0.95rem; font-family: var(--font-display);">${s.name}</span>
             </div>
             <span class="v2-hud-badge">${s.videosCount} vids</span>
@@ -1326,11 +1285,11 @@
             }
 
             return `
-              <div class="pxl-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="--tier-color: ${tierColor}; --tier-bg: ${tierBg}; --subject-accent: ${getSubjectAccentColor(sub.id)};">
+              <div class="pxl-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="--subject-accent: ${sub.accentColor};">
                 
-                <!-- Subject SVG Icon -->
+                <!-- Subject Icon -->
                 <div class="pxl-tile-icon-area">
-                  <div class="pxl-tile-svg-icon">${sub.svgIcon}</div>
+                  <img src="${sub.icon}" alt="${sub.name}" class="pxl-tile-icon-img">
                 </div>
 
                 <!-- Subject Name -->
@@ -1643,7 +1602,7 @@
         <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
           <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</div>
+              <img src="${sub.icon}" style="width:34px;height:34px;object-fit:contain;border-radius:6px;" alt="${sub.name}">
               <div>
                 <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
                 <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
@@ -1692,7 +1651,7 @@
       </div>
 
       <div class="v2-pixel-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 16px;">
-        <div style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;color:${subObj.accentColor};">${subObj.svgIcon}</div>
+        <img src="${subObj.icon}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;" alt="${subObj.name}">
         <div style="flex: 1;">
           <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;">${subObj.name}</div>
           <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); margin: 2px 0 6px 0;">${subObj.completedVideos} OF ${subObj.totalVideos} COMPLETED (${subObj.percentage}%)</div>

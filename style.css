@@ -1518,10 +1518,6 @@ body {
   font-size: 0.78rem;
 }
 
-[data-theme-style="retro"] .pxl-tile-svg-icon svg {
-  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.6));
-}
-
 [data-theme-style="retro"] .pxl-heatmap-filter-btn {
   font-family: var(--font-hud), "VT323", monospace;
   font-size: 0.85rem;
@@ -3048,24 +3044,16 @@ body {
   min-height: 56px;
 }
 
-.pxl-tile-svg-icon {
+.pxl-tile-icon-img {
   width: 52px;
   height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.9;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
 }
 
-.pxl-tile-svg-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.pxl-heatmap-tile:hover .pxl-tile-svg-icon {
-  opacity: 1;
-  transform: scale(1.05);
-  transition: transform 0.2s ease, opacity 0.2s ease;
+.pxl-heatmap-tile:hover .pxl-tile-icon-img {
+  transform: scale(1.08);
 }
 
 .pxl-tile-name {
