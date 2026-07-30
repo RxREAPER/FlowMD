@@ -11,7 +11,9 @@
     "deploy:all": "npm run version:bump && firebase deploy"
   },
   "dependencies": {
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "sharp": "^0.35.3",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "libsodium-wrappers": "^0.8.4"

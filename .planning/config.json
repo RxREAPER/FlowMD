@@ -1,0 +1,22 @@
+{
+  "workflow": {
+    "git": {
+      "enabled": true,
+      "atomicCommits": true,
+      "conventionalCommits": true
+    },
+    "phases": {
+      "autoIncrement": true,
+      "verifyOnComplete": true
+    },
+    "contextBudget": {
+      "maxPercent": 50,
+      "warningAt": 40
+    }
+  },
+  "preferences": {
+    "commitPrefix": "feat",
+    "branchStrategy": "main",
+    "deployOnPhaseComplete": false
+  }
+}

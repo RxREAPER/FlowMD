@@ -19,7 +19,6 @@
     DAILY_HISTORY: 'marrow_planner_daily_history',
     QUEUE_BATCH: 'marrow_planner_queue_completed_in_batch',
     QUEUE_BATCH_VIDEOS: 'marrow_planner_queue_batch_videos',
-    ONBOARDING: 'marrow_planner_onboarding_completed',
     TUTORIAL_SEEN: 'flowmd_tutorial_seen',
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',
@@ -45,17 +44,7 @@
   const PLAN_B_ACCENT = '#f43f5e';   // rose pink
 
   const DEFAULT_PERSONAL = {
-    doctorName: 'Dr. Aspirant',
-    customTitle: 'NEET-PG Candidate',
-    customTagline: 'Aiming for Top Rank in NEET-PG 2026',
-    targetExam: 'NEET PG 2026',
-    targetRank: 'Top 1000',
-    examDate: '2026-08-15',
-    studyHoursPerDay: 8,
-    studyStartTime: '07:00',
-    breakReminder: 60,
-    motivationalQuote: 'Consistency is the key to mastering Medicine.',
-    commitmentPledge: 'I pledge to complete my daily targets with discipline.'
+    doctorName: 'Dr. Aspirant'
   };
 
   const DEFAULT_GOALS = {
@@ -132,7 +121,6 @@
     dailyHistory: {},
     queueCompletedInBatch: 0,
     queueBatchVideoIds: [],
-    isCompletedOnboarding: false,
     hasSeenTutorial: false,
     // Dual-Subject Tracking v2
     plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT, 'Entire Syllabus')],
@@ -149,8 +137,16 @@
     applyTheme(state.theme);
     bindEvents();
     initFirebaseSync();
-    startDeadlineCountdownTimer();
     render();
+    resetPageScrollTop();
+
+    // Capture PWA install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      state.canInstallPWA = true;
+      if (typeof render === 'function' && DOM.appMain) render();
+    });
 
     // Guided tutorial walk-through only runs once per device
     if (!state.hasSeenTutorial) {
@@ -189,9 +185,6 @@
 
       const savedBatchVids = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS);
       if (savedBatchVids) state.queueBatchVideoIds = JSON.parse(savedBatchVids);
-
-      const savedOnboarding = localStorage.getItem(STORAGE_KEYS.ONBOARDING);
-      state.isCompletedOnboarding = (savedOnboarding === 'true');
 
       const savedTutorial = localStorage.getItem(STORAGE_KEYS.TUTORIAL_SEEN);
       state.hasSeenTutorial = (savedTutorial === 'true');
@@ -241,6 +234,7 @@
   }
 
   let cloudSyncTimeout = null;
+  let deferredInstallPrompt = null;
   function saveState() {
     try {
       localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
@@ -251,7 +245,6 @@
       localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
       localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
       localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
-      localStorage.setItem(STORAGE_KEYS.ONBOARDING, state.isCompletedOnboarding ? 'true' : 'false');
       localStorage.setItem(STORAGE_KEYS.TUTORIAL_SEEN, state.hasSeenTutorial ? 'true' : 'false');
       // Dual-Subject Tracking v2
       localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
@@ -426,27 +419,7 @@
     return state.plans && state.plans.find(p => p.id === planId);
   }
 
-  let countdownIntervalTimer = null;
-  function startDeadlineCountdownTimer() {
-    if (countdownIntervalTimer) clearInterval(countdownIntervalTimer);
-    countdownIntervalTimer = setInterval(() => {
-      // Update Plan A countdown
-      const elA = document.getElementById('live-countdown-text-plan-a');
-      if (elA && state.plans && state.plans[0]) {
-        elA.textContent = getDeadlineCountdown(state.plans[0].targetDate).text;
-      }
-      // Update Plan B countdown (if exists)
-      const elB = document.getElementById('live-countdown-text-plan-b');
-      if (elB && state.plans && state.plans[1]) {
-        elB.textContent = getDeadlineCountdown(state.plans[1].targetDate).text;
-      }
-      // Legacy single-plan countdown ID fallback
-      const el = document.getElementById('live-countdown-text');
-      if (el && state.plans && state.plans[0]) {
-        el.textContent = getDeadlineCountdown(state.plans[0].targetDate).text;
-      }
-    }, 1000);
-  }
+
 
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;
@@ -459,7 +432,6 @@
           if (cloudState.goals) state.goals = { ...state.goals, ...cloudState.goals };
           if (cloudState.personal) state.personal = { ...state.personal, ...cloudState.personal };
           if (cloudState.dailyHistory) state.dailyHistory = { ...state.dailyHistory, ...cloudState.dailyHistory };
-          if (cloudState.isCompletedOnboarding !== undefined) state.isCompletedOnboarding = cloudState.isCompletedOnboarding;
           if (cloudState.hasSeenTutorial !== undefined) state.hasSeenTutorial = cloudState.hasSeenTutorial;
           saveState();
         } else {
@@ -674,7 +646,7 @@
 
         <div class="pxl-command-group-header">📚 Top Medical Subjects</div>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 6px;">
-          ${MARROW_CURRICULUM.slice(0, 8).map(s => `
+          ${(typeof MARROW_CURRICULUM !== 'undefined' ? MARROW_CURRICULUM : []).slice(0, 8).map(s => `
             <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 8px 10px; display: flex; align-items: center; gap: 8px;">
               <img src="${s.icon}" style="width: 22px; height: 22px; object-fit: contain;" alt="${s.name}">
               <span style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${s.name}</span>
@@ -822,72 +794,7 @@
     });
   }
 
-  // --- First-Time Onboarding Wizard Engine ---
-  function openOnboardingWizardModal() {
-    const modal = document.getElementById('onboarding-wizard-modal');
-    if (!modal) return;
 
-    const stats = getSyllabusStats();
-    const subSelect = document.getElementById('onb-target-subject');
-    if (subSelect) {
-      let optionsHTML = `<option value="Entire Syllabus" selected>Entire Syllabus (${stats.totalVideos} Videos • ${stats.totalHours}h)</option>`;
-      optionsHTML += stats.subjectsStats.map(s => `
-        <option value="${s.name}">${s.name} (${s.totalVideos} Videos • ${s.totalHours}h)</option>
-      `).join('');
-      subSelect.innerHTML = optionsHTML;
-    }
-
-    const docInput = document.getElementById('onb-doc-name');
-    const examSelect = document.getElementById('onb-target-exam');
-    const rankSelect = document.getElementById('onb-target-rank');
-    const dateInput = document.getElementById('onb-target-date');
-    const vidsInput = document.getElementById('onb-videos-per-day');
-
-    if (docInput) docInput.value = state.personal.doctorName || 'Dr. Aspirant';
-    if (examSelect) examSelect.value = state.personal.targetExam || 'NEET PG 2026';
-    if (rankSelect) rankSelect.value = state.personal.targetRank || 'Top 1000';
-    if (dateInput) dateInput.value = state.goals.targetDate || '2026-08-15';
-    if (vidsInput) vidsInput.value = state.goals.videosPerDay || 8;
-
-    function syncOnboardingPace() {
-      const selectedSub = subSelect ? subSelect.value : 'Entire Syllabus';
-      const metrics = getSubjectOrSyllabusMetrics(selectedSub);
-      let targetDate = new Date(dateInput ? dateInput.value : '2026-08-15');
-      const now = new Date();
-      if (isNaN(targetDate.getTime()) || targetDate <= now) {
-        targetDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-      }
-
-      const days = Math.max(1, Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24)));
-      const badge = document.getElementById('onb-days-left-badge');
-      if (badge) badge.textContent = `${days} Days Left`;
-
-      const userVids = Math.max(1, parseInt(vidsInput ? vidsInput.value : 8) || 8);
-      const daysToFinish = Math.ceil(metrics.remainingVideos / userVids);
-      const finishDate = new Date(now.getTime() + daysToFinish * 24 * 60 * 60 * 1000);
-      const finishDateStr = finishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-
-      const headerEl = document.getElementById('onb-sync-header');
-      const detailEl = document.getElementById('onb-sync-detail');
-
-      if (headerEl) headerEl.textContent = `🎯 Projected Finish: ${finishDateStr}`;
-      if (detailEl) {
-        detailEl.textContent = `Watching ${userVids} vids/day will complete ${metrics.name} (${metrics.remainingVideos} vids left) in ${daysToFinish} days.`;
-      }
-    }
-
-    subSelect?.addEventListener('change', syncOnboardingPace);
-    dateInput?.addEventListener('input', syncOnboardingPace);
-    vidsInput?.addEventListener('input', syncOnboardingPace);
-    syncOnboardingPace();
-
-    modal.style.display = 'flex';
-  }
-
-  function closeOnboardingWizardModal() {
-    const modal = document.getElementById('onboarding-wizard-modal');
-    if (modal) modal.style.display = 'none';
-  }
 
   // --- Cache DOM Elements ---
   function cacheDOM() {
@@ -895,13 +802,11 @@
     DOM.navItems = document.querySelectorAll('.android-nav-item');
     DOM.btnToggleSearch = document.getElementById('btn-toggle-search');
     DOM.themeToggleBtn = document.getElementById('theme-toggle-btn');
-    DOM.themeIcon = document.getElementById('theme-icon');
     DOM.topbarUserProfile = document.getElementById('topbar-user-profile');
     DOM.topbarAvatarInitials = document.getElementById('topbar-avatar-initials');
     DOM.bottomSheetOverlay = document.getElementById('bottom-sheet-overlay');
     DOM.bottomSheetContent = document.getElementById('bottom-sheet-content');
     DOM.goalModal = document.getElementById('goal-modal');
-    DOM.goalForm = document.getElementById('goal-form');
     DOM.modalCloseBtn = document.getElementById('modal-close-btn');
     DOM.btnCancelGoals = document.getElementById('btn-cancel-goals');
     DOM.btnApplyGoals = document.getElementById('btn-apply-goals');
@@ -983,35 +888,7 @@
       renderSpotlightResults(e.target.value);
     });
 
-    // Onboarding Form Listener
-    document.getElementById('onboarding-form')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const docName = document.getElementById('onb-doc-name')?.value || 'Dr. Aspirant';
-      const exam = document.getElementById('onb-target-exam')?.value || 'NEET PG 2026';
-      const rank = document.getElementById('onb-target-rank')?.value || 'Top 1000';
-      const targetDate = document.getElementById('onb-target-date')?.value || '2026-08-15';
-      const vidsDay = parseInt(document.getElementById('onb-videos-per-day')?.value || 8) || 8;
-      const targetSub = document.getElementById('onb-target-subject')?.value || 'Entire Syllabus';
 
-      state.personal.doctorName = docName;
-      state.personal.targetExam = exam;
-      state.personal.targetRank = rank;
-
-      state.goals.targetDate = targetDate;
-      state.goals.videosPerDay = vidsDay;
-      state.goals.videosPerWeek = vidsDay * 7;
-      state.goals.videosPerMonth = vidsDay * 30;
-      state.goals.targetSubject = targetSub;
-
-      state.queueBatchVideoIds = [];
-      state.queueCompletedInBatch = 0;
-      state.isCompletedOnboarding = true;
-
-      saveState();
-      closeOnboardingWizardModal();
-      showToast('Preparation targets configured from scratch!', 'rocket_launch');
-      render();
-    });
 
     // Global Keyboard Shortcut ('/' or Cmd/Ctrl+K to open Spotlight)
     document.addEventListener('keydown', (e) => {
@@ -1039,23 +916,7 @@
       });
     }
 
-    // --- Topbar Feature Action Buttons ---
-    document.getElementById('topbar-btn-search')?.addEventListener('click', () => {
-      openSpotlightModal();
-    });
-
-    document.getElementById('topbar-btn-goals')?.addEventListener('click', () => {
-      openGoalModal();
-    });
-
-    document.getElementById('topbar-btn-tour')?.addEventListener('click', () => {
-      openGuidedTutorial(0);
-    });
-
     // --- Guided Tutorial Modal Controllers ---
-    document.getElementById('tut-btn-prev')?.addEventListener('click', () => {
-      openGuidedTutorial(currentTutorialStep - 1);
-    });
     document.getElementById('tut-btn-next')?.addEventListener('click', () => {
       if (currentTutorialStep >= TUTORIAL_STEPS.length - 1) {
         closeGuidedTutorial();
@@ -1067,13 +928,7 @@
     document.getElementById('tut-btn-skip')?.addEventListener('click', closeGuidedTutorial);
     document.getElementById('tut-btn-close-x')?.addEventListener('click', closeGuidedTutorial);
 
-    // --- Onboarding Wizard Modal Controllers (Optional & Non-blocking) ---
-    document.getElementById('btn-close-onboarding-x')?.addEventListener('click', closeOnboardingWizard);
-    document.getElementById('btn-skip-onboarding')?.addEventListener('click', () => {
-      closeOnboardingWizard();
-      showToast('Onboarding skipped. Configure goals anytime!', 'info');
-    });
-    document.getElementById('btn-open-onboarding')?.addEventListener('click', openOnboardingWizard);
+
 
     if (DOM.topbarUserProfile) {
       DOM.topbarUserProfile.addEventListener('click', openProfileBottomSheet);
@@ -1094,7 +949,6 @@
     }
     
     if (DOM.btnApplyGoals) DOM.btnApplyGoals.addEventListener('click', applyGoalsAction);
-    if (DOM.goalForm) DOM.goalForm.addEventListener('submit', applyGoalsAction);
 
     // Info Modal Event Handlers
     document.getElementById('info-modal-close')?.addEventListener('click', closeInfoModal);
@@ -1111,19 +965,7 @@
         e.stopPropagation();
         const type = helpBtn.getAttribute('data-help-type');
 
-        if (type === 'exam-countdown') {
-          openInfoModal(
-            'Target Exam Countdown Timer',
-            `<p style="margin-bottom: 8px;"><strong>Live Countdown Ticker:</strong> Displays exact days, hours, minutes, and seconds remaining until your exam target deadline.</p>
-             <div class="pxl-alert pxl-alert-info" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">info</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Disciplined Pace Keeps You Ahead</div>
-                 <div class="pxl-alert-message">Maintaining your daily video quota ensures complete 19-subject syllabus coverage before the countdown expires.</div>
-               </div>
-             </div>`
-          );
-        } else if (type === 'projected-date') {
+        if (type === 'projected-date') {
           openInfoModal(
             'Projected Completion Date',
             `<p style="margin-bottom: 8px;"><strong>Formula:</strong> <code>(Total Syllabus Videos − Completed Videos) ÷ Daily Video Pace</code></p>
@@ -1156,51 +998,6 @@
                <div class="pxl-alert-content">
                  <div class="pxl-alert-title">Advance Batch Early</div>
                  <div class="pxl-alert-message">Completing your daily batch unlocks 🚀 Advance to Next Target Batch early to stay ahead of schedule.</div>
-               </div>
-             </div>`
-          );
-        } else if (type === 'study-streak') {
-          openInfoModal(
-            'Study Streak Discipline',
-            `<p style="margin-bottom: 8px;"><strong>Streak Counter Rules:</strong> Increases by +1 for every consecutive day you complete at least 1 video lecture.</p>
-             <div class="pxl-alert pxl-alert-warning" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">warning</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Daily Discipline Guard</div>
-                 <div class="pxl-alert-message">Missing a study day resets the streak counter to 0 to foster consistent daily study habits.</div>
-               </div>
-             </div>`
-          );
-        } else if (type === 'subject-heatmap') {
-          openInfoModal(
-            'Subject Completion Heatmap',
-            `<p style="margin-bottom: 10px;"><strong>19 MBBS Subject Mastery Tiers:</strong></p>
-             <div class="pxl-alert pxl-alert-danger" style="margin-bottom: 8px; padding: 10px 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">warning</span>
-               <div class="pxl-alert-content"><div class="pxl-alert-title" style="font-size: 0.95rem;">Critical Priority Tier (&lt;25% Coverage)</div></div>
-             </div>
-             <div class="pxl-alert pxl-alert-warning" style="margin-bottom: 8px; padding: 10px 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">info</span>
-               <div class="pxl-alert-content"><div class="pxl-alert-title" style="font-size: 0.95rem;">In Progress Tier (25%–50% Coverage)</div></div>
-             </div>
-             <div class="pxl-alert pxl-alert-info" style="margin-bottom: 8px; padding: 10px 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">info</span>
-               <div class="pxl-alert-content"><div class="pxl-alert-title" style="font-size: 0.95rem;">Advanced Coverage Tier (50%–75% Coverage)</div></div>
-             </div>
-             <div class="pxl-alert pxl-alert-success" style="margin-bottom: 0; padding: 10px 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">check_circle</span>
-               <div class="pxl-alert-content"><div class="pxl-alert-title" style="font-size: 0.95rem;">Mastery Tier (75%+ High-Yield Complete)</div></div>
-             </div>`
-          );
-        } else if (type === 'velocity-gauge') {
-          openInfoModal(
-            'Target Pace Velocity Telemetry',
-            `<p style="margin-bottom: 8px;"><strong>Daily Target Velocity:</strong> Shows your configured daily lecture pace target (e.g. 8 vids/day) and live completion percentage for today.</p>
-             <div class="pxl-alert pxl-alert-info" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">bolt</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Syllabus Completion Driver</div>
-                 <div class="pxl-alert-message">Hitting your daily velocity quota ensures you complete your 19-subject NEET PG syllabus right on target!</div>
                </div>
              </div>`
           );
@@ -1303,18 +1100,12 @@
   }
 
   // --- Theme Helper ---
-  function applyTheme(theme, accent, shadowStyle) {
+  function applyTheme(theme) {
     const curTheme = theme || state.theme || 'dark';
-    const curAccent = accent || (state.personal && state.personal.themeAccent) || 'cobalt';
-    const curShadow = shadowStyle || (state.personal && state.personal.shadowStyle) || 'offset';
 
     document.documentElement.setAttribute('data-theme', curTheme);
-    document.documentElement.setAttribute('data-theme-accent', curAccent);
-    document.documentElement.setAttribute('data-shadow-style', curShadow);
-
-    if (DOM.themeIcon) {
-      DOM.themeIcon.textContent = curTheme === 'dark' ? 'light_mode' : 'dark_mode';
-    }
+    document.documentElement.setAttribute('data-theme-accent', 'cobalt');
+    document.documentElement.setAttribute('data-shadow-style', 'offset');
 
     // FlowMD Logo preserved in topbar (inline SVG with theme-aware currentColor)
 
@@ -1361,8 +1152,6 @@
     else if (state.currentView === 'subject_detail') renderSubjectDetailView(stats);
     else if (state.currentView === 'analytics') renderAnalyticsView(stats);
     else renderProfileView(stats);
-
-    resetPageScrollTop();
   }
 
   function updateTopbarInitials() {
@@ -1377,8 +1166,7 @@
 
     const avatarBox = document.getElementById('topbar-user-profile');
     if (avatarBox) {
-      const curAccent = (state.personal && state.personal.themeAccent) || 'cyan';
-      avatarBox.className = `pxl-avatar pxl-avatar-sm pxl-avatar-${curAccent}`;
+      avatarBox.className = `pxl-avatar pxl-avatar-sm pxl-avatar-cyan`;
     }
   }
 
@@ -1517,7 +1305,7 @@
     `;
   }
 
-  // --- View 1: Dashboard View (FlowMD v2 Dual-Plan Retro Presentation) ---
+  // --- View 1: Dashboard View ---
   function renderDashboardView(stats) {
     const docName = state.personal.doctorName || 'Dr. Aspirant';
     const plans = state.plans && state.plans.length > 0 ? state.plans : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT, 'Entire Syllabus')];
@@ -1528,103 +1316,10 @@
     const todayStr = now.toISOString().slice(0, 10);
     const todayCompletedCount = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
 
-    // Aggregate across all plans for global goal bars
     let totalVidsDay = 0;
-    let totalVidsWeek = 0;
-    let totalVidsMonth = 0;
     plans.forEach(p => {
       totalVidsDay += Math.max(1, parseInt(p.videosPerDay) || 8);
-      totalVidsWeek += Math.max(1, parseInt(p.videosPerWeek) || ((parseInt(p.videosPerDay) || 8) * 7));
-      totalVidsMonth += Math.max(1, parseInt(p.videosPerMonth) || ((parseInt(p.videosPerDay) || 8) * 30));
     });
-
-    let actual7DaysCount = 0;
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const k = d.toISOString().slice(0, 10);
-      actual7DaysCount += (state.dailyHistory && state.dailyHistory[k]) || 0;
-    }
-    let actual30DaysCount = 0;
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const k = d.toISOString().slice(0, 10);
-      actual30DaysCount += (state.dailyHistory && state.dailyHistory[k]) || 0;
-    }
-
-    const dailyPct = Math.min(100, Math.round((todayCompletedCount / totalVidsDay) * 100));
-    const weeklyPct = Math.min(100, Math.round((actual7DaysCount / totalVidsWeek) * 100));
-    const monthlyPct = Math.min(100, Math.round((actual30DaysCount / totalVidsMonth) * 100));
-
-    // Helper: render a plan's HUD pair (countdown + projected finish)
-    function renderPlanHudPair(plan, queue, countdownElId) {
-      const cd = getDeadlineCountdown(plan.targetDate);
-      const metrics = getSubjectOrSyllabusMetrics(plan.targetSubject);
-      const eta = calculateFinishETA(metrics, plan.videosPerDay || 8);
-      const isPlanA = plan.id === 'plan_a';
-      const badgeBg = isPlanA ? '#2563eb' : '#f43f5e';
-
-      return `
-        <!-- ${plan.label} Countdown -->
-        <div class="pxl-stat-card plan-stat-card" style="border-left: 4px solid ${badgeBg}; position: relative; padding: 14px 16px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-            <span class="plan-hud-chip" style="background: ${badgeBg}; color: #ffffff; font-family: var(--font-hud); font-size: 0.82rem; font-weight: 900; padding: 3px 10px; border-radius: 4px; box-shadow: 2px 2px 0 0 #000000; text-transform: uppercase; letter-spacing: 0.06em;">
-              📌 ${plan.label.toUpperCase()} TARGET
-            </span>
-            <span style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">
-              ${plan.targetSubject}
-            </span>
-          </div>
-
-          <div class="pxl-stat-card-header" style="margin-bottom: 6px;">
-            <div class="pxl-stat-card-title" style="color: ${badgeBg}; font-weight: 800; font-size: 1.05rem;">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="18" height="18" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="${badgeBg}" stroke-width="2" />
-                <path d="M8 4v4l3 2" stroke="${badgeBg}" stroke-width="2" stroke-linecap="square" />
-              </svg>
-              <span>${plan.label} Countdown</span>
-            </div>
-            <span class="help-icon-btn" data-help-type="exam-countdown">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
-                <circle cx="8" cy="8" r="7" fill="rgba(0,240,255,0.2)" stroke="#00f0ff" stroke-width="2" />
-                <path d="M8 4.5V5.5M8 7.5V11.5" stroke="#fff" stroke-width="2" stroke-linecap="square" />
-              </svg>
-            </span>
-          </div>
-          <div class="pxl-stat-card-value" id="${countdownElId}" style="color: ${badgeBg}; font-size: 1.45rem; font-weight: 800;">${cd.text}</div>
-          <div class="pxl-stat-card-sub" style="margin-top: 4px;">Deadline: <strong>${plan.targetDate}</strong></div>
-        </div>
-
-        <!-- ${plan.label} Projected Finish -->
-        <div class="pxl-stat-card plan-stat-card" style="border-left: 4px solid var(--retro-green, #00ff88); position: relative; padding: 14px 16px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-            <span class="plan-hud-chip" style="background: ${badgeBg}; color: #ffffff; font-family: var(--font-hud); font-size: 0.82rem; font-weight: 900; padding: 3px 10px; border-radius: 4px; box-shadow: 2px 2px 0 0 #000000; text-transform: uppercase; letter-spacing: 0.06em;">
-              📌 ${plan.label.toUpperCase()} TARGET
-            </span>
-            <span style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">
-              ${eta.pace} vids/day
-            </span>
-          </div>
-
-          <div class="pxl-stat-card-header" style="margin-bottom: 6px;">
-            <div class="pxl-stat-card-title" style="color: var(--retro-green, #00ff88); font-weight: 800; font-size: 1.05rem;">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="18" height="18" fill="none">
-                <circle cx="8" cy="8" r="7" stroke="#00ff88" stroke-width="2" />
-                <path d="M4.5 8.5L7 11L11.5 5.5" stroke="#00ff88" stroke-width="2" stroke-linecap="square" />
-              </svg>
-              <span>${plan.label} Projected Finish</span>
-            </div>
-            <span class="help-icon-btn" data-help-type="projected-date">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
-                <circle cx="8" cy="8" r="7" fill="rgba(0,240,255,0.2)" stroke="#00f0ff" stroke-width="2" />
-                <path d="M8 4.5V5.5M8 7.5V11.5" stroke="#fff" stroke-width="2" stroke-linecap="square" />
-              </svg>
-            </span>
-          </div>
-          <div class="pxl-stat-card-value" style="color: var(--retro-green, #00ff88); font-size: 1.45rem; font-weight: 800;">${eta.date}</div>
-          <div class="pxl-stat-card-sub" style="margin-top: 4px;"><strong>${eta.remVids} vids left</strong> to finish ${plan.targetSubject}</div>
-        </div>
-      `;
-    }
 
     // Helper: render one plan's daily quest block
     function renderPlanQuestBlock(plan, queue) {
@@ -1711,9 +1406,6 @@
 
     const allQuestsDone = allQueues.every(q => q.isDailyTargetAchieved);
     const hasDualPlans = plans.length >= 2;
-    const heroSubText = hasDualPlans
-      ? `Tracking ${plans.map(p => p.targetSubject).join(' + ')} — ${stats.percentage}% Syllabus Mastered`
-      : `Targeting ${state.personal.targetExam} Rank #${state.personal.targetRank} — ${plans[0]?.targetSubject || 'Entire Syllabus'} — ${stats.percentage}% Mastered`;
 
     DOM.appMain.innerHTML = `
       <!-- Hero Card -->
@@ -1721,24 +1413,20 @@
         <div class="pxl-feature-card hero-banner-card">
           <div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
-              <span class="hero-top-badge" style="background:var(--accent-primary, #2563eb); color:#ffffff; font-family:var(--font-hud); font-size:0.82rem; font-weight:900; padding:4px 10px; border-radius:4px; box-shadow:2px 2px 0 0 #000000; text-transform:uppercase; letter-spacing:0.05em;">
-                ${state.personal.targetExam}
-              </span>
               ${hasDualPlans ? `
                 <span class="hero-top-badge" style="background:#e11d48; color:#ffffff; font-family:var(--font-hud); font-size:0.82rem; font-weight:900; padding:4px 10px; border-radius:4px; box-shadow:2px 2px 0 0 #000000; text-transform:uppercase; letter-spacing:0.05em;">
                   ⚡ DUAL-TRACK MODE
                 </span>
               ` : ''}
-              <button type="button" class="v2-arcade-btn" id="btn-hero-setup-targets" style="height: 28px; padding: 0 10px; font-family: var(--font-hud); font-size: 0.78rem; font-weight: 700; background: rgba(255, 204, 0, 0.15); color: var(--retro-gold, #ffcc00); border-color: var(--retro-gold, #ffcc00); display: inline-flex; align-items: center; gap: 4px; margin-left: auto;">
-                <span class="material-symbols-outlined" style="font-size: 15px;">tune</span>
-                <span>Setup Preparation Targets</span>
-              </button>
+              <span style="margin-left:auto; font-family:var(--font-hud); font-size:0.85rem; color:var(--retro-gold,#ffcc00);">
+                🔥 ${streakCount} day streak
+              </span>
             </div>
             <h1 class="hero-card-title" style="font-family:var(--font-display); font-size:1.45rem; font-weight:800; color:#ffffff; margin-bottom:6px; letter-spacing:0.02em; text-shadow:2px 2px 0 #000000;">
               WELCOME BACK, ${docName.toUpperCase()}!
             </h1>
             <p class="hero-card-subtitle" style="font-family:var(--font-hud); font-size:1.05rem; color:#a0aec0; margin-bottom:14px; font-weight:600;">
-              ${heroSubText}
+              ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject).join(' + ')}` : `${plans[0]?.targetSubject || 'Entire Syllabus'}`} — ${stats.percentage}% Mastered
             </p>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-hud); font-size:1.1rem; color:#ffffff; margin-bottom:6px; font-weight:700;">
@@ -1756,55 +1444,25 @@
         </div>
       </div>
 
-      <!-- Temporary Setup Preparation Goals Callout Card (only visible until configured or dismissed) -->
-      ${!state.isSetupConfigured ? `
-        <div id="temp-setup-callout-card" class="v2-pixel-card" style="padding: 16px; margin-bottom: 20px; border-left: 4px solid var(--retro-gold, #ffcc00); background: rgba(255, 204, 0, 0.05); border: 2px solid var(--v2-ink); box-shadow: 4px 4px 0 0 #000000;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div style="flex: 1; min-width: 240px;">
-              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="v2-hud-badge" style="color: var(--retro-gold, #ffcc00); border-color: var(--retro-gold, #ffcc00); font-size: 0.76rem;">⚡ OPTIONAL INITIAL SETUP</span>
-                <span style="font-family: var(--font-hud); font-size: 0.8rem; color: var(--text-muted);">TEMPORARY CALLOUT</span>
-              </div>
-              <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">
-                Configure Exam Target & Daily Pace
-              </h3>
-              <p style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">
-                Set your target exam date and daily video pace to unlock automated finish date projections & ideal vs actual pace tracking.
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="v2-arcade-btn" id="btn-dash-setup-now" style="height: 38px; background: var(--accent-primary, #2563eb); color: #ffffff; font-weight: 700; font-size: 0.88rem;">
-                <span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
-                <span>Configure Targets</span>
-              </button>
-              <button type="button" class="v2-arcade-btn" id="btn-dash-dismiss-setup" style="height: 38px; background: var(--bg-surface-raised); color: var(--text-secondary); font-size: 0.88rem;">
-                Dismiss
-              </button>
-            </div>
-          </div>
-        </div>
-      ` : ''}
-
-      <!-- Android PWA Install Banner Card (visible when beforeinstallprompt fires and app is not installed) -->
+      <!-- Android PWA Install Banner -->
       ${state.canInstallPWA ? `
         <div id="pwa-install-banner-card" class="v2-pixel-card" style="padding: 16px; margin-bottom: 20px; border-left: 4px solid var(--retro-cyan, #00f0ff); background: rgba(0, 240, 255, 0.05); border: 2px solid var(--v2-ink); box-shadow: 4px 4px 0 0 #000000;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <div style="flex: 1; min-width: 240px;">
               <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="v2-hud-badge" style="color: var(--retro-cyan, #00f0ff); border-color: var(--retro-cyan, #00f0ff); font-size: 0.76rem;">📱 MOBILE PWA APPINSTALLED TRIGGER</span>
-                <span style="font-family: var(--font-hud); font-size: 0.8rem; color: var(--text-muted);">RECOMMENDED FOR ANDROID</span>
+                <span class="v2-hud-badge" style="color: var(--retro-cyan, #00f0ff); border-color: var(--retro-cyan, #00f0ff); font-size: 0.76rem;">📱 MOBILE PWA</span>
               </div>
               <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">
                 Install FlowMD Android App
               </h3>
               <p style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">
-                Get subtle haptic vibration feedback, offline access & hardware back-button integration!
+                Get offline access & hardware back-button integration!
               </p>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
               <button type="button" class="v2-arcade-btn" id="btn-pwa-install-now" style="height: 38px; background: var(--retro-cyan, #00f0ff); color: #0f172a; font-weight: 800; font-size: 0.88rem;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">get_app</span>
-                <span>Install Mobile PWA</span>
+                <span>Install</span>
               </button>
               <button type="button" class="v2-arcade-btn" id="btn-pwa-dismiss-banner" style="height: 38px; background: var(--bg-surface-raised); color: var(--text-secondary); font-size: 0.88rem;">
                 Dismiss
@@ -1814,68 +1472,18 @@
         </div>
       ` : ''}
 
-      <!-- All-Quests-Done Banner (only when both plans done) -->
+      <!-- All-Quests-Done Banner -->
       ${allQuestsDone ? `
         <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 16px;">
           <div class="v2-alert-icon-box" style="background: #ffd700;">${PXL_ICONS.trophy}</div>
           <div class="v2-alert-content">
             <div class="v2-alert-category" style="color:#ffd700;">🏆 ALL DAILY QUESTS COMPLETE!</div>
             <div class="v2-alert-title">Outstanding Performance!</div>
-            <div class="v2-alert-body">Every plan's daily target has been achieved today. Outstanding performance!</div>
+            <div class="v2-alert-body">Every plan's daily target has been achieved today!</div>
           </div>
           <div class="v2-alert-bottom-bar" style="width:100%; background:#ffd700;"></div>
         </div>
       ` : ''}
-
-      <!-- HUD Stat Matrix (Per-Plan Countdown + Projected Finish) -->
-      <div class="pxl-hud-matrix-grid">
-        ${plans.map((plan, idx) => renderPlanHudPair(plan, allQueues[idx], `live-countdown-text-plan-${plan.id.slice(-1)}`)).join('')}
-
-        <!-- Study Streak (global) -->
-        <div class="pxl-stat-card" style="border-left-color:var(--retro-gold,#ffcc00);">
-          <div class="pxl-stat-card-header">
-            <div class="pxl-stat-card-title" style="color:var(--retro-gold,#ffcc00);">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="18" height="18" fill="none">
-                <path d="M8 1l2.2 4.5 4.8.7-3.5 3.4.8 4.9L8 12.2l-4.3 2.3.8-4.9L1 6.2l4.8-.7L8 1z" fill="rgba(255,204,0,0.2)" stroke="#ffcc00" stroke-width="1.8" />
-              </svg>
-              <span>Study Streak</span>
-            </div>
-            <span class="help-icon-btn" data-help-type="study-streak">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
-                <circle cx="8" cy="8" r="7" fill="rgba(0,240,255,0.2)" stroke="#00f0ff" stroke-width="2" />
-                <path d="M8 4.5V5.5M8 7.5V11.5" stroke="#fff" stroke-width="2" stroke-linecap="square" />
-              </svg>
-            </span>
-          </div>
-          <div class="pxl-stat-card-value" style="color:var(--retro-gold,#ffcc00); display:flex; align-items:center; gap:6px;">
-            <span>${streakCount} Days</span><span style="font-size:1.1rem;">🔥</span>
-          </div>
-          <div class="pxl-stat-card-sub">Consecutive days studied</div>
-        </div>
-
-        <!-- Target Velocity (aggregate across all plans) -->
-        <div class="pxl-stat-card" style="border-left-color:var(--retro-cyan,#00f0ff);">
-          <div class="pxl-stat-card-header">
-            <div class="pxl-stat-card-title" style="color:var(--retro-cyan,#00f0ff);">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="18" height="18" fill="none">
-                <path d="M9 1L2 9h6l-1 6 7-8H8l1-6z" fill="rgba(0,240,255,0.2)" stroke="#00f0ff" stroke-width="1.8" stroke-linejoin="miter" />
-              </svg>
-              <span>Target Velocity</span>
-            </div>
-            <span class="help-icon-btn" data-help-type="velocity-gauge">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
-                <circle cx="8" cy="8" r="7" fill="rgba(0,240,255,0.2)" stroke="#00f0ff" stroke-width="2" />
-                <path d="M8 4.5V5.5M8 7.5V11.5" stroke="#fff" stroke-width="2" stroke-linecap="square" />
-              </svg>
-            </span>
-          </div>
-          <div class="pxl-stat-card-value" style="color:var(--retro-cyan,#00f0ff);">${totalVidsDay} Vids/Day</div>
-          <div class="pxl-stat-card-sub">
-            ${hasDualPlans ? plans.map(p => `${p.label}: ${p.videosPerDay}/day`).join(' + ') : ''}
-            ${todayCompletedCount} of ${totalVidsDay} completed today (${dailyPct}%)
-          </div>
-        </div>
-      </div>
 
       <!-- Daily Quest Section (per plan) -->
       <div class="v2-quest-card action-queue-card">
@@ -1886,65 +1494,7 @@
           ${plans.map((plan, idx) => renderPlanQuestBlock(plan, allQueues[idx])).join('')}
         </div>
       </div>
-
-      <!-- Personal Preparation Goals -->
-      <div class="section-title-row" style="margin-top:20px;">
-        <h2 class="section-title" style="font-family:var(--font-display);">Personal Preparation Goals</h2>
-        <button class="v2-arcade-btn" id="btn-edit-dash-goals" style="height:32px; padding:0 12px; font-size:0.85rem;">
-          <span class="material-symbols-outlined" style="font-size:16px;">tune</span>
-          <span>Set Target</span>
-        </button>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-bottom:20px;">
-        <div class="v2-pixel-card" style="padding:14px;">
-          <div style="font-family:var(--font-hud); font-size:0.9rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Daily Goal</div>
-          <div style="font-family:var(--font-hud); font-size:1.6rem; font-weight:700; margin:2px 0;">${todayCompletedCount} / ${totalVidsDay}</div>
-          <div style="font-size:0.75rem; color:var(--text-secondary);">videos • ${dailyPct}% daily target</div>
-          ${hasDualPlans ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">${plans.map(p => `${p.label}: ${p.videosPerDay}/d`).join(' + ')}</div>` : ''}
-          <div class="goal-progress-track"><div class="goal-progress-fill goal-fill-daily" style="width:${dailyPct}%;"></div></div>
-        </div>
-        <div class="v2-pixel-card" style="padding:14px;">
-          <div style="font-family:var(--font-hud); font-size:0.9rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Weekly Goal</div>
-          <div style="font-family:var(--font-hud); font-size:1.6rem; font-weight:700; margin:2px 0;">${actual7DaysCount} / ${totalVidsWeek}</div>
-          <div style="font-size:0.75rem; color:var(--text-secondary);">videos • ${weeklyPct}% weekly pace</div>
-          <div class="goal-progress-track"><div class="goal-progress-fill goal-fill-weekly" style="width:${weeklyPct}%;"></div></div>
-        </div>
-        <div class="v2-pixel-card" style="padding:14px;">
-          <div style="font-family:var(--font-hud); font-size:0.9rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Monthly Goal</div>
-          <div style="font-family:var(--font-hud); font-size:1.6rem; font-weight:700; margin:2px 0;">${actual30DaysCount} / ${totalVidsMonth}</div>
-          <div style="font-size:0.75rem; color:var(--text-secondary);">videos • ${monthlyPct}% monthly pace</div>
-          <div class="goal-progress-track"><div class="goal-progress-fill goal-fill-monthly" style="width:${monthlyPct}%;"></div></div>
-        </div>
-        ${plans.map((plan, idx) => {
-          const subObj = stats.subjectsStats.find(s => s.name === plan.targetSubject || s.id === plan.targetSubject);
-          const subPct = subObj ? subObj.percentage : stats.percentage;
-          const planColor = plan.accentColor || PLAN_A_ACCENT;
-          const fillClass = idx === 0 ? 'goal-fill-plan-a' : 'goal-fill-plan-b';
-          return `
-            <div class="v2-pixel-card" style="padding:14px; border-left:3px solid ${planColor};">
-              <div style="font-family:var(--font-hud); font-size:0.9rem; color:${planColor}; font-weight:700; text-transform:uppercase;">${plan.label}</div>
-              <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin:4px 0 2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${plan.targetSubject}</div>
-              <div style="font-size:0.75rem; color:var(--text-secondary);">${subPct}% • Deadline: ${plan.targetDate}</div>
-              <div class="goal-progress-track"><div class="goal-progress-fill ${fillClass}" style="width:${subPct}%;"></div></div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-
-      <!-- Heatmap -->
-      ${renderPixelSubjectHeatmap(stats)}
     `;
-
-    document.getElementById('btn-edit-dash-goals')?.addEventListener('click', openGoalModal);
-    document.getElementById('btn-hero-setup-targets')?.addEventListener('click', openOnboardingWizard);
-    document.getElementById('btn-dash-setup-now')?.addEventListener('click', openOnboardingWizard);
-    document.getElementById('btn-dash-dismiss-setup')?.addEventListener('click', () => {
-      state.isSetupConfigured = true;
-      saveState();
-      showToast('Setup callout dismissed.', 'info');
-      renderDashboardView(stats);
-    });
 
     document.getElementById('btn-pwa-install-now')?.addEventListener('click', () => {
       if (deferredInstallPrompt) {
@@ -2366,141 +1916,6 @@
       return { plan, q, m, vids, remVids, daysNeeded, finishDate, finishDateStr, targetDate, daysLeft, ideal7, ideal30, planPaceDelta };
     });
 
-    function renderPlanDelta(ps) {
-      const { plan, vids, finishDate, finishDateStr, targetDate, ideal7, ideal30, planPaceDelta } = ps;
-      const planColor = plan.accentColor || PLAN_A_ACCENT;
-      const delta = planPaceDelta;
-      const deficit = Math.abs(delta);
-      const recoveryRate = Math.ceil(deficit / Math.max(1, deficit));
-      return `
-        <div class="pxl-feature-card" style="margin-bottom:20px; padding:20px; background-color:var(--retro-surface,#0d1017); border:2px solid ${planColor}; box-shadow:4px 4px 0 0 #000;">
-          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; border-bottom:1px solid var(--retro-border,#282f42); padding-bottom:12px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="plan-badge" style="background:${planColor}22; color:${planColor}; border:1.5px solid ${planColor}; font-size:0.72rem; padding:2px 8px; border-radius:3px; font-family:var(--font-hud); font-weight:700;">${plan.label}</span>
-              <h3 style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:${planColor}; margin:0;">
-                ${plan.targetSubject} — Ideal vs Actual
-              </h3>
-            </div>
-            <span class="v2-hud-badge" style="${delta >= 0 ? 'color:var(--retro-green,#00ff88); border-color:var(--retro-green,#00ff88);' : 'color:var(--retro-red,#ff5555); border-color:var(--retro-red,#ff5555);'} font-size:0.8rem;">
-              ${delta > 0 ? 'AHEAD 🚀' : (delta === 0 ? 'ON TRACK 🎯' : 'BEHIND ⚠️')}
-            </span>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:18px;">
-            <div>
-              <div style="display:flex; justify-content:space-between; font-family:var(--font-hud); font-size:0.88rem; color:#94a3b8; margin-bottom:6px;">
-                <span>IDEAL 7-DAY TARGET (${vids}/day)</span>
-                <span style="font-weight:700; color:${planColor};">${ideal7} VIDS</span>
-              </div>
-              <div class="v2-hp-bar-bg" style="height:10px;"><div class="v2-hp-bar-fill" style="width:100%; background:${planColor};"></div></div>
-            </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; font-family:var(--font-hud); font-size:0.88rem; color:#94a3b8; margin-bottom:6px;">
-                <span>YOUR ACTUAL (7-DAY, COMBINED)</span>
-                <span style="font-weight:700; color:${delta >= 0 ? 'var(--retro-green,#00ff88)' : 'var(--retro-red,#ff5555)'};">${actual7DaysCount} VIDS</span>
-              </div>
-              <div class="v2-hp-bar-bg" style="height:10px;"><div class="v2-hp-bar-fill" style="width:${Math.min(100, Math.round((actual7DaysCount / ideal7) * 100))}%; background:${delta >= 0 ? 'var(--retro-green,#00ff88)' : 'var(--retro-red,#ff5555)'};"></div></div>
-            </div>
-          </div>
-          <div class="pxl-alert ${delta >= 0 ? 'pxl-alert-success' : 'pxl-alert-warning'}" style="margin:0; background:#0d111a !important; border:2px solid #000 !important; box-shadow:4px 4px 0 0 #000;">
-            <span class="material-symbols-outlined pxl-alert-icon" style="color:${delta >= 0 ? 'var(--retro-green,#00ff88)' : 'var(--retro-gold,#ffcc00)'};">${delta >= 0 ? 'check_circle' : 'warning'}</span>
-            <div class="pxl-alert-content">
-              <div class="pxl-alert-title" style="color:${delta >= 0 ? 'var(--retro-green,#00ff88)' : 'var(--retro-gold,#ffcc00)'};">
-                ${delta > 0 ? 'Ahead of Schedule!' : (delta === 0 ? 'Right on Track!' : 'Recovery Recommendation')}
-              </div>
-              <div class="pxl-alert-message" style="color:#cbd5e1; font-family:var(--font-hud); font-size:1rem;">
-                ${delta > 0
-                  ? `+${delta} lectures for ${plan.targetSubject}. ETA: ${finishDateStr}.`
-                  : (delta === 0
-                    ? `Watching ${vids} lectures/day will complete ${plan.targetSubject} on your target date.`
-                    : `−${deficit} lecture deficit for ${plan.targetSubject}. Recovery: +${recoveryRate} extra/day for ${deficit} days. ETA: ${finishDateStr}.`
-                  )
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderPlanQuestCenter(ps, queue) {
-      const { plan, vids } = ps;
-      const planColor = plan.accentColor || PLAN_A_ACCENT;
-      const batchVideos = queue.videos || [];
-      let compMins = 0, remMins = 0;
-      batchVideos.forEach(v => {
-        const mins = (v.durationMins || 0) + Math.round((v.durationSecs || 0) / 60);
-        if (state.completedVideos[v.id]) compMins += mins;
-        else remMins += mins;
-      });
-      const formatHrsMins = m => { const h = Math.floor(m/60), mn = m%60; return h > 0 ? `${h}h ${mn}m` : `${mn}m`; };
-      const pct = Math.min(100, Math.round((queue.queueCompletedInBatch / vids) * 100));
-
-      return `
-        <div class="v2-quest-card" style="margin-bottom:20px; padding:18px 14px; border-left:4px solid ${planColor};">
-          <div class="v2-quest-header-badge" style="background:${planColor} !important; color:#ffffff !important; border:2px solid #000000 !important; box-shadow:3px 3px 0 0 #000000 !important; text-shadow:1px 1px 0 #000000; font-weight:800; padding:6px 14px; top:-16px;">
-            📌 ${plan.label.toUpperCase()} QUEST CENTER — ${queue.subjectName.toUpperCase()}
-          </div>
-          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;">
-            <div>
-              <div style="font-family:var(--font-hud); font-size:1rem; color:${planColor}; font-weight:700;">
-                TARGET: ${vids} VIDS/DAY • TODAY: ${queue.queueCompletedInBatch}/${vids} DONE (${pct}%)
-              </div>
-              <div style="font-family:var(--font-hud); font-size:0.9rem; color:var(--text-muted); margin-top:2px;">
-                ⏱ <strong style="color:var(--retro-green,#00ff88);">${formatHrsMins(compMins)}</strong> Done •
-                <strong style="color:var(--retro-gold,#ffcc00);">${formatHrsMins(remMins)}</strong> Remaining
-              </div>
-            </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height:32px; padding:0 10px; font-size:0.82rem; background:var(--v2-pine-green,#10b981); color:#fff;">
-                Open ${queue.subjectName} →
-              </button>
-              ${queue.isDailyTargetAchieved ? `
-                <button class="v2-arcade-btn btn-advance-queue" data-plan-id="${plan.id}" style="height:32px; padding:0 10px; font-size:0.82rem;">
-                  🚀 Advance ${plan.label}
-                </button>
-              ` : ''}
-            </div>
-          </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:8px; background:rgba(0,0,0,0.25); border:1px solid var(--retro-border,#282f42); padding:10px 12px; margin-bottom:12px;">
-            <div>
-              <div style="font-family:var(--font-hud); font-size:0.78rem; color:var(--text-muted); text-transform:uppercase;">Quest Mastery</div>
-              <div style="font-family:var(--font-hud); font-size:1.05rem; font-weight:700; color:${planColor};">${pct}%</div>
-            </div>
-            <div>
-              <div style="font-family:var(--font-hud); font-size:0.78rem; color:var(--text-muted); text-transform:uppercase;">Progress</div>
-              <div style="font-family:var(--font-hud); font-size:1.05rem; font-weight:700; color:var(--retro-gold,#ffcc00);">${queue.queueCompletedInBatch}/${vids}</div>
-            </div>
-            <div>
-              <div style="font-family:var(--font-hud); font-size:0.78rem; color:var(--text-muted); text-transform:uppercase;">Status</div>
-              <div style="font-family:var(--font-hud); font-size:1.05rem; font-weight:700; color:${queue.isDailyTargetAchieved ? ((plan.extraBatchesCompletedToday || 0) > 0 ? '#a855f7' : 'var(--retro-green,#00ff88)') : 'var(--retro-gold,#ffcc00)'};">
-                ${queue.isDailyTargetAchieved ? ((plan.extraBatchesCompletedToday || 0) > 0 ? `🔥 BONUS +${plan.extraBatchesCompletedToday * queue.baseTargetPace} VIDS` : 'TARGET MET 🎯') : 'IN PROGRESS'}
-              </div>
-            </div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:3px;">
-            ${batchVideos.map(v => {
-              const isDone = !!state.completedVideos[v.id];
-              const durStr = `${v.durationMins||0}m ${v.durationSecs||0}s`;
-              let vNum = '#' + (v.videoNumber || '#1').replace(/^#+/, '');
-              return `
-                <div class="v2-quest-row ${isDone ? 'completed' : ''}">
-                  <label class="v2-pixel-checkbox-label">
-                    <input type="checkbox" class="anl-quest-chk" data-video-id="${v.id}" data-plan-id="${plan.id}" ${isDone ? 'checked' : ''}>
-                    <span class="v2-pixel-checkbox-box"></span>
-                    <div>
-                      <div class="v2-quest-title"><span style="color:${planColor}; font-family:var(--font-hud); margin-right:4px;">${vNum}</span> ${v.title}</div>
-                      <div style="font-size:0.78rem; color:var(--text-muted); font-family:var(--font-hud); margin-top:1px;">${v.subjectName || queue.subjectName}</div>
-                    </div>
-                  </label>
-                  <div style="font-family:var(--font-hud); font-size:0.9rem; color:var(--text-muted); font-weight:700;">${durStr}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-    }
-
     DOM.appMain.innerHTML = `
       <!-- Breadcrumb -->
       <div class="pxl-breadcrumb">
@@ -2520,28 +1935,46 @@
             ${hasDualPlans ? `<span class="v2-hud-badge" style="color:#f43f5e; border-color:#f43f5e; font-size:0.72rem;">⚡ DUAL-TRACK</span>` : ''}
           </h2>
           <p style="font-family:var(--font-hud); font-size:0.95rem; color:var(--text-muted); margin:2px 0 0 0;">
-            ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject).join(' + ')}` : 'Real-time analytical reasoning based on your goals, pace, and subject progress.'}
+            ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject).join(' + ')}` : 'Track your goals, pace, and subject progress.'}
           </p>
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <span class="v2-hud-badge" style="color:var(--retro-cyan,#00f0ff); border-color:var(--retro-cyan,#00f0ff); font-size:0.75rem;">
-            ${new Date().toISOString().slice(0,10)} • ${(state.goals.goalMode || 'video') === 'video' ? 'Videos Mode' : 'Hours Mode'}
-          </span>
           <button class="v2-arcade-btn" id="btn-share-report" style="height:34px; padding:0 12px; font-size:0.82rem; background:var(--accent-gradient);">
             <span class="material-symbols-outlined" style="font-size:16px;">share</span>
-            <span>Share Report ✨</span>
+            <span>Share Report</span>
           </button>
         </div>
+      </div>
+
+      <!-- Preparation Setup & Target Goals (moved from profile) -->
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin: 0;">Preparation Setup & Target Goals</h3>
+          <span class="v2-hud-badge" style="color: var(--accent-primary); border-color: var(--accent-primary);">${Math.max(1, Math.ceil((new Date(state.goals.targetDate || '2026-08-15') - new Date()) / 86400000))} DAYS LEFT</span>
+        </div>
+
+        <div style="background: var(--bg-surface-raised); border: 2px solid var(--v2-ink); padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; font-family: var(--font-hud); font-size: 1.05rem; margin-bottom: 4px;">
+            <span>PRIORITY FOCUS: <strong style="color: var(--retro-gold);">${state.goals.targetSubject || 'Entire Syllabus'}</strong></span>
+            <span style="color: var(--accent-primary); font-weight: 700;">${(state.goals.goalMode || 'video') === 'video' ? state.goals.videosPerDay + ' VIDS/DAY' : state.goals.dailyTargetHours + ' HRS/DAY'}</span>
+          </div>
+          <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted);">
+            Target Completion: <strong>${state.goals.targetDate || '2026-08-15'}</strong> (${state.goals.videosPerWeek || 56} vids/wk • ${state.goals.videosPerMonth || 240} vids/mo)
+          </div>
+        </div>
+
+        <button class="v2-arcade-btn" id="btn-analytics-open-goals" style="width: 100%;">
+          <span class="material-symbols-outlined">track_changes</span> Synchronize Pace & Goals
+        </button>
       </div>
 
       <!-- Global Goal Pulse Grid -->
       <div style="margin:14px 0 20px 0;">
         <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
           <span style="color:var(--retro-cyan,#00f0ff);">🎯</span>
-          <span>Goal Pulse — Today / Week / Month (Combined)</span>
+          <span>Goal Pulse — Today / Week / Month</span>
         </div>
         <div class="pxl-goal-pulse-grid">
-          <!-- Today -->
           <div class="pxl-pulse-card" style="border-left-color:var(--retro-cyan,#00f0ff);">
             <div class="pxl-pulse-header">
               <span class="pxl-pulse-title">Today's Daily Goal</span>
@@ -2560,7 +1993,6 @@
               <div class="v2-hp-bar-fill" style="width:${Math.min(100, Math.round((todayDone / totalVidsDay) * 100))}%; background:var(--retro-cyan,#00f0ff);"></div>
             </div>
           </div>
-          <!-- Weekly -->
           <div class="pxl-pulse-card" style="border-left-color:var(--retro-gold,#ffcc00);">
             <div class="pxl-pulse-header">
               <span class="pxl-pulse-title">Weekly Goal</span>
@@ -2574,7 +2006,6 @@
               <div class="v2-hp-bar-fill" style="width:${weeklyPct}%; background:var(--retro-gold,#ffcc00);"></div>
             </div>
           </div>
-          <!-- Monthly -->
           <div class="pxl-pulse-card" style="border-left-color:var(--retro-purple,#a855f7);">
             <div class="pxl-pulse-header">
               <span class="pxl-pulse-title">Monthly Goal</span>
@@ -2588,7 +2019,6 @@
               <div class="v2-hp-bar-fill" style="width:${monthlyPct}%; background:var(--retro-purple,#a855f7);"></div>
             </div>
           </div>
-          <!-- Per-plan ETAs -->
           ${planStats.map(ps => {
             const planColor = ps.plan.accentColor || PLAN_A_ACCENT;
             const behind = ps.finishDate > ps.targetDate;
@@ -2612,111 +2042,26 @@
         </div>
       </div>
 
-      <!-- Per-Plan Schedule Delta -->
-      ${planStats.map(ps => renderPlanDelta(ps)).join('')}
-
-      <!-- 7-Day Execution Chart (combined) -->
+      <!-- 7-Day Execution Chart -->
       ${renderPixelAreaChart(last7Days, totalVidsDay, maxChartVal)}
 
-      <!-- Advanced Quest Command Centers (per plan) -->
-      <div style="font-family:var(--font-display); font-size:1.05rem; font-weight:700; color:var(--text-primary); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-        <span style="color:var(--retro-cyan,#00f0ff);">🎮</span>
-        <span>Advanced Daily Quest Command Center${hasDualPlans ? 's' : ''}</span>
+      <!-- Subject Heatmap (moved from dashboard) -->
+      <div style="margin-top:20px;">
+        ${renderPixelSubjectHeatmap(stats)}
       </div>
-      ${planStats.map((ps, idx) => renderPlanQuestCenter(ps, allQueues[idx])).join('')}
 
-      <!-- Subject Velocity Matrix -->
-      <div class="section-title-row">
-        <h3 class="section-title" style="font-family:var(--font-display); font-size:1.05rem;">Subject Velocity & Completion Matrix</h3>
-      </div>
-      <div class="v2-pixel-card anl-table-container" style="padding:0; margin-bottom:24px; overflow-x:auto; width:100%;">
-        <table class="anl-table">
-          <thead><tr>
-            <th>Subject</th><th>Videos</th><th>Hours</th>
-            ${planStats.map(ps => `<th>${ps.plan.label} Days</th>`).join('')}
-            <th>Progress</th><th>Action</th>
-          </tr></thead>
-          <tbody>
-            ${stats.subjectsStats.map(s => {
-              const sRemVids = Math.max(0, s.totalVideos - s.completedVideos);
-              return `
-                <tr>
-                  <td>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <img src="${s.icon}" style="width:22px; height:22px; object-fit:contain;" alt="${s.name}">
-                      <span style="font-family:var(--font-display); font-weight:700; font-size:0.88rem;">${s.name}</span>
-                    </div>
-                  </td>
-                  <td style="font-family:var(--font-hud); font-size:0.9rem;">${s.completedVideos}/${s.totalVideos}</td>
-                  <td style="font-family:var(--font-hud); font-size:0.9rem;">${s.completedHours}h</td>
-                  ${planStats.map(ps => `<td><span style="font-family:var(--font-hud); font-weight:700; color:${ps.plan.accentColor || PLAN_A_ACCENT}; font-size:0.95rem;">${Math.ceil(sRemVids / ps.vids)}d</span></td>`).join('')}
-                  <td><span class="v2-hud-badge" style="${s.percentage === 100 ? 'color:var(--success); border-color:var(--success);' : ''}">${s.percentage}%</span></td>
-                  <td>
-                    <button class="v2-arcade-btn anl-study-btn" data-subject-id="${s.id}" style="height:28px; padding:0 8px; font-size:0.78rem;">Study</button>
-                  </td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
-      const shareText = `🎯 FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'} (${state.personal.targetExam})\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD 16-Bit Retro RPG Planner!`;
+      const shareText = `🎯 FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome', 'Share ✨'));
+        navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome'));
       } else {
-        showToast('Study Intelligence Report Ready!', 'auto_awesome', 'Share ✨');
+        showToast('Study Intelligence Report Ready!', 'auto_awesome');
       }
     });
 
-    document.querySelectorAll('.anl-quest-chk').forEach(chk => {
-      chk.addEventListener('change', (e) => {
-        const vidId = e.target.getAttribute('data-video-id');
-        const planId = e.target.getAttribute('data-plan-id');
-        const plan = planId ? getPlanById(planId) : null;
-        if (e.target.checked) {
-          state.completedVideos[vidId] = true;
-          markStudyActivity(true);
-          showToast(`${plan ? plan.label + ' — ' : ''}Completed Daily Quest!`, 'check_circle');
-        } else {
-          delete state.completedVideos[vidId];
-          markStudyActivity(false);
-        }
-        saveState();
-        renderAnalyticsView(getSyllabusStats());
-      });
-    });
-
-    document.querySelectorAll('.btn-open-queue-subject').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.activeSubjectId = btn.getAttribute('data-subject-id');
-        switchView('subject_detail');
-      });
-    });
-
-    document.querySelectorAll('.btn-advance-queue').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const planId = btn.getAttribute('data-plan-id');
-        const plan = planId ? getPlanById(planId) : (state.plans && state.plans[0]);
-        if (plan) {
-          plan.queueBatchVideoIds = [];
-          plan.queueCompletedInBatch = 0;
-          plan.extraBatchesCompletedToday = (plan.extraBatchesCompletedToday || 0) + 1;
-          saveState();
-          showToast(`⚡ ${plan.label} Extra Batch #${plan.extraBatchesCompletedToday} Unlocked!`, 'rocket_launch');
-        }
-        render();
-      });
-    });
-
-    document.querySelectorAll('.anl-study-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.activeSubjectId = btn.getAttribute('data-subject-id');
-        switchView('subject_detail');
-      });
-    });
+    document.getElementById('btn-analytics-open-goals')?.addEventListener('click', openGoalModal);
   }
 
   // --- View 5: Synchronized Targets & Goals View ---
@@ -2804,16 +2149,13 @@
     document.getElementById('btn-edit-goals-page')?.addEventListener('click', openGoalModal);
   }
 
-  // --- View 6: Comprehensive Profile View ---
+  // --- View 6: Profile View (simplified) ---
   function renderProfileView(stats) {
     const docName = state.personal.doctorName || 'Dr. Aspirant';
-    const exam = state.personal.targetExam || 'NEET PG 2026';
-    const rank = state.personal.targetRank || 'Top 1000';
     const isSynced = state.personal.isSynced;
     const syncEmail = state.personal.syncEmail || '';
 
     DOM.appMain.innerHTML = `
-      <!-- PxlKit PixelBreadcrumb -->
       <div class="pxl-breadcrumb">
         <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
         <span class="pxl-breadcrumb-separator">&gt;</span>
@@ -2826,12 +2168,11 @@
 
       <div class="v2-pixel-card" style="padding: 20px; margin-bottom: 16px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
-          <div class="pxl-avatar pxl-avatar-lg pxl-avatar-${state.personal.themeAccent || 'cyan'}">
+          <div class="pxl-avatar pxl-avatar-lg pxl-avatar-cyan">
             ${(docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase()}
           </div>
           <div>
             <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${docName}</h2>
-            <p style="font-family: var(--font-hud); font-size: 1.05rem; color: var(--text-secondary);">${exam} • TARGET RANK: ${rank}</p>
           </div>
         </div>
 
@@ -2840,47 +2181,8 @@
             <label for="prof-doc-name">Doctor Name</label>
             <input type="text" id="prof-doc-name" value="${docName}" class="form-input">
           </div>
-          <div class="form-group">
-            <label for="prof-target-exam">Target Exam</label>
-            <select id="prof-target-exam" class="form-select" style="border: 2px solid var(--v2-ink); font-family: var(--font-display); font-size: 0.9rem; height: 40px;">
-              <option value="NEET PG 2026" ${exam === 'NEET PG 2026' ? 'selected' : ''}>NEET PG 2026</option>
-              <option value="NEET PG 2027" ${exam === 'NEET PG 2027' ? 'selected' : ''}>NEET PG 2027</option>
-              <option value="NEET PG 2028" ${exam === 'NEET PG 2028' ? 'selected' : ''}>NEET PG 2028</option>
-              <option value="NEET PG 2029" ${exam === 'NEET PG 2029' ? 'selected' : ''}>NEET PG 2029</option>
-              <option value="NEET PG 2030" ${exam === 'NEET PG 2030' ? 'selected' : ''}>NEET PG 2030</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="prof-target-rank">Target Rank Goal</label>
-            <input type="text" id="prof-target-rank" value="${rank}" class="form-input">
-          </div>
           <button type="submit" class="v2-arcade-btn" style="height: 44px; width: 100%;">Save Profile Changes</button>
         </form>
-      </div>
-
-      <!-- Preparation Setup & Target Goals Card -->
-      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h3 style="font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin: 0;">Preparation Setup & Target Goals</h3>
-          <span class="v2-hud-badge" style="color: var(--accent-primary); border-color: var(--accent-primary);">${Math.max(1, Math.ceil((new Date(state.goals.targetDate || '2026-08-15') - new Date()) / 86400000))} DAYS LEFT</span>
-        </div>
-
-        <div style="background: var(--bg-surface-raised); border: 2px solid var(--v2-ink); padding: 12px; margin-bottom: 14px;">
-          <div style="display: flex; justify-content: space-between; font-family: var(--font-hud); font-size: 1.05rem; margin-bottom: 4px;">
-            <span>PRIORITY FOCUS: <strong style="color: var(--retro-gold);">${state.goals.targetSubject || 'Entire Syllabus'}</strong></span>
-            <span style="color: var(--accent-primary); font-weight: 700;">${(state.goals.goalMode || 'video') === 'video' ? state.goals.videosPerDay + ' VIDS/DAY' : state.goals.dailyTargetHours + ' HRS/DAY'}</span>
-          </div>
-          <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted);">
-            Target Completion: <strong>${state.goals.targetDate || '2026-08-15'}</strong> (${state.goals.videosPerWeek || 56} vids/wk • ${state.goals.videosPerMonth || 240} vids/mo)
-          </div>
-        </div>
-
-        <button class="v2-arcade-btn" id="btn-profile-open-goals" style="width: 100%; margin-bottom: 10px;">
-          <span class="material-symbols-outlined">track_changes</span> Synchronize Pace & Goals
-        </button>
-        <button class="v2-arcade-btn" id="btn-restart-onboarding" style="width: 100%; background: var(--bg-surface-raised); color: var(--text-primary);">
-          <span class="material-symbols-outlined">restart_alt</span> Reset Targets & Restart Setup Wizard
-        </button>
       </div>
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
@@ -2892,103 +2194,21 @@
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress across all your devices.</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
           </button>
         `}
       </div>
 
-      <!-- PxlKit PIXELCOLORSWATCH Theme & UI Style Customizer Card -->
-      <div class="pxl-feature-card-wrapper" style="margin-bottom: 16px;">
-        <div class="pxl-feature-card-header-badges">
-          <span class="pxl-badge-green">PIXELCOLORSWATCH</span>
-          <span class="pxl-badge-code">theme-customizer</span>
-        </div>
-
-        <div class="pxl-feature-card" style="padding: 18px;">
-          <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: #ffffff; margin: 0 0 4px 0;">
-            Color Swatches & UI Style Customizer
-          </h3>
-          <p style="font-family: var(--font-hud); font-size: 1rem; color: #a0aec0; margin: 0 0 14px 0;">
-            Customize color theme swatches, shadow depth, and card elevation.
-          </p>
-
-          <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--v2-rpg-gold, #ffd700); font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
-            1. PxlKit Accent Color Swatches
-          </div>
-          <div class="pxl-swatches-grid" style="margin-bottom: 18px;">
-            <div class="pxl-color-swatch ${(state.personal.themeAccent || 'cobalt') === 'emerald' ? 'active' : ''}" data-accent="emerald">
-              <div class="pxl-swatch-box" style="background-color: #00ff88;"></div>
-              <div class="pxl-swatch-info">
-                <span class="pxl-swatch-name">Green</span>
-                <span class="pxl-swatch-var">--retro-green</span>
-              </div>
-            </div>
-
-            <div class="pxl-color-swatch ${(state.personal.themeAccent || 'cobalt') === 'cobalt' ? 'active' : ''}" data-accent="cobalt">
-              <div class="pxl-swatch-box" style="background-color: #00f0ff;"></div>
-              <div class="pxl-swatch-info">
-                <span class="pxl-swatch-name">Cyan</span>
-                <span class="pxl-swatch-var">--retro-cyan</span>
-              </div>
-            </div>
-
-            <div class="pxl-color-swatch ${(state.personal.themeAccent || 'cobalt') === 'gold' ? 'active' : ''}" data-accent="gold">
-              <div class="pxl-swatch-box" style="background-color: #ffcc00;"></div>
-              <div class="pxl-swatch-info">
-                <span class="pxl-swatch-name">Gold</span>
-                <span class="pxl-swatch-var">--retro-gold</span>
-              </div>
-            </div>
-
-            <div class="pxl-color-swatch ${(state.personal.themeAccent || 'cobalt') === 'purple' ? 'active' : ''}" data-accent="purple">
-              <div class="pxl-swatch-box" style="background-color: #a855f7;"></div>
-              <div class="pxl-swatch-info">
-                <span class="pxl-swatch-name">Purple</span>
-                <span class="pxl-swatch-var">--retro-purple</span>
-              </div>
-            </div>
-
-            <div class="pxl-color-swatch ${(state.personal.themeAccent || 'cobalt') === 'crimson' ? 'active' : ''}" data-accent="crimson">
-              <div class="pxl-swatch-box" style="background-color: #ff5555;"></div>
-              <div class="pxl-swatch-info">
-                <span class="pxl-swatch-name">Red</span>
-                <span class="pxl-swatch-var">--retro-red</span>
-              </div>
-            </div>
-          </div>
-
-          <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--v2-rpg-gold, #ffd700); font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
-            2. Card Shadow & Elevation Variation
-          </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="v2-arcade-btn shadow-opt-btn ${(state.personal.shadowStyle || 'offset') === 'offset' ? 'active' : ''}" data-shadow="offset" style="font-size: 0.85rem; height: 32px;">
-              Hard 2D Pixel Offset
-            </button>
-            <button class="v2-arcade-btn shadow-opt-btn ${(state.personal.shadowStyle || 'offset') === 'glow' ? 'active' : ''}" data-shadow="glow" style="font-size: 0.85rem; height: 32px;">
-              Soft Ambient Glow
-            </button>
-            <button class="v2-arcade-btn shadow-opt-btn ${(state.personal.shadowStyle || 'offset') === 'flat' ? 'active' : ''}" data-shadow="flat" style="font-size: 0.85rem; height: 32px;">
-              Flat Ink Border
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Developer Support & Contact Center Card -->
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary, #2563eb);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
           <div>
             <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0;">
               <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb);">support_agent</span>
-              <span>Developer Support & Contact Center</span>
+              <span>Developer Support & Contact</span>
             </h3>
-            <p style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); margin-top: 2px;">
-              Direct support ticket submission, bug reporting, dual-track feature help & developer feedback.
-            </p>
           </div>
-          <span class="v2-hud-badge" style="color: var(--retro-green, #10b981); border-color: var(--retro-green, #10b981);">24/7 SUPPORT</span>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 14px;">
@@ -2999,71 +2219,22 @@
             <span class="material-symbols-outlined">content_copy</span> Copy Email (support@flowmd.app)
           </button>
         </div>
-
-        <div style="font-family: var(--font-hud); font-size: 0.88rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
-          <span>⚡ FlowMD Core v107.0 • Response Guarantee: &lt; 24h</span>
-          <span style="color: var(--retro-gold, #ffcc00); font-weight: 700;">PRO SUPPORT ACTIVE</span>
-        </div>
       </div>
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px;">
-        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Data & Backup Management</h3>
-        <button class="v2-arcade-btn" id="btn-export-data" style="width: 100%; margin-bottom: 10px; background: var(--bg-surface-raised); color: var(--text-primary);">
-          <span class="material-symbols-outlined">download</span> Export / Download My Data
-        </button>
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Data Management</h3>
         <button class="v2-arcade-btn" id="btn-reset-data" style="width: 100%; background: var(--danger);">
           <span class="material-symbols-outlined">delete_forever</span> Reset All App Data
         </button>
       </div>
     `;
 
-    document.querySelectorAll('.pxl-color-swatch').forEach(sw => {
-      sw.addEventListener('click', () => {
-        const acc = sw.getAttribute('data-accent');
-        state.personal.themeAccent = acc;
-        applyTheme(state.theme, acc, state.personal.shadowStyle);
-        saveState();
-        showToast(`Theme Swatch: ${acc.toUpperCase()} Applied!`, 'palette');
-        renderProfileView(stats);
-      });
-    });
-
-    document.querySelectorAll('.shadow-opt-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const sh = btn.getAttribute('data-shadow');
-        state.personal.shadowStyle = sh;
-        applyTheme(state.theme, state.personal.themeAccent, sh);
-        saveState();
-        showToast(`Shadow Variation: ${sh.toUpperCase()} Applied!`, 'auto_awesome');
-        renderProfileView(stats);
-      });
-    });
-
-    document.getElementById('btn-restart-onboarding')?.addEventListener('click', () => {
-      openOnboardingWizardModal();
-    });
-
-    document.getElementById('btn-profile-open-goals')?.addEventListener('click', openGoalModal);
-
     document.getElementById('profile-edit-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
       state.personal.doctorName = document.getElementById('prof-doc-name').value || 'Dr. Aspirant';
-      state.personal.targetExam = document.getElementById('prof-target-exam').value || 'NEET PG 2026';
-      state.personal.targetRank = document.getElementById('prof-target-rank').value || 'Top 1000';
       saveState();
       showToast('Profile updated!', 'check_circle');
       render();
-    });
-
-    document.getElementById('btn-export-data')?.addEventListener('click', () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `flowmd_backup_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast('Data exported successfully!', 'download');
     });
 
     document.getElementById('btn-reset-data')?.addEventListener('click', () => {
@@ -3118,10 +2289,9 @@
 
     const userEmail = (state.personal && state.personal.syncEmail) || '';
     const docName = (state.personal && state.personal.doctorName) || 'Dr. Aspirant';
-    const exam = (state.personal && state.personal.targetExam) || 'NEET PG 2026';
     const streak = typeof getStudyStreak === 'function' ? getStudyStreak() : 0;
     const overallMastery = (typeof getSyllabusStats === 'function' && getSyllabusStats().percentage) || 0;
-    const sysInfo = `Doctor: ${docName} | Exam: ${exam} | Streak: ${streak}d | Mastery: ${overallMastery}% | App Version: v111.0`;
+    const sysInfo = `Doctor: ${docName} | Streak: ${streak}d | Mastery: ${overallMastery}% | App Version: v111.0`;
 
     modal.innerHTML = `
       <div class="modal-card" style="max-width: 520px; width: 92%;">
@@ -3300,16 +2470,14 @@
     const docName = state.personal.doctorName || 'Dr. Aspirant';
     const isSynced = state.personal.isSynced;
     const syncEmail = state.personal.syncEmail || '';
-    const curAccent = state.personal.themeAccent || 'cyan';
     const initials = (docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase();
 
     DOM.bottomSheetContent.innerHTML = `
       <div style="text-align: center; margin-bottom: 16px;">
-        <div class="pxl-avatar pxl-avatar-lg pxl-avatar-${curAccent}" style="margin: 0 auto 8px auto;">
+        <div class="pxl-avatar pxl-avatar-lg pxl-avatar-cyan" style="margin: 0 auto 8px auto;">
           ${initials}
         </div>
         <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;">${docName}</div>
-        <div style="font-family: var(--font-hud); font-size: 1rem; color: var(--text-muted);">${state.personal.targetExam}</div>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -3635,29 +2803,7 @@
     }
   });
 
-  function openOnboardingWizard() {
-    const wizardModal = document.getElementById('onboarding-wizard-modal');
-    if (!wizardModal) return;
 
-    const stats = getSyllabusStats();
-    const subSelect = document.getElementById('onb-target-subject');
-    if (subSelect) {
-      let optionsHTML = `<option value="Entire Syllabus" selected>Entire Syllabus (${stats.totalVideos} Videos)</option>`;
-      optionsHTML += stats.subjectsStats.map(s => `
-        <option value="${s.name}">${s.name} (${s.totalVideos} Videos)</option>
-      `).join('');
-      subSelect.innerHTML = optionsHTML;
-    }
-
-    wizardModal.style.setProperty('display', 'flex', 'important');
-  }
-
-  function closeOnboardingWizard() {
-    const wizardModal = document.getElementById('onboarding-wizard-modal');
-    if (wizardModal) wizardModal.style.setProperty('display', 'none', 'important');
-    state.isCompletedOnboarding = true;
-    saveState();
-  }
 
   // --- Goal Modal Helpers (Dual-Plan Fully Functional) ---
   function openGoalModal() {

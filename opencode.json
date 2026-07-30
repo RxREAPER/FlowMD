@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["AGENTS.md"],
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp"],
+      "enabled": true
+    },
+    "semantic-dom": {
+      "type": "local",
+      "command": ["npx", "-y", "@helmif/semantic-dom-mcp"],
+      "enabled": true
+    },
+    "browser-lens": {
+      "type": "local",
+      "command": ["npx", "-y", "browser-lens-mcp"],
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,517 @@
+{
+  "chapterCorrections": [
+    {
+      "subject": "Anatomy",
+      "dataJsChapter": "EMBRYOLOGY",
+      "ocrChapter": "HEAD AND NECK",
+      "note": "OCR uses \"HEAD AND NECK\" but data.js uses \"EMBRYOLOGY\""
+    },
+    {
+      "subject": "Anatomy",
+      "dataJsChapter": "HISTOLOGY",
+      "ocrChapter": "HEAD AND NECK",
+      "note": "OCR uses \"HEAD AND NECK\" but data.js uses \"HISTOLOGY\""
+    },
+    {
+      "subject": "Anatomy",
+      "dataJsChapter": "NEUROANATOMY",
+      "ocrChapter": "HEAD AND NECK",
+      "note": "OCR uses \"HEAD AND NECK\" but data.js uses \"NEUROANATOMY\""
+    },
+    {
+      "subject": "Anatomy",
+      "dataJsChapter": "THORAX",
+      "ocrChapter": "HEAD AND NECK",
+      "note": "OCR uses \"HEAD AND NECK\" but data.js uses \"THORAX\""
+    },
+    {
+      "subject": "Anatomy",
+      "dataJsChapter": "ABDOMEN & PELVIS",
+      "ocrChapter": "HEAD AND NECK",
+      "note": "OCR uses \"HEAD AND NECK\" but data.js uses \"ABDOMEN & PELVIS\""
+    },
+    {
+      "subject": "Physiology",
+      "dataJsChapter": "NERVE & MUSCLE PHYSIOLOGY",
+      "ocrChapter": "GENERAL PHYSIOLOGY",
+      "note": "OCR uses \"GENERAL PHYSIOLOGY\" but data.js uses \"NERVE & MUSCLE PHYSIOLOGY\""
+    },
+    {
+      "subject": "Physiology",
+      "dataJsChapter": "REPRODUCTIVE SYSTEM",
+      "ocrChapter": "GENERAL PHYSIOLOGY",
+      "note": "OCR uses \"GENERAL PHYSIOLOGY\" but data.js uses \"REPRODUCTIVE SYSTEM\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "CENTRAL & PERIPHERAL NERVOUS SYSTEM",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"CENTRAL & PERIPHERAL NERVOUS SYSTEM\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "ANTIMICROBIAL AGENTS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"ANTIMICROBIAL AGENTS\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "AUTACOIDS & IMMUNOPHARMACOLOGY",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"AUTACOIDS & IMMUNOPHARMACOLOGY\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "HEMATOLOGY",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"HEMATOLOGY\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "GASTROINTESTINAL PHARMACOLOGY",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"GASTROINTESTINAL PHARMACOLOGY\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "IMMUNOMODULATORS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"IMMUNOMODULATORS\""
+    },
+    {
+      "subject": "Pharmacology",
+      "dataJsChapter": "ANTICANCER AGENTS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"ANTICANCER AGENTS\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "HEMATOLOGY",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"HEMATOLOGY\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "GU",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"GU\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "GI",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"GI\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "ENDO. & BREAST",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"ENDO. & BREAST\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "SKIN & MUSCULO-SKELETAL",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"SKIN & MUSCULO-SKELETAL\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "NERVOUS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"NERVOUS\""
+    },
+    {
+      "subject": "Pathology",
+      "dataJsChapter": "MISCELLANEOUS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"MISCELLANEOUS\""
+    },
+    {
+      "subject": "Forensic Medicine",
+      "dataJsChapter": "MEDICAL JURISPRUDENCE",
+      "ocrChapter": "FORENSIC TRAUMATOLOGY",
+      "note": "OCR uses \"FORENSIC TRAUMATOLOGY\" but data.js uses \"MEDICAL JURISPRUDENCE\""
+    },
+    {
+      "subject": "Forensic Medicine",
+      "dataJsChapter": "TOXICOLOGY",
+      "ocrChapter": "FORENSIC TRAUMATOLOGY",
+      "note": "OCR uses \"FORENSIC TRAUMATOLOGY\" but data.js uses \"TOXICOLOGY\""
+    },
+    {
+      "subject": "Forensic Medicine",
+      "dataJsChapter": "FORENSIC PSYCHIATRY & MISCELLANEOUS",
+      "ocrChapter": "FORENSIC TRAUMATOLOGY",
+      "note": "OCR uses \"FORENSIC TRAUMATOLOGY\" but data.js uses \"FORENSIC PSYCHIATRY & MISCELLANEOUS\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "GASTROENTEROLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"GASTROENTEROLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "HEMATOLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"HEMATOLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "PULMONOLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"PULMONOLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "CARDIOLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"CARDIOLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "RHEUMATOLOGY & IMMUNOLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"RHEUMATOLOGY & IMMUNOLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "NEUROLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"NEUROLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "NEPHROLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"NEPHROLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "ACID-BASE & ELECTROLYTE BALANCE",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"ACID-BASE & ELECTROLYTE BALANCE\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "ENDOCRINOLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"ENDOCRINOLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "HEPATOLOGY",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"HEPATOLOGY\""
+    },
+    {
+      "subject": "Medicine",
+      "dataJsChapter": "INFECTIOUS DISEASES",
+      "ocrChapter": "ECG",
+      "note": "OCR uses \"ECG\" but data.js uses \"INFECTIOUS DISEASES\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "BREAST",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"BREAST\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "GI & ABDOMINAL SURGERY",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"GI & ABDOMINAL SURGERY\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "UROLOGY",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"UROLOGY\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "SPECIALTY SURGERY",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"SPECIALTY SURGERY\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "TRAUMA & CRITICAL CARE",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"TRAUMA & CRITICAL CARE\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "HERNIA & ABDOMINAL WALL",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"HERNIA & ABDOMINAL WALL\""
+    },
+    {
+      "subject": "Surgery",
+      "dataJsChapter": "MISCELLANEOUS",
+      "ocrChapter": "ENDOCRINE SYSTEM",
+      "note": "OCR uses \"ENDOCRINE SYSTEM\" but data.js uses \"MISCELLANEOUS\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "NEONATOLOGY",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"NEONATOLOGY\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "GROWTH & DEVELOPMENT",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"GROWTH & DEVELOPMENT\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "NUTRITION",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"NUTRITION\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "GI",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"GI\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "GU",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"GU\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "NERVOUS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"NERVOUS\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "ENDOCRINE",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"ENDOCRINE\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "HEMATOLOGY",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"HEMATOLOGY\""
+    },
+    {
+      "subject": "Paediatrics",
+      "dataJsChapter": "MISCELLANEOUS",
+      "ocrChapter": "RESPIRATORY SYSTEM",
+      "note": "OCR uses \"RESPIRATORY SYSTEM\" but data.js uses \"MISCELLANEOUS\""
+    }
+  ],
+  "chapterAdditions": [],
+  "chapterMissingFromOCR": [
+    {
+      "subject": "Anatomy",
+      "chapter": "ABDOMEN & PELVIS"
+    },
+    {
+      "subject": "Biochemistry",
+      "chapter": "GENERAL BIOCHEMISTRY"
+    },
+    {
+      "subject": "Biochemistry",
+      "chapter": "CARBOHYDRATE METABOLISM"
+    },
+    {
+      "subject": "Biochemistry",
+      "chapter": "VITAMINS & MINERALS"
+    },
+    {
+      "subject": "Physiology",
+      "chapter": "NERVE & MUSCLE PHYSIOLOGY"
+    },
+    {
+      "subject": "Pharmacology",
+      "chapter": "CENTRAL & PERIPHERAL NERVOUS SYSTEM"
+    },
+    {
+      "subject": "Pharmacology",
+      "chapter": "ANTIMICROBIAL AGENTS"
+    },
+    {
+      "subject": "Pharmacology",
+      "chapter": "AUTACOIDS & IMMUNOPHARMACOLOGY"
+    },
+    {
+      "subject": "Pharmacology",
+      "chapter": "GASTROINTESTINAL PHARMACOLOGY"
+    },
+    {
+      "subject": "Pharmacology",
+      "chapter": "ANTICANCER AGENTS"
+    },
+    {
+      "subject": "Microbiology",
+      "chapter": "GEN. MICROBIO. & GEN. BACTERIO"
+    },
+    {
+      "subject": "Microbiology",
+      "chapter": "ORGAN SPECIFIC BACTERIO"
+    },
+    {
+      "subject": "Pathology",
+      "chapter": "ENDO. & BREAST"
+    },
+    {
+      "subject": "Pathology",
+      "chapter": "SKIN & MUSCULO-SKELETAL"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "DEMOGRAPHY & FAMILY-PLANNING"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "MATERNAL & CHILD HEALTH"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "VACCINE & IMMUNIZATION"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "SCREENING OF DISEASES"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "BIOSTATICS"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "INFECTIOUS DISEASES EPIDEMIOLOGY"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "NON-COMMUNICABLE DISEASE"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "BMW"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "CONCEPT OF HEALTH & DISEASE"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "INTERNATIONAL HEALTH ORGANIZATIONS"
+    },
+    {
+      "subject": "Community Medicine",
+      "chapter": "SOCIAL MEDICINE & DEMOGRAPHY"
+    },
+    {
+      "subject": "Forensic Medicine",
+      "chapter": "FORENSIC PSYCHIATRY & MISCELLANEOUS"
+    },
+    {
+      "subject": "Ophthalmology",
+      "chapter": "STRABISMUS & SQUINT"
+    },
+    {
+      "subject": "Ophthalmology",
+      "chapter": "LENS & CATARACT"
+    },
+    {
+      "subject": "Ophthalmology",
+      "chapter": "OPTICS & REFRACTION"
+    },
+    {
+      "subject": "Ophthalmology",
+      "chapter": "RETINA & VITREOUS"
+    },
+    {
+      "subject": "Ophthalmology",
+      "chapter": "CORNEA & SCLERA"
+    },
+    {
+      "subject": "Ophthalmology",
+      "chapter": "OCULAR ADNEXA"
+    },
+    {
+      "subject": "Otorhinolaryngology (ENT)",
+      "chapter": "OTOLOGY (EAR)"
+    },
+    {
+      "subject": "Otorhinolaryngology (ENT)",
+      "chapter": "RHINOLOGY (NOSE)"
+    },
+    {
+      "subject": "Radiology",
+      "chapter": "FUNDAMENTS OF RADIOLOGY"
+    },
+    {
+      "subject": "Radiology",
+      "chapter": "RADIOTHERAPY & NUCLEAR MEDICINE"
+    },
+    {
+      "subject": "Medicine",
+      "chapter": "RHEUMATOLOGY & IMMUNOLOGY"
+    },
+    {
+      "subject": "Medicine",
+      "chapter": "ACID-BASE & ELECTROLYTE BALANCE"
+    },
+    {
+      "subject": "Surgery",
+      "chapter": "GI & ABDOMINAL SURGERY"
+    },
+    {
+      "subject": "Surgery",
+      "chapter": "SPECIALTY SURGERY"
+    },
+    {
+      "subject": "Surgery",
+      "chapter": "TRAUMA & CRITICAL CARE"
+    },
+    {
+      "subject": "Surgery",
+      "chapter": "HERNIA & ABDOMINAL WALL"
+    },
+    {
+      "subject": "Orthopaedics",
+      "chapter": "ORTHOPEDICS & TRAUMATOLOGY"
+    },
+    {
+      "subject": "Paediatrics",
+      "chapter": "GROWTH & DEVELOPMENT"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "GENERAL GYNECOLOGY"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "GYNECOLOGIC INFECTIONS"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "INFERTILITY & CONTRACEPTION"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "GYNECOLOGIC ONCOLOGY"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "NORMAL PREGNANCY & ANTENATAL CARE"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "MEDICAL & SURGICAL COMPLICATIONS IN PREGNANCY"
+    },
+    {
+      "subject": "Obstetrics & Gynaecology",
+      "chapter": "LABOUR & PUERPERIUM"
+    }
+  ]
+}
