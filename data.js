@@ -3483,8 +3483,8 @@ const syllabusData = [
       },
       {
         "name": "BIOSTATISTICS",
-        "modules": 5,
-        "hours": 2.4,
+        "modules": 9,
+        "hours": 4.5,
         "videos": [
           {
             "id": "cm__bio__v1",
@@ -3520,6 +3520,34 @@ const syllabusData = [
             "title": "Tests of Significance, Probability Rules and Regression Analysis",
             "durationMins": 27,
             "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v6",
+            "videoNumber": "#34",
+            "title": "Skew and Tiles",
+            "durationMins": 19,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v7",
+            "videoNumber": "#35",
+            "title": "Sampling Methods and Sample Size Calculation",
+            "durationMins": 24,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v8",
+            "videoNumber": "#36",
+            "title": "Graphs",
+            "durationMins": 55,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v9",
+            "videoNumber": "#37",
+            "title": "Biostatistics: Questions and Answers",
+            "durationMins": 29,
+            "durationSecs": 0
           }
         ]
       },
@@ -3530,28 +3558,28 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__nut__v1",
-            "videoNumber": "#34",
+            "videoNumber": "#38",
             "title": "Nutrition: Concepts and Macronutrients",
             "durationMins": 56,
             "durationSecs": 0
           },
           {
             "id": "cm__nut__v2",
-            "videoNumber": "#35",
+            "videoNumber": "#39",
             "title": "Nutrition: Micronutrients",
             "durationMins": 41,
             "durationSecs": 0
           },
           {
             "id": "cm__nut__v3",
-            "videoNumber": "#36",
+            "videoNumber": "#40",
             "title": "Nutrition: Recommended Dietary allowance & Millets",
             "durationMins": 17,
             "durationSecs": 0
           },
           {
             "id": "cm__nut__v4",
-            "videoNumber": "#37",
+            "videoNumber": "#41",
             "title": "Nutrition: Food products, Adulterants and Standards",
             "durationMins": 51,
             "durationSecs": 0
@@ -3565,56 +3593,56 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__env__v1",
-            "videoNumber": "#38",
+            "videoNumber": "#42",
             "title": "Air and Health",
             "durationMins": 39,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v2",
-            "videoNumber": "#39",
+            "videoNumber": "#43",
             "title": "Water Sources and Quality of Water",
             "durationMins": 47,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v3",
-            "videoNumber": "#40",
+            "videoNumber": "#44",
             "title": "Water Purification Methods",
             "durationMins": 42,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v4",
-            "videoNumber": "#41",
+            "videoNumber": "#45",
             "title": "Housing, Ventilation, Light, Sound, Radiation",
             "durationMins": 30,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v5",
-            "videoNumber": "#42",
+            "videoNumber": "#46",
             "title": "Waste Management",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v6",
-            "videoNumber": "#43",
+            "videoNumber": "#47",
             "title": "Entomology: Mosquitoes",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v7",
-            "videoNumber": "#44",
+            "videoNumber": "#48",
             "title": "Entomology: Lice, Ticks, Mites and Sandfly",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
             "id": "cm__env__v8",
-            "videoNumber": "#45",
+            "videoNumber": "#49",
             "title": "Mosquito Control Measures and Insecticides",
             "durationMins": 41,
             "durationSecs": 0
@@ -3628,7 +3656,7 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__bmw__v1",
-            "videoNumber": "#46",
+            "videoNumber": "#50",
             "title": "Biomedical Waste Management",
             "durationMins": 49,
             "durationSecs": 0
@@ -3642,14 +3670,14 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__occ__v1",
-            "videoNumber": "#47",
+            "videoNumber": "#51",
             "title": "Occupational Health",
             "durationMins": 44,
             "durationSecs": 0
           },
           {
             "id": "cm__occ__v2",
-            "videoNumber": "#48",
+            "videoNumber": "#52",
             "title": "ESI and Factories Act",
             "durationMins": 28,
             "durationSecs": 0
@@ -3663,21 +3691,21 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__chd__v1",
-            "videoNumber": "#49",
+            "videoNumber": "#53",
             "title": "Concepts in Community Medicine",
             "durationMins": 29,
             "durationSecs": 0
           },
           {
             "id": "cm__chd__v2",
-            "videoNumber": "#50",
+            "videoNumber": "#54",
             "title": "Concepts of Control and Prevention",
             "durationMins": 40,
             "durationSecs": 0
           },
           {
             "id": "cm__chd__v3",
-            "videoNumber": "#51",
+            "videoNumber": "#55",
             "title": "Health and Disability Indicators",
             "durationMins": 47,
             "durationSecs": 0
@@ -3691,7 +3719,7 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__dis__v1",
-            "videoNumber": "#52",
+            "videoNumber": "#56",
             "title": "Disaster Management",
             "durationMins": 38,
             "durationSecs": 0
@@ -3705,7 +3733,7 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__hc__v1",
-            "videoNumber": "#53",
+            "videoNumber": "#57",
             "title": "Health Communication",
             "durationMins": 32,
             "durationSecs": 0
@@ -3719,7 +3747,7 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__iho__v1",
-            "videoNumber": "#54",
+            "videoNumber": "#58",
             "title": "International Health Organisations",
             "durationMins": 28,
             "durationSecs": 0
@@ -3733,7 +3761,7 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__soc__v1",
-            "videoNumber": "#55",
+            "videoNumber": "#59",
             "title": "Social Medicine",
             "durationMins": 47,
             "durationSecs": 0
@@ -3747,28 +3775,28 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__misc__v1",
-            "videoNumber": "#56",
+            "videoNumber": "#60",
             "title": "History and Evolution of medicine",
             "durationMins": 33,
             "durationSecs": 0
           },
           {
             "id": "cm__misc__v2",
-            "videoNumber": "#57",
+            "videoNumber": "#61",
             "title": "Preventive Geriatrics",
             "durationMins": 10,
             "durationSecs": 0
           },
           {
             "id": "cm__misc__v3",
-            "videoNumber": "#58",
+            "videoNumber": "#62",
             "title": "Mental Health Programme",
             "durationMins": 12,
             "durationSecs": 0
           },
           {
             "id": "cm__misc__v4",
-            "videoNumber": "#59",
+            "videoNumber": "#63",
             "title": "Genetics and Health",
             "durationMins": 43,
             "durationSecs": 0
@@ -3777,61 +3805,110 @@ const syllabusData = [
       },
       {
         "name": "NATIONAL HEALTH PROGRAMMES",
-        "modules": 8,
-        "hours": 4.3,
+        "modules": 15,
+        "hours": 9.3,
         "videos": [
           {
             "id": "cm__nhp__v1",
-            "videoNumber": "#60",
-            "title": "NVBDCP: Indicators",
-            "durationMins": 36,
+            "videoNumber": "#64",
+            "title": "TB: Epidemiology and Investigations",
+            "durationMins": 45,
             "durationSecs": 0
           },
           {
             "id": "cm__nhp__v2",
-            "videoNumber": "#61",
-            "title": "Japanese Encephalitis",
-            "durationMins": 17,
+            "videoNumber": "#65",
+            "title": "NTEP: Targets, Diagnosis and Management Guidelines",
+            "durationMins": 42,
             "durationSecs": 0
           },
           {
             "id": "cm__nhp__v3",
-            "videoNumber": "#62",
-            "title": "Dengue",
-            "durationMins": 23,
+            "videoNumber": "#66",
+            "title": "NTEP: Strategies, Organisation and Indicators",
+            "durationMins": 49,
             "durationSecs": 0
           },
           {
             "id": "cm__nhp__v4",
-            "videoNumber": "#63",
-            "title": "Lymphatic Filariasis",
-            "durationMins": 22,
+            "videoNumber": "#67",
+            "title": "NACP: Targets, Diagnosis and Management",
+            "durationMins": 60,
             "durationSecs": 0
           },
           {
             "id": "cm__nhp__v5",
-            "videoNumber": "#64",
-            "title": "Kala-Azar",
-            "durationMins": 19,
+            "videoNumber": "#68",
+            "title": "NACP: Strategies, Organisation and Indicators",
+            "durationMins": 30,
             "durationSecs": 0
           },
           {
             "id": "cm__nhp__v6",
-            "videoNumber": "#65",
-            "title": "National Leprosy Eradication Program",
+            "videoNumber": "#69",
+            "title": "NVBDCP: Malaria Epidemiology",
             "durationMins": 38,
             "durationSecs": 0
           },
           {
             "id": "cm__nhp__v7",
-            "videoNumber": "#66",
+            "videoNumber": "#70",
+            "title": "NVBDCP: Malaria Diagnosis, Treatment and Control",
+            "durationMins": 35,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v8",
+            "videoNumber": "#71",
+            "title": "NVBDCP: Indicators",
+            "durationMins": 36,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v9",
+            "videoNumber": "#72",
+            "title": "Japanese Encephalitis",
+            "durationMins": 17,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v10",
+            "videoNumber": "#73",
+            "title": "Dengue",
+            "durationMins": 23,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v11",
+            "videoNumber": "#74",
+            "title": "Lymphatic Filariasis",
+            "durationMins": 22,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v12",
+            "videoNumber": "#75",
+            "title": "Kala-Azar",
+            "durationMins": 19,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v13",
+            "videoNumber": "#76",
+            "title": "National Leprosy Eradication Program",
+            "durationMins": 38,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nhp__v14",
+            "videoNumber": "#77",
             "title": "National Polio Surveillance Project",
             "durationMins": 55,
             "durationSecs": 0
           },
           {
-            "id": "cm__nhp__v8",
-            "videoNumber": "#67",
+            "id": "cm__nhp__v15",
+            "videoNumber": "#78",
             "title": "NIDDCP, IDSP and ICDS",
             "durationMins": 41,
             "durationSecs": 0
@@ -3845,21 +3922,21 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__hcp__v1",
-            "videoNumber": "#68",
+            "videoNumber": "#79",
             "title": "Recent Advances in Community Medicine - 2023",
             "durationMins": 29,
             "durationSecs": 0
           },
           {
             "id": "cm__hcp__v2",
-            "videoNumber": "#69",
+            "videoNumber": "#80",
             "title": "Health Care System in India",
             "durationMins": 66,
             "durationSecs": 0
           },
           {
             "id": "cm__hcp__v3",
-            "videoNumber": "#70",
+            "videoNumber": "#81",
             "title": "Health Planning and Management",
             "durationMins": 45,
             "durationSecs": 0
@@ -3873,21 +3950,21 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__ide__v1",
-            "videoNumber": "#71",
+            "videoNumber": "#82",
             "title": "Infectious Diseases: Basic Definitions, Chain of Transmission",
             "durationMins": 40,
             "durationSecs": 0
           },
           {
             "id": "cm__ide__v2",
-            "videoNumber": "#72",
+            "videoNumber": "#83",
             "title": "Infectious Diseases: Agent, Host, Case, Carrier",
             "durationMins": 47,
             "durationSecs": 0
           },
           {
             "id": "cm__ide__v3",
-            "videoNumber": "#73",
+            "videoNumber": "#84",
             "title": "Infectious Diseases: Modes of Transmission, PPE, Handwashing",
             "durationMins": 48,
             "durationSecs": 0
@@ -3901,98 +3978,98 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__com__v1",
-            "videoNumber": "#74",
+            "videoNumber": "#85",
             "title": "Smallpox and Chickenpox",
             "durationMins": 23,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v2",
-            "videoNumber": "#75",
+            "videoNumber": "#86",
             "title": "Measles, Mumps and Rubella",
             "durationMins": 57,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v3",
-            "videoNumber": "#76",
+            "videoNumber": "#87",
             "title": "Flu, Diphtheria and Pertussis",
             "durationMins": 30,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v4",
-            "videoNumber": "#77",
+            "videoNumber": "#88",
             "title": "Meningitis",
             "durationMins": 16,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v5",
-            "videoNumber": "#78",
+            "videoNumber": "#89",
             "title": "Cholera and Diarrhoea Management",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v6",
-            "videoNumber": "#79",
+            "videoNumber": "#90",
             "title": "Typhoid",
             "durationMins": 28,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v7",
-            "videoNumber": "#80",
+            "videoNumber": "#91",
             "title": "Hepatitis",
             "durationMins": 39,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v8",
-            "videoNumber": "#81",
+            "videoNumber": "#92",
             "title": "Soil Transmitted Helminthic Infections",
             "durationMins": 27,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v9",
-            "videoNumber": "#82",
+            "videoNumber": "#93",
             "title": "Zoonoses and Rabies",
             "durationMins": 32,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v10",
-            "videoNumber": "#83",
+            "videoNumber": "#94",
             "title": "Plague, Yellow fever and KFD",
             "durationMins": 56,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v11",
-            "videoNumber": "#84",
+            "videoNumber": "#95",
             "title": "Tetanus",
             "durationMins": 17,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v12",
-            "videoNumber": "#85",
+            "videoNumber": "#96",
             "title": "Rickettsia",
             "durationMins": 22,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v13",
-            "videoNumber": "#86",
+            "videoNumber": "#97",
             "title": "Leptospirosis",
             "durationMins": 16,
             "durationSecs": 0
           },
           {
             "id": "cm__com__v14",
-            "videoNumber": "#87",
+            "videoNumber": "#98",
             "title": "Ebola, Zika, and Nipah",
             "durationMins": 27,
             "durationSecs": 0
@@ -4006,14 +4083,14 @@ const syllabusData = [
         "videos": [
           {
             "id": "cm__ncd__v1",
-            "videoNumber": "#88",
+            "videoNumber": "#99",
             "title": "CVD, Hypertension and Obesity",
             "durationMins": 33,
             "durationSecs": 0
           },
           {
             "id": "cm__ncd__v2",
-            "videoNumber": "#89",
+            "videoNumber": "#100",
             "title": "Rheumatic Fever, Cancer, and Sickle Cell Disease",
             "durationMins": 29,
             "durationSecs": 0
