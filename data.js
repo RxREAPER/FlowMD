@@ -2295,8 +2295,8 @@ const syllabusData = [
       },
       {
         "name": "VIROLOGY",
-        "modules": 2,
-        "hours": 1.7,
+        "modules": 13,
+        "hours": 9.2,
         "videos": [
           {
             "id": "micro__vir__v1",
@@ -2311,6 +2311,83 @@ const syllabusData = [
             "title": "Prions and Transmissible Spongiform Encephalopathy",
             "durationMins": 36,
             "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v3",
+            "videoNumber": "#46",
+            "title": "Papilloma and Polyoma Viruses",
+            "durationMins": 26,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v4",
+            "videoNumber": "#47",
+            "title": "Parvoviruses, Adenoviruses and Pox Viruses",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v5",
+            "videoNumber": "#48",
+            "title": "Herpes Viruses: Part 1",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v6",
+            "videoNumber": "#49",
+            "title": "Herpes Viruses: Part 2",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v7",
+            "videoNumber": "#50",
+            "title": "Hepatitis B and D",
+            "durationMins": 56,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v8",
+            "videoNumber": "#51",
+            "title": "Hepatitis A and E",
+            "durationMins": 25,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v9",
+            "videoNumber": "#52",
+            "title": "Influenza Virus",
+            "durationMins": 33,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v10",
+            "videoNumber": "#53",
+            "title": "Measles, Mumps and Rubella",
+            "durationMins": 46,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v11",
+            "videoNumber": "#54",
+            "title": "Rhabdoviruses and Reoviruses",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v12",
+            "videoNumber": "#55",
+            "title": "Arboviruses",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "micro__vir__v13",
+            "videoNumber": "#56",
+            "title": "Retroviruses: HIV",
+            "durationMins": 68,
+            "durationSecs": 0
           }
         ]
       },
@@ -2321,42 +2398,42 @@ const syllabusData = [
         "videos": [
           {
             "id": "micro__prot__v1",
-            "videoNumber": "#46",
+            "videoNumber": "#57",
             "title": "Amoebae",
             "durationMins": 54,
             "durationSecs": 0
           },
           {
             "id": "micro__prot__v2",
-            "videoNumber": "#47",
+            "videoNumber": "#58",
             "title": "Giardia and Trichomonas",
             "durationMins": 22,
             "durationSecs": 0
           },
           {
             "id": "micro__prot__v3",
-            "videoNumber": "#48",
+            "videoNumber": "#59",
             "title": "Leishmania and Trypanosoma",
             "durationMins": 57,
             "durationSecs": 0
           },
           {
             "id": "micro__prot__v4",
-            "videoNumber": "#49",
+            "videoNumber": "#60",
             "title": "Plasmodium and Babesia",
             "durationMins": 49,
             "durationSecs": 0
           },
           {
             "id": "micro__prot__v5",
-            "videoNumber": "#50",
+            "videoNumber": "#61",
             "title": "Toxoplasma",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
             "id": "micro__prot__v6",
-            "videoNumber": "#51",
+            "videoNumber": "#62",
             "title": "Gl Coccidea and Balantidium",
             "durationMins": 22,
             "durationSecs": 0
@@ -2370,28 +2447,28 @@ const syllabusData = [
         "videos": [
           {
             "id": "micro__helm__v1",
-            "videoNumber": "#52",
+            "videoNumber": "#63",
             "title": "Trematodes",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
             "id": "micro__helm__v2",
-            "videoNumber": "#53",
+            "videoNumber": "#64",
             "title": "Cestodes",
             "durationMins": 42,
             "durationSecs": 0
           },
           {
             "id": "micro__helm__v3",
-            "videoNumber": "#54",
+            "videoNumber": "#65",
             "title": "Nematodes: Part 1",
             "durationMins": 51,
             "durationSecs": 0
           },
           {
             "id": "micro__helm__v4",
-            "videoNumber": "#55",
+            "videoNumber": "#66",
             "title": "Nematodes: Part 2",
             "durationMins": 27,
             "durationSecs": 0
@@ -2405,42 +2482,42 @@ const syllabusData = [
         "videos": [
           {
             "id": "micro__myc__v1",
-            "videoNumber": "#56",
+            "videoNumber": "#67",
             "title": "General Mycology",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
             "id": "micro__myc__v2",
-            "videoNumber": "#57",
+            "videoNumber": "#68",
             "title": "Superficial Mycoses",
             "durationMins": 23,
             "durationSecs": 0
           },
           {
             "id": "micro__myc__v3",
-            "videoNumber": "#58",
+            "videoNumber": "#69",
             "title": "Subcutaneous Mycology",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
             "id": "micro__myc__v4",
-            "videoNumber": "#59",
+            "videoNumber": "#70",
             "title": "Opportunistic Mycoses: Part 1",
             "durationMins": 51,
             "durationSecs": 0
           },
           {
             "id": "micro__myc__v5",
-            "videoNumber": "#60",
+            "videoNumber": "#71",
             "title": "Opportunistic Mycoses: Part 2",
             "durationMins": 30,
             "durationSecs": 0
           },
           {
             "id": "micro__myc__v6",
-            "videoNumber": "#61",
+            "videoNumber": "#72",
             "title": "Dimorphic Fungi",
             "durationMins": 24,
             "durationSecs": 0
@@ -2454,84 +2531,84 @@ const syllabusData = [
         "videos": [
           {
             "id": "micro__clin__v1",
-            "videoNumber": "#62",
+            "videoNumber": "#73",
             "title": "Acute Rheumatic Fever",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v2",
-            "videoNumber": "#63",
+            "videoNumber": "#74",
             "title": "Infective Endocarditis",
             "durationMins": 48,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v3",
-            "videoNumber": "#64",
+            "videoNumber": "#75",
             "title": "Community Acquired and Hospital Acquired Pneumonia",
             "durationMins": 59,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v4",
-            "videoNumber": "#65",
+            "videoNumber": "#76",
             "title": "Acute Meningitis",
             "durationMins": 59,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v5",
-            "videoNumber": "#66",
+            "videoNumber": "#77",
             "title": "Chronic meningitis",
             "durationMins": 47,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v6",
-            "videoNumber": "#67",
+            "videoNumber": "#78",
             "title": "Encephalitis: Viral and Bacterial",
             "durationMins": 62,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v7",
-            "videoNumber": "#68",
+            "videoNumber": "#79",
             "title": "Non-inflammatory Diarrhea",
             "durationMins": 40,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v8",
-            "videoNumber": "#69",
+            "videoNumber": "#80",
             "title": "Inflammatory Diarrhea",
             "durationMins": 48,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v9",
-            "videoNumber": "#70",
+            "videoNumber": "#81",
             "title": "Myositis and Myonecrosis",
             "durationMins": 31,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v10",
-            "videoNumber": "#71",
+            "videoNumber": "#82",
             "title": "Genital Ulcer Disease",
             "durationMins": 32,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v11",
-            "videoNumber": "#72",
+            "videoNumber": "#83",
             "title": "Urinary Tract Infections",
             "durationMins": 61,
             "durationSecs": 0
           },
           {
             "id": "micro__clin__v12",
-            "videoNumber": "#73",
+            "videoNumber": "#84",
             "title": "Urethritis and Vaginitis",
             "durationMins": 49,
             "durationSecs": 0
