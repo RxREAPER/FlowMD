@@ -4105,110 +4105,201 @@ const syllabusData = [
     "chapters": [
       {
         "name": "FORENSIC TRAUMATOLOGY",
-        "modules": 10,
-        "hours": 7.2,
+        "modules": 12,
+        "hours": 8.5,
         "videos": [
           {
-            "id": "forensic_medicine__v1",
+            "id": "fmt__trau__v1",
             "videoNumber": "#01",
             "title": "How to Approach Forensic Medicine Edition 8",
             "durationMins": 5,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v2",
+            "id": "fmt__trau__v2",
             "videoNumber": "#02",
-            "title": "Definitions in Forensic Medicine [4",
+            "title": "Definitions in Forensic Medicine",
             "durationMins": 27,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v3",
+            "id": "fmt__trau__v3",
             "videoNumber": "#03",
             "title": "Blunt Trauma Injuries",
             "durationMins": 60,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v4",
+            "id": "fmt__trau__v4",
             "videoNumber": "#04",
-            "title": "Regional Injuries: Part 1 [4",
+            "title": "Sharp Trauma Injuries",
+            "durationMins": 35,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__trau__v5",
+            "videoNumber": "#05",
+            "title": "Regional Injuries: Part 1",
             "durationMins": 40,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v5",
-            "videoNumber": "#05",
+            "id": "fmt__trau__v6",
+            "videoNumber": "#06",
             "title": "Regional Injuries: Part 2",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v6",
-            "videoNumber": "#06",
+            "id": "fmt__trau__v7",
+            "videoNumber": "#07",
             "title": "Thermal Injuries",
             "durationMins": 61,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v7",
-            "videoNumber": "#07",
+            "id": "fmt__trau__v8",
+            "videoNumber": "#08",
             "title": "Proximal Ballistics",
             "durationMins": 67,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v8",
-            "videoNumber": "#08",
+            "id": "fmt__trau__v9",
+            "videoNumber": "#09",
             "title": "Intermediate and Terminal Ballistics: Part 1",
             "durationMins": 42,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v9",
-            "videoNumber": "#09",
-            "title": "Intermediate and Terminal Ballistics: Part 2 [J",
+            "id": "fmt__trau__v10",
+            "videoNumber": "#10",
+            "title": "Intermediate and Terminal Ballistics: Part 2",
             "durationMins": 45,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v10",
-            "videoNumber": "#10",
+            "id": "fmt__trau__v11",
+            "videoNumber": "#11",
             "title": "Electrical Injuries, Explosion Injuries and Torture Methods",
             "durationMins": 53,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__trau__v12",
+            "videoNumber": "#12",
+            "title": "Transportation Injuries",
+            "durationMins": 42,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "MEDICAL JURISPRUDENCE",
+        "modules": 4,
+        "hours": 3.3,
+        "videos": [
+          {
+            "id": "fmt__jur__v1",
+            "videoNumber": "#13",
+            "title": "Indian Legal System",
+            "durationMins": 55,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__jur__v2",
+            "videoNumber": "#14",
+            "title": "Medical Ethics",
+            "durationMins": 37,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__jur__v3",
+            "videoNumber": "#15",
+            "title": "Medical Negligence",
+            "durationMins": 74,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__jur__v4",
+            "videoNumber": "#16",
+            "title": "Consent in Medical Practice",
+            "durationMins": 32,
             "durationSecs": 0
           }
         ]
       },
       {
         "name": "FORENSIC PATHOLOGY",
-        "modules": 4,
-        "hours": 2.5,
+        "modules": 10,
+        "hours": 8.6,
         "videos": [
           {
-            "id": "forensic_medicine__v1",
-            "videoNumber": "#11",
-            "title": "Hanging []",
+            "id": "fmt__path__v1",
+            "videoNumber": "#17",
+            "title": "Autopsy Procedures",
+            "durationMins": 68,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__path__v2",
+            "videoNumber": "#18",
+            "title": "Early Postmortem Changes",
+            "durationMins": 72,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__path__v3",
+            "videoNumber": "#19",
+            "title": "Late Postmortem Changes",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__path__v4",
+            "videoNumber": "#20",
+            "title": "Human Identification: Part 1",
+            "durationMins": 42,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__path__v5",
+            "videoNumber": "#21",
+            "title": "Human Identification: Part 2",
+            "durationMins": 76,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__path__v6",
+            "videoNumber": "#22",
+            "title": "Human Identification: Part 3",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "fmt__path__v7",
+            "videoNumber": "#23",
+            "title": "Hanging",
             "durationMins": 62,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v2",
-            "videoNumber": "#12",
+            "id": "fmt__path__v8",
+            "videoNumber": "#24",
             "title": "Strangulation",
             "durationMins": 17,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v3",
-            "videoNumber": "#13",
+            "id": "fmt__path__v9",
+            "videoNumber": "#25",
             "title": "Suffocation",
             "durationMins": 17,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v4",
-            "videoNumber": "#14",
+            "id": "fmt__path__v10",
+            "videoNumber": "#26",
             "title": "Drowning",
             "durationMins": 52,
             "durationSecs": 0
@@ -4221,29 +4312,29 @@ const syllabusData = [
         "hours": 3.5,
         "videos": [
           {
-            "id": "forensic_medicine__v1",
-            "videoNumber": "#15",
-            "title": "Impotence, Virginity and Delivery [4",
+            "id": "fmt__sex__v1",
+            "videoNumber": "#27",
+            "title": "Impotence, Virginity and Delivery",
             "durationMins": 68,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v2",
-            "videoNumber": "#16",
+            "id": "fmt__sex__v2",
+            "videoNumber": "#28",
             "title": "Abortion",
             "durationMins": 29,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v3",
-            "videoNumber": "#17",
+            "id": "fmt__sex__v3",
+            "videoNumber": "#29",
             "title": "Infant Deaths and Child Abuse",
             "durationMins": 39,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v4",
-            "videoNumber": "#18",
+            "id": "fmt__sex__v4",
+            "videoNumber": "#30",
             "title": "Sexual Offences",
             "durationMins": 75,
             "durationSecs": 0
@@ -4253,82 +4344,82 @@ const syllabusData = [
       {
         "name": "TOXICOLOGY",
         "modules": 11,
-        "hours": 8.4,
+        "hours": 8.2,
         "videos": [
           {
-            "id": "forensic_medicine__v1",
-            "videoNumber": "#19",
+            "id": "fmt__tox__v1",
+            "videoNumber": "#31",
             "title": "General Toxicology",
             "durationMins": 75,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v2",
-            "videoNumber": "#20",
-            "title": "Duties of a Doctor in a Case of Poisoning [4",
+            "id": "fmt__tox__v2",
+            "videoNumber": "#32",
+            "title": "Duties of a Doctor in a Case of Poisoning",
             "durationMins": 31,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v3",
-            "videoNumber": "#21",
+            "id": "fmt__tox__v3",
+            "videoNumber": "#33",
             "title": "Corrosive Poisons",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v4",
-            "videoNumber": "#22",
+            "id": "fmt__tox__v4",
+            "videoNumber": "#34",
             "title": "Metallic Irritants",
             "durationMins": 72,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v5",
-            "videoNumber": "#23",
+            "id": "fmt__tox__v5",
+            "videoNumber": "#35",
             "title": "Non-Metallic Irritants",
             "durationMins": 20,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v6",
-            "videoNumber": "#24",
-            "title": "36 viv pass",
+            "id": "fmt__tox__v6",
+            "videoNumber": "#36",
+            "title": "Organic Irritants",
             "durationMins": 65,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v7",
-            "videoNumber": "#25",
+            "id": "fmt__tox__v7",
+            "videoNumber": "#37",
             "title": "Neurotoxic Poisons: Deliriants",
             "durationMins": 62,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v8",
-            "videoNumber": "#26",
+            "id": "fmt__tox__v8",
+            "videoNumber": "#38",
             "title": "Neurotoxic Poisons: Inebriants",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v9",
-            "videoNumber": "#27",
+            "id": "fmt__tox__v9",
+            "videoNumber": "#39",
             "title": "Neurotoxic Poisons: Somniferous and Spinal Poisons",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v10",
-            "videoNumber": "#28",
+            "id": "fmt__tox__v10",
+            "videoNumber": "#40",
             "title": "Asphyxiants and Cardiac Poisons",
             "durationMins": 57,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v11",
-            "videoNumber": "#29",
-            "title": "[oo] Agricultural Poisons",
+            "id": "fmt__tox__v11",
+            "videoNumber": "#41",
+            "title": "Agricultural Poisons",
             "durationMins": 21,
             "durationSecs": 0
           }
@@ -4336,112 +4427,28 @@ const syllabusData = [
       },
       {
         "name": "FORENSIC PSYCHIATRY AND MISCELLANEOUS",
-        "modules": 4,
-        "hours": 2.9,
+        "modules": 3,
+        "hours": 2.3,
         "videos": [
           {
-            "id": "forensic_medicine__v1",
-            "videoNumber": "#30",
-            "title": "Forensic Psychiatry [4",
+            "id": "fmt__misc__v1",
+            "videoNumber": "#42",
+            "title": "Forensic Psychiatry",
             "durationMins": 47,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v2",
-            "videoNumber": "#31",
-            "title": "Trace Evidence [4",
+            "id": "fmt__misc__v2",
+            "videoNumber": "#43",
+            "title": "Trace Evidence",
             "durationMins": 23,
             "durationSecs": 0
           },
           {
-            "id": "forensic_medicine__v3",
-            "videoNumber": "#32",
+            "id": "fmt__misc__v3",
+            "videoNumber": "#44",
             "title": "Acts and Legal Sections of Importance",
             "durationMins": 66,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v4",
-            "videoNumber": "#33",
-            "title": "Infectious Diseases: Basic Definitions, Chain of Transmission",
-            "durationMins": 40,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "FRO",
-        "modules": 10,
-        "hours": 5.8,
-        "videos": [
-          {
-            "id": "forensic_medicine__v1",
-            "videoNumber": "#34",
-            "title": "Infectious Diseases: Agent, Host, Case, Carrier",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v2",
-            "videoNumber": "#35",
-            "title": "Infectious Diseases: Modes of Transmission, PPE, Handwashing",
-            "durationMins": 48,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v3",
-            "videoNumber": "#36",
-            "title": "Smallpox and Chickenpox",
-            "durationMins": 23,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v4",
-            "videoNumber": "#37",
-            "title": "Measles, Mumps and Rubella",
-            "durationMins": 57,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v5",
-            "videoNumber": "#38",
-            "title": "Flu, Diphtheria and Pertussis A",
-            "durationMins": 30,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v6",
-            "videoNumber": "#39",
-            "title": "Meningitis",
-            "durationMins": 16,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v7",
-            "videoNumber": "#40",
-            "title": "Cholera and Diarrhoea Management",
-            "durationMins": 36,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v8",
-            "videoNumber": "#41",
-            "title": "Typhoid",
-            "durationMins": 28,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v9",
-            "videoNumber": "#42",
-            "title": "Hepatitis",
-            "durationMins": 39,
-            "durationSecs": 0
-          },
-          {
-            "id": "forensic_medicine__v10",
-            "videoNumber": "#43",
-            "title": "Soil Transmitted Helminthic Infections",
-            "durationMins": 27,
             "durationSecs": 0
           }
         ]
