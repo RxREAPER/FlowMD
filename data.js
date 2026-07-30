@@ -2622,195 +2622,419 @@ const syllabusData = [
     "subject": "Pathology",
     "chapters": [
       {
-        "name": "VIROLOGY",
-        "modules": 1,
-        "hours": 0.4,
+        "name": "GENERAL PATHOLOGY",
+        "modules": 23,
+        "hours": 19.6,
         "videos": [
           {
-            "id": "pathology__v1",
+            "id": "path__gen__v1",
             "videoNumber": "#01",
-            "title": "Papilloma and Polyoma Viruses",
-            "durationMins": 26,
+            "title": "How to Approach Pathology Edition 8",
+            "durationMins": 5,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "FRO",
-        "modules": 10,
-        "hours": 6.7,
-        "videos": [
+          },
           {
-            "id": "pathology__v1",
+            "id": "path__gen__v2",
             "videoNumber": "#02",
-            "title": "Parvoviruses, Adenoviruses and Pox Viruses",
-            "durationMins": 34,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v2",
-            "videoNumber": "#03",
-            "title": "Herpes Viruses: Part 1",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v3",
-            "videoNumber": "#04",
-            "title": "Herpes Viruses: Part 2",
+            "title": "Cell Adaptations",
             "durationMins": 48,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v4",
+            "id": "path__gen__v3",
+            "videoNumber": "#03",
+            "title": "Cell Injury",
+            "durationMins": 40,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gen__v4",
+            "videoNumber": "#04",
+            "title": "Cell Death",
+            "durationMins": 73,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gen__v5",
             "videoNumber": "#05",
-            "title": "Hepatitis B and D",
-            "durationMins": 56,
+            "title": "Intracellular Accumulations",
+            "durationMins": 65,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v5",
+            "id": "path__gen__v6",
             "videoNumber": "#06",
-            "title": "Hepatitis A and E 7:",
-            "durationMins": 25,
+            "title": "Acute Inflammation",
+            "durationMins": 71,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v6",
+            "id": "path__gen__v7",
             "videoNumber": "#07",
-            "title": "Influenza Virus",
-            "durationMins": 33,
+            "title": "Chronic Inflammation",
+            "durationMins": 47,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v7",
+            "id": "path__gen__v8",
             "videoNumber": "#08",
-            "title": "Measles, Mumps and Rubella",
-            "durationMins": 46,
+            "title": "Mediators of Inflammation",
+            "durationMins": 64,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v8",
+            "id": "path__gen__v9",
             "videoNumber": "#09",
-            "title": "Rhabdoviruses and Reoviruses",
-            "durationMins": 43,
+            "title": "Wound Healing and Tissue Repair",
+            "durationMins": 36,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v9",
+            "id": "path__gen__v10",
             "videoNumber": "#10",
-            "title": "Flaviviruses",
-            "durationMins": 39,
+            "title": "Hemodynamics",
+            "durationMins": 30,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v10",
+            "id": "path__gen__v11",
             "videoNumber": "#11",
-            "title": "Arena, Filo, Bunya and Toga Viruses",
-            "durationMins": 35,
+            "title": "Neoplasia: Basics",
+            "durationMins": 59,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "GENERAL PATHOLOGY",
-        "modules": 10,
-        "hours": 8.7,
-        "videos": [
+          },
           {
-            "id": "pathology__v1",
+            "id": "path__gen__v12",
             "videoNumber": "#12",
             "title": "Types of Carcinogenesis",
             "durationMins": 40,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v2",
+            "id": "path__gen__v13",
             "videoNumber": "#13",
             "title": "Neoplasia: Hallmarks",
             "durationMins": 73,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v3",
+            "id": "path__gen__v14",
             "videoNumber": "#14",
             "title": "Lab Diagnosis of Cancer",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v4",
+            "id": "path__gen__v15",
             "videoNumber": "#15",
             "title": "Tumor Diagnosis",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v5",
+            "id": "path__gen__v16",
             "videoNumber": "#16",
             "title": "Genetics: Basics and Mendelian Modes",
             "durationMins": 74,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v6",
+            "id": "path__gen__v17",
             "videoNumber": "#17",
-            "title": "Genetics: Non-Mendelian Modes and Pedigree —",
+            "title": "Genetics: Non-Mendelian Modes and Pedigree",
             "durationMins": 63,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v7",
+            "id": "path__gen__v18",
             "videoNumber": "#18",
             "title": "Genetics: Chromosomal Disorders",
             "durationMins": 65,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v8",
+            "id": "path__gen__v19",
             "videoNumber": "#19",
             "title": "Genetic Disorders: Diagnosis",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v9",
+            "id": "path__gen__v20",
             "videoNumber": "#20",
             "title": "Hypersensitivity Reactions",
             "durationMins": 44,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v10",
+            "id": "path__gen__v21",
             "videoNumber": "#21",
             "title": "Transplant Pathology",
             "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gen__v22",
+            "videoNumber": "#22",
+            "title": "Immunodeficiency Disorders",
+            "durationMins": 37,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gen__v23",
+            "videoNumber": "#23",
+            "title": "Amyloidosis",
+            "durationMins": 39,
             "durationSecs": 0
           }
         ]
       },
       {
-        "name": "ED)",
-        "modules": 1,
-        "hours": 0.6,
+        "name": "HEMATOLOGY",
+        "modules": 18,
+        "hours": 17.3,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#22",
-            "title": "Immunodeficiency Disorders",
-            "durationMins": 37,
+            "id": "path__hem__v1",
+            "videoNumber": "#24",
+            "title": "RBC: Introduction",
+            "durationMins": 70,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v2",
+            "videoNumber": "#25",
+            "title": "Peripheral Smear Examination",
+            "durationMins": 40,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v3",
+            "videoNumber": "#26",
+            "title": "Microcytic Hypochromic Anemia",
+            "durationMins": 73,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v4",
+            "videoNumber": "#27",
+            "title": "Megaloblastic Anemia",
+            "durationMins": 47,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v5",
+            "videoNumber": "#28",
+            "title": "Hemolytic Anemia: Part 1",
+            "durationMins": 89,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v6",
+            "videoNumber": "#29",
+            "title": "Hemolytic Anemia: Part 2",
+            "durationMins": 73,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v7",
+            "videoNumber": "#30",
+            "title": "WBC: Introduction",
+            "durationMins": 55,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v8",
+            "videoNumber": "#31",
+            "title": "Acute Lymphoblastic Leukemia",
+            "durationMins": 44,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v9",
+            "videoNumber": "#32",
+            "title": "Acute Myeloid Leukemia",
+            "durationMins": 45,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v10",
+            "videoNumber": "#33",
+            "title": "Myeloid Disorders",
+            "durationMins": 46,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v11",
+            "videoNumber": "#34",
+            "title": "Chronic Leukemias",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v12",
+            "videoNumber": "#35",
+            "title": "Hodgkin's Lymphoma",
+            "durationMins": 42,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v13",
+            "videoNumber": "#36",
+            "title": "Non-Hodgkin's Lymphoma",
+            "durationMins": 59,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v14",
+            "videoNumber": "#37",
+            "title": "Plasma Cell Disorders",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v15",
+            "videoNumber": "#38",
+            "title": "Hemostasis: Part 1",
+            "durationMins": 63,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v16",
+            "videoNumber": "#39",
+            "title": "Hemostasis: Part 2",
+            "durationMins": 52,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v17",
+            "videoNumber": "#40",
+            "title": "Blood Banking and Transfusion Medicine",
+            "durationMins": 59,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__hem__v18",
+            "videoNumber": "#41",
+            "title": "Hematology: Clinical Case Discussions",
+            "durationMins": 38,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "CARDIOVASCULAR SYSTEM",
+        "modules": 5,
+        "hours": 4.5,
+        "videos": [
+          {
+            "id": "path__cvs__v1",
+            "videoNumber": "#42",
+            "title": "Blood Vessels: Sclerosis",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__cvs__v2",
+            "videoNumber": "#43",
+            "title": "Blood Vessels: Vasculitis",
+            "durationMins": 63,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__cvs__v3",
+            "videoNumber": "#44",
+            "title": "Vascular Tumors",
+            "durationMins": 33,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__cvs__v4",
+            "videoNumber": "#45",
+            "title": "Cardiovascular System: Part 1",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__cvs__v5",
+            "videoNumber": "#46",
+            "title": "Cardiovascular System: Part 2",
+            "durationMins": 72,
             "durationSecs": 0
           }
         ]
       },
       {
         "name": "GENITOURINARY SYSTEM",
-        "modules": 1,
-        "hours": 0.9,
+        "modules": 10,
+        "hours": 7.9,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#23",
+            "id": "path__gu__v1",
+            "videoNumber": "#47",
+            "title": "Kidney: Basics",
+            "durationMins": 47,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v2",
+            "videoNumber": "#48",
+            "title": "Nephritic Syndromes",
+            "durationMins": 40,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v3",
+            "videoNumber": "#49",
+            "title": "Nephrotic Syndrome",
+            "durationMins": 42,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v4",
+            "videoNumber": "#50",
+            "title": "Renal Involvement in Systemic Diseases",
+            "durationMins": 32,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v5",
+            "videoNumber": "#51",
+            "title": "Kidney Tumors",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v6",
+            "videoNumber": "#52",
+            "title": "Male Genital System: Penis and Prostate",
+            "durationMins": 53,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v7",
+            "videoNumber": "#53",
+            "title": "Male Genital System: Testis",
+            "durationMins": 53,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v8",
+            "videoNumber": "#54",
+            "title": "Female Genital Tract: Vulva, Vagina and Cervix",
+            "durationMins": 39,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v9",
+            "videoNumber": "#55",
+            "title": "Female Genital Tract: Uterus and Endometrium",
+            "durationMins": 41,
+            "durationSecs": 0
+          },
+          {
+            "id": "path__gu__v10",
+            "videoNumber": "#56",
             "title": "Female Genital Tract: Ovaries",
             "durationMins": 52,
             "durationSecs": 0
@@ -2820,53 +3044,53 @@ const syllabusData = [
       {
         "name": "GASTROINTESTINAL SYSTEM",
         "modules": 7,
-        "hours": 5.8,
+        "hours": 6.1,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#24",
+            "id": "path__gi__v1",
+            "videoNumber": "#57",
             "title": "Esophagus",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v2",
-            "videoNumber": "#25",
+            "id": "path__gi__v2",
+            "videoNumber": "#58",
             "title": "Stomach",
             "durationMins": 61,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v3",
-            "videoNumber": "#26",
+            "id": "path__gi__v3",
+            "videoNumber": "#59",
             "title": "Intestinal Disorders",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v4",
-            "videoNumber": "#27",
+            "id": "path__gi__v4",
+            "videoNumber": "#60",
             "title": "Inflammatory Bowel Disease",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v5",
-            "videoNumber": "#28",
-            "title": "61 Tz",
+            "id": "path__gi__v5",
+            "videoNumber": "#61",
+            "title": "Colorectal Polyps and Cancer",
             "durationMins": 52,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v6",
-            "videoNumber": "#29",
+            "id": "path__gi__v6",
+            "videoNumber": "#62",
             "title": "Liver Pathology: Part 1",
             "durationMins": 53,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v7",
-            "videoNumber": "#30",
+            "id": "path__gi__v7",
+            "videoNumber": "#63",
             "title": "Liver Pathology: Part 2",
             "durationMins": 64,
             "durationSecs": 0
@@ -2876,200 +3100,32 @@ const syllabusData = [
       {
         "name": "RESPIRATORY SYSTEM",
         "modules": 4,
-        "hours": 2.9,
+        "hours": 3.2,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#31",
+            "id": "path__resp__v1",
+            "videoNumber": "#64",
             "title": "Obstructive Lung Diseases",
             "durationMins": 59,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v2",
-            "videoNumber": "#32",
+            "id": "path__resp__v2",
+            "videoNumber": "#65",
             "title": "Restrictive Lung Diseases",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v3",
-            "videoNumber": "#33",
+            "id": "path__resp__v3",
+            "videoNumber": "#66",
             "title": "Granulomas and Infections of Lung",
             "durationMins": 41,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v4",
-            "videoNumber": "#34",
-            "title": "Amyloidosis",
-            "durationMins": 39,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "HEMATOLOGY",
-        "modules": 6,
-        "hours": 6.5,
-        "videos": [
-          {
-            "id": "pathology__v1",
-            "videoNumber": "#35",
-            "title": "RBC: Introduction",
-            "durationMins": 70,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v2",
-            "videoNumber": "#36",
-            "title": "Peripheral Smear Examination",
-            "durationMins": 40,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v3",
-            "videoNumber": "#37",
-            "title": "Microcytic Hypochromic Anemia",
-            "durationMins": 73,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v4",
-            "videoNumber": "#38",
-            "title": "Megaloblastic Anemia",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v5",
-            "videoNumber": "#39",
-            "title": "Hemolytic Anemia: Part 1",
-            "durationMins": 89,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v6",
-            "videoNumber": "#40",
-            "title": "Hemolytic Anemia: Part 2",
-            "durationMins": 73,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "#RO",
-        "modules": 16,
-        "hours": 13,
-        "videos": [
-          {
-            "id": "pathology__v1",
-            "videoNumber": "#41",
-            "title": "WBC: Introduction",
-            "durationMins": 55,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v2",
-            "videoNumber": "#42",
-            "title": "Acute Lymphoblastic Leukemia",
-            "durationMins": 44,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v3",
-            "videoNumber": "#43",
-            "title": "Acute Myeloid Leukemia",
-            "durationMins": 45,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v4",
-            "videoNumber": "#44",
-            "title": "Myeloid Disorders",
-            "durationMins": 46,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v5",
-            "videoNumber": "#45",
-            "title": "How to Approach Pathology Edition 8",
-            "durationMins": 5,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v6",
-            "videoNumber": "#46",
-            "title": "Cell Adaptations",
-            "durationMins": 48,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v7",
-            "videoNumber": "#47",
-            "title": "Cell Injury",
-            "durationMins": 40,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v8",
-            "videoNumber": "#48",
-            "title": "Cell Death",
-            "durationMins": 73,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v9",
-            "videoNumber": "#49",
-            "title": "Intracellular Accumulations",
-            "durationMins": 65,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v10",
-            "videoNumber": "#50",
-            "title": "Acute Inflammation",
-            "durationMins": 71,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v11",
-            "videoNumber": "#51",
-            "title": "Chronic Inflammation",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v12",
-            "videoNumber": "#52",
-            "title": "Mediators of Inflammation",
-            "durationMins": 64,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v13",
-            "videoNumber": "#53",
-            "title": "Wound Healing and Tissue Repair",
-            "durationMins": 36,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v14",
-            "videoNumber": "#54",
-            "title": "Hemodynamics",
-            "durationMins": 30,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v15",
-            "videoNumber": "#55",
-            "title": "Neoplasia: Basics",
-            "durationMins": 59,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v16",
-            "videoNumber": "#56",
+            "id": "path__resp__v4",
+            "videoNumber": "#67",
             "title": "Lung Tumors",
             "durationMins": 54,
             "durationSecs": 0
@@ -3079,46 +3135,46 @@ const syllabusData = [
       {
         "name": "ENDOCRINE SYSTEM AND BREAST",
         "modules": 6,
-        "hours": 4.3,
+        "hours": 4.7,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#57",
+            "id": "path__endo__v1",
+            "videoNumber": "#68",
             "title": "Thyroid: Non-neoplastic Lesions",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v2",
-            "videoNumber": "#58",
+            "id": "path__endo__v2",
+            "videoNumber": "#69",
             "title": "Thyroid Tumors",
             "durationMins": 41,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v3",
-            "videoNumber": "#59",
+            "id": "path__endo__v3",
+            "videoNumber": "#70",
             "title": "Adrenal Medulla",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v4",
-            "videoNumber": "#60",
+            "id": "path__endo__v4",
+            "videoNumber": "#71",
             "title": "Pituitary and Parathyroid Gland",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v5",
-            "videoNumber": "#61",
+            "id": "path__endo__v5",
+            "videoNumber": "#72",
             "title": "Breast Pathology: Part 1",
             "durationMins": 41,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v6",
-            "videoNumber": "#62",
+            "id": "path__endo__v6",
+            "videoNumber": "#73",
             "title": "Breast Pathology: Part 2",
             "durationMins": 60,
             "durationSecs": 0
@@ -3131,15 +3187,15 @@ const syllabusData = [
         "hours": 1.5,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#63",
+            "id": "path__skin__v1",
+            "videoNumber": "#74",
             "title": "Dermatopathology",
             "durationMins": 52,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v2",
-            "videoNumber": "#64",
+            "id": "path__skin__v2",
+            "videoNumber": "#75",
             "title": "Bone and Soft Tissue Lesions",
             "durationMins": 38,
             "durationSecs": 0
@@ -3148,196 +3204,42 @@ const syllabusData = [
       },
       {
         "name": "NERVOUS SYSTEM",
-        "modules": 12,
-        "hours": 9.3,
+        "modules": 2,
+        "hours": 1.8,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#65",
+            "id": "path__cns__v1",
+            "videoNumber": "#76",
             "title": "CNS: Non-neoplastic Lesions",
             "durationMins": 39,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v2",
-            "videoNumber": "#66",
+            "id": "path__cns__v2",
+            "videoNumber": "#77",
             "title": "CNS Tumors",
             "durationMins": 67,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v3",
-            "videoNumber": "#67",
-            "title": "Systemic Pathology: Clinical Cases",
-            "durationMins": 27,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v4",
-            "videoNumber": "#68",
-            "title": "Demonstration of Instruments",
-            "durationMins": 21,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v5",
-            "videoNumber": "#69",
-            "title": "Chronic Leukemias",
-            "durationMins": 48,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v6",
-            "videoNumber": "#70",
-            "title": "Hodgkin's Lymphoma",
-            "durationMins": 42,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v7",
-            "videoNumber": "#71",
-            "title": "Non-Hodgkin's Lymphoma",
-            "durationMins": 59,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v8",
-            "videoNumber": "#72",
-            "title": "Plasma Cell Disorders",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v9",
-            "videoNumber": "#73",
-            "title": "Hemostasis: Part 1",
-            "durationMins": 63,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v10",
-            "videoNumber": "#74",
-            "title": "Hemostasis: Part 2",
-            "durationMins": 52,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v11",
-            "videoNumber": "#75",
-            "title": "Blood Banking and Transfusion Medicine",
-            "durationMins": 59,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v12",
-            "videoNumber": "#76",
-            "title": "Hematology: Clinical Case Discussions",
-            "durationMins": 38,
             "durationSecs": 0
           }
         ]
       },
       {
-        "name": "CARDIOVASCULAR SYSTEM",
-        "modules": 14,
-        "hours": 10.9,
+        "name": "MISCELLANEOUS",
+        "modules": 2,
+        "hours": 0.8,
         "videos": [
           {
-            "id": "pathology__v1",
-            "videoNumber": "#77",
-            "title": "Blood Vessels: Sclerosis",
-            "durationMins": 48,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v2",
+            "id": "path__misc__v1",
             "videoNumber": "#78",
-            "title": "Blood Vessels: Vasculitis",
-            "durationMins": 63,
+            "title": "Systemic Pathology: Clinical Cases",
+            "durationMins": 27,
             "durationSecs": 0
           },
           {
-            "id": "pathology__v3",
+            "id": "path__misc__v2",
             "videoNumber": "#79",
-            "title": "Vascular Tumors",
-            "durationMins": 33,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v4",
-            "videoNumber": "#80",
-            "title": "Cardiovascular System: Part 1",
-            "durationMins": 51,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v5",
-            "videoNumber": "#81",
-            "title": "Cardiovascular System: Part 2",
-            "durationMins": 72,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v6",
-            "videoNumber": "#82",
-            "title": "Kidney: Basics",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v7",
-            "videoNumber": "#83",
-            "title": "Nephritic Syndromes",
-            "durationMins": 40,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v8",
-            "videoNumber": "#84",
-            "title": "Nephrotic Syndrome",
-            "durationMins": 42,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v9",
-            "videoNumber": "#85",
-            "title": "Renal Involvement in Systemic Diseases /",
-            "durationMins": 32,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v10",
-            "videoNumber": "#86",
-            "title": "Kidney Tumors",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v11",
-            "videoNumber": "#87",
-            "title": "Male Genital System: Penis and Prostate",
-            "durationMins": 53,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v12",
-            "videoNumber": "#88",
-            "title": "Male Genital System: Testis",
-            "durationMins": 53,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v13",
-            "videoNumber": "#89",
-            "title": "Female Genital Tract: Vulva, Vagina and Cervix",
-            "durationMins": 39,
-            "durationSecs": 0
-          },
-          {
-            "id": "pathology__v14",
-            "videoNumber": "#90",
-            "title": "Female Genital Tract: Uterus and Endometrium",
-            "durationMins": 41,
+            "title": "Demonstration of Instruments",
+            "durationMins": 21,
             "durationSecs": 0
           }
         ]
