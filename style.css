@@ -3062,6 +3062,12 @@ body {
   height: 100%;
 }
 
+.pxl-heatmap-tile:hover .pxl-tile-svg-icon {
+  opacity: 1;
+  transform: scale(1.05);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
 .pxl-tile-name {
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 600;

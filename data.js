@@ -1,9 +1,3 @@
-/* ============================================================
-   FLOWMD V2 — MARROW EDITION 8 OFFICIAL SYLLABUS DATASET
-   Strict In-Place Reconciled against Official Marrow Edition 8 App Screenshots
-   All 19 Subjects, Chapters & Topic Assignments 100% Intact
-   ============================================================ */
-
 const syllabusData = [
   {
     "id": "anatomy",
@@ -18,57 +12,57 @@ const syllabusData = [
             "id": "anatomy__embryo___v1",
             "videoNumber": "#01",
             "title": "How to Approach Anatomy Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 38
           },
           {
             "id": "anatomy__embryo___v2",
             "videoNumber": "#02",
             "title": "Gametogenesis",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 26
           },
           {
             "id": "anatomy__embryo___v3",
             "videoNumber": "#03",
             "title": "1st and 2nd Week of Development",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 58
           },
           {
             "id": "anatomy__embryo___v4",
             "videoNumber": "#04",
             "title": "3rd Week Development",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 58
           }
         ]
       },
       {
         "name": "HISTOLOGY",
         "modules": 3,
-        "hours": 2.4,
+        "hours": 2.3,
         "videos": [
           {
             "id": "anatomy__histo___v1",
             "videoNumber": "#05",
             "title": "Histology: Part 1",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 30
           },
           {
             "id": "anatomy__histo___v2",
             "videoNumber": "#06",
-            "title": "Histology: Part 1",
-            "durationMins": 47,
-            "durationSecs": 0
+            "title": "Histology: Part 2",
+            "durationMins": 53,
+            "durationSecs": 5
           },
           {
             "id": "anatomy__histo___v3",
             "videoNumber": "#07",
             "title": "Histology: Part 3",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 25
           }
         ]
       },
@@ -81,141 +75,141 @@ const syllabusData = [
             "id": "anatomy__neuro_anat___v1",
             "videoNumber": "#08",
             "title": "Development of Neural Tube",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 31
           },
           {
             "id": "anatomy__neuro_anat___v2",
             "videoNumber": "#09",
             "title": "Functional Columns of Cranial Nerve Nuclei",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 33
           },
           {
             "id": "anatomy__neuro_anat___v3",
             "videoNumber": "#10",
-            "title": "Neuroanatomy basics",
-            "durationMins": 7,
-            "durationSecs": 0
+            "title": "Neuroanatomy Basics",
+            "durationMins": 34,
+            "durationSecs": 29
           },
           {
             "id": "anatomy__neuro_anat___v4",
             "videoNumber": "#11",
             "title": "CSF and Ventricles",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 33
           },
           {
             "id": "anatomy__neuro_anat___v5",
             "videoNumber": "#12",
             "title": "Spinal Cord",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 5
           },
           {
             "id": "anatomy__neuro_anat___v6",
             "videoNumber": "#13",
             "title": "Brain Stem",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 47
           },
           {
             "id": "anatomy__neuro_anat___v7",
             "videoNumber": "#14",
             "title": "Cerebellum",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 50
           },
           {
             "id": "anatomy__neuro_anat___v8",
             "videoNumber": "#15",
             "title": "Cerebrum",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 43
           },
           {
             "id": "anatomy__neuro_anat___v9",
             "videoNumber": "#16",
             "title": "White Matter of Cerebrum",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 3
           },
           {
             "id": "anatomy__neuro_anat___v10",
             "videoNumber": "#17",
             "title": "Basal Ganglia",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 59
           },
           {
             "id": "anatomy__neuro_anat___v11",
             "videoNumber": "#18",
             "title": "Blood Supply of Brain",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 27
           }
         ]
       },
       {
         "name": "HEAD, NECK & FACE",
         "modules": 17,
-        "hours": 11.3,
+        "hours": 11.5,
         "videos": [
           {
             "id": "anatomy__hnf__v1",
             "videoNumber": "#19",
             "title": "Pharyngeal Arches, Clefts and Pouches",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 21
           },
           {
             "id": "anatomy__hnf__v2",
             "videoNumber": "#20",
             "title": "Development of Tongue, Pituitary, Face, Palate and Thyroid",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 44
           },
           {
             "id": "anatomy__hnf__v3",
             "videoNumber": "#21",
             "title": "Osteology of Head and Neck",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 19
           },
           {
             "id": "anatomy__hnf__v4",
             "videoNumber": "#22",
             "title": "Scalp and Face",
-            "durationMins": 27,
+            "durationMins": 39,
             "durationSecs": 0
           },
           {
             "id": "anatomy__hnf__v5",
             "videoNumber": "#23",
             "title": "Deep Cervical Fascia and Triangles of Neck",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 24
           },
           {
             "id": "anatomy__hnf__v6",
             "videoNumber": "#24",
             "title": "Neurovascular Structures in Neck",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 29
           },
           {
             "id": "anatomy__hnf__v7",
             "videoNumber": "#25",
             "title": "Infratemporal Fossa",
-            "durationMins": 74,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 13
           },
           {
             "id": "anatomy__hnf__v8",
             "videoNumber": "#26",
             "title": "Pterygopalatine Fossa",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 6
           },
           {
             "id": "anatomy__hnf__v9",
@@ -228,50 +222,50 @@ const syllabusData = [
             "id": "anatomy__hnf__v10",
             "videoNumber": "#28",
             "title": "Dural Folds and Dural Venous Sinuses",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 42
           },
           {
             "id": "anatomy__hnf__v11",
             "videoNumber": "#29",
             "title": "Orbit and Extra Ocular Muscles",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 3
           },
           {
             "id": "anatomy__hnf__v12",
             "videoNumber": "#30",
             "title": "3rd, 4th and 6th Cranial Nerves",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 33
           },
           {
             "id": "anatomy__hnf__v13",
             "videoNumber": "#31",
             "title": "Nose",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 27
           },
           {
             "id": "anatomy__hnf__v14",
             "videoNumber": "#32",
-            "title": "Tongue and Hypoglossal nerve",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Tongue and Hypoglossal Nerve",
+            "durationMins": 47,
+            "durationSecs": 11
           },
           {
             "id": "anatomy__hnf__v15",
             "videoNumber": "#33",
             "title": "Larynx",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 4
           },
           {
             "id": "anatomy__hnf__v16",
             "videoNumber": "#34",
             "title": "Pharynx",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 40
           },
           {
             "id": "anatomy__hnf__v17",
@@ -285,56 +279,56 @@ const syllabusData = [
       {
         "name": "UPPER LIMB",
         "modules": 10,
-        "hours": 7,
+        "hours": 5.7,
         "videos": [
           {
             "id": "anatomy__ul__v1",
             "videoNumber": "#36",
             "title": "Pectoral Region, Back and Scapular Region",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 26
           },
           {
             "id": "anatomy__ul__v2",
             "videoNumber": "#37",
             "title": "Brachial Plexus and Axillary Nerve",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 52
           },
           {
             "id": "anatomy__ul__v3",
             "videoNumber": "#38",
             "title": "Radial Nerve, Dorsal Digital Expansion and Anatomical Snuffbox",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 18
           },
           {
             "id": "anatomy__ul__v4",
             "videoNumber": "#39",
             "title": "Median Nerve",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 21
           },
           {
             "id": "anatomy__ul__v5",
             "videoNumber": "#40",
             "title": "Ulnar Nerve",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 43
           },
           {
             "id": "anatomy__ul__v6",
             "videoNumber": "#41",
             "title": "Vessels of Upper Limb",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 46
           },
           {
             "id": "anatomy__ul__v7",
             "videoNumber": "#42",
             "title": "Carpal Bones and Flexor Retinaculum",
-            "durationMins": 17,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 8
           },
           {
             "id": "anatomy__ul__v8",
@@ -368,50 +362,50 @@ const syllabusData = [
             "id": "anatomy__thorax__v1",
             "videoNumber": "#46",
             "title": "Development of Veins",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 18
           },
           {
             "id": "anatomy__thorax__v2",
             "videoNumber": "#47",
-            "title": "Development of arch arteries",
+            "title": "Development of Arch Arteries",
             "durationMins": 24,
-            "durationSecs": 0
+            "durationSecs": 48
           },
           {
             "id": "anatomy__thorax__v3",
             "videoNumber": "#48",
-            "title": "Fetal circulation",
-            "durationMins": 14,
+            "title": "Fetal Circulation",
+            "durationMins": 21,
             "durationSecs": 0
           },
           {
             "id": "anatomy__thorax__v4",
             "videoNumber": "#49",
             "title": "Thorax Osteology",
-            "durationMins": 17,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 53
           },
           {
             "id": "anatomy__thorax__v5",
             "videoNumber": "#50",
             "title": "Intercostal Spaces and its Contents",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 23
           },
           {
             "id": "anatomy__thorax__v6",
             "videoNumber": "#51",
             "title": "Pericardium and External Features of Heart",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 21,
+            "durationSecs": 13
           },
           {
             "id": "anatomy__thorax__v7",
             "videoNumber": "#52",
             "title": "Blood Supply of Heart",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 10
           },
           {
             "id": "anatomy__thorax__v8",
@@ -430,9 +424,9 @@ const syllabusData = [
           {
             "id": "anatomy__thorax__v10",
             "videoNumber": "#55",
-            "title": "Mediastinum and Its Contents",
-            "durationMins": 22,
-            "durationSecs": 0
+            "title": "Mediastinum",
+            "durationMins": 26,
+            "durationSecs": 41
           },
           {
             "id": "anatomy__thorax__v11",
@@ -445,50 +439,50 @@ const syllabusData = [
             "id": "anatomy__thorax__v12",
             "videoNumber": "#57",
             "title": "Diaphragm",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 18,
+            "durationSecs": 40
           }
         ]
       },
       {
         "name": "ABDOMEN & PELVIS",
         "modules": 19,
-        "hours": 9.6,
+        "hours": 9.8,
         "videos": [
           {
             "id": "anatomy__abdo___v1",
             "videoNumber": "#58",
             "title": "Gut Tube and Respiratory System Development",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 5
           },
           {
             "id": "anatomy__abdo___v2",
             "videoNumber": "#59",
             "title": "Foregut Development",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 58
           },
           {
             "id": "anatomy__abdo___v3",
             "videoNumber": "#60",
-            "title": "Midgut development",
-            "durationMins": 31,
-            "durationSecs": 0
+            "title": "Midgut Development",
+            "durationMins": 32,
+            "durationSecs": 1
           },
           {
             "id": "anatomy__abdo___v4",
             "videoNumber": "#61",
             "title": "Hindgut Development",
-            "durationMins": 11,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 37
           },
           {
             "id": "anatomy__abdo___v5",
             "videoNumber": "#62",
-            "title": "Anterior Abdominal wall",
-            "durationMins": 24,
-            "durationSecs": 0
+            "title": "Anterior Abdominal Wall",
+            "durationMins": 32,
+            "durationSecs": 56
           },
           {
             "id": "anatomy__abdo___v6",
@@ -501,15 +495,15 @@ const syllabusData = [
             "id": "anatomy__abdo___v7",
             "videoNumber": "#64",
             "title": "Peritoneum",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 25
           },
           {
             "id": "anatomy__abdo___v8",
             "videoNumber": "#65",
             "title": "Stomach",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 20
           },
           {
             "id": "anatomy__abdo___v9",
@@ -522,8 +516,8 @@ const syllabusData = [
             "id": "anatomy__abdo___v10",
             "videoNumber": "#67",
             "title": "Large Intestine",
-            "durationMins": 10,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 50
           },
           {
             "id": "anatomy__abdo___v11",
@@ -536,36 +530,36 @@ const syllabusData = [
             "id": "anatomy__abdo___v12",
             "videoNumber": "#69",
             "title": "Liver",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 7
           },
           {
             "id": "anatomy__abdo___v13",
             "videoNumber": "#70",
             "title": "Extrahepatic Biliary Apparatus and Spleen",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 26,
+            "durationSecs": 42
           },
           {
             "id": "anatomy__abdo___v14",
             "videoNumber": "#71",
             "title": "Blood Supply of Abdomen and Pelvis",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 1
           },
           {
             "id": "anatomy__abdo___v15",
             "videoNumber": "#72",
             "title": "Development of Kidneys and Renal Anatomy",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 15
           },
           {
             "id": "anatomy__abdo___v16",
             "videoNumber": "#73",
             "title": "Development of Gonads",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 2
           },
           {
             "id": "anatomy__abdo___v17",
@@ -578,71 +572,71 @@ const syllabusData = [
             "id": "anatomy__abdo___v18",
             "videoNumber": "#75",
             "title": "Perineum: Part 1",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 13
           },
           {
             "id": "anatomy__abdo___v19",
             "videoNumber": "#76",
             "title": "Perineum: Part 2",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 51
           }
         ]
       },
       {
         "name": "LOWER LIMB",
         "modules": 7,
-        "hours": 4.4,
+        "hours": 4.3,
         "videos": [
           {
             "id": "anatomy__ll__v1",
             "videoNumber": "#77",
-            "title": "Cutaneous Drug Reactions",
-            "durationMins": 25,
-            "durationSecs": 0
+            "title": "Cutaneous Innervation of Lower Limb, Lumbar Plexus and Great Saphenous Vein",
+            "durationMins": 43,
+            "durationSecs": 47
           },
           {
             "id": "anatomy__ll__v2",
             "videoNumber": "#78",
-            "title": "Front of thigh, Adductor canal and Popliteal Fossa",
-            "durationMins": 71,
-            "durationSecs": 0
+            "title": "Front of Thigh, Adductor Canal and Popliteal Fossa",
+            "durationMins": 41,
+            "durationSecs": 46
           },
           {
             "id": "anatomy__ll__v3",
             "videoNumber": "#79",
-            "title": "Gluteal region and Hamstring muscles",
-            "durationMins": 40,
-            "durationSecs": 0
+            "title": "Gluteal Region and Hamstring Muscles",
+            "durationMins": 31,
+            "durationSecs": 25
           },
           {
             "id": "anatomy__ll__v4",
             "videoNumber": "#80",
-            "title": "Knee joint",
-            "durationMins": 28,
-            "durationSecs": 0
+            "title": "Knee Joint",
+            "durationMins": 37,
+            "durationSecs": 20
           },
           {
             "id": "anatomy__ll__v5",
             "videoNumber": "#81",
             "title": "Leg and Ankle Joint",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 50
           },
           {
             "id": "anatomy__ll__v6",
             "videoNumber": "#82",
             "title": "Arteries of Lower Limb",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 35
           },
           {
             "id": "anatomy__ll__v7",
             "videoNumber": "#83",
             "title": "Layers of the Sole and Arches of the Foot",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 22,
+            "durationSecs": 17
           }
         ]
       },
@@ -655,7 +649,7 @@ const syllabusData = [
             "id": "anatomy__gen__anat___v1",
             "videoNumber": "#84",
             "title": "General Anatomy",
-            "durationMins": 34,
+            "durationMins": 36,
             "durationSecs": 0
           }
         ]
@@ -675,64 +669,64 @@ const syllabusData = [
             "id": "biochemistry__gen__biochem___v1",
             "videoNumber": "#01",
             "title": "How to Approach Biochemistry Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 40
           },
           {
             "id": "biochemistry__gen__biochem___v2",
             "videoNumber": "#02",
             "title": "Metabolism in Fed and Fasting State",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 29
           },
           {
             "id": "biochemistry__gen__biochem___v3",
             "videoNumber": "#03",
-            "title": "Concept of Enzyme Regulation [4",
-            "durationMins": 24,
-            "durationSecs": 0
+            "title": "Concept of Enzyme Regulation",
+            "durationMins": 33,
+            "durationSecs": 51
           }
         ]
       },
       {
         "name": "ENZYMOLOGY",
         "modules": 7,
-        "hours": 5.3,
+        "hours": 5.1,
         "videos": [
           {
             "id": "biochemistry__enzymology__v1",
             "videoNumber": "#04",
             "title": "Introduction to Enzymes",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 29
           },
           {
             "id": "biochemistry__enzymology__v2",
             "videoNumber": "#05",
             "title": "Classification of Enzymes",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 23
           },
           {
             "id": "biochemistry__enzymology__v3",
             "videoNumber": "#06",
             "title": "Mechanism of Action of Enzymes",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 27
           },
           {
             "id": "biochemistry__enzymology__v4",
             "videoNumber": "#07",
             "title": "Enzyme Kinetics",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 57
           },
           {
             "id": "biochemistry__enzymology__v5",
             "videoNumber": "#08",
             "title": "Enzyme Inhibition",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 40
           },
           {
             "id": "biochemistry__enzymology__v6",
@@ -744,44 +738,44 @@ const syllabusData = [
           {
             "id": "biochemistry__enzymology__v7",
             "videoNumber": "#10",
-            "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "title": "Clinical Applications of Enzymes",
+            "durationMins": 60,
+            "durationSecs": 49
           }
         ]
       },
       {
         "name": "CARBOHYDRATE METABOLISM",
         "modules": 10,
-        "hours": 6.4,
+        "hours": 7.6,
         "videos": [
           {
             "id": "biochemistry__carbohydrates__v1",
             "videoNumber": "#11",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Carbohydrates",
+            "durationMins": 52,
+            "durationSecs": 14
           },
           {
             "id": "biochemistry__carbohydrates__v2",
             "videoNumber": "#12",
             "title": "Glycolysis: Part 1",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 30
           },
           {
             "id": "biochemistry__carbohydrates__v3",
             "videoNumber": "#13",
             "title": "Glycolysis: Part 2",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 38
           },
           {
             "id": "biochemistry__carbohydrates__v4",
             "videoNumber": "#14",
             "title": "Pyruvate Dehydrogenase",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 58
           },
           {
             "id": "biochemistry__carbohydrates__v5",
@@ -794,29 +788,29 @@ const syllabusData = [
             "id": "biochemistry__carbohydrates__v6",
             "videoNumber": "#16",
             "title": "Electron Transport Chain",
-            "durationMins": 49,
+            "durationMins": 46,
             "durationSecs": 0
           },
           {
             "id": "biochemistry__carbohydrates__v7",
             "videoNumber": "#17",
             "title": "Glycogen Metabolism",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 2
           },
           {
             "id": "biochemistry__carbohydrates__v8",
             "videoNumber": "#18",
             "title": "Glycogen Storage Disorders",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 38
           },
           {
             "id": "biochemistry__carbohydrates__v9",
             "videoNumber": "#19",
             "title": "Gluconeogenesis",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 56
           },
           {
             "id": "biochemistry__carbohydrates__v10",
@@ -830,14 +824,14 @@ const syllabusData = [
       {
         "name": "LIPID METABOLISM",
         "modules": 7,
-        "hours": 5.4,
+        "hours": 5.9,
         "videos": [
           {
             "id": "biochemistry__lipids__v1",
             "videoNumber": "#21",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Lipids",
+            "durationMins": 57,
+            "durationSecs": 43
           },
           {
             "id": "biochemistry__lipids__v2",
@@ -857,28 +851,28 @@ const syllabusData = [
             "id": "biochemistry__lipids__v4",
             "videoNumber": "#24",
             "title": "Lipid Metabolism in Fasting State",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 49
           },
           {
             "id": "biochemistry__lipids__v5",
             "videoNumber": "#25",
             "title": "Lipid Metabolism in Fed State",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 31
           },
           {
             "id": "biochemistry__lipids__v6",
             "videoNumber": "#26",
             "title": "Ketone Body Synthesis",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 22
           },
           {
             "id": "biochemistry__lipids__v7",
             "videoNumber": "#27",
             "title": "Lipoproteins and its Metabolism",
-            "durationMins": 48,
+            "durationMins": 31,
             "durationSecs": 0
           }
         ]
@@ -886,14 +880,14 @@ const syllabusData = [
       {
         "name": "PROTEINS & AMINO ACIDS",
         "modules": 8,
-        "hours": 6.9,
+        "hours": 6.5,
         "videos": [
           {
             "id": "biochemistry__proteins___aa__v1",
             "videoNumber": "#28",
             "title": "Chemistry of Amino Acids",
-            "durationMins": 70,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 55
           },
           {
             "id": "biochemistry__proteins___aa__v2",
@@ -905,23 +899,23 @@ const syllabusData = [
           {
             "id": "biochemistry__proteins___aa__v3",
             "videoNumber": "#30",
-            "title": "Urea Cycle and Its Disorders",
-            "durationMins": 43,
-            "durationSecs": 0
+            "title": "Urea Cycle",
+            "durationMins": 51,
+            "durationSecs": 9
           },
           {
             "id": "biochemistry__proteins___aa__v4",
             "videoNumber": "#31",
             "title": "Aromatic Amino Acids",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 46
           },
           {
             "id": "biochemistry__proteins___aa__v5",
             "videoNumber": "#32",
             "title": "Sulphur Containing Amino Acids",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 18
           },
           {
             "id": "biochemistry__proteins___aa__v6",
@@ -934,15 +928,15 @@ const syllabusData = [
             "id": "biochemistry__proteins___aa__v7",
             "videoNumber": "#34",
             "title": "Tryptophan",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 52
           },
           {
             "id": "biochemistry__proteins___aa__v8",
             "videoNumber": "#35",
             "title": "Miscellaneous Amino Acids",
             "durationMins": 62,
-            "durationSecs": 0
+            "durationSecs": 59
           }
         ]
       },
@@ -955,22 +949,22 @@ const syllabusData = [
             "id": "biochemistry__bioenergetics__v1",
             "videoNumber": "#36",
             "title": "Krebs Cycle",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 9
           },
           {
             "id": "biochemistry__bioenergetics__v2",
             "videoNumber": "#37",
             "title": "Electron Transport Chain",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 51
           }
         ]
       },
       {
         "name": "MOLECULAR BIOLOGY",
         "modules": 11,
-        "hours": 10.1,
+        "hours": 9.9,
         "videos": [
           {
             "id": "biochemistry__molecular_biology__v1",
@@ -990,43 +984,43 @@ const syllabusData = [
             "id": "biochemistry__molecular_biology__v3",
             "videoNumber": "#40",
             "title": "DNA Replication",
-            "durationMins": 76,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 58
           },
           {
             "id": "biochemistry__molecular_biology__v4",
             "videoNumber": "#41",
             "title": "Transcription",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 9
           },
           {
             "id": "biochemistry__molecular_biology__v5",
             "videoNumber": "#42",
             "title": "Translation",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 23
           },
           {
             "id": "biochemistry__molecular_biology__v6",
             "videoNumber": "#43",
             "title": "Regulation of Gene Expression",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 42
           },
           {
             "id": "biochemistry__molecular_biology__v7",
             "videoNumber": "#44",
             "title": "Hybridization Techniques",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 17
           },
           {
             "id": "biochemistry__molecular_biology__v8",
             "videoNumber": "#45",
             "title": "Recombinant DNA Technology",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 50
           },
           {
             "id": "biochemistry__molecular_biology__v9",
@@ -1046,8 +1040,8 @@ const syllabusData = [
             "id": "biochemistry__molecular_biology__v11",
             "videoNumber": "#48",
             "title": "Mutation",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 55
           }
         ]
       },
@@ -1060,36 +1054,36 @@ const syllabusData = [
             "id": "biochemistry__vitamins__v1",
             "videoNumber": "#49",
             "title": "Fat Soluble Vitamins",
-            "durationMins": 78,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 34
           },
           {
             "id": "biochemistry__vitamins__v2",
             "videoNumber": "#50",
             "title": "Hematopoietic Vitamins",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 15
           },
           {
             "id": "biochemistry__vitamins__v3",
             "videoNumber": "#51",
             "title": "Energy Releasing Vitamins",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 28
           },
           {
             "id": "biochemistry__vitamins__v4",
             "videoNumber": "#52",
             "title": "Vitamin B6 and C",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 23
           },
           {
             "id": "biochemistry__vitamins__v5",
             "videoNumber": "#53",
             "title": "Heme Metabolism",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 20
           }
         ]
       }
@@ -1102,42 +1096,42 @@ const syllabusData = [
       {
         "name": "GENERAL PHYSIOLOGY",
         "modules": 9,
-        "hours": 6.2,
+        "hours": 6.5,
         "videos": [
           {
             "id": "physiology__gen__physio___v1",
             "videoNumber": "#01",
             "title": "How to Approach Physiology Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 4
           },
           {
             "id": "physiology__gen__physio___v2",
             "videoNumber": "#02",
             "title": "Homeostasis",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 22
           },
           {
             "id": "physiology__gen__physio___v3",
             "videoNumber": "#03",
             "title": "Cellular Physiology",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 16
           },
           {
             "id": "physiology__gen__physio___v4",
             "videoNumber": "#04",
             "title": "Cell Organelles",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 38
           },
           {
             "id": "physiology__gen__physio___v5",
             "videoNumber": "#05",
             "title": "Cytoskeletal Filaments and Cellular Junctions",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 46
           },
           {
             "id": "physiology__gen__physio___v6",
@@ -1150,22 +1144,22 @@ const syllabusData = [
             "id": "physiology__gen__physio___v7",
             "videoNumber": "#07",
             "title": "Membrane Transport",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 6
           },
           {
             "id": "physiology__gen__physio___v8",
             "videoNumber": "#08",
             "title": "Membrane Potentials",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 55
           },
           {
             "id": "physiology__gen__physio___v9",
             "videoNumber": "#09",
             "title": "Cellular Fluids",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 32
           }
         ]
       },
@@ -1178,78 +1172,78 @@ const syllabusData = [
             "id": "physiology__nv__mus__physio___v1",
             "videoNumber": "#10",
             "title": "Characteristics of Nerve Fibres",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 7
           },
           {
             "id": "physiology__nv__mus__physio___v2",
             "videoNumber": "#11",
             "title": "Classification of Nerve Fibres",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 9
           },
           {
             "id": "physiology__nv__mus__physio___v3",
             "videoNumber": "#12",
             "title": "Skeletal Muscles",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 17
           },
           {
             "id": "physiology__nv__mus__physio___v4",
             "videoNumber": "#13",
-            "title": "Neuromuscular Disorders",
-            "durationMins": 47,
-            "durationSecs": 0
+            "title": "Neuromuscular Junction",
+            "durationMins": 51,
+            "durationSecs": 8
           },
           {
             "id": "physiology__nv__mus__physio___v5",
             "videoNumber": "#14",
             "title": "Cardiac and Smooth Muscles",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 8
           },
           {
             "id": "physiology__nv__mus__physio___v6",
             "videoNumber": "#15",
             "title": "Synaptic Transmission and Neurotransmitters",
-            "durationMins": 74,
-            "durationSecs": 0
+            "durationMins": 69,
+            "durationSecs": 11
           }
         ]
       },
       {
         "name": "CENTRAL NERVOUS SYSTEM",
         "modules": 11,
-        "hours": 9.6,
+        "hours": 10.1,
         "videos": [
           {
             "id": "physiology__cns__v1",
             "videoNumber": "#16",
             "title": "Sensory Receptors",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 38
           },
           {
             "id": "physiology__cns__v2",
             "videoNumber": "#17",
             "title": "Somatosensory Pathways",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 56
           },
           {
             "id": "physiology__cns__v3",
             "videoNumber": "#18",
             "title": "Vision",
-            "durationMins": 68,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 22
           },
           {
             "id": "physiology__cns__v4",
             "videoNumber": "#19",
             "title": "Hearing, Smell and Taste",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 43
           },
           {
             "id": "physiology__cns__v5",
@@ -1262,8 +1256,8 @@ const syllabusData = [
             "id": "physiology__cns__v6",
             "videoNumber": "#21",
             "title": "Cerebellum and Basal Ganglia",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 39
           },
           {
             "id": "physiology__cns__v7",
@@ -1276,99 +1270,99 @@ const syllabusData = [
             "id": "physiology__cns__v8",
             "videoNumber": "#23",
             "title": "Limbic System and Hypothalamus",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 53
           },
           {
             "id": "physiology__cns__v9",
             "videoNumber": "#24",
             "title": "Learning and Memory",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 29
           },
           {
             "id": "physiology__cns__v10",
             "videoNumber": "#25",
             "title": "CSF, CBF and BBB",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 1
           },
           {
             "id": "physiology__cns__v11",
             "videoNumber": "#26",
             "title": "EEG and Sleep",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 48
           }
         ]
       },
       {
         "name": "RESPIRATORY SYSTEM",
         "modules": 9,
-        "hours": 6.7,
+        "hours": 7,
         "videos": [
           {
             "id": "physiology__respi___v1",
             "videoNumber": "#27",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Respiratory System",
+            "durationMins": 49,
+            "durationSecs": 19
           },
           {
             "id": "physiology__respi___v2",
             "videoNumber": "#28",
             "title": "Mechanics of Breathing",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 5
           },
           {
             "id": "physiology__respi___v3",
             "videoNumber": "#29",
             "title": "Lung Volumes and Capacities",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 26
           },
           {
             "id": "physiology__respi___v4",
             "videoNumber": "#30",
             "title": "Ventilation Perfusion Ratio",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 45
           },
           {
             "id": "physiology__respi___v5",
             "videoNumber": "#31",
             "title": "Diffusion and Transport of Gases",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 12
           },
           {
             "id": "physiology__respi___v6",
             "videoNumber": "#32",
             "title": "Neural Regulation of Respiration",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 24
           },
           {
             "id": "physiology__respi___v7",
             "videoNumber": "#33",
             "title": "Chemical Regulation of Respiration",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 46
           },
           {
             "id": "physiology__respi___v8",
             "videoNumber": "#34",
-            "title": "Pulmonary Function Tests",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Pulmonary Circulation",
+            "durationMins": 38,
+            "durationSecs": 27
           },
           {
             "id": "physiology__respi___v9",
             "videoNumber": "#35",
             "title": "Environmental Physiology",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 36
           }
         ]
       },
@@ -1381,8 +1375,8 @@ const syllabusData = [
             "id": "physiology__cvs__v1",
             "videoNumber": "#36",
             "title": "Cardiac Action Potentials",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 53
           },
           {
             "id": "physiology__cvs__v2",
@@ -1395,64 +1389,64 @@ const syllabusData = [
             "id": "physiology__cvs__v3",
             "videoNumber": "#38",
             "title": "Cardiac Cycle",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 3
           },
           {
             "id": "physiology__cvs__v4",
             "videoNumber": "#39",
             "title": "Cardiac Output",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 11
           },
           {
             "id": "physiology__cvs__v5",
             "videoNumber": "#40",
             "title": "Hematopoiesis & Blood Groups",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 32
           },
           {
             "id": "physiology__cvs__v6",
             "videoNumber": "#41",
             "title": "Characteristics of Blood Vessels",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 24
           },
           {
             "id": "physiology__cvs__v7",
             "videoNumber": "#42",
             "title": "Hemodynamics",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 21
           },
           {
             "id": "physiology__cvs__v8",
             "videoNumber": "#43",
             "title": "Vascular Injury",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 25
           },
           {
             "id": "physiology__cvs__v9",
             "videoNumber": "#44",
             "title": "Regulation of Blood Pressure",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 16
           }
         ]
       },
       {
         "name": "GASTROINTESTINAL SYSTEM",
         "modules": 4,
-        "hours": 3.4,
+        "hours": 5.6,
         "videos": [
           {
             "id": "physiology__gi___v1",
             "videoNumber": "#45",
             "title": "Gastrointestinal Motility",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 96,
+            "durationSecs": 11
           },
           {
             "id": "physiology__gi___v2",
@@ -1465,15 +1459,15 @@ const syllabusData = [
             "id": "physiology__gi___v3",
             "videoNumber": "#47",
             "title": "Digestion and Absorption",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 71,
+            "durationSecs": 17
           },
           {
             "id": "physiology__gi___v4",
             "videoNumber": "#48",
-            "title": "Liver",
-            "durationMins": 26,
-            "durationSecs": 0
+            "title": "Liver and Biliary Functions",
+            "durationMins": 92,
+            "durationSecs": 28
           }
         ]
       },
@@ -1486,50 +1480,50 @@ const syllabusData = [
             "id": "physiology__renal__v1",
             "videoNumber": "#49",
             "title": "Glomerular Filtration Rate",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 42
           },
           {
             "id": "physiology__renal__v2",
             "videoNumber": "#50",
             "title": "Proximal Convoluted Tubule",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 52
           },
           {
             "id": "physiology__renal__v3",
             "videoNumber": "#51",
             "title": "Loop of Henle and Distal Convoluted Tubule",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 53
           },
           {
             "id": "physiology__renal__v4",
             "videoNumber": "#52",
             "title": "Collecting Duct and Micturition Reflex",
             "durationMins": 57,
-            "durationSecs": 0
+            "durationSecs": 52
           },
           {
             "id": "physiology__renal__v5",
             "videoNumber": "#53",
             "title": "Acid Base Balance",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 41
           }
         ]
       },
       {
         "name": "ENDOCRINE SYSTEM",
         "modules": 5,
-        "hours": 3.8,
+        "hours": 4.5,
         "videos": [
           {
             "id": "physiology__endo___v1",
             "videoNumber": "#54",
             "title": "Introduction to Endocrinology",
-            "durationMins": 14,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 58
           },
           {
             "id": "physiology__endo___v2",
@@ -1542,22 +1536,22 @@ const syllabusData = [
             "id": "physiology__endo___v3",
             "videoNumber": "#56",
             "title": "Thyroid Gland",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 44
           },
           {
             "id": "physiology__endo___v4",
             "videoNumber": "#57",
             "title": "Endocrine Pancreas",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 58
           },
           {
             "id": "physiology__endo___v5",
             "videoNumber": "#58",
             "title": "Adrenal Gland",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 56
           }
         ]
       },
@@ -1570,36 +1564,36 @@ const syllabusData = [
             "id": "physiology__repro___v1",
             "videoNumber": "#59",
             "title": "Male Reproduction",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 65,
+            "durationSecs": 56
           },
           {
             "id": "physiology__repro___v2",
             "videoNumber": "#60",
             "title": "Female Reproduction",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 4
           }
         ]
       },
       {
         "name": "EXERCISE PHYSIOLOGY",
         "modules": 2,
-        "hours": 1.6,
+        "hours": 1.5,
         "videos": [
           {
             "id": "physiology__exercise_physio__v1",
             "videoNumber": "#61",
             "title": "Exercise Physiology",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 2
           },
           {
             "id": "physiology__exercise_physio__v2",
             "videoNumber": "#62",
-            "title": "Regulation of Blood Pressure",
-            "durationMins": 59,
-            "durationSecs": 0
+            "title": "Regulation of Temperature",
+            "durationMins": 38,
+            "durationSecs": 58
           }
         ]
       }
@@ -1625,99 +1619,99 @@ const syllabusData = [
             "id": "pharmacology__gen__pharma___v2",
             "videoNumber": "#02",
             "title": "Introduction to Pharmacokinetics and Pharmacodynamics",
-            "durationMins": 16,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 24
           },
           {
             "id": "pharmacology__gen__pharma___v3",
             "videoNumber": "#03",
-            "title": "Pharmacokinetics: Absorption - Part 1 [4",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Pharmacokinetics: Absorption - Part 1",
+            "durationMins": 48,
+            "durationSecs": 3
           },
           {
             "id": "pharmacology__gen__pharma___v4",
             "videoNumber": "#04",
             "title": "Pharmacokinetics: Absorption - Part 2",
-            "durationMins": 52,
+            "durationMins": 44,
             "durationSecs": 0
           },
           {
             "id": "pharmacology__gen__pharma___v5",
             "videoNumber": "#05",
             "title": "Pharmacokinetics: Distribution",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 39
           },
           {
             "id": "pharmacology__gen__pharma___v6",
             "videoNumber": "#06",
             "title": "Pharmacokinetics: Metabolism",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 23
           },
           {
             "id": "pharmacology__gen__pharma___v7",
             "videoNumber": "#07",
             "title": "Pharmacokinetics: Excretion",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 14
           },
           {
             "id": "pharmacology__gen__pharma___v8",
             "videoNumber": "#08",
-            "title": "Pharmacokinetics: Absorption - Part 1 [4",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Pharmacokinetics: Drug Interactions",
+            "durationMins": 34,
+            "durationSecs": 42
           },
           {
             "id": "pharmacology__gen__pharma___v9",
             "videoNumber": "#09",
             "title": "Pharmacodynamics: Drug Receptors and Interactions",
-            "durationMins": 70,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 57
           },
           {
             "id": "pharmacology__gen__pharma___v10",
             "videoNumber": "#10",
             "title": "Drug Development and Clinical Trials",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 37
           },
           {
             "id": "pharmacology__gen__pharma___v11",
             "videoNumber": "#11",
             "title": "ADR and Pharmacovigilance, Pharmacogenetics and Pharmacogenomics",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 56
           },
           {
             "id": "pharmacology__gen__pharma___v12",
             "videoNumber": "#12",
             "title": "General Pharmacology: Miscellaneous",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 49
           }
         ]
       },
       {
         "name": "AUTONOMIC NERVOUS SYSTEM",
         "modules": 7,
-        "hours": 6.6,
+        "hours": 6.5,
         "videos": [
           {
             "id": "pharmacology__ans__v1",
             "videoNumber": "#13",
             "title": "Introduction to Autonomic Nervous System (ANS)",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 35
           },
           {
             "id": "pharmacology__ans__v2",
             "videoNumber": "#14",
             "title": "Cholinergic Drugs",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 50
           },
           {
             "id": "pharmacology__ans__v3",
@@ -1730,50 +1724,50 @@ const syllabusData = [
             "id": "pharmacology__ans__v4",
             "videoNumber": "#16",
             "title": "Sympathetic Nervous System: Neurotransmitters and Receptors",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 39
           },
           {
             "id": "pharmacology__ans__v5",
             "videoNumber": "#17",
             "title": "Adrenergic Drugs: Part 1",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 46
           },
           {
             "id": "pharmacology__ans__v6",
             "videoNumber": "#18",
             "title": "Adrenergic Drugs: Part 2",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 47
           },
           {
             "id": "pharmacology__ans__v7",
             "videoNumber": "#19",
             "title": "Anti-adrenergic Drugs",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 78,
+            "durationSecs": 25
           }
         ]
       },
       {
         "name": "CARDIOVASCULAR SYSTEM",
         "modules": 7,
-        "hours": 5.9,
+        "hours": 6.3,
         "videos": [
           {
             "id": "pharmacology__cvs__v1",
             "videoNumber": "#20",
             "title": "Anti-arrhythmic Drugs: Part 1",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 27
           },
           {
             "id": "pharmacology__cvs__v2",
             "videoNumber": "#21",
             "title": "Anti-arrhythmic Drugs: Part 2",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 55
           },
           {
             "id": "pharmacology__cvs__v3",
@@ -1786,22 +1780,22 @@ const syllabusData = [
             "id": "pharmacology__cvs__v4",
             "videoNumber": "#23",
             "title": "Vasodilators",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 23
           },
           {
             "id": "pharmacology__cvs__v5",
             "videoNumber": "#24",
             "title": "Anti-hypertensive Drugs",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 37
           },
           {
             "id": "pharmacology__cvs__v6",
             "videoNumber": "#25",
             "title": "Anti-anginal Drugs",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 49
           },
           {
             "id": "pharmacology__cvs__v7",
@@ -1821,85 +1815,85 @@ const syllabusData = [
             "id": "pharmacology__renal__v1",
             "videoNumber": "#27",
             "title": "Diuretics: Part 1",
-            "durationMins": 68,
-            "durationSecs": 0
+            "durationMins": 67,
+            "durationSecs": 47
           },
           {
             "id": "pharmacology__renal__v2",
             "videoNumber": "#28",
             "title": "Diuretics: Part 2",
-            "durationMins": 85,
-            "durationSecs": 0
+            "durationMins": 82,
+            "durationSecs": 13
           }
         ]
       },
       {
         "name": "CENTRAL & PERIPHERAL NERVOUS SYSTEM",
         "modules": 10,
-        "hours": 8.4,
+        "hours": 8.3,
         "videos": [
           {
             "id": "pharmacology__cns___pns__v1",
             "videoNumber": "#29",
             "title": "Anti-epileptic Drugs: Part 1",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 41
           },
           {
             "id": "pharmacology__cns___pns__v2",
             "videoNumber": "#30",
             "title": "Anti-epileptic Drugs: Part 2",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 50
           },
           {
             "id": "pharmacology__cns___pns__v3",
             "videoNumber": "#31",
             "title": "Sedative Hypnotic Drugs",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 38
           },
           {
             "id": "pharmacology__cns___pns__v4",
             "videoNumber": "#32",
             "title": "Opioids: Part 1",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 10
           },
           {
             "id": "pharmacology__cns___pns__v5",
             "videoNumber": "#33",
             "title": "Opioids: Part 2",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 27
           },
           {
             "id": "pharmacology__cns___pns__v6",
             "videoNumber": "#34",
             "title": "Affect Disorders: Part 1",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 48
           },
           {
             "id": "pharmacology__cns___pns__v7",
             "videoNumber": "#35",
             "title": "Affect Disorders: Part 2",
-            "durationMins": 77,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 50
           },
           {
             "id": "pharmacology__cns___pns__v8",
             "videoNumber": "#36",
             "title": "Anti-psychotic Drugs",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 47
           },
           {
             "id": "pharmacology__cns___pns__v9",
             "videoNumber": "#37",
             "title": "Neurodegenerative Disorders",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 20
           },
           {
             "id": "pharmacology__cns___pns__v10",
@@ -1919,71 +1913,71 @@ const syllabusData = [
             "id": "pharmacology__antimicrobials__v1",
             "videoNumber": "#39",
             "title": "Introduction to Antibacterial Drugs",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 35
           },
           {
             "id": "pharmacology__antimicrobials__v2",
             "videoNumber": "#40",
             "title": "Cell Wall Synthesis Inhibitors: Part 1",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 12
           },
           {
             "id": "pharmacology__antimicrobials__v3",
             "videoNumber": "#41",
-            "title": "Cell Wall Synthesis Inhibitors: Part 1",
-            "durationMins": 64,
-            "durationSecs": 0
+            "title": "Cell Wall Synthesis Inhibitors: Part 2",
+            "durationMins": 52,
+            "durationSecs": 44
           },
           {
             "id": "pharmacology__antimicrobials__v4",
             "videoNumber": "#42",
             "title": "Cell Wall Synthesis Inhibitors: Part 3",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 2
           },
           {
             "id": "pharmacology__antimicrobials__v5",
             "videoNumber": "#43",
             "title": "Protein Synthesis Inhibitors: Part 1",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 22
           },
           {
             "id": "pharmacology__antimicrobials__v6",
             "videoNumber": "#44",
             "title": "Protein Synthesis Inhibitors: Part 2",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 3
           },
           {
             "id": "pharmacology__antimicrobials__v7",
             "videoNumber": "#45",
             "title": "Other Antibacterial Drugs",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 18
           },
           {
             "id": "pharmacology__antimicrobials__v8",
             "videoNumber": "#46",
             "title": "Anti-fungal Drugs",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 39
           },
           {
             "id": "pharmacology__antimicrobials__v9",
             "videoNumber": "#47",
             "title": "Non-retroviral Drugs",
-            "durationMins": 68,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 1
           },
           {
             "id": "pharmacology__antimicrobials__v10",
             "videoNumber": "#48",
             "title": "Anti-retroviral Drugs",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 42
           },
           {
             "id": "pharmacology__antimicrobials__v11",
@@ -1996,36 +1990,36 @@ const syllabusData = [
             "id": "pharmacology__antimicrobials__v12",
             "videoNumber": "#50",
             "title": "Anti-protozoal Drugs",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 17
           },
           {
             "id": "pharmacology__antimicrobials__v13",
             "videoNumber": "#51",
             "title": "Anti-helminthic Drugs",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 44
           }
         ]
       },
       {
         "name": "ENDOCRINE SYSTEM",
         "modules": 7,
-        "hours": 4.1,
+        "hours": 4,
         "videos": [
           {
             "id": "pharmacology__endo___v1",
             "videoNumber": "#52",
             "title": "Anti-diabetic Drugs: Part 1",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 7
           },
           {
             "id": "pharmacology__endo___v2",
             "videoNumber": "#53",
-            "title": "Anti-diabetic Drugs: Part 1",
-            "durationMins": 53,
-            "durationSecs": 0
+            "title": "Anti-diabetic Drugs: Part 2",
+            "durationMins": 34,
+            "durationSecs": 5
           },
           {
             "id": "pharmacology__endo___v3",
@@ -2038,57 +2032,57 @@ const syllabusData = [
             "id": "pharmacology__endo___v4",
             "videoNumber": "#55",
             "title": "Growth Hormone and Related Drugs",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 33
           },
           {
             "id": "pharmacology__endo___v5",
             "videoNumber": "#56",
             "title": "Steroids",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 39
           },
           {
             "id": "pharmacology__endo___v6",
             "videoNumber": "#57",
-            "title": "Drugs acting on Bone",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Drugs Acting on Bone",
+            "durationMins": 32,
+            "durationSecs": 45
           },
           {
             "id": "pharmacology__endo___v7",
             "videoNumber": "#58",
-            "title": "Drugs acting on Thyroid",
-            "durationMins": 28,
-            "durationSecs": 0
+            "title": "Drugs Acting on Thyroid",
+            "durationMins": 38,
+            "durationSecs": 51
           }
         ]
       },
       {
         "name": "AUTACOIDS & IMMUNOPHARMACOLOGY",
         "modules": 5,
-        "hours": 3.5,
+        "hours": 3.1,
         "videos": [
           {
             "id": "pharmacology__autacoids__v1",
             "videoNumber": "#59",
             "title": "Anti-histaminics",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 51
           },
           {
             "id": "pharmacology__autacoids__v2",
             "videoNumber": "#60",
             "title": "Serotonin-related Drugs",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 25
           },
           {
             "id": "pharmacology__autacoids__v3",
             "videoNumber": "#61",
             "title": "Eicosanoids",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 50
           },
           {
             "id": "pharmacology__autacoids__v4",
@@ -2115,15 +2109,15 @@ const syllabusData = [
             "id": "pharmacology__hemat___v1",
             "videoNumber": "#64",
             "title": "Anti-aggregants and Hematopoietic Agents",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 1
           },
           {
             "id": "pharmacology__hemat___v2",
             "videoNumber": "#65",
             "title": "Anti-coagulants and Fibrinolytics",
-            "durationMins": 82,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 59
           }
         ]
       },
@@ -2136,43 +2130,43 @@ const syllabusData = [
             "id": "pharmacology__respi___v1",
             "videoNumber": "#66",
             "title": "Bronchial Asthma",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 21,
+            "durationSecs": 3
           },
           {
             "id": "pharmacology__respi___v2",
             "videoNumber": "#67",
             "title": "Anti-tussives",
-            "durationMins": 15,
-            "durationSecs": 0
+            "durationMins": 26,
+            "durationSecs": 57
           }
         ]
       },
       {
         "name": "GASTROINTESTINAL PHARMACOLOGY",
         "modules": 3,
-        "hours": 1.6,
+        "hours": 1.5,
         "videos": [
           {
             "id": "pharmacology__gastro_intestinal__v1",
             "videoNumber": "#68",
             "title": "Peptic Ulcer Disease",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 29
           },
           {
             "id": "pharmacology__gastro_intestinal__v2",
             "videoNumber": "#69",
-            "title": "Prokinetics and Antiemetics",
-            "durationMins": 23,
-            "durationSecs": 0
+            "title": "Prokinetics and Anti-emetics",
+            "durationMins": 31,
+            "durationSecs": 25
           },
           {
             "id": "pharmacology__gastro_intestinal__v3",
             "videoNumber": "#70",
             "title": "Laxatives and Antidiarrheal Drugs",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 6
           }
         ]
       },
@@ -2185,7 +2179,7 @@ const syllabusData = [
             "id": "pharmacology__immuno_modulators__v1",
             "videoNumber": "#71",
             "title": "Immunomodulators",
-            "durationMins": 37,
+            "durationMins": 36,
             "durationSecs": 0
           }
         ]
@@ -2193,14 +2187,14 @@ const syllabusData = [
       {
         "name": "ANTICANCER AGENTS",
         "modules": 4,
-        "hours": 3.3,
+        "hours": 3.1,
         "videos": [
           {
             "id": "pharmacology__anti_neoplastic_agents__v1",
             "videoNumber": "#72",
             "title": "Introduction to Anti-cancer Drugs",
-            "durationMins": 68,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 7
           },
           {
             "id": "pharmacology__anti_neoplastic_agents__v2",
@@ -2213,15 +2207,15 @@ const syllabusData = [
             "id": "pharmacology__anti_neoplastic_agents__v3",
             "videoNumber": "#74",
             "title": "Cell Cycle Specific Drugs",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 56
           },
           {
             "id": "pharmacology__anti_neoplastic_agents__v4",
             "videoNumber": "#75",
             "title": "Miscellaneous Drugs",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 56
           }
         ]
       }
@@ -2234,126 +2228,126 @@ const syllabusData = [
       {
         "name": "GEN. MICROBIO. & GEN. BACTERIO",
         "modules": 11,
-        "hours": 7.5,
+        "hours": 7.8,
         "videos": [
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v1",
             "videoNumber": "#01",
             "title": "How to Approach Microbiology Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 54
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v2",
             "videoNumber": "#02",
             "title": "Microscopes",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 9
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v3",
             "videoNumber": "#03",
             "title": "Bacterial Stains",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 47
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v4",
             "videoNumber": "#04",
             "title": "Bacterial Anatomy and Typing",
-            "durationMins": 87,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 7
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v5",
             "videoNumber": "#05",
             "title": "Biochemicals and Antibiotic Sensitivity Tests",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 30
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v6",
             "videoNumber": "#06",
             "title": "Bacterial Cultivation",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 55
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v7",
             "videoNumber": "#07",
-            "title": "Bacterial Stains",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Bacterial Genetics",
+            "durationMins": 39,
+            "durationSecs": 25
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v8",
             "videoNumber": "#08",
             "title": "Miscellaneous Topics in Microbiology",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 10
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v9",
             "videoNumber": "#09",
             "title": "Sterilization and Disinfection: Part 1",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 46
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v10",
             "videoNumber": "#10",
             "title": "Sterilization and Disinfection: Part 2",
             "durationMins": 42,
-            "durationSecs": 0
+            "durationSecs": 14
           },
           {
             "id": "microbiology__gen__microbio____gen__bacterio___v11",
             "videoNumber": "#11",
             "title": "Standard and Transmission Based Precautions",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 3
           }
         ]
       },
       {
         "name": "ORGAN SPECIFIC BACTERIO",
         "modules": 24,
-        "hours": 18.8,
+        "hours": 18.3,
         "videos": [
           {
             "id": "microbiology__organ_specific_bacterio___v1",
             "videoNumber": "#12",
             "title": "Staphylococcus",
-            "durationMins": 79,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 7
           },
           {
             "id": "microbiology__organ_specific_bacterio___v2",
             "videoNumber": "#13",
             "title": "Alpha and Gamma Hemolytic Streptococcus",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 41
           },
           {
             "id": "microbiology__organ_specific_bacterio___v3",
             "videoNumber": "#14",
             "title": "Beta Hemolytic Streptococcus",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 11
           },
           {
             "id": "microbiology__organ_specific_bacterio___v4",
             "videoNumber": "#15",
             "title": "Corynebacterium",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 55
           },
           {
             "id": "microbiology__organ_specific_bacterio___v5",
             "videoNumber": "#16",
             "title": "Bacillus",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 53
           },
           {
             "id": "microbiology__organ_specific_bacterio___v6",
@@ -2394,50 +2388,50 @@ const syllabusData = [
             "id": "microbiology__organ_specific_bacterio___v11",
             "videoNumber": "#22",
             "title": "Mycobacterium",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 28
           },
           {
             "id": "microbiology__organ_specific_bacterio___v12",
             "videoNumber": "#23",
             "title": "Neisseria and Moraxella",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 20
           },
           {
             "id": "microbiology__organ_specific_bacterio___v13",
             "videoNumber": "#24",
             "title": "Escherichia and Shigella",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 24
           },
           {
             "id": "microbiology__organ_specific_bacterio___v14",
             "videoNumber": "#25",
             "title": "Salmonella",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 9
           },
           {
             "id": "microbiology__organ_specific_bacterio___v15",
             "videoNumber": "#26",
             "title": "Klebsiella, Proteus and Yersinia",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 10
           },
           {
             "id": "microbiology__organ_specific_bacterio___v16",
             "videoNumber": "#27",
             "title": "Vibrio",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 6
           },
           {
             "id": "microbiology__organ_specific_bacterio___v17",
             "videoNumber": "#28",
-            "title": "Pseudomonas and Burkholderia",
-            "durationMins": 39,
-            "durationSecs": 0
+            "title": "Pseudomonas and Acinetobacter",
+            "durationMins": 41,
+            "durationSecs": 38
           },
           {
             "id": "microbiology__organ_specific_bacterio___v18",
@@ -2450,99 +2444,99 @@ const syllabusData = [
             "id": "microbiology__organ_specific_bacterio___v19",
             "videoNumber": "#30",
             "title": "Campylobacter and Helicobacter",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 32
           },
           {
             "id": "microbiology__organ_specific_bacterio___v20",
             "videoNumber": "#31",
             "title": "Brucella and Bordetella",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 30
           },
           {
             "id": "microbiology__organ_specific_bacterio___v21",
             "videoNumber": "#32",
             "title": "Hemophilus and Legionella",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 48
           },
           {
             "id": "microbiology__organ_specific_bacterio___v22",
             "videoNumber": "#33",
             "title": "Rickettsia and Orientia",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 42
           },
           {
             "id": "microbiology__organ_specific_bacterio___v23",
             "videoNumber": "#34",
             "title": "Coxiella, Bartonella and Ehrlichia",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 38
           },
           {
             "id": "microbiology__organ_specific_bacterio___v24",
             "videoNumber": "#35",
             "title": "Chlamydia and Mycoplasma",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 12
           }
         ]
       },
       {
         "name": "IMMUNOLOGY",
         "modules": 8,
-        "hours": 6.5,
+        "hours": 7.7,
         "videos": [
           {
             "id": "microbiology__immuno___v1",
             "videoNumber": "#36",
             "title": "Antigens",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 17
           },
           {
             "id": "microbiology__immuno___v2",
             "videoNumber": "#37",
             "title": "Antibodies",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 67,
+            "durationSecs": 29
           },
           {
             "id": "microbiology__immuno___v3",
             "videoNumber": "#38",
-            "title": "Complement System pe",
-            "durationMins": 45,
-            "durationSecs": 0
+            "title": "Complement System",
+            "durationMins": 64,
+            "durationSecs": 1
           },
           {
             "id": "microbiology__immuno___v4",
             "videoNumber": "#39",
             "title": "Major Histocompatibility Complex",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 25
           },
           {
             "id": "microbiology__immuno___v5",
             "videoNumber": "#40",
             "title": "Adaptive Immunity: Part 1",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 39
           },
           {
             "id": "microbiology__immuno___v6",
             "videoNumber": "#41",
             "title": "Adaptive Immunity: Part 2",
-            "durationMins": 97,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 55
           },
           {
             "id": "microbiology__immuno___v7",
             "videoNumber": "#42",
             "title": "Hypersensitivity Reactions",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 20
           },
           {
             "id": "microbiology__immuno___v8",
@@ -2556,14 +2550,14 @@ const syllabusData = [
       {
         "name": "VIROLOGY",
         "modules": 13,
-        "hours": 9,
+        "hours": 8.9,
         "videos": [
           {
             "id": "microbiology__virology__v1",
             "videoNumber": "#44",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Virology",
+            "durationMins": 37,
+            "durationSecs": 6
           },
           {
             "id": "microbiology__virology__v2",
@@ -2583,85 +2577,85 @@ const syllabusData = [
             "id": "microbiology__virology__v4",
             "videoNumber": "#47",
             "title": "Papilloma and Polyoma Viruses",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 24
           },
           {
             "id": "microbiology__virology__v5",
             "videoNumber": "#48",
             "title": "Parvoviruses, Adenoviruses and Pox Viruses",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 29
           },
           {
             "id": "microbiology__virology__v6",
             "videoNumber": "#49",
             "title": "Herpes Viruses: Part 1",
-            "durationMins": 43,
+            "durationMins": 37,
             "durationSecs": 0
           },
           {
             "id": "microbiology__virology__v7",
             "videoNumber": "#50",
             "title": "Herpes Viruses: Part 2",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 24
           },
           {
             "id": "microbiology__virology__v8",
             "videoNumber": "#51",
             "title": "Hepatitis B and D",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 7
           },
           {
             "id": "microbiology__virology__v9",
             "videoNumber": "#52",
-            "title": "Hepatitis B and D",
-            "durationMins": 56,
+            "title": "Hepatitis A and E",
+            "durationMins": 44,
             "durationSecs": 0
           },
           {
             "id": "microbiology__virology__v10",
             "videoNumber": "#53",
-            "title": "HIV",
-            "durationMins": 53,
-            "durationSecs": 0
+            "title": "HIV: Part 1",
+            "durationMins": 43,
+            "durationSecs": 38
           },
           {
             "id": "microbiology__virology__v11",
             "videoNumber": "#54",
-            "title": "HIV",
-            "durationMins": 53,
-            "durationSecs": 0
+            "title": "HIV: Part 2",
+            "durationMins": 38,
+            "durationSecs": 45
           },
           {
             "id": "microbiology__virology__v12",
             "videoNumber": "#55",
-            "title": "Influenza Virus",
-            "durationMins": 33,
-            "durationSecs": 0
+            "title": "Influenza and Other Respiratory Viruses",
+            "durationMins": 43,
+            "durationSecs": 2
           },
           {
             "id": "microbiology__virology__v13",
             "videoNumber": "#56",
             "title": "Flaviviruses",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 35
           }
         ]
       },
       {
         "name": "PROTOZOOLOGY",
         "modules": 6,
-        "hours": 4.1,
+        "hours": 4,
         "videos": [
           {
             "id": "microbiology__protozoology__v1",
             "videoNumber": "#57",
             "title": "Amoebae",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 15
           },
           {
             "id": "microbiology__protozoology__v2",
@@ -2681,22 +2675,22 @@ const syllabusData = [
             "id": "microbiology__protozoology__v4",
             "videoNumber": "#60",
             "title": "Giardia and Trichomonas",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 3
           },
           {
             "id": "microbiology__protozoology__v5",
             "videoNumber": "#61",
             "title": "Leishmania and Trypanosoma",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 27
           },
           {
             "id": "microbiology__protozoology__v6",
             "videoNumber": "#62",
-            "title": "Toxoplasma",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "Toxoplasma and Other Protozoa",
+            "durationMins": 47,
+            "durationSecs": 24
           }
         ]
       },
@@ -2709,71 +2703,71 @@ const syllabusData = [
             "id": "microbiology__helminthology__v1",
             "videoNumber": "#63",
             "title": "Cestodes",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 27
           },
           {
             "id": "microbiology__helminthology__v2",
             "videoNumber": "#64",
             "title": "Nematodes: Part 1",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 16
           },
           {
             "id": "microbiology__helminthology__v3",
             "videoNumber": "#65",
             "title": "Nematodes: Part 2",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 22
           },
           {
             "id": "microbiology__helminthology__v4",
             "videoNumber": "#66",
             "title": "Trematodes",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 26,
+            "durationSecs": 55
           }
         ]
       },
       {
         "name": "MYCOLOGY",
         "modules": 6,
-        "hours": 3.5,
+        "hours": 3.3,
         "videos": [
           {
             "id": "microbiology__mycology__v1",
             "videoNumber": "#67",
             "title": "General Mycology",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 26,
+            "durationSecs": 51
           },
           {
             "id": "microbiology__mycology__v2",
             "videoNumber": "#68",
             "title": "Superficial Mycoses",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 41
           },
           {
             "id": "microbiology__mycology__v3",
             "videoNumber": "#69",
             "title": "Subcutaneous Mycology",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 52
           },
           {
             "id": "microbiology__mycology__v4",
             "videoNumber": "#70",
             "title": "Opportunistic Mycoses: Part 1",
-            "durationMins": 51,
+            "durationMins": 34,
             "durationSecs": 0
           },
           {
             "id": "microbiology__mycology__v5",
             "videoNumber": "#71",
             "title": "Opportunistic Mycoses: Part 2",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 11
           },
           {
             "id": "microbiology__mycology__v6",
@@ -2787,77 +2781,77 @@ const syllabusData = [
       {
         "name": "CLINICAL MICRO",
         "modules": 12,
-        "hours": 9.6,
+        "hours": 9.7,
         "videos": [
           {
             "id": "microbiology__clinical_micro___v1",
             "videoNumber": "#73",
             "title": "Infective Endocarditis",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 6
           },
           {
             "id": "microbiology__clinical_micro___v2",
             "videoNumber": "#74",
             "title": "Community Acquired and Hospital Acquired Pneumonia",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 46
           },
           {
             "id": "microbiology__clinical_micro___v3",
             "videoNumber": "#75",
             "title": "Acute Meningitis",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 33
           },
           {
             "id": "microbiology__clinical_micro___v4",
             "videoNumber": "#76",
-            "title": "Chronic meningitis",
-            "durationMins": 47,
-            "durationSecs": 0
+            "title": "Chronic Meningitis",
+            "durationMins": 54,
+            "durationSecs": 52
           },
           {
             "id": "microbiology__clinical_micro___v5",
             "videoNumber": "#77",
             "title": "Encephalitis: Viral and Bacterial",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 53
           },
           {
             "id": "microbiology__clinical_micro___v6",
             "videoNumber": "#78",
             "title": "Non-inflammatory Diarrhea",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 21
           },
           {
             "id": "microbiology__clinical_micro___v7",
             "videoNumber": "#79",
             "title": "Inflammatory Diarrhea",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 52
           },
           {
             "id": "microbiology__clinical_micro___v8",
             "videoNumber": "#80",
-            "title": "Myositis and Myonecrosis",
-            "durationMins": 31,
-            "durationSecs": 0
+            "title": "Myositis and Myocarditis",
+            "durationMins": 39,
+            "durationSecs": 16
           },
           {
             "id": "microbiology__clinical_micro___v9",
             "videoNumber": "#81",
             "title": "Genital Ulcer Disease",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 40
           },
           {
             "id": "microbiology__clinical_micro___v10",
             "videoNumber": "#82",
-            "title": "Urinary Tract Infections",
-            "durationMins": 61,
-            "durationSecs": 0
+            "title": "Urinary Tract Infection",
+            "durationMins": 49,
+            "durationSecs": 49
           },
           {
             "id": "microbiology__clinical_micro___v11",
@@ -2884,77 +2878,77 @@ const syllabusData = [
       {
         "name": "GENERAL PATHOLOGY",
         "modules": 23,
-        "hours": 19.2,
+        "hours": 19.8,
         "videos": [
           {
             "id": "pathology__gen__patho___v1",
             "videoNumber": "#01",
             "title": "How to Approach Pathology Edition 8",
-            "durationMins": 5,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 39
           },
           {
             "id": "pathology__gen__patho___v2",
             "videoNumber": "#02",
             "title": "Cell Adaptations",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 12
           },
           {
             "id": "pathology__gen__patho___v3",
             "videoNumber": "#03",
             "title": "Cell Injury",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 31
           },
           {
             "id": "pathology__gen__patho___v4",
             "videoNumber": "#04",
             "title": "Cell Death",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 7
           },
           {
             "id": "pathology__gen__patho___v5",
             "videoNumber": "#05",
             "title": "Intracellular Accumulations",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 59
           },
           {
             "id": "pathology__gen__patho___v6",
             "videoNumber": "#06",
             "title": "Acute Inflammation",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 47
           },
           {
             "id": "pathology__gen__patho___v7",
             "videoNumber": "#07",
             "title": "Chronic Inflammation",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 33
           },
           {
             "id": "pathology__gen__patho___v8",
             "videoNumber": "#08",
             "title": "Mediators of Inflammation",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 8
           },
           {
             "id": "pathology__gen__patho___v9",
             "videoNumber": "#09",
             "title": "Wound Healing and Tissue Repair",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 24
           },
           {
             "id": "pathology__gen__patho___v10",
             "videoNumber": "#10",
             "title": "Hemodynamics",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 19
           },
           {
             "id": "pathology__gen__patho___v11",
@@ -2974,43 +2968,43 @@ const syllabusData = [
             "id": "pathology__gen__patho___v13",
             "videoNumber": "#13",
             "title": "Neoplasia: Hallmarks",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 24
           },
           {
             "id": "pathology__gen__patho___v14",
             "videoNumber": "#14",
             "title": "Lab Diagnosis of Cancer",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 14
           },
           {
             "id": "pathology__gen__patho___v15",
             "videoNumber": "#15",
             "title": "Tumor Diagnosis",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 37
           },
           {
             "id": "pathology__gen__patho___v16",
             "videoNumber": "#16",
             "title": "Genetics: Basics and Mendelian Modes",
-            "durationMins": 74,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 19
           },
           {
             "id": "pathology__gen__patho___v17",
             "videoNumber": "#17",
-            "title": "Genetics: Basics and Mendelian Modes",
-            "durationMins": 74,
-            "durationSecs": 0
+            "title": "Genetics: Non-Mendelian Modes and Pedigree",
+            "durationMins": 41,
+            "durationSecs": 56
           },
           {
             "id": "pathology__gen__patho___v18",
             "videoNumber": "#18",
             "title": "Genetics: Chromosomal Disorders",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 32
           },
           {
             "id": "pathology__gen__patho___v19",
@@ -3022,65 +3016,65 @@ const syllabusData = [
           {
             "id": "pathology__gen__patho___v20",
             "videoNumber": "#20",
-            "title": "Immunodeficiency Disorders",
-            "durationMins": 37,
-            "durationSecs": 0
+            "title": "Immunodeficiency: Primary",
+            "durationMins": 49,
+            "durationSecs": 55
           },
           {
             "id": "pathology__gen__patho___v21",
             "videoNumber": "#21",
             "title": "Transplant Pathology",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 14
           },
           {
             "id": "pathology__gen__patho___v22",
             "videoNumber": "#22",
             "title": "Immunodeficiency Disorders",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 28
           },
           {
             "id": "pathology__gen__patho___v23",
             "videoNumber": "#23",
             "title": "Amyloidosis",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 2
           }
         ]
       },
       {
         "name": "HEMATOLOGY",
         "modules": 18,
-        "hours": 16.1,
+        "hours": 15.4,
         "videos": [
           {
             "id": "pathology__hemat___v1",
             "videoNumber": "#24",
             "title": "RBC: Introduction",
-            "durationMins": 70,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 26
           },
           {
             "id": "pathology__hemat___v2",
             "videoNumber": "#25",
             "title": "Peripheral Smear Examination",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 12
           },
           {
             "id": "pathology__hemat___v3",
             "videoNumber": "#26",
             "title": "Microcytic Hypochromic Anemia",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 15
           },
           {
             "id": "pathology__hemat___v4",
             "videoNumber": "#27",
             "title": "Macrocytic Anemia",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 3
           },
           {
             "id": "pathology__hemat___v5",
@@ -3092,9 +3086,9 @@ const syllabusData = [
           {
             "id": "pathology__hemat___v6",
             "videoNumber": "#29",
-            "title": "Hemolytic Anemia: Part 1",
-            "durationMins": 89,
-            "durationSecs": 0
+            "title": "Hemolytic Anemia",
+            "durationMins": 45,
+            "durationSecs": 27
           },
           {
             "id": "pathology__hemat___v7",
@@ -3114,57 +3108,57 @@ const syllabusData = [
             "id": "pathology__hemat___v9",
             "videoNumber": "#32",
             "title": "WBC: Introduction",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 45
           },
           {
             "id": "pathology__hemat___v10",
             "videoNumber": "#33",
             "title": "Acute Lymphoblastic Leukemia",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 6
           },
           {
             "id": "pathology__hemat___v11",
             "videoNumber": "#34",
             "title": "Acute Myeloid Leukemia",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 49
           },
           {
             "id": "pathology__hemat___v12",
             "videoNumber": "#35",
             "title": "Myeloid Disorders",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 25
           },
           {
             "id": "pathology__hemat___v13",
             "videoNumber": "#36",
             "title": "Chronic Leukemias",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 16
           },
           {
             "id": "pathology__hemat___v14",
             "videoNumber": "#37",
             "title": "Hodgkin's Lymphoma",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 34
           },
           {
             "id": "pathology__hemat___v15",
             "videoNumber": "#38",
             "title": "Non-Hodgkin's Lymphoma",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 21
           },
           {
             "id": "pathology__hemat___v16",
             "videoNumber": "#39",
             "title": "Plasma Cell Disorders",
             "durationMins": 43,
-            "durationSecs": 0
+            "durationSecs": 4
           },
           {
             "id": "pathology__hemat___v17",
@@ -3191,64 +3185,64 @@ const syllabusData = [
             "id": "pathology__cvs__v1",
             "videoNumber": "#42",
             "title": "Blood Vessels: Sclerosis",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 29
           },
           {
             "id": "pathology__cvs__v2",
             "videoNumber": "#43",
             "title": "Blood Vessels: Vasculitis",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 23
           },
           {
             "id": "pathology__cvs__v3",
             "videoNumber": "#44",
             "title": "Vascular Tumors",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 39
           },
           {
             "id": "pathology__cvs__v4",
             "videoNumber": "#45",
             "title": "Cardiovascular System: Part 1",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 39
           },
           {
             "id": "pathology__cvs__v5",
             "videoNumber": "#46",
             "title": "Cardiovascular System: Part 2",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 50
           }
         ]
       },
       {
         "name": "GU",
         "modules": 10,
-        "hours": 8.6,
+        "hours": 7.4,
         "videos": [
           {
             "id": "pathology__gu__v1",
             "videoNumber": "#47",
-            "title": "Glomerular Filtration Rate",
-            "durationMins": 62,
-            "durationSecs": 0
+            "title": "Glomerular Diseases: Part 1",
+            "durationMins": 39,
+            "durationSecs": 39
           },
           {
             "id": "pathology__gu__v2",
             "videoNumber": "#48",
-            "title": "Glomerular Filtration Rate",
-            "durationMins": 62,
-            "durationSecs": 0
+            "title": "Glomerular Diseases: Part 2",
+            "durationMins": 48,
+            "durationSecs": 26
           },
           {
             "id": "pathology__gu__v3",
             "videoNumber": "#49",
-            "title": "Tubular Anatomy",
-            "durationMins": 82,
-            "durationSecs": 0
+            "title": "Tubular and Interstitial Disorders",
+            "durationMins": 41,
+            "durationSecs": 33
           },
           {
             "id": "pathology__gu__v4",
@@ -3260,51 +3254,51 @@ const syllabusData = [
           {
             "id": "pathology__gu__v5",
             "videoNumber": "#51",
-            "title": "Renal Involvement in Systemic Diseases /",
-            "durationMins": 32,
-            "durationSecs": 0
+            "title": "Renal Involvement in Systemic Diseases",
+            "durationMins": 44,
+            "durationSecs": 19
           },
           {
             "id": "pathology__gu__v6",
             "videoNumber": "#52",
             "title": "Kidney Tumors",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 41
           },
           {
             "id": "pathology__gu__v7",
             "videoNumber": "#53",
             "title": "Male Genital System: Penis and Prostate",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 56
           },
           {
             "id": "pathology__gu__v8",
             "videoNumber": "#54",
             "title": "Male Genital System: Testis",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 15
           },
           {
             "id": "pathology__gu__v9",
             "videoNumber": "#55",
             "title": "Female Genital Tract: Vulva, Vagina and Cervix",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 4
           },
           {
             "id": "pathology__gu__v10",
             "videoNumber": "#56",
             "title": "Female Genital Tract: Uterus and Endometrium",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 42
           }
         ]
       },
       {
         "name": "GI",
         "modules": 7,
-        "hours": 6.4,
+        "hours": 5.8,
         "videos": [
           {
             "id": "pathology__gi__v1",
@@ -3316,9 +3310,9 @@ const syllabusData = [
           {
             "id": "pathology__gi__v2",
             "videoNumber": "#58",
-            "title": "Stomach",
-            "durationMins": 61,
-            "durationSecs": 0
+            "title": "Stomach and Small Intestinal Tumors",
+            "durationMins": 51,
+            "durationSecs": 48
           },
           {
             "id": "pathology__gi__v3",
@@ -3330,30 +3324,30 @@ const syllabusData = [
           {
             "id": "pathology__gi__v4",
             "videoNumber": "#60",
-            "title": "Colorectal Polyps and Cancer. Part 1",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Colorectal Polyps and Cancer",
+            "durationMins": 55,
+            "durationSecs": 20
           },
           {
             "id": "pathology__gi__v5",
             "videoNumber": "#61",
             "title": "Liver Pathology: Part 1",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 14
           },
           {
             "id": "pathology__gi__v6",
             "videoNumber": "#62",
             "title": "Liver Pathology: Part 2",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 48
           },
           {
             "id": "pathology__gi__v7",
             "videoNumber": "#63",
-            "title": "Pancreatic Tumors",
-            "durationMins": 64,
-            "durationSecs": 0
+            "title": "Pancreatic Pathology",
+            "durationMins": 58,
+            "durationSecs": 22
           }
         ]
       },
@@ -3366,36 +3360,36 @@ const syllabusData = [
             "id": "pathology__respi___v1",
             "videoNumber": "#64",
             "title": "Obstructive Lung Diseases",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 27
           },
           {
             "id": "pathology__respi___v2",
             "videoNumber": "#65",
             "title": "Restrictive Lung Diseases",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 35
           },
           {
             "id": "pathology__respi___v3",
             "videoNumber": "#66",
             "title": "Granulomas and Infections of Lung",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 7
           },
           {
             "id": "pathology__respi___v4",
             "videoNumber": "#67",
             "title": "Lung Tumors",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 51
           }
         ]
       },
       {
         "name": "ENDO. & BREAST",
         "modules": 5,
-        "hours": 3.9,
+        "hours": 4.3,
         "videos": [
           {
             "id": "pathology__endo____breast__v1",
@@ -3414,23 +3408,23 @@ const syllabusData = [
           {
             "id": "pathology__endo____breast__v3",
             "videoNumber": "#70",
-            "title": "Pituitary Gland",
-            "durationMins": 48,
-            "durationSecs": 0
+            "title": "Pituitary and Pancreatic Pathology",
+            "durationMins": 47,
+            "durationSecs": 15
           },
           {
             "id": "pathology__endo____breast__v4",
             "videoNumber": "#71",
             "title": "Breast Pathology: Part 1",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 12
           },
           {
             "id": "pathology__endo____breast__v5",
             "videoNumber": "#72",
             "title": "Breast Pathology: Part 2",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 69,
+            "durationSecs": 45
           }
         ]
       },
@@ -3443,15 +3437,15 @@ const syllabusData = [
             "id": "pathology__skin___musculo_skeletal__v1",
             "videoNumber": "#73",
             "title": "Dermatopathology",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 47
           },
           {
             "id": "pathology__skin___musculo_skeletal__v2",
             "videoNumber": "#74",
             "title": "Bone and Soft Tissue Lesions",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 13
           }
         ]
       },
@@ -3464,36 +3458,36 @@ const syllabusData = [
             "id": "pathology__nervous__v1",
             "videoNumber": "#75",
             "title": "CNS: Non-neoplastic Lesions",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 5
           },
           {
             "id": "pathology__nervous__v2",
             "videoNumber": "#76",
             "title": "CNS Tumors",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 55
           }
         ]
       },
       {
         "name": "MISCELLANEOUS",
         "modules": 3,
-        "hours": 1,
+        "hours": 0.8,
         "videos": [
           {
             "id": "pathology__misc___v1",
             "videoNumber": "#77",
             "title": "Systemic Pathology: Clinical Cases",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 17,
+            "durationSecs": 56
           },
           {
             "id": "pathology__misc___v2",
             "videoNumber": "#78",
             "title": "Demonstration of Instruments",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 15,
+            "durationSecs": 29
           },
           {
             "id": "pathology__misc___v3",
@@ -3513,119 +3507,119 @@ const syllabusData = [
       {
         "name": "DEMOGRAPHY & FAMILY-PLANNING",
         "modules": 8,
-        "hours": 4.3,
+        "hours": 4.6,
         "videos": [
           {
             "id": "community_medicine__demography___family_planning__v1",
             "videoNumber": "#01",
             "title": "How to Approach Community Medicine Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 29
           },
           {
             "id": "community_medicine__demography___family_planning__v2",
             "videoNumber": "#02",
-            "title": "Demographic Cycle [4",
-            "durationMins": 27,
-            "durationSecs": 0
+            "title": "Demographic Cycle",
+            "durationMins": 29,
+            "durationSecs": 35
           },
           {
             "id": "community_medicine__demography___family_planning__v3",
             "videoNumber": "#03",
             "title": "Demographic Trends",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 25
           },
           {
             "id": "community_medicine__demography___family_planning__v4",
             "videoNumber": "#04",
             "title": "Fertility Rates",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 20
           },
           {
             "id": "community_medicine__demography___family_planning__v5",
             "videoNumber": "#05",
             "title": "Survey Techniques",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 25
           },
           {
             "id": "community_medicine__demography___family_planning__v6",
             "videoNumber": "#06",
-            "title": "Family Planning and Contraception: Part 1 [4",
-            "durationMins": 51,
-            "durationSecs": 0
+            "title": "Family Planning and Contraception: Part 1",
+            "durationMins": 30,
+            "durationSecs": 20
           },
           {
             "id": "community_medicine__demography___family_planning__v7",
             "videoNumber": "#07",
-            "title": "Family Planning and Contraception: Part 1 [4",
-            "durationMins": 51,
-            "durationSecs": 0
+            "title": "Family Planning and Contraception: Part 2",
+            "durationMins": 31,
+            "durationSecs": 39
           },
           {
             "id": "community_medicine__demography___family_planning__v8",
             "videoNumber": "#08",
-            "title": "National Family Planning Programme [4",
-            "durationMins": 37,
-            "durationSecs": 0
+            "title": "National Family Planning Programme",
+            "durationMins": 32,
+            "durationSecs": 47
           }
         ]
       },
       {
         "name": "MATERNAL & CHILD HEALTH",
         "modules": 5,
-        "hours": 2.4,
+        "hours": 4.7,
         "videos": [
           {
             "id": "community_medicine__maternal___child_health__v1",
             "videoNumber": "#09",
-            "title": "Indicators of MCH Care [4",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Indicators of MCH Care",
+            "durationMins": 48,
+            "durationSecs": 25
           },
           {
             "id": "community_medicine__maternal___child_health__v2",
             "videoNumber": "#10",
-            "title": "Preventive Geriatrics",
-            "durationMins": 10,
-            "durationSecs": 0
+            "title": "Preventive Obstetrics: Antenatal Care and Post Natal Care",
+            "durationMins": 58,
+            "durationSecs": 1
           },
           {
             "id": "community_medicine__maternal___child_health__v3",
             "videoNumber": "#11",
-            "title": "Preventive Geriatrics",
-            "durationMins": 10,
-            "durationSecs": 0
+            "title": "Preventive Paediatrics: Early Care",
+            "durationMins": 65,
+            "durationSecs": 28
           },
           {
             "id": "community_medicine__maternal___child_health__v4",
             "videoNumber": "#12",
             "title": "Preventive Paediatrics: Growth and Development",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 41
           },
           {
             "id": "community_medicine__maternal___child_health__v5",
             "videoNumber": "#13",
             "title": "Social Paediatrics",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 25
           }
         ]
       },
       {
         "name": "VACCINE & IMMUNIZATION",
         "modules": 4,
-        "hours": 3,
+        "hours": 3.2,
         "videos": [
           {
             "id": "community_medicine__vaccine___immunization__v1",
             "videoNumber": "#14",
-            "title": "Immunization: Frequently Asked Questions ——",
-            "durationMins": 43,
-            "durationSecs": 0
+            "title": "Immunization Basics and Types of Vaccines",
+            "durationMins": 44,
+            "durationSecs": 46
           },
           {
             "id": "community_medicine__vaccine___immunization__v2",
@@ -3638,50 +3632,50 @@ const syllabusData = [
             "id": "community_medicine__vaccine___immunization__v3",
             "videoNumber": "#16",
             "title": "Cold Chain and Vaccine Requirement",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 31
           },
           {
             "id": "community_medicine__vaccine___immunization__v4",
             "videoNumber": "#17",
             "title": "Vaccine Strains, Waste Management and AEFI",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 40
           }
         ]
       },
       {
         "name": "EPIDEMIOLOGY",
         "modules": 6,
-        "hours": 2.9,
+        "hours": 3.4,
         "videos": [
           {
             "id": "community_medicine__epidemiology__v1",
             "videoNumber": "#18",
-            "title": "Aim of Epidemiology and Historical Perspective [4",
-            "durationMins": 15,
-            "durationSecs": 0
+            "title": "Aim of Epidemiology and Historical Perspective",
+            "durationMins": 27,
+            "durationSecs": 16
           },
           {
             "id": "community_medicine__epidemiology__v2",
             "videoNumber": "#19",
             "title": "Basics in Epidemiology",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 10
           },
           {
             "id": "community_medicine__epidemiology__v3",
             "videoNumber": "#20",
-            "title": "Epidemiological Methods and Descriptive Epidemiology [4",
-            "durationMins": 23,
-            "durationSecs": 0
+            "title": "Epidemiological Methods and Descriptive Epidemiology",
+            "durationMins": 39,
+            "durationSecs": 44
           },
           {
             "id": "community_medicine__epidemiology__v4",
             "videoNumber": "#21",
-            "title": "Analytical and Experimental Epidemiology [4",
-            "durationMins": 61,
-            "durationSecs": 0
+            "title": "Analytical and Experimental Epidemiology",
+            "durationMins": 35,
+            "durationSecs": 29
           },
           {
             "id": "community_medicine__epidemiology__v5",
@@ -3693,9 +3687,9 @@ const syllabusData = [
           {
             "id": "community_medicine__epidemiology__v6",
             "videoNumber": "#23",
-            "title": "Epidemiological Methods and Descriptive Epidemiology [4",
-            "durationMins": 23,
-            "durationSecs": 0
+            "title": "Epidemiological Measures",
+            "durationMins": 38,
+            "durationSecs": 6
           }
         ]
       },
@@ -3708,106 +3702,106 @@ const syllabusData = [
             "id": "community_medicine__screening_of_diseases__v1",
             "videoNumber": "#24",
             "title": "Screening of Disease Concepts",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 3
           },
           {
             "id": "community_medicine__screening_of_diseases__v2",
             "videoNumber": "#25",
             "title": "Determinants in Screening of Disease",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 45
           },
           {
             "id": "community_medicine__screening_of_diseases__v3",
             "videoNumber": "#26",
-            "title": "Advanced Concepts in Screening of Disease /~",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Advanced Concepts in Screening of Disease",
+            "durationMins": 52,
+            "durationSecs": 12
           }
         ]
       },
       {
         "name": "BIOSTATICS",
         "modules": 9,
-        "hours": 4.4,
+        "hours": 4.5,
         "videos": [
           {
             "id": "community_medicine__biostatics__v1",
             "videoNumber": "#27",
             "title": "Data Types and Scales",
             "durationMins": 35,
-            "durationSecs": 0
+            "durationSecs": 59
           },
           {
             "id": "community_medicine__biostatics__v2",
             "videoNumber": "#28",
-            "title": "Measures of Central Tendency and Variation [4",
-            "durationMins": 20,
-            "durationSecs": 0
+            "title": "Measures of Central Tendency and Variation",
+            "durationMins": 29,
+            "durationSecs": 41
           },
           {
             "id": "community_medicine__biostatics__v3",
             "videoNumber": "#29",
-            "title": "Normal Distribution Curve [J",
-            "durationMins": 26,
-            "durationSecs": 0
+            "title": "Normal Distribution Curve",
+            "durationMins": 28,
+            "durationSecs": 5
           },
           {
             "id": "community_medicine__biostatics__v4",
             "videoNumber": "#30",
-            "title": "Tests of Significance, Probability Rules and Regression Analysis",
+            "title": "Tests of Significance and P-Value",
             "durationMins": 27,
-            "durationSecs": 0
+            "durationSecs": 15
           },
           {
             "id": "community_medicine__biostatics__v5",
             "videoNumber": "#31",
             "title": "Tests of Significance, Probability Rules and Regression Analysis",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 35
           },
           {
             "id": "community_medicine__biostatics__v6",
             "videoNumber": "#32",
             "title": "Skew and Tiles",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 12
           },
           {
             "id": "community_medicine__biostatics__v7",
             "videoNumber": "#33",
             "title": "Sampling Methods and Sample Size Calculation",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 32
           },
           {
             "id": "community_medicine__biostatics__v8",
             "videoNumber": "#34",
             "title": "Graphs",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 42
           },
           {
             "id": "community_medicine__biostatics__v9",
             "videoNumber": "#35",
             "title": "Biostatistics: Questions and Answers",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 59
           }
         ]
       },
       {
         "name": "NATIONAL HEALTH PROGRAMMES",
         "modules": 15,
-        "hours": 8.4,
+        "hours": 9.2,
         "videos": [
           {
             "id": "community_medicine__national_health_programmes__v1",
             "videoNumber": "#36",
             "title": "TB: Epidemiology and Investigations",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 13
           },
           {
             "id": "community_medicine__national_health_programmes__v2",
@@ -3819,58 +3813,58 @@ const syllabusData = [
           {
             "id": "community_medicine__national_health_programmes__v3",
             "videoNumber": "#38",
-            "title": "HIV",
-            "durationMins": 53,
-            "durationSecs": 0
+            "title": "HIV: Epidemiology",
+            "durationMins": 39,
+            "durationSecs": 44
           },
           {
             "id": "community_medicine__national_health_programmes__v4",
             "videoNumber": "#39",
             "title": "NACP: Strategies, Organisation and Indicators",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 34
           },
           {
             "id": "community_medicine__national_health_programmes__v5",
             "videoNumber": "#40",
             "title": "NVBDCP: Malaria Epidemiology",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 32
           },
           {
             "id": "community_medicine__national_health_programmes__v6",
             "videoNumber": "#41",
             "title": "NVBDCP: Malaria Diagnosis, Treatment and Control",
             "durationMins": 35,
-            "durationSecs": 0
+            "durationSecs": 40
           },
           {
             "id": "community_medicine__national_health_programmes__v7",
             "videoNumber": "#42",
             "title": "NVBDCP: Indicators",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 13
           },
           {
             "id": "community_medicine__national_health_programmes__v8",
             "videoNumber": "#43",
             "title": "Japanese Encephalitis",
-            "durationMins": 17,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 13
           },
           {
             "id": "community_medicine__national_health_programmes__v9",
             "videoNumber": "#44",
             "title": "Dengue",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 14
           },
           {
             "id": "community_medicine__national_health_programmes__v10",
             "videoNumber": "#45",
             "title": "Lymphatic Filariasis",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 12
           },
           {
             "id": "community_medicine__national_health_programmes__v11",
@@ -3890,8 +3884,8 @@ const syllabusData = [
             "id": "community_medicine__national_health_programmes__v13",
             "videoNumber": "#48",
             "title": "NIDDCP, IDSP and ICDS",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 54
           },
           {
             "id": "community_medicine__national_health_programmes__v14",
@@ -3918,43 +3912,43 @@ const syllabusData = [
             "id": "community_medicine__healthcare_planning_in_india__v1",
             "videoNumber": "#51",
             "title": "Recent Advances in Community Medicine - 2023",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 12
           },
           {
             "id": "community_medicine__healthcare_planning_in_india__v2",
             "videoNumber": "#52",
             "title": "Health Care System in India",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 55
           },
           {
             "id": "community_medicine__healthcare_planning_in_india__v3",
             "videoNumber": "#53",
             "title": "Health Planning and Management",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 53
           }
         ]
       },
       {
         "name": "INFECTIOUS DISEASES EPIDEMIOLOGY",
         "modules": 3,
-        "hours": 2.2,
+        "hours": 2.3,
         "videos": [
           {
             "id": "community_medicine__infectious_diseases_epidemiology__v1",
             "videoNumber": "#54",
             "title": "Infectious Diseases: Basic Definitions, Chain of Transmission",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 58
           },
           {
             "id": "community_medicine__infectious_diseases_epidemiology__v2",
             "videoNumber": "#55",
             "title": "Infectious Diseases: Agent, Host, Case, Carrier",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 27
           },
           {
             "id": "community_medicine__infectious_diseases_epidemiology__v3",
@@ -3968,56 +3962,56 @@ const syllabusData = [
       {
         "name": "COMMUNICABLE DISEASE",
         "modules": 14,
-        "hours": 7,
+        "hours": 7.2,
         "videos": [
           {
             "id": "community_medicine__communicable_disease__v1",
             "videoNumber": "#57",
             "title": "Smallpox and Chickenpox",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 48
           },
           {
             "id": "community_medicine__communicable_disease__v2",
             "videoNumber": "#58",
             "title": "Measles, Mumps and Rubella",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 10
           },
           {
             "id": "community_medicine__communicable_disease__v3",
             "videoNumber": "#59",
-            "title": "Flu, Diphtheria and Pertussis A",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Flu, Diphtheria and Pertussis",
+            "durationMins": 32,
+            "durationSecs": 11
           },
           {
             "id": "community_medicine__communicable_disease__v4",
             "videoNumber": "#60",
             "title": "Meningitis",
-            "durationMins": 16,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 38
           },
           {
             "id": "community_medicine__communicable_disease__v5",
             "videoNumber": "#61",
             "title": "Cholera and Diarrhoea Management",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 14
           },
           {
             "id": "community_medicine__communicable_disease__v6",
             "videoNumber": "#62",
             "title": "Typhoid",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 33
           },
           {
             "id": "community_medicine__communicable_disease__v7",
             "videoNumber": "#63",
             "title": "Hepatitis",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 53
           },
           {
             "id": "community_medicine__communicable_disease__v8",
@@ -4029,37 +4023,37 @@ const syllabusData = [
           {
             "id": "community_medicine__communicable_disease__v9",
             "videoNumber": "#65",
-            "title": "Plague, Yellow fever and KFD",
-            "durationMins": 56,
-            "durationSecs": 0
+            "title": "Plague, Yellow Fever and KFD",
+            "durationMins": 25,
+            "durationSecs": 54
           },
           {
             "id": "community_medicine__communicable_disease__v10",
             "videoNumber": "#66",
             "title": "Tetanus",
-            "durationMins": 17,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 17
           },
           {
             "id": "community_medicine__communicable_disease__v11",
             "videoNumber": "#67",
             "title": "Rickettsia",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 2
           },
           {
             "id": "community_medicine__communicable_disease__v12",
             "videoNumber": "#68",
             "title": "Leptospirosis",
-            "durationMins": 16,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 29
           },
           {
             "id": "community_medicine__communicable_disease__v13",
             "videoNumber": "#69",
             "title": "Ebola, Zika, and Nipah",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 48
           },
           {
             "id": "community_medicine__communicable_disease__v14",
@@ -4079,8 +4073,8 @@ const syllabusData = [
             "id": "community_medicine__non_communicable_disease__v1",
             "videoNumber": "#71",
             "title": "CVD, Hypertension and Obesity",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 33
           },
           {
             "id": "community_medicine__non_communicable_disease__v2",
@@ -4094,63 +4088,63 @@ const syllabusData = [
       {
         "name": "NUTRITION",
         "modules": 4,
-        "hours": 2.8,
+        "hours": 2.7,
         "videos": [
           {
             "id": "community_medicine__nutrition__v1",
             "videoNumber": "#73",
-            "title": "Nutrition: Concepts and Macronutrients",
-            "durationMins": 56,
-            "durationSecs": 0
+            "title": "Nutrition: Macronutrients",
+            "durationMins": 48,
+            "durationSecs": 25
           },
           {
             "id": "community_medicine__nutrition__v2",
             "videoNumber": "#74",
             "title": "Nutrition: Micronutrients",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 14
           },
           {
             "id": "community_medicine__nutrition__v3",
             "videoNumber": "#75",
-            "title": "Nutrition: Recommended Dietary allowance & Millets",
-            "durationMins": 17,
-            "durationSecs": 0
+            "title": "Nutrition: Recommended Dietary Allowance & Millets",
+            "durationMins": 41,
+            "durationSecs": 30
           },
           {
             "id": "community_medicine__nutrition__v4",
             "videoNumber": "#76",
-            "title": "Nutrition: Food products, Adulterants and Standards",
-            "durationMins": 51,
-            "durationSecs": 0
+            "title": "Nutrition: Food Products, Adulterants and Standards",
+            "durationMins": 32,
+            "durationSecs": 51
           }
         ]
       },
       {
         "name": "ENVIRONMENT",
         "modules": 8,
-        "hours": 5.8,
+        "hours": 5.5,
         "videos": [
           {
             "id": "community_medicine__environment__v1",
             "videoNumber": "#77",
             "title": "Air and Health",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 13
           },
           {
             "id": "community_medicine__environment__v2",
             "videoNumber": "#78",
             "title": "Water Sources and Quality of Water",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 34
           },
           {
             "id": "community_medicine__environment__v3",
             "videoNumber": "#79",
             "title": "Water Purification Methods",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 13
           },
           {
             "id": "community_medicine__environment__v4",
@@ -4169,22 +4163,22 @@ const syllabusData = [
           {
             "id": "community_medicine__environment__v6",
             "videoNumber": "#82",
-            "title": "Entomology: Mosquitoes",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Entomology: Mosquitoes and Flies",
+            "durationMins": 43,
+            "durationSecs": 12
           },
           {
             "id": "community_medicine__environment__v7",
             "videoNumber": "#83",
             "title": "Entomology: Lice, Ticks, Mites and Sandfly",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 50
           },
           {
             "id": "community_medicine__environment__v8",
             "videoNumber": "#84",
             "title": "Mosquito Control Measures and Insecticides",
-            "durationMins": 41,
+            "durationMins": 50,
             "durationSecs": 0
           }
         ]
@@ -4198,7 +4192,7 @@ const syllabusData = [
             "id": "community_medicine__bmw__v1",
             "videoNumber": "#85",
             "title": "Biomedical Waste Management",
-            "durationMins": 49,
+            "durationMins": 48,
             "durationSecs": 0
           }
         ]
@@ -4212,15 +4206,15 @@ const syllabusData = [
             "id": "community_medicine__occupational_health__v1",
             "videoNumber": "#86",
             "title": "Occupational Health",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 58
           },
           {
             "id": "community_medicine__occupational_health__v2",
             "videoNumber": "#87",
             "title": "ESI and Factories Act",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 2
           }
         ]
       },
@@ -4232,9 +4226,9 @@ const syllabusData = [
           {
             "id": "community_medicine__concept_of_health___disease__v1",
             "videoNumber": "#88",
-            "title": "Concept of Enzyme Regulation [4",
-            "durationMins": 24,
-            "durationSecs": 0
+            "title": "Concept of Health and its Determinants",
+            "durationMins": 37,
+            "durationSecs": 34
           },
           {
             "id": "community_medicine__concept_of_health___disease__v2",
@@ -4247,8 +4241,8 @@ const syllabusData = [
             "id": "community_medicine__concept_of_health___disease__v3",
             "videoNumber": "#90",
             "title": "Health and Disability Indicators",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 16
           }
         ]
       },
@@ -4260,8 +4254,8 @@ const syllabusData = [
           {
             "id": "community_medicine__disaster_management__v1",
             "videoNumber": "#91",
-            "title": "Disaster Management [1",
-            "durationMins": 38,
+            "title": "Disaster Management",
+            "durationMins": 36,
             "durationSecs": 0
           }
         ]
@@ -4275,7 +4269,7 @@ const syllabusData = [
             "id": "community_medicine__health_comm___v1",
             "videoNumber": "#92",
             "title": "Health Communication",
-            "durationMins": 32,
+            "durationMins": 30,
             "durationSecs": 0
           }
         ]
@@ -4289,7 +4283,7 @@ const syllabusData = [
             "id": "community_medicine__international_health_org___v1",
             "videoNumber": "#93",
             "title": "International Health Organisations",
-            "durationMins": 28,
+            "durationMins": 30,
             "durationSecs": 0
           }
         ]
@@ -4303,7 +4297,7 @@ const syllabusData = [
             "id": "community_medicine__social_medicine__v1",
             "videoNumber": "#94",
             "title": "Social Medicine",
-            "durationMins": 47,
+            "durationMins": 48,
             "durationSecs": 0
           }
         ]
@@ -4316,30 +4310,30 @@ const syllabusData = [
           {
             "id": "community_medicine__misc___v1",
             "videoNumber": "#95",
-            "title": "History and Evolution of medicine",
-            "durationMins": 33,
-            "durationSecs": 0
+            "title": "History and Evolution of Medicine",
+            "durationMins": 24,
+            "durationSecs": 13
           },
           {
             "id": "community_medicine__misc___v2",
             "videoNumber": "#96",
             "title": "Preventive Geriatrics",
-            "durationMins": 10,
-            "durationSecs": 0
+            "durationMins": 22,
+            "durationSecs": 14
           },
           {
             "id": "community_medicine__misc___v3",
             "videoNumber": "#97",
-            "title": "Mental Health Programme 1]",
-            "durationMins": 12,
+            "title": "Mental Health Programme",
+            "durationMins": 27,
             "durationSecs": 0
           },
           {
             "id": "community_medicine__misc___v4",
             "videoNumber": "#98",
             "title": "Genetics and Health",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 22,
+            "durationSecs": 33
           }
         ]
       }
@@ -4352,28 +4346,28 @@ const syllabusData = [
       {
         "name": "FORENSIC TRAUMATOLOGY",
         "modules": 12,
-        "hours": 8.4,
+        "hours": 8.5,
         "videos": [
           {
             "id": "forensic_medicine__forensic_traumatology__v1",
             "videoNumber": "#01",
             "title": "How to Approach Forensic Medicine Edition 8",
-            "durationMins": 5,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 47
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v2",
             "videoNumber": "#02",
-            "title": "Definitions in Forensic Medicine [4",
-            "durationMins": 27,
-            "durationSecs": 0
+            "title": "Definitions in Forensic Medicine",
+            "durationMins": 41,
+            "durationSecs": 9
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v3",
             "videoNumber": "#03",
             "title": "Blunt Trauma Injuries",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 33
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v4",
@@ -4385,72 +4379,72 @@ const syllabusData = [
           {
             "id": "forensic_medicine__forensic_traumatology__v5",
             "videoNumber": "#05",
-            "title": "Regional Injuries: Part 1 [4",
-            "durationMins": 40,
-            "durationSecs": 0
+            "title": "Regional Injuries: Part 1",
+            "durationMins": 38,
+            "durationSecs": 40
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v6",
             "videoNumber": "#06",
             "title": "Regional Injuries: Part 2",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 14
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v7",
             "videoNumber": "#07",
             "title": "Thermal Injuries",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 37
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v8",
             "videoNumber": "#08",
             "title": "Proximal Ballistics",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 9
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v9",
             "videoNumber": "#09",
             "title": "Intermediate and Terminal Ballistics: Part 1",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 47
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v10",
             "videoNumber": "#10",
-            "title": "Intermediate and Terminal Ballistics: Part 1",
-            "durationMins": 42,
-            "durationSecs": 0
+            "title": "Intermediate and Terminal Ballistics: Part 2",
+            "durationMins": 36,
+            "durationSecs": 7
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v11",
             "videoNumber": "#11",
             "title": "Electrical Injuries, Explosion Injuries and Torture Methods",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 37
           },
           {
             "id": "forensic_medicine__forensic_traumatology__v12",
             "videoNumber": "#12",
             "title": "Transportation Injuries",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 43
           }
         ]
       },
       {
         "name": "MEDICAL JURISPRUDENCE",
         "modules": 4,
-        "hours": 3,
+        "hours": 3.3,
         "videos": [
           {
             "id": "forensic_medicine__medical_jurisprudence__v1",
             "videoNumber": "#13",
-            "title": "Medical Ethics [J]",
-            "durationMins": 37,
-            "durationSecs": 0
+            "title": "Medical Ethics and Consent",
+            "durationMins": 51,
+            "durationSecs": 19
           },
           {
             "id": "forensic_medicine__medical_jurisprudence__v2",
@@ -4478,49 +4472,49 @@ const syllabusData = [
       {
         "name": "FORENSIC PATHOLOGY",
         "modules": 10,
-        "hours": 9,
+        "hours": 7.9,
         "videos": [
           {
             "id": "forensic_medicine__forensic_patho___v1",
             "videoNumber": "#17",
-            "title": "Autopsy Procedures [4 1}",
-            "durationMins": 68,
-            "durationSecs": 0
+            "title": "Autopsy Procedures",
+            "durationMins": 48,
+            "durationSecs": 40
           },
           {
             "id": "forensic_medicine__forensic_patho___v2",
             "videoNumber": "#18",
-            "title": "Early Postmortem Changes [4",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Early Postmortem Changes",
+            "durationMins": 51,
+            "durationSecs": 19
           },
           {
             "id": "forensic_medicine__forensic_patho___v3",
             "videoNumber": "#19",
             "title": "Late Postmortem Changes",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 54
           },
           {
             "id": "forensic_medicine__forensic_patho___v4",
             "videoNumber": "#20",
             "title": "Human Identification: Part 1",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 21
           },
           {
             "id": "forensic_medicine__forensic_patho___v5",
             "videoNumber": "#21",
             "title": "Human Identification: Part 2",
-            "durationMins": 76,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 22
           },
           {
             "id": "forensic_medicine__forensic_patho___v6",
             "videoNumber": "#22",
             "title": "Human Identification: Part 3",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 54
           },
           {
             "id": "forensic_medicine__forensic_patho___v7",
@@ -4533,8 +4527,8 @@ const syllabusData = [
             "id": "forensic_medicine__forensic_patho___v8",
             "videoNumber": "#24",
             "title": "Drowning",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 11
           },
           {
             "id": "forensic_medicine__forensic_patho___v9",
@@ -4560,51 +4554,51 @@ const syllabusData = [
           {
             "id": "forensic_medicine__sexual_juris___v1",
             "videoNumber": "#27",
-            "title": "Impotence, Virginity and Delivery [4",
-            "durationMins": 68,
-            "durationSecs": 0
+            "title": "Impotence, Virginity and Delivery",
+            "durationMins": 44,
+            "durationSecs": 55
           },
           {
             "id": "forensic_medicine__sexual_juris___v2",
             "videoNumber": "#28",
             "title": "Abortion",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 27
           },
           {
             "id": "forensic_medicine__sexual_juris___v3",
             "videoNumber": "#29",
             "title": "Infant Deaths and Child Abuse",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 46
           },
           {
             "id": "forensic_medicine__sexual_juris___v4",
             "videoNumber": "#30",
             "title": "Sexual Offences",
-            "durationMins": 75,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 52
           }
         ]
       },
       {
         "name": "TOXICOLOGY",
         "modules": 11,
-        "hours": 8.2,
+        "hours": 8.3,
         "videos": [
           {
             "id": "forensic_medicine__toxicology__v1",
             "videoNumber": "#31",
             "title": "General Toxicology",
-            "durationMins": 75,
+            "durationMins": 50,
             "durationSecs": 0
           },
           {
             "id": "forensic_medicine__toxicology__v2",
             "videoNumber": "#32",
-            "title": "Duties of a Doctor in a Case of Poisoning [4",
-            "durationMins": 31,
-            "durationSecs": 0
+            "title": "Duties of a Doctor in a Case of Poisoning",
+            "durationMins": 51,
+            "durationSecs": 51
           },
           {
             "id": "forensic_medicine__toxicology__v3",
@@ -4624,8 +4618,8 @@ const syllabusData = [
             "id": "forensic_medicine__toxicology__v5",
             "videoNumber": "#35",
             "title": "Non-Metallic Irritants",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 3
           },
           {
             "id": "forensic_medicine__toxicology__v6",
@@ -4638,29 +4632,29 @@ const syllabusData = [
             "id": "forensic_medicine__toxicology__v7",
             "videoNumber": "#37",
             "title": "Neurotoxic Poisons: Deliriants",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 53
           },
           {
             "id": "forensic_medicine__toxicology__v8",
             "videoNumber": "#38",
             "title": "Neurotoxic Poisons: Inebriants",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 11
           },
           {
             "id": "forensic_medicine__toxicology__v9",
             "videoNumber": "#39",
             "title": "Neurotoxic Poisons: Somniferous and Spinal Poisons",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 9
           },
           {
             "id": "forensic_medicine__toxicology__v10",
             "videoNumber": "#40",
             "title": "Asphyxiants and Cardiac Poisons",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 22
           },
           {
             "id": "forensic_medicine__toxicology__v11",
@@ -4679,23 +4673,23 @@ const syllabusData = [
           {
             "id": "forensic_medicine__forensic_psychiatry___misc___v1",
             "videoNumber": "#42",
-            "title": "Forensic Psychiatry [4",
-            "durationMins": 47,
-            "durationSecs": 0
+            "title": "Forensic Psychiatry",
+            "durationMins": 41,
+            "durationSecs": 57
           },
           {
             "id": "forensic_medicine__forensic_psychiatry___misc___v2",
             "videoNumber": "#43",
-            "title": "Trace Evidence [4",
-            "durationMins": 23,
-            "durationSecs": 0
+            "title": "Trace Evidence",
+            "durationMins": 38,
+            "durationSecs": 45
           },
           {
             "id": "forensic_medicine__forensic_psychiatry___misc___v3",
             "videoNumber": "#44",
             "title": "Acts and Legal Sections of Importance",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 18
           }
         ]
       }
@@ -4708,42 +4702,42 @@ const syllabusData = [
       {
         "name": "BASIC ANATOMY OF EYE",
         "modules": 6,
-        "hours": 3.4,
+        "hours": 4.7,
         "videos": [
           {
             "id": "ophthalmology__basic_anatomy_of_eye__v1",
             "videoNumber": "#01",
             "title": "How to Approach Ophthalmology Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 55
           },
           {
             "id": "ophthalmology__basic_anatomy_of_eye__v2",
             "videoNumber": "#02",
-            "title": "Applied Anatomy: Introduction and Uterine Artery [4",
+            "title": "Applied Anatomy of Eye: Part 1",
             "durationMins": 52,
-            "durationSecs": 0
+            "durationSecs": 18
           },
           {
             "id": "ophthalmology__basic_anatomy_of_eye__v3",
             "videoNumber": "#03",
-            "title": "Applied Anatomy: Introduction and Uterine Artery [4",
-            "durationMins": 52,
-            "durationSecs": 0
+            "title": "Applied Anatomy of Eye: Part 2",
+            "durationMins": 37,
+            "durationSecs": 48
           },
           {
             "id": "ophthalmology__basic_anatomy_of_eye__v4",
             "videoNumber": "#04",
-            "title": "Physiology of Vision",
-            "durationMins": 15,
-            "durationSecs": 0
+            "title": "Physiology of Aqueous Humor",
+            "durationMins": 41,
+            "durationSecs": 12
           },
           {
             "id": "ophthalmology__basic_anatomy_of_eye__v5",
             "videoNumber": "#05",
             "title": "Anatomy of Retina",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 45
           },
           {
             "id": "ophthalmology__basic_anatomy_of_eye__v6",
@@ -4763,43 +4757,43 @@ const syllabusData = [
             "id": "ophthalmology__neuro_ophthalmo___v1",
             "videoNumber": "#07",
             "title": "Visual Pathway and Visual Field Defects",
-            "durationMins": 86,
-            "durationSecs": 0
+            "durationMins": 69,
+            "durationSecs": 49
           },
           {
             "id": "ophthalmology__neuro_ophthalmo___v2",
             "videoNumber": "#08",
             "title": "Pupillary Reflexes, Light Reflex and its Lesions",
-            "durationMins": 80,
-            "durationSecs": 0
+            "durationMins": 79,
+            "durationSecs": 54
           },
           {
             "id": "ophthalmology__neuro_ophthalmo___v3",
             "videoNumber": "#09",
             "title": "Optic Atrophy: Optic Neuritis, Optic Neuropathies and Papilledema",
-            "durationMins": 74,
-            "durationSecs": 0
+            "durationMins": 79,
+            "durationSecs": 33
           },
           {
             "id": "ophthalmology__neuro_ophthalmo___v4",
             "videoNumber": "#10",
             "title": "Congenital Anomalies of Optic Disc and Colour Blindness",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 44
           }
         ]
       },
       {
         "name": "STRABISMUS & SQUINT",
         "modules": 7,
-        "hours": 4.6,
+        "hours": 5,
         "videos": [
           {
             "id": "ophthalmology__squint__v1",
             "videoNumber": "#11",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Squint",
+            "durationMins": 39,
+            "durationSecs": 22
           },
           {
             "id": "ophthalmology__squint__v2",
@@ -4819,71 +4813,71 @@ const syllabusData = [
             "id": "ophthalmology__squint__v4",
             "videoNumber": "#14",
             "title": "Paralytic Squint",
-            "durationMins": 82,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 19
           },
           {
             "id": "ophthalmology__squint__v5",
             "videoNumber": "#15",
             "title": "Gaze Defects",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 2
           },
           {
             "id": "ophthalmology__squint__v6",
             "videoNumber": "#16",
             "title": "Restrictive Squint and Comitant Squint",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 15
           },
           {
             "id": "ophthalmology__squint__v7",
             "videoNumber": "#17",
             "title": "Pseudo-strabismus and Ocular Myopathies",
-            "durationMins": 18,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 26
           }
         ]
       },
       {
         "name": "LENS & CATARACT",
         "modules": 6,
-        "hours": 5.4,
+        "hours": 6,
         "videos": [
           {
             "id": "ophthalmology__lens__v1",
             "videoNumber": "#18",
             "title": "Anatomy and Metabolism",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 54
           },
           {
             "id": "ophthalmology__lens__v2",
             "videoNumber": "#19",
             "title": "Acquired Cataract: Types",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 46
           },
           {
             "id": "ophthalmology__lens__v3",
             "videoNumber": "#20",
-            "title": "Cataract Surgery",
-            "durationMins": 55,
-            "durationSecs": 0
+            "title": "Cataract Surgery: Techniques",
+            "durationMins": 62,
+            "durationSecs": 7
           },
           {
             "id": "ophthalmology__lens__v4",
             "videoNumber": "#21",
             "title": "Complications of Cataract Surgery",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 22
           },
           {
             "id": "ophthalmology__lens__v5",
             "videoNumber": "#22",
-            "title": "Congenital Cataract, Ectopia lentis and Miscellaneous",
-            "durationMins": 44,
-            "durationSecs": 0
+            "title": "Congenital Cataract, Ectopia Lentis and Miscellaneous",
+            "durationMins": 48,
+            "durationSecs": 39
           },
           {
             "id": "ophthalmology__lens__v6",
@@ -4903,64 +4897,64 @@ const syllabusData = [
             "id": "ophthalmology__glaucoma__v1",
             "videoNumber": "#24",
             "title": "Glaucoma: What and How?",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 38
           },
           {
             "id": "ophthalmology__glaucoma__v2",
             "videoNumber": "#25",
             "title": "Investigations for Glaucoma",
-            "durationMins": 80,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 20
           },
           {
             "id": "ophthalmology__glaucoma__v3",
             "videoNumber": "#26",
             "title": "Primary Open Angle Glaucoma",
-            "durationMins": 86,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 42
           },
           {
             "id": "ophthalmology__glaucoma__v4",
             "videoNumber": "#27",
             "title": "Primary Angle Closure Glaucoma",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 19
           },
           {
             "id": "ophthalmology__glaucoma__v5",
             "videoNumber": "#28",
-            "title": "Secondary Glaucoma(s) and Congenital Glaucoma",
-            "durationMins": 42,
-            "durationSecs": 0
+            "title": "Secondary and Congenital Glaucoma",
+            "durationMins": 38,
+            "durationSecs": 1
           }
         ]
       },
       {
         "name": "OPTICS & REFRACTION",
         "modules": 4,
-        "hours": 4.8,
+        "hours": 5,
         "videos": [
           {
             "id": "ophthalmology__optics__v1",
             "videoNumber": "#29",
             "title": "Tests for Vision and Normal Optics of Eyes",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 26
           },
           {
             "id": "ophthalmology__optics__v2",
             "videoNumber": "#30",
             "title": "Myopia and Hypermetropia",
-            "durationMins": 84,
-            "durationSecs": 0
+            "durationMins": 79,
+            "durationSecs": 29
           },
           {
             "id": "ophthalmology__optics__v3",
             "videoNumber": "#31",
             "title": "Astigmatism, Reading of Spectacle Prescription and Binocular Errors",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 79,
+            "durationSecs": 51
           },
           {
             "id": "ophthalmology__optics__v4",
@@ -4974,70 +4968,70 @@ const syllabusData = [
       {
         "name": "RETINA & VITREOUS",
         "modules": 6,
-        "hours": 5.3,
+        "hours": 6,
         "videos": [
           {
             "id": "ophthalmology__retina__v1",
             "videoNumber": "#33",
-            "title": "Anatomy and Metabolism",
-            "durationMins": 50,
-            "durationSecs": 0
+            "title": "Anatomy and Investigations of Retina",
+            "durationMins": 66,
+            "durationSecs": 18
           },
           {
             "id": "ophthalmology__retina__v2",
             "videoNumber": "#34",
             "title": "Retinoblastoma and Macular Disorders",
-            "durationMins": 80,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 26
           },
           {
             "id": "ophthalmology__retina__v3",
             "videoNumber": "#35",
             "title": "Dystrophies of Fundus: Retinitis Pigmentosa and Others",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 70,
+            "durationSecs": 50
           },
           {
             "id": "ophthalmology__retina__v4",
             "videoNumber": "#36",
             "title": "Retinal Vascular Disorders: Part 1",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 43
           },
           {
             "id": "ophthalmology__retina__v5",
             "videoNumber": "#37",
             "title": "Retinal Vascular Disorders: Part 2",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 37
           },
           {
             "id": "ophthalmology__retina__v6",
             "videoNumber": "#38",
             "title": "Retinal Detachment",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 6
           }
         ]
       },
       {
         "name": "CORNEA & SCLERA",
         "modules": 3,
-        "hours": 2.1,
+        "hours": 2.2,
         "videos": [
           {
             "id": "ophthalmology__cornea__v1",
             "videoNumber": "#39",
             "title": "Special Investigations for Cornea",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 54
           },
           {
             "id": "ophthalmology__cornea__v2",
             "videoNumber": "#40",
             "title": "Corneal Ulcer and Keratitis",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 53
           },
           {
             "id": "ophthalmology__cornea__v3",
@@ -5051,28 +5045,28 @@ const syllabusData = [
       {
         "name": "UVEA",
         "modules": 3,
-        "hours": 2,
+        "hours": 1.9,
         "videos": [
           {
             "id": "ophthalmology__uvea__v1",
             "videoNumber": "#42",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Uveitis",
+            "durationMins": 31,
+            "durationSecs": 20
           },
           {
             "id": "ophthalmology__uvea__v2",
             "videoNumber": "#43",
             "title": "Anterior Uveitis",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 15
           },
           {
             "id": "ophthalmology__uvea__v3",
             "videoNumber": "#44",
             "title": "Intermediate, Posterior, Pan-uveitis and Miscellaneous Disorders",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 25
           }
         ]
       },
@@ -5099,22 +5093,22 @@ const syllabusData = [
             "id": "ophthalmology__adnexa__v1",
             "videoNumber": "#46",
             "title": "Eyelids: Anatomy and Pathologies",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 15
           },
           {
             "id": "ophthalmology__adnexa__v2",
             "videoNumber": "#47",
             "title": "Anatomy of Orbit and Proptosis",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 58
           },
           {
             "id": "ophthalmology__adnexa__v3",
             "videoNumber": "#48",
-            "title": "Lacrimal apparatus: Anatomy, Watering eye and Dry eye",
-            "durationMins": 37,
-            "durationSecs": 0
+            "title": "Lacrimal Apparatus: Anatomy, Watering Eye and Dry Eye",
+            "durationMins": 43,
+            "durationSecs": 47
           }
         ]
       },
@@ -5127,36 +5121,36 @@ const syllabusData = [
             "id": "ophthalmology__misc___v1",
             "videoNumber": "#49",
             "title": "Ocular Trauma",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 17,
+            "durationSecs": 40
           },
           {
             "id": "ophthalmology__misc___v2",
             "videoNumber": "#50",
             "title": "Community Ophthalmology",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 22,
+            "durationSecs": 53
           },
           {
             "id": "ophthalmology__misc___v3",
             "videoNumber": "#51",
             "title": "Lasers in Ophthalmology",
-            "durationMins": 14,
-            "durationSecs": 0
+            "durationMins": 19,
+            "durationSecs": 57
           },
           {
             "id": "ophthalmology__misc___v4",
             "videoNumber": "#52",
             "title": "Physiology of Vision",
-            "durationMins": 15,
-            "durationSecs": 0
+            "durationMins": 17,
+            "durationSecs": 47
           },
           {
             "id": "ophthalmology__misc___v5",
             "videoNumber": "#53",
             "title": "Slit Lamp Oblique Illumination",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 23,
+            "durationSecs": 43
           }
         ]
       }
@@ -5169,168 +5163,168 @@ const syllabusData = [
       {
         "name": "OTOLOGY (EAR)",
         "modules": 35,
-        "hours": 28.1,
+        "hours": 23.8,
         "videos": [
           {
             "id": "otorhinolaryngology__ent___ear__v1",
             "videoNumber": "#01",
-            "title": "How to Approach Otorhinolaryngology (ENT) Edition 8",
-            "durationMins": 8,
-            "durationSecs": 0
+            "title": "How to Approach ENT Edition 8",
+            "durationMins": 42,
+            "durationSecs": 6
           },
           {
             "id": "otorhinolaryngology__ent___ear__v2",
             "videoNumber": "#02",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Ear and Embryology of Ear",
+            "durationMins": 33,
+            "durationSecs": 22
           },
           {
             "id": "otorhinolaryngology__ent___ear__v3",
             "videoNumber": "#03",
-            "title": "Clinical Enzymology",
-            "durationMins": 52,
-            "durationSecs": 0
+            "title": "Clinical Embryology and Anatomy of Inner Ear: Part 1",
+            "durationMins": 41,
+            "durationSecs": 43
           },
           {
             "id": "otorhinolaryngology__ent___ear__v4",
             "videoNumber": "#04",
-            "title": "Clinical Enzymology",
-            "durationMins": 52,
-            "durationSecs": 0
+            "title": "Clinical Embryology of External and Middle Ear",
+            "durationMins": 45,
+            "durationSecs": 33
           },
           {
             "id": "otorhinolaryngology__ent___ear__v5",
             "videoNumber": "#05",
-            "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "title": "Clinical Anatomy and Diseases of Pinna",
+            "durationMins": 47,
+            "durationSecs": 1
           },
           {
             "id": "otorhinolaryngology__ent___ear__v6",
             "videoNumber": "#06",
             "title": "Clinical Anatomy and Diseases of External Auditory Canal",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 52
           },
           {
             "id": "otorhinolaryngology__ent___ear__v7",
             "videoNumber": "#07",
             "title": "Clinical Anatomy of Tympanic Membrane and Ossicles",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 26
           },
           {
             "id": "otorhinolaryngology__ent___ear__v8",
             "videoNumber": "#08",
-            "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "title": "Clinical Anatomy of Middle Ear: Part 1",
+            "durationMins": 33,
+            "durationSecs": 50
           },
           {
             "id": "otorhinolaryngology__ent___ear__v9",
             "videoNumber": "#09",
-            "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "title": "Clinical Anatomy of Middle Ear: Part 2",
+            "durationMins": 34,
+            "durationSecs": 30
           },
           {
             "id": "otorhinolaryngology__ent___ear__v10",
             "videoNumber": "#10",
-            "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "title": "Clinical Anatomy of Inner Ear: Part 2",
+            "durationMins": 40,
+            "durationSecs": 46
           },
           {
             "id": "otorhinolaryngology__ent___ear__v11",
             "videoNumber": "#11",
-            "title": "Nerve Supply of Larynx and Vocal Cord Palsy",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Nerve Supply of Ear",
+            "durationMins": 37,
+            "durationSecs": 24
           },
           {
             "id": "otorhinolaryngology__ent___ear__v12",
             "videoNumber": "#12",
             "title": "Audiology and Evaluation: Tuning Fork Tests",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 52
           },
           {
             "id": "otorhinolaryngology__ent___ear__v13",
             "videoNumber": "#13",
-            "title": "Audiology and Evaluation: Tuning Fork Tests",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Audiology and Evaluation: Audiogram (PTA)",
+            "durationMins": 48,
+            "durationSecs": 42
           },
           {
             "id": "otorhinolaryngology__ent___ear__v14",
             "videoNumber": "#14",
-            "title": "Audiology and Evaluation: Tuning Fork Tests",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Audiology - Part 3: Tympanometry and Stapedial Reflex",
+            "durationMins": 48,
+            "durationSecs": 51
           },
           {
             "id": "otorhinolaryngology__ent___ear__v15",
             "videoNumber": "#15",
             "title": "Audiology - Part 4: OAE, ECOG, BERA, and Others",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 14
           },
           {
             "id": "otorhinolaryngology__ent___ear__v16",
             "videoNumber": "#16",
-            "title": "Facial Nerve, Glossopharyngeal Nerve and Vagus Nerve",
-            "durationMins": 45,
-            "durationSecs": 0
+            "title": "Facial Nerve Anatomy",
+            "durationMins": 48,
+            "durationSecs": 27
           },
           {
             "id": "otorhinolaryngology__ent___ear__v17",
             "videoNumber": "#17",
-            "title": "Conditions of Tonsils and Tonsillectomy",
-            "durationMins": 79,
-            "durationSecs": 0
+            "title": "Conditions of Tympanic Membrane",
+            "durationMins": 43,
+            "durationSecs": 46
           },
           {
             "id": "otorhinolaryngology__ent___ear__v18",
             "videoNumber": "#18",
-            "title": "Acute Otitis Media [J]",
-            "durationMins": 22,
-            "durationSecs": 0
+            "title": "Acute Otitis Media",
+            "durationMins": 33,
+            "durationSecs": 16
           },
           {
             "id": "otorhinolaryngology__ent___ear__v19",
             "videoNumber": "#19",
             "title": "Serous Otitis Media",
             "durationMins": 43,
-            "durationSecs": 0
+            "durationSecs": 18
           },
           {
             "id": "otorhinolaryngology__ent___ear__v20",
             "videoNumber": "#20",
-            "title": "Chronic Mucosal Otitis Media [4",
-            "durationMins": 64,
-            "durationSecs": 0
+            "title": "Chronic Mucosal Otitis Media",
+            "durationMins": 36,
+            "durationSecs": 23
           },
           {
             "id": "otorhinolaryngology__ent___ear__v21",
             "videoNumber": "#21",
             "title": "Chronic Squamous Otitis Media",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 41
           },
           {
             "id": "otorhinolaryngology__ent___ear__v22",
             "videoNumber": "#22",
-            "title": "Complications of Otitis Media [4",
-            "durationMins": 68,
-            "durationSecs": 0
+            "title": "Complications of Otitis Media",
+            "durationMins": 43,
+            "durationSecs": 40
           },
           {
             "id": "otorhinolaryngology__ent___ear__v23",
             "videoNumber": "#23",
-            "title": "Otosclerosis [4",
-            "durationMins": 42,
-            "durationSecs": 0
+            "title": "Otosclerosis",
+            "durationMins": 33,
+            "durationSecs": 23
           },
           {
             "id": "otorhinolaryngology__ent___ear__v24",
@@ -5350,57 +5344,57 @@ const syllabusData = [
             "id": "otorhinolaryngology__ent___ear__v26",
             "videoNumber": "#26",
             "title": "BPPV and Vestibular Neuritis",
-            "durationMins": 18,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 51
           },
           {
             "id": "otorhinolaryngology__ent___ear__v27",
             "videoNumber": "#27",
-            "title": "Meniere's Disease a",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Meniere's Disease",
+            "durationMins": 38,
+            "durationSecs": 22
           },
           {
             "id": "otorhinolaryngology__ent___ear__v28",
             "videoNumber": "#28",
             "title": "Superior Semicircular Canal Dehiscence and Perilymph Fistula",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 32
           },
           {
             "id": "otorhinolaryngology__ent___ear__v29",
             "videoNumber": "#29",
             "title": "Sudden SNHL, Noise Trauma, Ototoxicity and Presbycusis",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 20
           },
           {
             "id": "otorhinolaryngology__ent___ear__v30",
             "videoNumber": "#30",
             "title": "Tumors of External and Middle Ear",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 29
           },
           {
             "id": "otorhinolaryngology__ent___ear__v31",
             "videoNumber": "#31",
             "title": "Acoustic Neuroma",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 37
           },
           {
             "id": "otorhinolaryngology__ent___ear__v32",
             "videoNumber": "#32",
             "title": "Facial Nerve: Part 1",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 12
           },
           {
             "id": "otorhinolaryngology__ent___ear__v33",
             "videoNumber": "#33",
             "title": "Facial Nerve: Part 2",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 40
           },
           {
             "id": "otorhinolaryngology__ent___ear__v34",
@@ -5412,65 +5406,65 @@ const syllabusData = [
           {
             "id": "otorhinolaryngology__ent___ear__v35",
             "videoNumber": "#35",
-            "title": "Vestibular Physiology",
-            "durationMins": 44,
-            "durationSecs": 0
+            "title": "Vestibular Disorders",
+            "durationMins": 33,
+            "durationSecs": 19
           }
         ]
       },
       {
         "name": "RHINOLOGY (NOSE)",
         "modules": 14,
-        "hours": 10.4,
+        "hours": 9.7,
         "videos": [
           {
             "id": "otorhinolaryngology__ent___nose__v1",
             "videoNumber": "#36",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Nose",
+            "durationMins": 33,
+            "durationSecs": 45
           },
           {
             "id": "otorhinolaryngology__ent___nose__v2",
             "videoNumber": "#37",
-            "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "title": "Clinical Anatomy of External Nose and Choanal Atresia",
+            "durationMins": 48,
+            "durationSecs": 39
           },
           {
             "id": "otorhinolaryngology__ent___nose__v3",
             "videoNumber": "#38",
             "title": "Clinical Anatomy of Lateral Wall of Nose",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 9
           },
           {
             "id": "otorhinolaryngology__ent___nose__v4",
             "videoNumber": "#39",
             "title": "Clinical Anatomy and Diseases of Septum",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 25
           },
           {
             "id": "otorhinolaryngology__ent___nose__v5",
             "videoNumber": "#40",
-            "title": "Nerve supply of Nose and its Diseases: Part 1",
-            "durationMins": 44,
-            "durationSecs": 0
+            "title": "Nerve Supply of Nose and its Diseases: Part 1",
+            "durationMins": 43,
+            "durationSecs": 48
           },
           {
             "id": "otorhinolaryngology__ent___nose__v6",
             "videoNumber": "#41",
-            "title": "Nerve supply of Nose and its Diseases: Part 2",
-            "durationMins": 25,
-            "durationSecs": 0
+            "title": "Nerve Supply of Nose and its Diseases: Part 2",
+            "durationMins": 35,
+            "durationSecs": 34
           },
           {
             "id": "otorhinolaryngology__ent___nose__v7",
             "videoNumber": "#42",
             "title": "Arterial Supply of Nose and Epistaxis",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 10
           },
           {
             "id": "otorhinolaryngology__ent___nose__v8",
@@ -5504,43 +5498,43 @@ const syllabusData = [
             "id": "otorhinolaryngology__ent___nose__v12",
             "videoNumber": "#47",
             "title": "Nasal Polyps",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 44
           },
           {
             "id": "otorhinolaryngology__ent___nose__v13",
             "videoNumber": "#48",
             "title": "Atrophic Rhinitis and Granulomatous Conditions of Nose",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 59
           },
           {
             "id": "otorhinolaryngology__ent___nose__v14",
             "videoNumber": "#49",
             "title": "Fractures of Face and CSF Rhinorrhea",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 47
           }
         ]
       },
       {
         "name": "PHARYNX",
         "modules": 8,
-        "hours": 6.3,
+        "hours": 7.1,
         "videos": [
           {
             "id": "otorhinolaryngology__ent___pharynx__v1",
             "videoNumber": "#50",
             "title": "Clinical Anatomy of Pharynx - Part 1: Overview",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 50
           },
           {
             "id": "otorhinolaryngology__ent___pharynx__v2",
             "videoNumber": "#51",
             "title": "Clinical Anatomy of Pharynx - Part 2: Pharyngeal Wall",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 57
           },
           {
             "id": "otorhinolaryngology__ent___pharynx__v3",
@@ -5553,36 +5547,36 @@ const syllabusData = [
             "id": "otorhinolaryngology__ent___pharynx__v4",
             "videoNumber": "#53",
             "title": "Adenoid Hypertrophy",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 13
           },
           {
             "id": "otorhinolaryngology__ent___pharynx__v5",
             "videoNumber": "#54",
             "title": "Angiofibroma",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 2
           },
           {
             "id": "otorhinolaryngology__ent___pharynx__v6",
             "videoNumber": "#55",
             "title": "Nasopharyngeal Carcinoma",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 51
           },
           {
             "id": "otorhinolaryngology__ent___pharynx__v7",
             "videoNumber": "#56",
             "title": "Conditions of Tonsils and Tonsillectomy",
-            "durationMins": 79,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 6
           },
           {
             "id": "otorhinolaryngology__ent___pharynx__v8",
             "videoNumber": "#57",
-            "title": "Obstructive Lung Diseases",
-            "durationMins": 59,
-            "durationSecs": 0
+            "title": "Obstructive Sleep Apnea",
+            "durationMins": 56,
+            "durationSecs": 19
           }
         ]
       },
@@ -5595,57 +5589,57 @@ const syllabusData = [
             "id": "otorhinolaryngology__ent___larynx__v1",
             "videoNumber": "#58",
             "title": "Clinical Anatomy of Larynx: Part 1",
-            "durationMins": 75,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 15
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v2",
             "videoNumber": "#59",
             "title": "Clinical Anatomy of Larynx: Part 2",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 69,
+            "durationSecs": 18
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v3",
             "videoNumber": "#60",
             "title": "Infections of Larynx",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 68,
+            "durationSecs": 13
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v4",
             "videoNumber": "#61",
             "title": "Congenital Conditions of Larynx",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 71,
+            "durationSecs": 4
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v5",
             "videoNumber": "#62",
             "title": "Voice Disorders",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 68,
+            "durationSecs": 54
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v6",
             "videoNumber": "#63",
             "title": "Nerve Supply of Larynx and Vocal Cord Palsy",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 55
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v7",
             "videoNumber": "#64",
             "title": "Carcinoma Larynx",
-            "durationMins": 88,
-            "durationSecs": 0
+            "durationMins": 68,
+            "durationSecs": 22
           },
           {
             "id": "otorhinolaryngology__ent___larynx__v8",
             "videoNumber": "#65",
             "title": "Tracheostomy and Foreign Body in Airways",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 59
           }
         ]
       }
@@ -5658,70 +5652,70 @@ const syllabusData = [
       {
         "name": "ANAESTHESIA",
         "modules": 28,
-        "hours": 22.9,
+        "hours": 24,
         "videos": [
           {
             "id": "anaesthesia__anaesthesia__v1",
             "videoNumber": "#01",
             "title": "How to Approach Anaesthesia Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 9
           },
           {
             "id": "anaesthesia__anaesthesia__v2",
             "videoNumber": "#02",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Anaesthesia",
+            "durationMins": 43,
+            "durationSecs": 23
           },
           {
             "id": "anaesthesia__anaesthesia__v3",
             "videoNumber": "#03",
             "title": "Pre Anaesthetic Checkup: Part 1",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 53
           },
           {
             "id": "anaesthesia__anaesthesia__v4",
             "videoNumber": "#04",
-            "title": "Pre Anaesthetic Checkup: Part 1",
-            "durationMins": 45,
-            "durationSecs": 0
+            "title": "Pre Anaesthetic Checkup: Part 2",
+            "durationMins": 55,
+            "durationSecs": 4
           },
           {
             "id": "anaesthesia__anaesthesia__v5",
             "videoNumber": "#05",
-            "title": "Pre-operative Preparation [4",
-            "durationMins": 44,
-            "durationSecs": 0
+            "title": "Pre-operative Preparation",
+            "durationMins": 50,
+            "durationSecs": 21
           },
           {
             "id": "anaesthesia__anaesthesia__v6",
             "videoNumber": "#06",
             "title": "Monitoring Under Anaesthesia: Part 1",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 30
           },
           {
             "id": "anaesthesia__anaesthesia__v7",
             "videoNumber": "#07",
             "title": "Monitoring Under Anaesthesia: Part 2",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 40
           },
           {
             "id": "anaesthesia__anaesthesia__v8",
             "videoNumber": "#08",
             "title": "Anaesthesia Workstation",
-            "durationMins": 78,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 25
           },
           {
             "id": "anaesthesia__anaesthesia__v9",
             "videoNumber": "#09",
-            "title": "General Anatomy",
-            "durationMins": 34,
-            "durationSecs": 0
+            "title": "General Anaesthesia: Induction and Maintenance",
+            "durationMins": 56,
+            "durationSecs": 4
           },
           {
             "id": "anaesthesia__anaesthesia__v10",
@@ -5734,120 +5728,120 @@ const syllabusData = [
             "id": "anaesthesia__anaesthesia__v11",
             "videoNumber": "#11",
             "title": "Epidural Anaesthesia",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 42
           },
           {
             "id": "anaesthesia__anaesthesia__v12",
             "videoNumber": "#12",
             "title": "Peripheral Nerve Blocks",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 51
           },
           {
             "id": "anaesthesia__anaesthesia__v13",
             "videoNumber": "#13",
             "title": "Intravenous Anaesthetics",
-            "durationMins": 78,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 32
           },
           {
             "id": "anaesthesia__anaesthesia__v14",
             "videoNumber": "#14",
-            "title": "Inhalational Anaesthetics: Part 2",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "Inhalational Anaesthetics: Part 1",
+            "durationMins": 57,
+            "durationSecs": 35
           },
           {
             "id": "anaesthesia__anaesthesia__v15",
             "videoNumber": "#15",
             "title": "Inhalational Anaesthetics: Part 2",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 55
           },
           {
             "id": "anaesthesia__anaesthesia__v16",
             "videoNumber": "#16",
-            "title": "Muscle Relaxants: Part 1 Sa—",
-            "durationMins": 47,
-            "durationSecs": 0
+            "title": "Muscle Relaxants: Part 1",
+            "durationMins": 54,
+            "durationSecs": 9
           },
           {
             "id": "anaesthesia__anaesthesia__v17",
             "videoNumber": "#17",
-            "title": "Muscle Relaxants: Part 1 Sa—",
+            "title": "Muscle Relaxants: Part 2",
             "durationMins": 47,
-            "durationSecs": 0
+            "durationSecs": 10
           },
           {
             "id": "anaesthesia__anaesthesia__v18",
             "videoNumber": "#18",
             "title": "Anaesthesia for Coexisting Diseases",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 27
           },
           {
             "id": "anaesthesia__anaesthesia__v19",
             "videoNumber": "#19",
             "title": "Subspecialty Management",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 14
           },
           {
             "id": "anaesthesia__anaesthesia__v20",
             "videoNumber": "#20",
             "title": "Malignant Hyperthermia",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 38
           },
           {
             "id": "anaesthesia__anaesthesia__v21",
             "videoNumber": "#21",
             "title": "Day Care Anaesthesia",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 1
           },
           {
             "id": "anaesthesia__anaesthesia__v22",
             "videoNumber": "#22",
             "title": "Airway Management",
-            "durationMins": 86,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 45
           },
           {
             "id": "anaesthesia__anaesthesia__v23",
             "videoNumber": "#23",
             "title": "Anaesthesia Equipment",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 2
           },
           {
             "id": "anaesthesia__anaesthesia__v24",
             "videoNumber": "#24",
             "title": "Basics of Critical Care",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 32
           },
           {
             "id": "anaesthesia__anaesthesia__v25",
             "videoNumber": "#25",
             "title": "Mechanical Ventilation: Part 1",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 4
           },
           {
             "id": "anaesthesia__anaesthesia__v26",
             "videoNumber": "#26",
             "title": "Mechanical Ventilation: Part 2",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 41
           },
           {
             "id": "anaesthesia__anaesthesia__v27",
             "videoNumber": "#27",
             "title": "Cardiopulmonary Resuscitation",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 7
           },
           {
             "id": "anaesthesia__anaesthesia__v28",
@@ -5873,169 +5867,169 @@ const syllabusData = [
             "id": "dermatology__dermatology__v1",
             "videoNumber": "#01",
             "title": "How to Approach Dermatology Edition 8",
-            "durationMins": 5,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 34
           },
           {
             "id": "dermatology__dermatology__v2",
             "videoNumber": "#02",
             "title": "Basics in Dermatology: Part 1",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 43
           },
           {
             "id": "dermatology__dermatology__v3",
             "videoNumber": "#03",
             "title": "Basics in Dermatology: Part 2",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 43
           },
           {
             "id": "dermatology__dermatology__v4",
             "videoNumber": "#04",
             "title": "Papulosquamous Diseases: Part 1",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 57
           },
           {
             "id": "dermatology__dermatology__v5",
             "videoNumber": "#05",
             "title": "Papulosquamous Diseases: Part 2",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 5
           },
           {
             "id": "dermatology__dermatology__v6",
             "videoNumber": "#06",
-            "title": "Appendages and Disorders: Part 1 7:",
-            "durationMins": 34,
-            "durationSecs": 0
+            "title": "Appendages and Disorders: Part 1",
+            "durationMins": 26,
+            "durationSecs": 37
           },
           {
             "id": "dermatology__dermatology__v7",
             "videoNumber": "#07",
             "title": "Appendages and Disorders: Part 2",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 13
           },
           {
             "id": "dermatology__dermatology__v8",
             "videoNumber": "#08",
             "title": "Bullous Disorders: Part 1",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 18
           },
           {
             "id": "dermatology__dermatology__v9",
             "videoNumber": "#09",
             "title": "Bullous Disorders: Part 2",
             "durationMins": 38,
-            "durationSecs": 0
+            "durationSecs": 28
           },
           {
             "id": "dermatology__dermatology__v10",
             "videoNumber": "#10",
             "title": "Bacterial Infections of Skin",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 20
           },
           {
             "id": "dermatology__dermatology__v11",
             "videoNumber": "#11",
             "title": "Mycobacterial Infections of Skin",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 35
           },
           {
             "id": "dermatology__dermatology__v12",
             "videoNumber": "#12",
             "title": "Viral Infections of Skin",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 56
           },
           {
             "id": "dermatology__dermatology__v13",
             "videoNumber": "#13",
             "title": "Fungal Infections of Skin",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 24
           },
           {
             "id": "dermatology__dermatology__v14",
             "videoNumber": "#14",
             "title": "Sexually Transmitted Infections: Part 1",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 12
           },
           {
             "id": "dermatology__dermatology__v15",
             "videoNumber": "#15",
             "title": "Sexually Transmitted Infections: Part 2",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 18
           },
           {
             "id": "dermatology__dermatology__v16",
             "videoNumber": "#16",
             "title": "Hansen's Disease: Part 1",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 13
           },
           {
             "id": "dermatology__dermatology__v17",
             "videoNumber": "#17",
             "title": "Hansen's Disease: Part 2",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 2
           },
           {
             "id": "dermatology__dermatology__v18",
             "videoNumber": "#18",
             "title": "Pigmentary Diseases",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 31
           },
           {
             "id": "dermatology__dermatology__v19",
             "videoNumber": "#19",
             "title": "Eczema",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 16
           },
           {
             "id": "dermatology__dermatology__v20",
             "videoNumber": "#20",
             "title": "Genodermatoses",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 39
           },
           {
             "id": "dermatology__dermatology__v21",
             "videoNumber": "#21",
             "title": "Histamine Related Disorders",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 25
           },
           {
             "id": "dermatology__dermatology__v22",
             "videoNumber": "#22",
             "title": "Cutaneous Drug Reactions",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 11
           },
           {
             "id": "dermatology__dermatology__v23",
             "videoNumber": "#23",
             "title": "Skin In Rheumatology and Immunology",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 27
           },
           {
             "id": "dermatology__dermatology__v24",
             "videoNumber": "#24",
             "title": "Skin and Systems",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 45
           },
           {
             "id": "dermatology__dermatology__v25",
@@ -6048,7 +6042,7 @@ const syllabusData = [
             "id": "dermatology__dermatology__v26",
             "videoNumber": "#26",
             "title": "Short Topics in Dermatology",
-            "durationMins": 31,
+            "durationMins": 3,
             "durationSecs": 0
           }
         ]
@@ -6062,20 +6056,20 @@ const syllabusData = [
       {
         "name": "PSYCHIATRY",
         "modules": 22,
-        "hours": 15.7,
+        "hours": 16.6,
         "videos": [
           {
             "id": "psychiatry__psychiatry__v1",
             "videoNumber": "#01",
             "title": "How to Approach Psychiatry Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 7
           },
           {
             "id": "psychiatry__psychiatry__v2",
             "videoNumber": "#02",
-            "title": "Schizophrenia and Other Psychotic Disorders",
-            "durationMins": 67,
+            "title": "Schizophrenia Spectrum Disorders",
+            "durationMins": 44,
             "durationSecs": 0
           },
           {
@@ -6088,9 +6082,9 @@ const syllabusData = [
           {
             "id": "psychiatry__psychiatry__v4",
             "videoNumber": "#04",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Mood Disorders",
+            "durationMins": 38,
+            "durationSecs": 21
           },
           {
             "id": "psychiatry__psychiatry__v5",
@@ -6102,44 +6096,44 @@ const syllabusData = [
           {
             "id": "psychiatry__psychiatry__v6",
             "videoNumber": "#06",
-            "title": "Bipolar Disorder /",
-            "durationMins": 38,
-            "durationSecs": 0
+            "title": "Bipolar Disorder",
+            "durationMins": 49,
+            "durationSecs": 36
           },
           {
             "id": "psychiatry__psychiatry__v7",
             "videoNumber": "#07",
             "title": "Stress, Trauma and Related Disorders",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 16
           },
           {
             "id": "psychiatry__psychiatry__v8",
             "videoNumber": "#08",
             "title": "Anxiety and Related Disorders",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 13
           },
           {
             "id": "psychiatry__psychiatry__v9",
             "videoNumber": "#09",
             "title": "Obsessive Compulsive Disorder",
             "durationMins": 38,
-            "durationSecs": 0
+            "durationSecs": 9
           },
           {
             "id": "psychiatry__psychiatry__v10",
             "videoNumber": "#10",
             "title": "Somatization Disorders",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 59
           },
           {
             "id": "psychiatry__psychiatry__v11",
             "videoNumber": "#11",
             "title": "Neurocognitive Disorders",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 7
           },
           {
             "id": "psychiatry__psychiatry__v12",
@@ -6152,71 +6146,71 @@ const syllabusData = [
             "id": "psychiatry__psychiatry__v13",
             "videoNumber": "#13",
             "title": "Sex, Gender and Related Disorders",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 17
           },
           {
             "id": "psychiatry__psychiatry__v14",
             "videoNumber": "#14",
             "title": "Sleep and Related Disorders",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 58
           },
           {
             "id": "psychiatry__psychiatry__v15",
             "videoNumber": "#15",
             "title": "Personality and Related Disorders",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 16
           },
           {
             "id": "psychiatry__psychiatry__v16",
             "videoNumber": "#16",
             "title": "Substance Use and Related Addictive Disorders",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 59
           },
           {
             "id": "psychiatry__psychiatry__v17",
             "videoNumber": "#17",
             "title": "Child and Adolescent Psychiatry",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 56
           },
           {
             "id": "psychiatry__psychiatry__v18",
             "videoNumber": "#18",
             "title": "Emergency Psychiatry and Somatic Treatments in Psychiatry",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 6
           },
           {
             "id": "psychiatry__psychiatry__v19",
             "videoNumber": "#19",
             "title": "Psychopharmacology",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 22
           },
           {
             "id": "psychiatry__psychiatry__v20",
             "videoNumber": "#20",
             "title": "Psychology",
-            "durationMins": 51,
+            "durationMins": 48,
             "durationSecs": 0
           },
           {
             "id": "psychiatry__psychiatry__v21",
             "videoNumber": "#21",
             "title": "Psychological Therapies and Assessments",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 14
           },
           {
             "id": "psychiatry__psychiatry__v22",
             "videoNumber": "#22",
             "title": "Public Health, Legal Aspects and Other Related Topics",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 49
           }
         ]
       }
@@ -6229,56 +6223,56 @@ const syllabusData = [
       {
         "name": "FUNDAMENTS OF RADIOLOGY",
         "modules": 10,
-        "hours": 5.8,
+        "hours": 6,
         "videos": [
           {
             "id": "radiology__fundaments_of_radiology__v1",
             "videoNumber": "#01",
             "title": "How to Approach Radiology Edition 8",
-            "durationMins": 6,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 22
           },
           {
             "id": "radiology__fundaments_of_radiology__v2",
             "videoNumber": "#02",
             "title": "X-Ray Fundamentals: Part 1",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 59
           },
           {
             "id": "radiology__fundaments_of_radiology__v3",
             "videoNumber": "#03",
             "title": "X-Ray Fundamentals: Part 2",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 23
           },
           {
             "id": "radiology__fundaments_of_radiology__v4",
             "videoNumber": "#04",
             "title": "X-Ray Production and Interactions",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 24
           },
           {
             "id": "radiology__fundaments_of_radiology__v5",
             "videoNumber": "#05",
             "title": "CT Basics",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 35
           },
           {
             "id": "radiology__fundaments_of_radiology__v6",
             "videoNumber": "#06",
             "title": "USG Basics",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 20
           },
           {
             "id": "radiology__fundaments_of_radiology__v7",
             "videoNumber": "#07",
-            "title": "MRI Basics LL]",
-            "durationMins": 28,
-            "durationSecs": 0
+            "title": "MRI Basics",
+            "durationMins": 29,
+            "durationSecs": 33
           },
           {
             "id": "radiology__fundaments_of_radiology__v8",
@@ -6291,127 +6285,127 @@ const syllabusData = [
             "id": "radiology__fundaments_of_radiology__v9",
             "videoNumber": "#09",
             "title": "USG Interpretation",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 19
           },
           {
             "id": "radiology__fundaments_of_radiology__v10",
             "videoNumber": "#10",
             "title": "CT Interpretation",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 36
           }
         ]
       },
       {
         "name": "RADIOTHERAPY & NUCLEAR MEDICINE",
         "modules": 5,
-        "hours": 3.4,
+        "hours": 3.3,
         "videos": [
           {
             "id": "radiology__radiotherapy___nuclear_medicine__v1",
             "videoNumber": "#11",
             "title": "Radionuclide Imaging: Basics",
-            "durationMins": 5,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 33
           },
           {
             "id": "radiology__radiotherapy___nuclear_medicine__v2",
             "videoNumber": "#12",
             "title": "PET Scan",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 16
           },
           {
             "id": "radiology__radiotherapy___nuclear_medicine__v3",
             "videoNumber": "#13",
             "title": "Systemic Radionuclide Imaging: Part 1",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 50
           },
           {
             "id": "radiology__radiotherapy___nuclear_medicine__v4",
             "videoNumber": "#14",
             "title": "Systemic Radionuclide Imaging: Part 2",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 20
           },
           {
             "id": "radiology__radiotherapy___nuclear_medicine__v5",
             "videoNumber": "#15",
             "title": "Radiotherapy",
-            "durationMins": 88,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 1
           }
         ]
       },
       {
         "name": "SYSTEMIC RADIOLOGY",
         "modules": 27,
-        "hours": 20.2,
+        "hours": 19.7,
         "videos": [
           {
             "id": "radiology__systemic_radiology__v1",
             "videoNumber": "#16",
             "title": "CXR Interpretation: Part 1",
             "durationMins": 48,
-            "durationSecs": 0
+            "durationSecs": 27
           },
           {
             "id": "radiology__systemic_radiology__v2",
             "videoNumber": "#17",
-            "title": "CXR Interpretation: Part 1",
-            "durationMins": 48,
-            "durationSecs": 0
+            "title": "CXR Interpretation: Part 2",
+            "durationMins": 51,
+            "durationSecs": 26
           },
           {
             "id": "radiology__systemic_radiology__v3",
             "videoNumber": "#18",
-            "title": "Silhouette Sign: Applications",
-            "durationMins": 50,
-            "durationSecs": 0
+            "title": "Silhouette Sign: Basics",
+            "durationMins": 39,
+            "durationSecs": 7
           },
           {
             "id": "radiology__systemic_radiology__v4",
             "videoNumber": "#19",
             "title": "Silhouette Sign: Applications",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 27
           },
           {
             "id": "radiology__systemic_radiology__v5",
             "videoNumber": "#20",
             "title": "Pleural Abnormalities",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 36
           },
           {
             "id": "radiology__systemic_radiology__v6",
             "videoNumber": "#21",
             "title": "Mediastinum and Lung Tumours",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 21
           },
           {
             "id": "radiology__systemic_radiology__v7",
             "videoNumber": "#22",
             "title": "Congenital Heart Disease",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 54
           },
           {
             "id": "radiology__systemic_radiology__v8",
             "videoNumber": "#23",
             "title": "Acquired Cardiac Disease",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 10
           },
           {
             "id": "radiology__systemic_radiology__v9",
             "videoNumber": "#24",
-            "title": "Vascular Injury",
-            "durationMins": 34,
-            "durationSecs": 0
+            "title": "Vascular Imaging",
+            "durationMins": 39,
+            "durationSecs": 37
           },
           {
             "id": "radiology__systemic_radiology__v10",
@@ -6431,57 +6425,57 @@ const syllabusData = [
             "id": "radiology__systemic_radiology__v12",
             "videoNumber": "#27",
             "title": "Head Trauma Imaging",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 27
           },
           {
             "id": "radiology__systemic_radiology__v13",
             "videoNumber": "#28",
-            "title": "Brain Tumors —",
-            "durationMins": 39,
-            "durationSecs": 0
+            "title": "Brain Tumors",
+            "durationMins": 36,
+            "durationSecs": 9
           },
           {
             "id": "radiology__systemic_radiology__v14",
             "videoNumber": "#29",
             "title": "CNS Infections and Miscellaneous",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 9
           },
           {
             "id": "radiology__systemic_radiology__v15",
             "videoNumber": "#30",
             "title": "Conventional Procedures in GUT",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 7
           },
           {
             "id": "radiology__systemic_radiology__v16",
             "videoNumber": "#31",
             "title": "GUT Imaging",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 53
           },
           {
             "id": "radiology__systemic_radiology__v17",
             "videoNumber": "#32",
             "title": "Renal Papillary Necrosis Imaging",
-            "durationMins": 9,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 15
           },
           {
             "id": "radiology__systemic_radiology__v18",
             "videoNumber": "#33",
-            "title": "Liver",
-            "durationMins": 26,
-            "durationSecs": 0
+            "title": "Liver Imaging",
+            "durationMins": 42,
+            "durationSecs": 27
           },
           {
             "id": "radiology__systemic_radiology__v19",
             "videoNumber": "#34",
             "title": "GIT Imaging",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 32
           },
           {
             "id": "radiology__systemic_radiology__v20",
@@ -6494,22 +6488,22 @@ const syllabusData = [
             "id": "radiology__systemic_radiology__v21",
             "videoNumber": "#36",
             "title": "Hepatobiliary Imaging",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 26
           },
           {
             "id": "radiology__systemic_radiology__v22",
             "videoNumber": "#37",
             "title": "Obstetrics and Gynaecology Imaging",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 18
           },
           {
             "id": "radiology__systemic_radiology__v23",
             "videoNumber": "#38",
             "title": "Breast Imaging",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 7
           },
           {
             "id": "radiology__systemic_radiology__v24",
@@ -6522,22 +6516,22 @@ const syllabusData = [
             "id": "radiology__systemic_radiology__v25",
             "videoNumber": "#40",
             "title": "Arthritis and Bone Infections",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 7
           },
           {
             "id": "radiology__systemic_radiology__v26",
             "videoNumber": "#41",
             "title": "Systemic Bone Disorders",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 32
           },
           {
             "id": "radiology__systemic_radiology__v27",
             "videoNumber": "#42",
-            "title": "Miscellaneous Amino Acids",
-            "durationMins": 62,
-            "durationSecs": 0
+            "title": "Miscellaneous Radiology Topics",
+            "durationMins": 63,
+            "durationSecs": 59
           }
         ]
       }
@@ -6550,20 +6544,20 @@ const syllabusData = [
       {
         "name": "GASTROENTEROLOGY",
         "modules": 12,
-        "hours": 5.9,
+        "hours": 6.9,
         "videos": [
           {
             "id": "medicine__gastroentero___v1",
             "videoNumber": "#01",
             "title": "How to Approach Medicine Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 14
           },
           {
             "id": "medicine__gastroentero___v2",
             "videoNumber": "#02",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
+            "title": "Introduction to GIT",
+            "durationMins": 38,
             "durationSecs": 0
           },
           {
@@ -6576,16 +6570,16 @@ const syllabusData = [
           {
             "id": "medicine__gastroentero___v4",
             "videoNumber": "#04",
-            "title": "Physiology of Vision",
-            "durationMins": 15,
-            "durationSecs": 0
+            "title": "Physiology of GIT Absorption and Selective Malabsorption",
+            "durationMins": 36,
+            "durationSecs": 16
           },
           {
             "id": "medicine__gastroentero___v5",
             "videoNumber": "#05",
             "title": "Clinical Features And Tests For Malabsorption",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 56
           },
           {
             "id": "medicine__gastroentero___v6",
@@ -6597,58 +6591,58 @@ const syllabusData = [
           {
             "id": "medicine__gastroentero___v7",
             "videoNumber": "#07",
-            "title": "Inflammatory Diarrhea",
-            "durationMins": 48,
-            "durationSecs": 0
+            "title": "Inflammatory Bowel Disease: Part 1",
+            "durationMins": 36,
+            "durationSecs": 22
           },
           {
             "id": "medicine__gastroentero___v8",
             "videoNumber": "#08",
             "title": "Inflammatory Bowel Disease: Part 2",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 55
           },
           {
             "id": "medicine__gastroentero___v9",
             "videoNumber": "#09",
             "title": "Infectious Diarrhoea",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 16
           },
           {
             "id": "medicine__gastroentero___v10",
             "videoNumber": "#10",
             "title": "Stomach",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 45
           },
           {
             "id": "medicine__gastroentero___v11",
             "videoNumber": "#11",
             "title": "Gastrinoma",
-            "durationMins": 12,
+            "durationMins": 29,
             "durationSecs": 0
           },
           {
             "id": "medicine__gastroentero___v12",
             "videoNumber": "#12",
             "title": "Irritable Bowel Syndrome",
-            "durationMins": 18,
-            "durationSecs": 0
+            "durationMins": 19,
+            "durationSecs": 23
           }
         ]
       },
       {
         "name": "HEMATOLOGY",
         "modules": 21,
-        "hours": 15.1,
+        "hours": 14.1,
         "videos": [
           {
             "id": "medicine__hemat___v1",
             "videoNumber": "#13",
-            "title": "Approach to Bleeding Disorders",
-            "durationMins": 69,
-            "durationSecs": 0
+            "title": "Approach to Anemia",
+            "durationMins": 47,
+            "durationSecs": 9
           },
           {
             "id": "medicine__hemat___v2",
@@ -6661,8 +6655,8 @@ const syllabusData = [
             "id": "medicine__hemat___v3",
             "videoNumber": "#15",
             "title": "Megaloblastic Anemia",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 21
           },
           {
             "id": "medicine__hemat___v4",
@@ -6675,15 +6669,15 @@ const syllabusData = [
             "id": "medicine__hemat___v5",
             "videoNumber": "#17",
             "title": "Approach to Hemolysis",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 3
           },
           {
             "id": "medicine__hemat___v6",
             "videoNumber": "#18",
-            "title": "Immune Mediated Hemolytic Anemia [)",
-            "durationMins": 51,
-            "durationSecs": 0
+            "title": "Immune Mediated Hemolytic Anemia",
+            "durationMins": 35,
+            "durationSecs": 45
           },
           {
             "id": "medicine__hemat___v7",
@@ -6696,29 +6690,29 @@ const syllabusData = [
             "id": "medicine__hemat___v8",
             "videoNumber": "#20",
             "title": "Hemolytic Anemia: Miscellaneous",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 43
           },
           {
             "id": "medicine__hemat___v9",
             "videoNumber": "#21",
             "title": "Myeloproliferative Neoplasms: Part 1",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 10
           },
           {
             "id": "medicine__hemat___v10",
             "videoNumber": "#22",
             "title": "Myeloproliferative Neoplasms: Part 2",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 58
           },
           {
             "id": "medicine__hemat___v11",
             "videoNumber": "#23",
             "title": "Bone Marrow Failure Syndromes",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 21
           },
           {
             "id": "medicine__hemat___v12",
@@ -6737,16 +6731,16 @@ const syllabusData = [
           {
             "id": "medicine__hemat___v14",
             "videoNumber": "#26",
-            "title": "Amyloidosis",
+            "title": "Amyloidosis in Hematology",
             "durationMins": 39,
-            "durationSecs": 0
+            "durationSecs": 21
           },
           {
             "id": "medicine__hemat___v15",
             "videoNumber": "#27",
-            "title": "Acute Leukemia",
-            "durationMins": 77,
-            "durationSecs": 0
+            "title": "Acute Leukemias",
+            "durationMins": 41,
+            "durationSecs": 56
           },
           {
             "id": "medicine__hemat___v16",
@@ -6759,267 +6753,267 @@ const syllabusData = [
             "id": "medicine__hemat___v17",
             "videoNumber": "#29",
             "title": "Chronic Lymphocytic Leukemia",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 40
           },
           {
             "id": "medicine__hemat___v18",
             "videoNumber": "#30",
             "title": "Non-Hodgkin's Lymphoma",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 2
           },
           {
             "id": "medicine__hemat___v19",
             "videoNumber": "#31",
             "title": "Hodgkin's Disease",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 6
           },
           {
             "id": "medicine__hemat___v20",
             "videoNumber": "#32",
             "title": "Plasma Cell Disorders",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 40
           },
           {
             "id": "medicine__hemat___v21",
             "videoNumber": "#33",
             "title": "Platelets: Basics",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 14
           }
         ]
       },
       {
         "name": "PULMONOLOGY",
         "modules": 18,
-        "hours": 10.8,
+        "hours": 11.5,
         "videos": [
           {
             "id": "medicine__pulmono___v1",
             "videoNumber": "#34",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Pulmonology",
+            "durationMins": 35,
+            "durationSecs": 33
           },
           {
             "id": "medicine__pulmono___v2",
             "videoNumber": "#35",
-            "title": "Respiratory Failure and Acute Respiratory Distress Syndrome",
-            "durationMins": 51,
-            "durationSecs": 0
+            "title": "Respiratory Failure",
+            "durationMins": 32,
+            "durationSecs": 46
           },
           {
             "id": "medicine__pulmono___v3",
             "videoNumber": "#36",
             "title": "Clinical Physiology of Lungs",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 37
           },
           {
             "id": "medicine__pulmono___v4",
             "videoNumber": "#37",
             "title": "Pulmonary Function Tests",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 9
           },
           {
             "id": "medicine__pulmono___v5",
             "videoNumber": "#38",
-            "title": "Asthma",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "Asthma: Diagnosis",
+            "durationMins": 32,
+            "durationSecs": 40
           },
           {
             "id": "medicine__pulmono___v6",
             "videoNumber": "#39",
-            "title": "Asthma",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "Asthma: Management",
+            "durationMins": 39,
+            "durationSecs": 46
           },
           {
             "id": "medicine__pulmono___v7",
             "videoNumber": "#40",
             "title": "Venous Thromboembolism",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 56
           },
           {
             "id": "medicine__pulmono___v8",
             "videoNumber": "#41",
             "title": "Pulmonary Hypertension",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 52
           },
           {
             "id": "medicine__pulmono___v9",
             "videoNumber": "#42",
             "title": "Bronchiectasis",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 35
           },
           {
             "id": "medicine__pulmono___v10",
             "videoNumber": "#43",
-            "title": "Occupational Health",
-            "durationMins": 44,
-            "durationSecs": 0
+            "title": "Occupational Lung Diseases",
+            "durationMins": 40,
+            "durationSecs": 58
           },
           {
             "id": "medicine__pulmono___v11",
             "videoNumber": "#44",
-            "title": "Interstitial Lung Disease",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Interstitial Lung Diseases: Part 1",
+            "durationMins": 43,
+            "durationSecs": 50
           },
           {
             "id": "medicine__pulmono___v12",
             "videoNumber": "#45",
-            "title": "Interstitial Lung Disease",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Interstitial Lung Diseases: Part 2",
+            "durationMins": 31,
+            "durationSecs": 11
           },
           {
             "id": "medicine__pulmono___v13",
             "videoNumber": "#46",
-            "title": "Sarcoidosis and Mixed Connective Tissue Disease",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Sarcoidosis",
+            "durationMins": 38,
+            "durationSecs": 52
           },
           {
             "id": "medicine__pulmono___v14",
             "videoNumber": "#47",
             "title": "Pulmonary Eosinophilia",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 51
           },
           {
             "id": "medicine__pulmono___v15",
             "videoNumber": "#48",
             "title": "Allergic Bronchopulmonary Aspergillosis",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 3
           },
           {
             "id": "medicine__pulmono___v16",
             "videoNumber": "#49",
             "title": "Hypersensitivity Pneumonitis",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 8
           },
           {
             "id": "medicine__pulmono___v17",
             "videoNumber": "#50",
             "title": "Pleural Effusion",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 58
           },
           {
             "id": "medicine__pulmono___v18",
             "videoNumber": "#51",
             "title": "Obstructive Sleep Apnea Syndrome",
-            "durationMins": 16,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 15
           }
         ]
       },
       {
         "name": "CARDIOLOGY",
         "modules": 14,
-        "hours": 11.5,
+        "hours": 10.5,
         "videos": [
           {
             "id": "medicine__cardio___v1",
             "videoNumber": "#52",
-            "title": "Approach to Bleeding Disorders",
-            "durationMins": 69,
-            "durationSecs": 0
+            "title": "Approach to Cardiovascular Diseases",
+            "durationMins": 49,
+            "durationSecs": 14
           },
           {
             "id": "medicine__cardio___v2",
             "videoNumber": "#53",
             "title": "Community Acquired Pneumonia",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 1
           },
           {
             "id": "medicine__cardio___v3",
             "videoNumber": "#54",
             "title": "Introduction to Cardiology",
-            "durationMins": 10,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 34
           },
           {
             "id": "medicine__cardio___v4",
             "videoNumber": "#55",
             "title": "Cardiac Cycle with Heart Sounds",
-            "durationMins": 76,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 3
           },
           {
             "id": "medicine__cardio___v5",
             "videoNumber": "#56",
             "title": "Added Heart Sounds",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 25
           },
           {
             "id": "medicine__cardio___v6",
             "videoNumber": "#57",
             "title": "Aortic Stenosis",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 18
           },
           {
             "id": "medicine__cardio___v7",
             "videoNumber": "#58",
             "title": "Aortic Regurgitation",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 33
           },
           {
             "id": "medicine__cardio___v8",
             "videoNumber": "#59",
             "title": "Heart Failure",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 5
           },
           {
             "id": "medicine__cardio___v9",
             "videoNumber": "#60",
             "title": "Acute Decompensated Heart Failure",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 31
           },
           {
             "id": "medicine__cardio___v10",
             "videoNumber": "#61",
             "title": "Infective Endocarditis",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 58
           },
           {
             "id": "medicine__cardio___v11",
             "videoNumber": "#62",
             "title": "Mitral Regurgitation",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 56
           },
           {
             "id": "medicine__cardio___v12",
             "videoNumber": "#63",
-            "title": "Mitral Stenosis 1}",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Mitral Stenosis",
+            "durationMins": 47,
+            "durationSecs": 49
           },
           {
             "id": "medicine__cardio___v13",
             "videoNumber": "#64",
             "title": "CCP, CT, RCM and Acute Pericarditis",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 3
           },
           {
             "id": "medicine__cardio___v14",
@@ -7039,8 +7033,8 @@ const syllabusData = [
             "id": "medicine__ecg__v1",
             "videoNumber": "#66",
             "title": "Introduction to ECG",
-            "durationMins": 83,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 10
           },
           {
             "id": "medicine__ecg__v2",
@@ -7053,28 +7047,28 @@ const syllabusData = [
             "id": "medicine__ecg__v3",
             "videoNumber": "#68",
             "title": "SA Nodal Dysfunction",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 55
           },
           {
             "id": "medicine__ecg__v4",
             "videoNumber": "#69",
-            "title": "AV blocks",
-            "durationMins": 50,
-            "durationSecs": 0
+            "title": "AV Blocks",
+            "durationMins": 63,
+            "durationSecs": 13
           },
           {
             "id": "medicine__ecg__v5",
             "videoNumber": "#70",
             "title": "Tachyarrhythmias",
-            "durationMins": 101,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 12
           },
           {
             "id": "medicine__ecg__v6",
             "videoNumber": "#71",
             "title": "Atrial Fibrillation and Flutter",
-            "durationMins": 49,
+            "durationMins": 62,
             "durationSecs": 0
           },
           {
@@ -7087,16 +7081,16 @@ const syllabusData = [
           {
             "id": "medicine__ecg__v8",
             "videoNumber": "#73",
-            "title": "WPW Syndrome | 1.3",
-            "durationMins": 15,
-            "durationSecs": 0
+            "title": "WPW Syndrome",
+            "durationMins": 70,
+            "durationSecs": 46
           },
           {
             "id": "medicine__ecg__v9",
             "videoNumber": "#74",
             "title": "Introduction to ACS",
-            "durationMins": 97,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 5
           },
           {
             "id": "medicine__ecg__v10",
@@ -7117,14 +7111,14 @@ const syllabusData = [
       {
         "name": "RHEUMATOLOGY & IMMUNOLOGY",
         "modules": 19,
-        "hours": 12.4,
+        "hours": 13.3,
         "videos": [
           {
             "id": "medicine__rheumat____immuno___v1",
             "videoNumber": "#77",
             "title": "Introduction to Rheumatology",
-            "durationMins": 9,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 29
           },
           {
             "id": "medicine__rheumat____immuno___v2",
@@ -7137,50 +7131,50 @@ const syllabusData = [
             "id": "medicine__rheumat____immuno___v3",
             "videoNumber": "#79",
             "title": "Sjogren's Syndrome",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 55
           },
           {
             "id": "medicine__rheumat____immuno___v4",
             "videoNumber": "#80",
             "title": "IgG4 Related Disease",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 36
           },
           {
             "id": "medicine__rheumat____immuno___v5",
             "videoNumber": "#81",
             "title": "SLE: Basic Approach",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 35
           },
           {
             "id": "medicine__rheumat____immuno___v6",
             "videoNumber": "#82",
             "title": "SLE: Diagnosis",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 1
           },
           {
             "id": "medicine__rheumat____immuno___v7",
             "videoNumber": "#83",
             "title": "SLE: Clinical Profile and Management",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 55
           },
           {
             "id": "medicine__rheumat____immuno___v8",
             "videoNumber": "#84",
-            "title": "Antiphospholipid Syndrome —",
-            "durationMins": 37,
-            "durationSecs": 0
+            "title": "Antiphospholipid Syndrome",
+            "durationMins": 44,
+            "durationSecs": 8
           },
           {
             "id": "medicine__rheumat____immuno___v9",
             "videoNumber": "#85",
-            "title": "Myositis and Myonecrosis",
-            "durationMins": 31,
-            "durationSecs": 0
+            "title": "Myositis and Scleroderma",
+            "durationMins": 41,
+            "durationSecs": 3
           },
           {
             "id": "medicine__rheumat____immuno___v10",
@@ -7207,64 +7201,64 @@ const syllabusData = [
             "id": "medicine__rheumat____immuno___v13",
             "videoNumber": "#89",
             "title": "Small Vessel Vasculitis",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 32
           },
           {
             "id": "medicine__rheumat____immuno___v14",
             "videoNumber": "#90",
             "title": "Henoch-Schonlein Purpura V/S Cryoglobulinemia",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 59
           },
           {
             "id": "medicine__rheumat____immuno___v15",
             "videoNumber": "#91",
             "title": "Variable Vessel Vasculitis",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 27
           },
           {
             "id": "medicine__rheumat____immuno___v16",
             "videoNumber": "#92",
             "title": "Basic Approach to Arthritis",
-            "durationMins": 30,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 28
           },
           {
             "id": "medicine__rheumat____immuno___v17",
             "videoNumber": "#93",
             "title": "Rheumatoid Arthritis",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 31
           },
           {
             "id": "medicine__rheumat____immuno___v18",
             "videoNumber": "#94",
             "title": "Spondyloarthritis",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 37
           },
           {
             "id": "medicine__rheumat____immuno___v19",
             "videoNumber": "#95",
             "title": "Crystal Arthropathies",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 36
           }
         ]
       },
       {
         "name": "NEUROLOGY",
         "modules": 29,
-        "hours": 18.6,
+        "hours": 18.7,
         "videos": [
           {
             "id": "medicine__neuro___v1",
             "videoNumber": "#96",
             "title": "Introduction to Neurology",
-            "durationMins": 11,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 18
           },
           {
             "id": "medicine__neuro___v2",
@@ -7284,113 +7278,113 @@ const syllabusData = [
             "id": "medicine__neuro___v4",
             "videoNumber": "#99",
             "title": "Praxicons",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 30
           },
           {
             "id": "medicine__neuro___v5",
             "videoNumber": "#100",
             "title": "Temporal and Occipital Lobe",
-            "durationMins": 17,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 33
           },
           {
             "id": "medicine__neuro___v6",
             "videoNumber": "#101",
             "title": "Language V/S Speech",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 41
           },
           {
             "id": "medicine__neuro___v7",
             "videoNumber": "#102",
             "title": "Memory",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 55
           },
           {
             "id": "medicine__neuro___v8",
             "videoNumber": "#103",
             "title": "Dementia: Part 1",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 32
           },
           {
             "id": "medicine__neuro___v9",
             "videoNumber": "#104",
             "title": "Dementia: Part 2",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 47
           },
           {
             "id": "medicine__neuro___v10",
             "videoNumber": "#105",
-            "title": "Parkinson's Disease",
-            "durationMins": 80,
-            "durationSecs": 0
+            "title": "Parkinson's Disease and Movement Disorders",
+            "durationMins": 33,
+            "durationSecs": 42
           },
           {
             "id": "medicine__neuro___v11",
             "videoNumber": "#106",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Seizures",
+            "durationMins": 31,
+            "durationSecs": 28
           },
           {
             "id": "medicine__neuro___v12",
             "videoNumber": "#107",
             "title": "Generalised Tonic-Clonic Seizure",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 50
           },
           {
             "id": "medicine__neuro___v13",
             "videoNumber": "#108",
             "title": "CNS Infections",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 14
           },
           {
             "id": "medicine__neuro___v14",
             "videoNumber": "#109",
             "title": "LMN Approach: Part 1",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 28
           },
           {
             "id": "medicine__neuro___v15",
             "videoNumber": "#110",
             "title": "LMN Approach: Part 2",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 19
           },
           {
             "id": "medicine__neuro___v16",
             "videoNumber": "#111",
             "title": "Inherited Neuropathies",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 11
           },
           {
             "id": "medicine__neuro___v17",
             "videoNumber": "#112",
             "title": "Guillain-Barre Syndrome",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 57
           },
           {
             "id": "medicine__neuro___v18",
             "videoNumber": "#113",
             "title": "LMN Approach: Part 3",
-            "durationMins": 36,
+            "durationMins": 46,
             "durationSecs": 0
           },
           {
             "id": "medicine__neuro___v19",
             "videoNumber": "#114",
-            "title": "Neuromuscular Disorders",
-            "durationMins": 47,
-            "durationSecs": 0
+            "title": "Neuromuscular Junction Disorders",
+            "durationMins": 42,
+            "durationSecs": 54
           },
           {
             "id": "medicine__neuro___v20",
@@ -7409,184 +7403,184 @@ const syllabusData = [
           {
             "id": "medicine__neuro___v22",
             "videoNumber": "#117",
-            "title": "Anatomy of Stomach",
-            "durationMins": 34,
+            "title": "Anatomy of Spinal Cord",
+            "durationMins": 41,
             "durationSecs": 0
           },
           {
             "id": "medicine__neuro___v23",
             "videoNumber": "#118",
             "title": "Diseases of Spinal Cord",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 41
           },
           {
             "id": "medicine__neuro___v24",
             "videoNumber": "#119",
             "title": "Multiple Sclerosis",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 46
           },
           {
             "id": "medicine__neuro___v25",
             "videoNumber": "#120",
             "title": "Vascular Anatomy of Brain",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 32
           },
           {
             "id": "medicine__neuro___v26",
             "videoNumber": "#121",
             "title": "Approach to UMN Lesion",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 3
           },
           {
             "id": "medicine__neuro___v27",
             "videoNumber": "#122",
             "title": "Approach to Stroke",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 20
           },
           {
             "id": "medicine__neuro___v28",
             "videoNumber": "#123",
             "title": "Brainstem Stroke",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 21
           },
           {
             "id": "medicine__neuro___v29",
             "videoNumber": "#124",
-            "title": "Headache",
-            "durationMins": 68,
-            "durationSecs": 0
+            "title": "Headache Syndromes",
+            "durationMins": 7,
+            "durationSecs": 25
           }
         ]
       },
       {
         "name": "NEPHROLOGY",
         "modules": 23,
-        "hours": 14.8,
+        "hours": 13.5,
         "videos": [
           {
             "id": "medicine__nephro___v1",
             "videoNumber": "#125",
             "title": "Introduction to Nephrology",
-            "durationMins": 6,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 22
           },
           {
             "id": "medicine__nephro___v2",
             "videoNumber": "#126",
-            "title": "Glomerulus: Anatomy",
-            "durationMins": 27,
-            "durationSecs": 0
+            "title": "Glomerulus: Overview",
+            "durationMins": 32,
+            "durationSecs": 37
           },
           {
             "id": "medicine__nephro___v3",
             "videoNumber": "#127",
             "title": "Gross Anatomy of Kidney",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 10
           },
           {
             "id": "medicine__nephro___v4",
             "videoNumber": "#128",
             "title": "Tubular Anatomy",
-            "durationMins": 82,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 34
           },
           {
             "id": "medicine__nephro___v5",
             "videoNumber": "#129",
             "title": "Juxtaglomerular Apparatus",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 23
           },
           {
             "id": "medicine__nephro___v6",
             "videoNumber": "#130",
             "title": "Glomerulus: Anatomy",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 25
           },
           {
             "id": "medicine__nephro___v7",
             "videoNumber": "#131",
             "title": "Renal Physiology",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 30
           },
           {
             "id": "medicine__nephro___v8",
             "videoNumber": "#132",
             "title": "Urine Analysis",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 22
           },
           {
             "id": "medicine__nephro___v9",
             "videoNumber": "#133",
-            "title": "Approach to Bleeding Disorders",
-            "durationMins": 69,
-            "durationSecs": 0
+            "title": "Approach to Hematuria",
+            "durationMins": 31,
+            "durationSecs": 27
           },
           {
             "id": "medicine__nephro___v10",
             "videoNumber": "#134",
-            "title": "Approach to Bleeding Disorders",
-            "durationMins": 69,
-            "durationSecs": 0
+            "title": "Approach to Proteinuria",
+            "durationMins": 38,
+            "durationSecs": 18
           },
           {
             "id": "medicine__nephro___v11",
             "videoNumber": "#135",
             "title": "Glomerular Disease: Patterns",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 23
           },
           {
             "id": "medicine__nephro___v12",
             "videoNumber": "#136",
             "title": "Podocytopathies",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 32
           },
           {
             "id": "medicine__nephro___v13",
             "videoNumber": "#137",
             "title": "MPGN and IgA Nephropathy",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 17
           },
           {
             "id": "medicine__nephro___v14",
             "videoNumber": "#138",
             "title": "Post Streptococcal Glomerulonephritis",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 55
           },
           {
             "id": "medicine__nephro___v15",
             "videoNumber": "#139",
-            "title": "RPGN and Pulmonary Renal Syndrome Pi",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "RPGN and Pulmonary Renal Syndrome",
+            "durationMins": 33,
+            "durationSecs": 39
           },
           {
             "id": "medicine__nephro___v16",
             "videoNumber": "#140",
             "title": "Familial Glomerular Syndromes",
-            "durationMins": 14,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 59
           },
           {
             "id": "medicine__nephro___v17",
             "videoNumber": "#141",
             "title": "Ciliopathies",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 57
           },
           {
             "id": "medicine__nephro___v18",
@@ -7599,36 +7593,36 @@ const syllabusData = [
             "id": "medicine__nephro___v19",
             "videoNumber": "#143",
             "title": "Acute Kidney Injury",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 32
           },
           {
             "id": "medicine__nephro___v20",
             "videoNumber": "#144",
             "title": "Chronic Kidney Disease",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 18
           },
           {
             "id": "medicine__nephro___v21",
             "videoNumber": "#145",
             "title": "Anemia in Chronic Kidney Disease",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 35
           },
           {
             "id": "medicine__nephro___v22",
             "videoNumber": "#146",
             "title": "CKD: Calciphylaxis and Cardiovascular Changes",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 55
           },
           {
             "id": "medicine__nephro___v23",
             "videoNumber": "#147",
             "title": "Diabetic Kidney Disease",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 36
           }
         ]
       },
@@ -7641,71 +7635,71 @@ const syllabusData = [
             "id": "medicine__acid_base_regulation__v1",
             "videoNumber": "#148",
             "title": "Introduction to Acid Base Analysis",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 55
           },
           {
             "id": "medicine__acid_base_regulation__v2",
             "videoNumber": "#149",
-            "title": "Metabolic Alkalosis",
-            "durationMins": 19,
-            "durationSecs": 0
+            "title": "Metabolic Acidosis and Alkalosis",
+            "durationMins": 38,
+            "durationSecs": 31
           },
           {
             "id": "medicine__acid_base_regulation__v3",
             "videoNumber": "#150",
-            "title": "Methodology and Interpretation of ABG Analysis Pa",
-            "durationMins": 41,
-            "durationSecs": 0
+            "title": "Methodology and Interpretation of ABG Analysis",
+            "durationMins": 47,
+            "durationSecs": 11
           },
           {
             "id": "medicine__acid_base_regulation__v4",
             "videoNumber": "#151",
             "title": "Case Scenarios on ABG",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 23
           }
         ]
       },
       {
         "name": "ENDOCRINOLOGY",
         "modules": 31,
-        "hours": 19.7,
+        "hours": 18,
         "videos": [
           {
             "id": "medicine__endocrino___v1",
             "videoNumber": "#152",
             "title": "Introduction to Endocrinology",
-            "durationMins": 14,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 36
           },
           {
             "id": "medicine__endocrino___v2",
             "videoNumber": "#153",
             "title": "Overview of Hormones",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 46
           },
           {
             "id": "medicine__endocrino___v3",
             "videoNumber": "#154",
             "title": "Physiology of Adrenal Cortex",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 55
           },
           {
             "id": "medicine__endocrino___v4",
             "videoNumber": "#155",
             "title": "Conn's Syndrome",
             "durationMins": 31,
-            "durationSecs": 0
+            "durationSecs": 48
           },
           {
             "id": "medicine__endocrino___v5",
             "videoNumber": "#156",
             "title": "Cushing's Syndrome",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 25
           },
           {
             "id": "medicine__endocrino___v6",
@@ -7725,106 +7719,106 @@ const syllabusData = [
             "id": "medicine__endocrino___v8",
             "videoNumber": "#159",
             "title": "Basics of Bone and Mineral Metabolism",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 50
           },
           {
             "id": "medicine__endocrino___v9",
             "videoNumber": "#160",
-            "title": "Calcium Metabolism Se",
-            "durationMins": 20,
-            "durationSecs": 0
+            "title": "Calcium Metabolism",
+            "durationMins": 36,
+            "durationSecs": 39
           },
           {
             "id": "medicine__endocrino___v10",
             "videoNumber": "#161",
             "title": "Hypercalcemia",
-            "durationMins": 37,
+            "durationMins": 32,
             "durationSecs": 0
           },
           {
             "id": "medicine__endocrino___v11",
             "videoNumber": "#162",
             "title": "Hypocalcemia",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 19
           },
           {
             "id": "medicine__endocrino___v12",
             "videoNumber": "#163",
             "title": "Phosphorus Metabolism",
             "durationMins": 36,
-            "durationSecs": 0
+            "durationSecs": 39
           },
           {
             "id": "medicine__endocrino___v13",
             "videoNumber": "#164",
             "title": "Magnesium Metabolism",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 26
           },
           {
             "id": "medicine__endocrino___v14",
             "videoNumber": "#165",
             "title": "Osteoporosis",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 10
           },
           {
             "id": "medicine__endocrino___v15",
             "videoNumber": "#166",
-            "title": "Approach to Bleeding Disorders",
-            "durationMins": 69,
-            "durationSecs": 0
+            "title": "Approach to Thyroid Disease",
+            "durationMins": 41,
+            "durationSecs": 37
           },
           {
             "id": "medicine__endocrino___v16",
             "videoNumber": "#167",
             "title": "Hypothyroidism",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 49
           },
           {
             "id": "medicine__endocrino___v17",
             "videoNumber": "#168",
             "title": "Thyrotoxicosis and Thyroiditis",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 52
           },
           {
             "id": "medicine__endocrino___v18",
             "videoNumber": "#169",
             "title": "Introduction to Diabetes Mellitus and Classification",
-            "durationMins": 68,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 17
           },
           {
             "id": "medicine__endocrino___v19",
             "videoNumber": "#170",
-            "title": "Insulin Physiology and Acute Complications of Diabetes Mellitus /",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "Insulin Physiology and Acute Complications of Diabetes Mellitus",
+            "durationMins": 40,
+            "durationSecs": 21
           },
           {
             "id": "medicine__endocrino___v20",
             "videoNumber": "#171",
             "title": "Management of Diabetes Mellitus: 2024 Guidelines",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 45
           },
           {
             "id": "medicine__endocrino___v21",
             "videoNumber": "#172",
             "title": "Basics of Pituitary Gland",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 34
           },
           {
             "id": "medicine__endocrino___v22",
             "videoNumber": "#173",
             "title": "Prolactin",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 10
           },
           {
             "id": "medicine__endocrino___v23",
@@ -7836,37 +7830,37 @@ const syllabusData = [
           {
             "id": "medicine__endocrino___v24",
             "videoNumber": "#175",
-            "title": "Diabetes in Pregnancy: Part 1",
-            "durationMins": 64,
-            "durationSecs": 0
+            "title": "Diabetes Insipidus",
+            "durationMins": 29,
+            "durationSecs": 6
           },
           {
             "id": "medicine__endocrino___v25",
             "videoNumber": "#176",
             "title": "Hyponatremia",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 25
           },
           {
             "id": "medicine__endocrino___v26",
             "videoNumber": "#177",
             "title": "Polyuria",
-            "durationMins": 23,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 34
           },
           {
             "id": "medicine__endocrino___v27",
             "videoNumber": "#178",
             "title": "Potassium Metabolism",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 11
           },
           {
             "id": "medicine__endocrino___v28",
             "videoNumber": "#179",
             "title": "Management of Hypertension: 2023 Guidelines",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 13
           },
           {
             "id": "medicine__endocrino___v29",
@@ -7894,28 +7888,28 @@ const syllabusData = [
       {
         "name": "HEPATOLOGY",
         "modules": 17,
-        "hours": 8.1,
+        "hours": 8.5,
         "videos": [
           {
             "id": "medicine__hepatology__v1",
             "videoNumber": "#183",
-            "title": "Introduction to Upper Limb []",
-            "durationMins": 12,
-            "durationSecs": 0
+            "title": "Introduction to Hepatology",
+            "durationMins": 25,
+            "durationSecs": 48
           },
           {
             "id": "medicine__hepatology__v2",
             "videoNumber": "#184",
             "title": "Basics of Development and Anatomy of Liver",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 5
           },
           {
             "id": "medicine__hepatology__v3",
             "videoNumber": "#185",
-            "title": "Liver",
-            "durationMins": 26,
-            "durationSecs": 0
+            "title": "Liver Function Tests",
+            "durationMins": 32,
+            "durationSecs": 4
           },
           {
             "id": "medicine__hepatology__v4",
@@ -7934,51 +7928,51 @@ const syllabusData = [
           {
             "id": "medicine__hepatology__v6",
             "videoNumber": "#188",
-            "title": "Chronic Hepatitis: Cirrhosis",
-            "durationMins": 22,
-            "durationSecs": 0
+            "title": "Chronic Hepatitis",
+            "durationMins": 26,
+            "durationSecs": 13
           },
           {
             "id": "medicine__hepatology__v7",
             "videoNumber": "#189",
             "title": "Portal Hypertension",
-            "durationMins": 24,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 7
           },
           {
             "id": "medicine__hepatology__v8",
             "videoNumber": "#190",
             "title": "Ascites and Hepatorenal Syndrome",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 29,
+            "durationSecs": 38
           },
           {
             "id": "medicine__hepatology__v9",
             "videoNumber": "#191",
             "title": "Hepatic Encephalopathy",
-            "durationMins": 17,
-            "durationSecs": 0
+            "durationMins": 26,
+            "durationSecs": 6
           },
           {
             "id": "medicine__hepatology__v10",
             "videoNumber": "#192",
             "title": "Metabolic Diseases of Liver",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 25,
+            "durationSecs": 42
           },
           {
             "id": "medicine__hepatology__v11",
             "videoNumber": "#193",
             "title": "Biliary Cirrhosis",
-            "durationMins": 16,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 9
           },
           {
             "id": "medicine__hepatology__v12",
             "videoNumber": "#194",
             "title": "Autoimmune Hepatitis",
-            "durationMins": 18,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 46
           },
           {
             "id": "medicine__hepatology__v13",
@@ -7997,51 +7991,51 @@ const syllabusData = [
           {
             "id": "medicine__hepatology__v15",
             "videoNumber": "#197",
-            "title": "Liver",
+            "title": "Liver Tumors",
             "durationMins": 26,
-            "durationSecs": 0
+            "durationSecs": 32
           },
           {
             "id": "medicine__hepatology__v16",
             "videoNumber": "#198",
             "title": "Hepatitis B Virus: Part 1",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 6
           },
           {
             "id": "medicine__hepatology__v17",
             "videoNumber": "#199",
             "title": "Hepatitis B Virus: Part 2",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 68,
+            "durationSecs": 25
           }
         ]
       },
       {
         "name": "INFECTIOUS DISEASES",
         "modules": 3,
-        "hours": 2.4,
+        "hours": 2.8,
         "videos": [
           {
             "id": "medicine__infectious_diseases__v1",
             "videoNumber": "#200",
             "title": "Infective Endocarditis",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 6
           },
           {
             "id": "medicine__infectious_diseases__v2",
             "videoNumber": "#201",
             "title": "Tropical Infections: Synopsis",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 39
           },
           {
             "id": "medicine__infectious_diseases__v3",
             "videoNumber": "#202",
             "title": "HIV",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 15
           }
         ]
       }
@@ -8060,323 +8054,323 @@ const syllabusData = [
             "id": "surgery__gen__surgery__v1",
             "videoNumber": "#01",
             "title": "How to Approach Surgery Edition 8",
-            "durationMins": 7,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 20
           },
           {
             "id": "surgery__gen__surgery__v2",
             "videoNumber": "#02",
             "title": "Patient Safety, OT Zones and Surgery Positions",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 42
           },
           {
             "id": "surgery__gen__surgery__v3",
             "videoNumber": "#03",
             "title": "Surgical Blades and Energy Sources",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 14
           },
           {
             "id": "surgery__gen__surgery__v4",
             "videoNumber": "#04",
             "title": "Surgical Drains, Knots and Sutures",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 41
           },
           {
             "id": "surgery__gen__surgery__v5",
             "videoNumber": "#05",
             "title": "Post-operative Fever and Wound Infection",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 53
           },
           {
             "id": "surgery__gen__surgery__v6",
             "videoNumber": "#06",
             "title": "Day Care Surgery",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 16
           },
           {
             "id": "surgery__gen__surgery__v7",
             "videoNumber": "#07",
-            "title": "Surgical Nutrition 1}",
-            "durationMins": 50,
+            "title": "Surgical Nutrition",
+            "durationMins": 45,
             "durationSecs": 0
           },
           {
             "id": "surgery__gen__surgery__v8",
             "videoNumber": "#08",
             "title": "Shock: Part 1",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 42
           },
           {
             "id": "surgery__gen__surgery__v9",
             "videoNumber": "#09",
             "title": "Shock: Part 2",
             "durationMins": 37,
-            "durationSecs": 0
+            "durationSecs": 16
           },
           {
             "id": "surgery__gen__surgery__v10",
             "videoNumber": "#10",
             "title": "General Surgery: Clinical Scenarios",
-            "durationMins": 16,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 56
           }
         ]
       },
       {
         "name": "BREAST",
         "modules": 6,
-        "hours": 4.6,
+        "hours": 5.1,
         "videos": [
           {
             "id": "surgery__breast__v1",
             "videoNumber": "#11",
             "title": "Breast: Part 1",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 4
           },
           {
             "id": "surgery__breast__v2",
             "videoNumber": "#12",
             "title": "Breast: Part 2",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 15
           },
           {
             "id": "surgery__breast__v3",
             "videoNumber": "#13",
             "title": "Breast: Part 3",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 55
           },
           {
             "id": "surgery__breast__v4",
             "videoNumber": "#14",
             "title": "Breast: Part 4",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 23
           },
           {
             "id": "surgery__breast__v5",
             "videoNumber": "#15",
-            "title": "Breast",
-            "durationMins": 14,
-            "durationSecs": 0
+            "title": "Breast Reconstructive Surgery",
+            "durationMins": 44,
+            "durationSecs": 3
           },
           {
             "id": "surgery__breast__v6",
             "videoNumber": "#16",
-            "title": "Clinical Case Discussion: Abdominal lump",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Clinical Case Discussion: Breast Lump",
+            "durationMins": 79,
+            "durationSecs": 20
           }
         ]
       },
       {
         "name": "ENDOCRINE SYSTEM",
         "modules": 6,
-        "hours": 6,
+        "hours": 5,
         "videos": [
           {
             "id": "surgery__endo___v1",
             "videoNumber": "#17",
             "title": "Esophagus: Part 1",
-            "durationMins": 82,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 7
           },
           {
             "id": "surgery__endo___v2",
             "videoNumber": "#18",
             "title": "Esophagus: Part 2",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 10
           },
           {
             "id": "surgery__endo___v3",
             "videoNumber": "#19",
             "title": "Thyroid: Part 1",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 25
           },
           {
             "id": "surgery__endo___v4",
             "videoNumber": "#20",
             "title": "Thyroid: Part 2",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 14
           },
           {
             "id": "surgery__endo___v5",
             "videoNumber": "#21",
             "title": "Thyroid: Part 3",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 8
           },
           {
             "id": "surgery__endo___v6",
             "videoNumber": "#22",
-            "title": "Clinical Case Discussion: Neck swelling",
-            "durationMins": 16,
-            "durationSecs": 0
+            "title": "Clinical Case Discussion: Neck Swelling",
+            "durationMins": 55,
+            "durationSecs": 56
           }
         ]
       },
       {
         "name": "GI & ABDOMINAL SURGERY",
         "modules": 24,
-        "hours": 20.3,
+        "hours": 22.1,
         "videos": [
           {
             "id": "surgery__gi___abd__surgery__v1",
             "videoNumber": "#23",
             "title": "Esophagus: Part 3",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 15
           },
           {
             "id": "surgery__gi___abd__surgery__v2",
             "videoNumber": "#24",
             "title": "Stomach: Part 1",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 56
           },
           {
             "id": "surgery__gi___abd__surgery__v3",
             "videoNumber": "#25",
             "title": "Stomach: Part 2",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 8
           },
           {
             "id": "surgery__gi___abd__surgery__v4",
             "videoNumber": "#26",
             "title": "Stomach: Part 3",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 23
           },
           {
             "id": "surgery__gi___abd__surgery__v5",
             "videoNumber": "#27",
             "title": "Upper GI Hemorrhage",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 29
           },
           {
             "id": "surgery__gi___abd__surgery__v6",
             "videoNumber": "#28",
             "title": "Bariatric Surgery",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 65,
+            "durationSecs": 17
           },
           {
             "id": "surgery__gi___abd__surgery__v7",
             "videoNumber": "#29",
             "title": "Bowel Obstruction: Part 1",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 18
           },
           {
             "id": "surgery__gi___abd__surgery__v8",
             "videoNumber": "#30",
             "title": "Bowel Obstruction: Part 2",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 28
           },
           {
             "id": "surgery__gi___abd__surgery__v9",
             "videoNumber": "#31",
             "title": "Benign Conditions of Small and Large Bowel",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 24
           },
           {
             "id": "surgery__gi___abd__surgery__v10",
             "videoNumber": "#32",
             "title": "Appendix",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 54
           },
           {
             "id": "surgery__gi___abd__surgery__v11",
             "videoNumber": "#33",
-            "title": "Colorectal Polyps and Cancer. Part 1",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Colorectal Polyps and Cancer: Part 1",
+            "durationMins": 60,
+            "durationSecs": 37
           },
           {
             "id": "surgery__gi___abd__surgery__v12",
             "videoNumber": "#34",
-            "title": "Colorectal Polyps and Cancer. Part 1",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Colorectal Polyps and Cancer: Part 2",
+            "durationMins": 58,
+            "durationSecs": 3
           },
           {
             "id": "surgery__gi___abd__surgery__v13",
             "videoNumber": "#35",
             "title": "Rectum and Anal Canal",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 40
           },
           {
             "id": "surgery__gi___abd__surgery__v14",
             "videoNumber": "#36",
-            "title": "Liver",
-            "durationMins": 26,
-            "durationSecs": 0
+            "title": "Liver: Part 1",
+            "durationMins": 51,
+            "durationSecs": 34
           },
           {
             "id": "surgery__gi___abd__surgery__v15",
             "videoNumber": "#37",
-            "title": "Liver",
-            "durationMins": 26,
-            "durationSecs": 0
+            "title": "Liver: Part 2",
+            "durationMins": 64,
+            "durationSecs": 2
           },
           {
             "id": "surgery__gi___abd__surgery__v16",
             "videoNumber": "#38",
             "title": "Spleen",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 9
           },
           {
             "id": "surgery__gi___abd__surgery__v17",
             "videoNumber": "#39",
             "title": "Gall Bladder and Bile Ducts: Part 1",
-            "durationMins": 74,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 37
           },
           {
             "id": "surgery__gi___abd__surgery__v18",
             "videoNumber": "#40",
             "title": "Gall Bladder and Bile Ducts: Part 2",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 9
           },
           {
             "id": "surgery__gi___abd__surgery__v19",
             "videoNumber": "#41",
             "title": "Benign Pancreatic Conditions",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 3
           },
           {
             "id": "surgery__gi___abd__surgery__v20",
             "videoNumber": "#42",
             "title": "Pancreatic Tumors",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 36
           },
           {
             "id": "surgery__gi___abd__surgery__v21",
             "videoNumber": "#43",
-            "title": "Clinical Case Discussion: Abdominal lump",
-            "durationMins": 30,
-            "durationSecs": 0
+            "title": "Clinical Case Discussion: Abdominal Lump",
+            "durationMins": 56,
+            "durationSecs": 51
           },
           {
             "id": "surgery__gi___abd__surgery__v22",
@@ -8396,8 +8390,8 @@ const syllabusData = [
             "id": "surgery__gi___abd__surgery__v24",
             "videoNumber": "#46",
             "title": "GIT: Clinical Scenarios",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 20,
+            "durationSecs": 7
           }
         ]
       },
@@ -8410,106 +8404,106 @@ const syllabusData = [
             "id": "surgery__urology__v1",
             "videoNumber": "#47",
             "title": "Testicular Disorders: Part 1",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 46
           },
           {
             "id": "surgery__urology__v2",
             "videoNumber": "#48",
             "title": "Testicular Disorders: Part 2",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 2
           },
           {
             "id": "surgery__urology__v3",
             "videoNumber": "#49",
-            "title": "Clinical Case Discussion: Scrotal swelling",
-            "durationMins": 10,
-            "durationSecs": 0
+            "title": "Clinical Case Discussion: Scrotal Swelling",
+            "durationMins": 46,
+            "durationSecs": 35
           },
           {
             "id": "surgery__urology__v4",
             "videoNumber": "#50",
-            "title": "Urethral and Penile Disorders /",
-            "durationMins": 53,
-            "durationSecs": 0
+            "title": "Urethral and Penile Disorders",
+            "durationMins": 38,
+            "durationSecs": 1
           },
           {
             "id": "surgery__urology__v5",
             "videoNumber": "#51",
             "title": "Kidney: Part 1",
-            "durationMins": 76,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 17
           },
           {
             "id": "surgery__urology__v6",
             "videoNumber": "#52",
             "title": "Kidney: Part 2",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 40
           },
           {
             "id": "surgery__urology__v7",
             "videoNumber": "#53",
             "title": "Bladder",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 58
           },
           {
             "id": "surgery__urology__v8",
             "videoNumber": "#54",
             "title": "Prostate: Part 1",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 3
           },
           {
             "id": "surgery__urology__v9",
             "videoNumber": "#55",
             "title": "Prostate: Part 2",
             "durationMins": 51,
-            "durationSecs": 0
+            "durationSecs": 10
           },
           {
             "id": "surgery__urology__v10",
             "videoNumber": "#56",
             "title": "Urology: Clinical Scenarios",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 28
           }
         ]
       },
       {
         "name": "SPECIALTY SURGERY",
         "modules": 5,
-        "hours": 3.8,
+        "hours": 3.9,
         "videos": [
           {
             "id": "surgery__speciality_surgery__v1",
             "videoNumber": "#57",
             "title": "Minimally Invasive Surgery",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 33
           },
           {
             "id": "surgery__speciality_surgery__v2",
             "videoNumber": "#58",
             "title": "Transplant Surgery",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 17
           },
           {
             "id": "surgery__speciality_surgery__v3",
             "videoNumber": "#59",
             "title": "Plastic Surgery: Part 1",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 18
           },
           {
             "id": "surgery__speciality_surgery__v4",
             "videoNumber": "#60",
             "title": "Plastic Surgery: Part 2",
             "durationMins": 41,
-            "durationSecs": 0
+            "durationSecs": 47
           },
           {
             "id": "surgery__speciality_surgery__v5",
@@ -8523,7 +8517,7 @@ const syllabusData = [
       {
         "name": "TRAUMA & CRITICAL CARE",
         "modules": 6,
-        "hours": 5.5,
+        "hours": 6,
         "videos": [
           {
             "id": "surgery__trauma__v1",
@@ -8536,15 +8530,15 @@ const syllabusData = [
             "id": "surgery__trauma__v2",
             "videoNumber": "#63",
             "title": "Abdominal Trauma",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 34
           },
           {
             "id": "surgery__trauma__v3",
             "videoNumber": "#64",
             "title": "Head Trauma",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 39
           },
           {
             "id": "surgery__trauma__v4",
@@ -8557,15 +8551,15 @@ const syllabusData = [
             "id": "surgery__trauma__v5",
             "videoNumber": "#66",
             "title": "Thermal Injuries",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 14
           },
           {
             "id": "surgery__trauma__v6",
             "videoNumber": "#67",
             "title": "Trauma: Clinical Scenarios",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 54
           }
         ]
       },
@@ -8578,43 +8572,43 @@ const syllabusData = [
             "id": "surgery__hernia__v1",
             "videoNumber": "#68",
             "title": "Clinical Case Discussion: Inguinoscrotal Swelling",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 57
           },
           {
             "id": "surgery__hernia__v2",
             "videoNumber": "#69",
             "title": "Hernia: Part 1",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 24
           },
           {
             "id": "surgery__hernia__v3",
             "videoNumber": "#70",
             "title": "Hernia: Part 2",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 39
           }
         ]
       },
       {
         "name": "VASCULAR SURGERY",
         "modules": 6,
-        "hours": 4,
+        "hours": 4.1,
         "videos": [
           {
             "id": "surgery__vascular_surgery__v1",
             "videoNumber": "#71",
             "title": "Arterial System: Part 1",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 2
           },
           {
             "id": "surgery__vascular_surgery__v2",
             "videoNumber": "#72",
             "title": "Arterial System: Part 2",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 42
           },
           {
             "id": "surgery__vascular_surgery__v3",
@@ -8627,8 +8621,8 @@ const syllabusData = [
             "id": "surgery__vascular_surgery__v4",
             "videoNumber": "#74",
             "title": "Lymphatic System",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 18
           },
           {
             "id": "surgery__vascular_surgery__v5",
@@ -8641,8 +8635,8 @@ const syllabusData = [
             "id": "surgery__vascular_surgery__v6",
             "videoNumber": "#76",
             "title": "Vascular Surgery: Clinical Scenarios",
-            "durationMins": 15,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 7
           }
         ]
       },
@@ -8655,64 +8649,64 @@ const syllabusData = [
             "id": "surgery__faciomaxillary_surgery__v1",
             "videoNumber": "#77",
             "title": "Oral Cancers",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 42
           },
           {
             "id": "surgery__faciomaxillary_surgery__v2",
             "videoNumber": "#78",
-            "title": "Clinical Case Discussion: Oral lesion",
-            "durationMins": 13,
-            "durationSecs": 0
+            "title": "Clinical Case Discussion: Oral Lesion",
+            "durationMins": 58,
+            "durationSecs": 28
           },
           {
             "id": "surgery__faciomaxillary_surgery__v3",
             "videoNumber": "#79",
             "title": "Salivary Glands",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 50
           }
         ]
       },
       {
         "name": "MISCELLANEOUS",
         "modules": 5,
-        "hours": 2.9,
+        "hours": 3,
         "videos": [
           {
             "id": "surgery__misc___v1",
             "videoNumber": "#80",
             "title": "Skin Tumors and Soft Tissue Sarcomas",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 9
           },
           {
             "id": "surgery__misc___v2",
             "videoNumber": "#81",
             "title": "Thorax and Mediastinum",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 44
           },
           {
             "id": "surgery__misc___v3",
             "videoNumber": "#82",
             "title": "Common Surgical Swellings",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 32,
+            "durationSecs": 51
           },
           {
             "id": "surgery__misc___v4",
             "videoNumber": "#83",
             "title": "Common Ulcers",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 49
           },
           {
             "id": "surgery__misc___v5",
             "videoNumber": "#84",
             "title": "Surgical Instruments",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 24,
+            "durationSecs": 27
           }
         ]
       }
@@ -8725,98 +8719,98 @@ const syllabusData = [
       {
         "name": "ORTHOPEDICS & TRAUMATOLOGY",
         "modules": 25,
-        "hours": 19,
+        "hours": 21,
         "videos": [
           {
             "id": "orthopaedics__orthopaedics__v1",
             "videoNumber": "#01",
             "title": "How to Approach Orthopaedics Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 14
           },
           {
             "id": "orthopaedics__orthopaedics__v2",
             "videoNumber": "#02",
             "title": "Basic Anatomy and Physiology of Bone",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 37
           },
           {
             "id": "orthopaedics__orthopaedics__v3",
             "videoNumber": "#03",
             "title": "Basic Terminology of Fracture and Healing",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 1
           },
           {
             "id": "orthopaedics__orthopaedics__v4",
             "videoNumber": "#04",
-            "title": "Open Fracture, Amputations and Polytrauma",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Open Fracture, Amputation and Polytrauma",
+            "durationMins": 51,
+            "durationSecs": 49
           },
           {
             "id": "orthopaedics__orthopaedics__v5",
             "videoNumber": "#05",
             "title": "Metabolic Disorders of Bone",
-            "durationMins": 78,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 39
           },
           {
             "id": "orthopaedics__orthopaedics__v6",
             "videoNumber": "#06",
             "title": "Upper Limb Trauma: Clavicle and Shoulder",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 24
           },
           {
             "id": "orthopaedics__orthopaedics__v7",
             "videoNumber": "#07",
-            "title": "Upper Limb Trauma: Clavicle and Shoulder",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "Upper Limb Trauma: Arm and Elbow",
+            "durationMins": 53,
+            "durationSecs": 9
           },
           {
             "id": "orthopaedics__orthopaedics__v8",
             "videoNumber": "#08",
             "title": "Upper Limb Trauma: Forearm, Wrist and Hand",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 20
           },
           {
             "id": "orthopaedics__orthopaedics__v9",
             "videoNumber": "#09",
-            "title": "Lower Limb Trauma: Pelvis and Tests",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Lower Limb Trauma: Pelvis and Hip",
+            "durationMins": 53,
+            "durationSecs": 40
           },
           {
             "id": "orthopaedics__orthopaedics__v10",
             "videoNumber": "#10",
             "title": "Lower Limb Trauma: Femur, Knee, Leg and Foot",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 23
           },
           {
             "id": "orthopaedics__orthopaedics__v11",
             "videoNumber": "#11",
-            "title": "Lower Limb Trauma: Pelvis and Tests",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Lower Limb Trauma: Foot and Ankle",
+            "durationMins": 52,
+            "durationSecs": 39
           },
           {
             "id": "orthopaedics__orthopaedics__v12",
             "videoNumber": "#12",
             "title": "Nerve Injuries: Part 1",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 54
           },
           {
             "id": "orthopaedics__orthopaedics__v13",
             "videoNumber": "#13",
-            "title": "Nerve Injuries: Part 1",
-            "durationMins": 45,
-            "durationSecs": 0
+            "title": "Nerve Injuries: Part 2",
+            "durationMins": 55,
+            "durationSecs": 40
           },
           {
             "id": "orthopaedics__orthopaedics__v14",
@@ -8829,57 +8823,57 @@ const syllabusData = [
             "id": "orthopaedics__orthopaedics__v15",
             "videoNumber": "#15",
             "title": "Orthopaedic Oncology: Part 1",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 22
           },
           {
             "id": "orthopaedics__orthopaedics__v16",
             "videoNumber": "#16",
             "title": "Orthopaedic Oncology: Part 2",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 25
           },
           {
             "id": "orthopaedics__orthopaedics__v17",
             "videoNumber": "#17",
-            "title": "Infection of Bone and Joints.",
-            "durationMins": 73,
-            "durationSecs": 0
+            "title": "Infection of Bone and Joints",
+            "durationMins": 57,
+            "durationSecs": 23
           },
           {
             "id": "orthopaedics__orthopaedics__v18",
             "videoNumber": "#18",
             "title": "Tuberculosis of Bone and Joints",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 47
           },
           {
             "id": "orthopaedics__orthopaedics__v19",
             "videoNumber": "#19",
             "title": "Paediatric Orthopaedics: Trauma, Neck and Upper Limb",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 5
           },
           {
             "id": "orthopaedics__orthopaedics__v20",
             "videoNumber": "#20",
             "title": "Paediatric Orthopaedics: Hip",
-            "durationMins": 39,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 42
           },
           {
             "id": "orthopaedics__orthopaedics__v21",
             "videoNumber": "#21",
-            "title": "Paediatric Hearing Assessment",
-            "durationMins": 29,
-            "durationSecs": 0
+            "title": "Paediatric Orthopaedics: Knee and Foot",
+            "durationMins": 48,
+            "durationSecs": 42
           },
           {
             "id": "orthopaedics__orthopaedics__v22",
             "videoNumber": "#22",
             "title": "Spine: General and Trauma",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 57
           },
           {
             "id": "orthopaedics__orthopaedics__v23",
@@ -8892,14 +8886,14 @@ const syllabusData = [
             "id": "orthopaedics__orthopaedics__v24",
             "videoNumber": "#24",
             "title": "Joint Disorders",
-            "durationMins": 57,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 25
           },
           {
             "id": "orthopaedics__orthopaedics__v25",
             "videoNumber": "#25",
-            "title": "Orthopaedic Oncology: Part 1",
-            "durationMins": 47,
+            "title": "Orthopaedics: Instruments and Implants",
+            "durationMins": 3,
             "durationSecs": 0
           }
         ]
@@ -8913,98 +8907,98 @@ const syllabusData = [
       {
         "name": "NEONATOLOGY",
         "modules": 8,
-        "hours": 6.2,
+        "hours": 6,
         "videos": [
           {
             "id": "paediatrics__neonatology__v1",
             "videoNumber": "#01",
             "title": "How to Approach Paediatrics Edition 8",
-            "durationMins": 3,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 44
           },
           {
             "id": "paediatrics__neonatology__v2",
             "videoNumber": "#02",
             "title": "Normal Newborn",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 37
           },
           {
             "id": "paediatrics__neonatology__v3",
             "videoNumber": "#03",
-            "title": "Neonatal Reflexes, HIE and Neonatal Seizures",
-            "durationMins": 56,
-            "durationSecs": 0
+            "title": "Neonatal Resuscitation",
+            "durationMins": 45,
+            "durationSecs": 39
           },
           {
             "id": "paediatrics__neonatology__v4",
             "videoNumber": "#04",
-            "title": "Necrotizing Enterocolitis and Neonatal Sepsis [1",
-            "durationMins": 45,
-            "durationSecs": 0
+            "title": "Necrotizing Enterocolitis and Neonatal Sepsis",
+            "durationMins": 41,
+            "durationSecs": 39
           },
           {
             "id": "paediatrics__neonatology__v5",
             "videoNumber": "#05",
             "title": "Respiratory Distress in Newborn",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 52,
+            "durationSecs": 34
           },
           {
             "id": "paediatrics__neonatology__v6",
             "videoNumber": "#06",
-            "title": "Neonatal Jaundice [J",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Neonatal Jaundice",
+            "durationMins": 53,
+            "durationSecs": 25
           },
           {
             "id": "paediatrics__neonatology__v7",
             "videoNumber": "#07",
-            "title": "Neonatal Hypothermia and Neonatal Hypoglycemia [4 1.3",
-            "durationMins": 41,
-            "durationSecs": 0
+            "title": "Neonatal Hypothermia and Neonatal Hypoglycemia",
+            "durationMins": 44,
+            "durationSecs": 55
           },
           {
             "id": "paediatrics__neonatology__v8",
             "videoNumber": "#08",
             "title": "Neonatal Reflexes, HIE and Neonatal Seizures",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 33,
+            "durationSecs": 27
           }
         ]
       },
       {
         "name": "GROWTH & DEVELOPMENT",
         "modules": 6,
-        "hours": 3.3,
+        "hours": 3.8,
         "videos": [
           {
             "id": "paediatrics__growth___dev___v1",
             "videoNumber": "#09",
-            "title": "Normal Growth [4",
-            "durationMins": 55,
-            "durationSecs": 0
+            "title": "Normal Growth",
+            "durationMins": 36,
+            "durationSecs": 4
           },
           {
             "id": "paediatrics__growth___dev___v2",
             "videoNumber": "#10",
-            "title": "Abnormalities of Head Size and Shape [4",
+            "title": "Abnormalities of Head Size and Shape",
             "durationMins": 37,
-            "durationSecs": 0
+            "durationSecs": 33
           },
           {
             "id": "paediatrics__growth___dev___v3",
             "videoNumber": "#11",
-            "title": "Development of Neural Tube",
-            "durationMins": 21,
-            "durationSecs": 0
+            "title": "Developmental Milestones",
+            "durationMins": 32,
+            "durationSecs": 2
           },
           {
             "id": "paediatrics__growth___dev___v4",
             "videoNumber": "#12",
-            "title": "Disorders of development",
-            "durationMins": 18,
-            "durationSecs": 0
+            "title": "Disorders of Development",
+            "durationMins": 31,
+            "durationSecs": 56
           },
           {
             "id": "paediatrics__growth___dev___v5",
@@ -9016,37 +9010,37 @@ const syllabusData = [
           {
             "id": "paediatrics__growth___dev___v6",
             "videoNumber": "#14",
-            "title": "Development of Neural Tube",
-            "durationMins": 21,
-            "durationSecs": 0
+            "title": "Developmental Delay",
+            "durationMins": 47,
+            "durationSecs": 2
           }
         ]
       },
       {
         "name": "NUTRITION",
         "modules": 4,
-        "hours": 2.3,
+        "hours": 2.5,
         "videos": [
           {
             "id": "paediatrics__nutrition__v1",
             "videoNumber": "#15",
             "title": "Breastfeeding",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 8
           },
           {
             "id": "paediatrics__nutrition__v2",
             "videoNumber": "#16",
             "title": "Malnutrition",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 7
           },
           {
             "id": "paediatrics__nutrition__v3",
             "videoNumber": "#17",
             "title": "Obesity",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 39
           },
           {
             "id": "paediatrics__nutrition__v4",
@@ -9060,13 +9054,13 @@ const syllabusData = [
       {
         "name": "GENETIC DISORDERS",
         "modules": 1,
-        "hours": 0.6,
+        "hours": 1.1,
         "videos": [
           {
             "id": "paediatrics__genetic_disorders__v1",
             "videoNumber": "#19",
-            "title": "Genetic Disorders: Diagnosis",
-            "durationMins": 36,
+            "title": "Genetic Disorders in Children",
+            "durationMins": 66,
             "durationSecs": 0
           }
         ]
@@ -9080,57 +9074,57 @@ const syllabusData = [
             "id": "paediatrics__childhood_infec___v1",
             "videoNumber": "#20",
             "title": "Childhood Infections",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 23
           },
           {
             "id": "paediatrics__childhood_infec___v2",
             "videoNumber": "#21",
             "title": "TORCH Infections",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 35,
+            "durationSecs": 50
           },
           {
             "id": "paediatrics__childhood_infec___v3",
             "videoNumber": "#22",
-            "title": "COVID-19 in children",
-            "durationMins": 28,
-            "durationSecs": 0
+            "title": "COVID-19 in Children",
+            "durationMins": 51,
+            "durationSecs": 47
           }
         ]
       },
       {
         "name": "GI",
         "modules": 4,
-        "hours": 3.6,
+        "hours": 3.1,
         "videos": [
           {
             "id": "paediatrics__gi__v1",
             "videoNumber": "#23",
             "title": "Disorders of Esophagus in Children",
-            "durationMins": 25,
-            "durationSecs": 0
+            "durationMins": 37,
+            "durationSecs": 13
           },
           {
             "id": "paediatrics__gi__v2",
             "videoNumber": "#24",
             "title": "Diarrheal Disorders in Children",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 24
           },
           {
             "id": "paediatrics__gi__v3",
             "videoNumber": "#25",
             "title": "Disorders of Liver in Children",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 21
           },
           {
             "id": "paediatrics__gi__v4",
             "videoNumber": "#26",
-            "title": "Abdominal Trauma",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Abdominal Emergencies in Children",
+            "durationMins": 61,
+            "durationSecs": 2
           }
         ]
       },
@@ -9143,43 +9137,43 @@ const syllabusData = [
             "id": "paediatrics__respi___v1",
             "videoNumber": "#27",
             "title": "Airway Malformations and Foreign Bodies",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 43
           },
           {
             "id": "paediatrics__respi___v2",
             "videoNumber": "#28",
             "title": "Asthma",
-            "durationMins": 36,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 26
           },
           {
             "id": "paediatrics__respi___v3",
             "videoNumber": "#29",
             "title": "Respiratory Infections",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 44
           },
           {
             "id": "paediatrics__respi___v4",
             "videoNumber": "#30",
             "title": "Cystic Fibrosis",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 23,
+            "durationSecs": 7
           }
         ]
       },
       {
         "name": "CARDIOVASCULAR SYSTEM",
         "modules": 4,
-        "hours": 3.2,
+        "hours": 3.1,
         "videos": [
           {
             "id": "paediatrics__cvs__v1",
             "videoNumber": "#31",
             "title": "Fetal Circulation and Introduction to Congenital Heart Diseases",
-            "durationMins": 29,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 27
           },
           {
             "id": "paediatrics__cvs__v2",
@@ -9192,8 +9186,8 @@ const syllabusData = [
             "id": "paediatrics__cvs__v3",
             "videoNumber": "#33",
             "title": "Cyanotic Congenital Heart Defects",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 41,
+            "durationSecs": 39
           },
           {
             "id": "paediatrics__cvs__v4",
@@ -9207,42 +9201,42 @@ const syllabusData = [
       {
         "name": "GU",
         "modules": 5,
-        "hours": 3.7,
+        "hours": 3.3,
         "videos": [
           {
             "id": "paediatrics__gu__v1",
             "videoNumber": "#35",
-            "title": "Urinary Tract Infections",
-            "durationMins": 61,
-            "durationSecs": 0
+            "title": "Urinary Tract Infection in Children",
+            "durationMins": 31,
+            "durationSecs": 58
           },
           {
             "id": "paediatrics__gu__v2",
             "videoNumber": "#36",
             "title": "Nephrotic and Nephritic Syndrome",
-            "durationMins": 49,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 20
           },
           {
             "id": "paediatrics__gu__v3",
             "videoNumber": "#37",
             "title": "Inherited Tubular Disorders",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 45
           },
           {
             "id": "paediatrics__gu__v4",
             "videoNumber": "#38",
             "title": "Acute Kidney Injury and Chronic Kidney Disease",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 47
           },
           {
             "id": "paediatrics__gu__v5",
             "videoNumber": "#39",
-            "title": "VUR and UTI Management guidelines",
-            "durationMins": 36,
-            "durationSecs": 0
+            "title": "VUR and UTI Management Guidelines",
+            "durationMins": 56,
+            "durationSecs": 10
           }
         ]
       },
@@ -9255,29 +9249,29 @@ const syllabusData = [
             "id": "paediatrics__nervous__v1",
             "videoNumber": "#40",
             "title": "Congenital Anomalies and Hydrocephalus",
-            "durationMins": 64,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 40
           },
           {
             "id": "paediatrics__nervous__v2",
             "videoNumber": "#41",
             "title": "Seizure Disorders",
-            "durationMins": 48,
+            "durationMins": 52,
             "durationSecs": 0
           },
           {
             "id": "paediatrics__nervous__v3",
             "videoNumber": "#42",
-            "title": "Cerebral Palsy and CNS Infections",
-            "durationMins": 58,
-            "durationSecs": 0
+            "title": "Cerebral Palsy",
+            "durationMins": 64,
+            "durationSecs": 14
           },
           {
             "id": "paediatrics__nervous__v4",
             "videoNumber": "#43",
             "title": "Neuromuscular Disorders",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 6
           }
         ]
       },
@@ -9290,50 +9284,50 @@ const syllabusData = [
             "id": "paediatrics__endocrine__v1",
             "videoNumber": "#44",
             "title": "Growth Hormone Deficiency and Hypothyroidism",
-            "durationMins": 42,
-            "durationSecs": 0
+            "durationMins": 34,
+            "durationSecs": 25
           },
           {
             "id": "paediatrics__endocrine__v2",
             "videoNumber": "#45",
             "title": "Adrenal Disorders in Children",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 30,
+            "durationSecs": 54
           },
           {
             "id": "paediatrics__endocrine__v3",
             "videoNumber": "#46",
             "title": "Pubertal Disorders",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 40,
+            "durationSecs": 56
           },
           {
             "id": "paediatrics__endocrine__v4",
             "videoNumber": "#47",
             "title": "Diabetic Ketoacidosis",
-            "durationMins": 21,
-            "durationSecs": 0
+            "durationMins": 31,
+            "durationSecs": 45
           }
         ]
       },
       {
         "name": "CHILDHOOD MALIGNANCIES",
         "modules": 2,
-        "hours": 1.8,
+        "hours": 0.8,
         "videos": [
           {
             "id": "paediatrics__childhood_malignancies__v1",
             "videoNumber": "#48",
             "title": "Hematological Malignancies",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 19,
+            "durationSecs": 58
           },
           {
             "id": "paediatrics__childhood_malignancies__v2",
             "videoNumber": "#49",
             "title": "Solid Tumors in Children",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 28,
+            "durationSecs": 2
           }
         ]
       },
@@ -9346,7 +9340,7 @@ const syllabusData = [
             "id": "paediatrics__paediatric_rheumatology__v1",
             "videoNumber": "#50",
             "title": "Rheumatic Diseases of Childhood",
-            "durationMins": 73,
+            "durationMins": 72,
             "durationSecs": 0
           }
         ]
@@ -9360,22 +9354,22 @@ const syllabusData = [
             "id": "paediatrics__hematology__v1",
             "videoNumber": "#51",
             "title": "Approach to Anemia in Children and Nutritional Anemia",
-            "durationMins": 62,
-            "durationSecs": 0
+            "durationMins": 55,
+            "durationSecs": 26
           },
           {
             "id": "paediatrics__hematology__v2",
             "videoNumber": "#52",
             "title": "Congenital Hemolytic Anemia",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 17
           },
           {
             "id": "paediatrics__hematology__v3",
             "videoNumber": "#53",
             "title": "Bleeding Disorders",
-            "durationMins": 43,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 17
           }
         ]
       },
@@ -9388,15 +9382,15 @@ const syllabusData = [
             "id": "paediatrics__misc___v1",
             "videoNumber": "#54",
             "title": "Pediatric Resuscitation",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 39
           },
           {
             "id": "paediatrics__misc___v2",
             "videoNumber": "#55",
             "title": "Shock",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 21
           }
         ]
       }
@@ -9409,119 +9403,119 @@ const syllabusData = [
       {
         "name": "GENERAL GYNECOLOGY",
         "modules": 33,
-        "hours": 27.1,
+        "hours": 28.3,
         "videos": [
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v1",
             "videoNumber": "#01",
             "title": "How to Approach Obstetrics & Gynaecology Edition 8",
-            "durationMins": 3,
+            "durationMins": 47,
             "durationSecs": 0
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v2",
             "videoNumber": "#02",
-            "title": "Applied Anatomy: Introduction and Uterine Artery [4",
-            "durationMins": 52,
-            "durationSecs": 0
+            "title": "Applied Anatomy: Introduction and Uterine Artery",
+            "durationMins": 45,
+            "durationSecs": 49
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v3",
             "videoNumber": "#03",
             "title": "Applied Anatomy: Fallopian Tubes, Ovary and Uterus",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 4
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v4",
             "videoNumber": "#04",
             "title": "Applied Anatomy: Cervix and Vagina",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 59
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v5",
             "videoNumber": "#05",
-            "title": "Types of Hysterectomy [4",
-            "durationMins": 33,
-            "durationSecs": 0
+            "title": "Types of Hysterectomy",
+            "durationMins": 52,
+            "durationSecs": 55
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v6",
             "videoNumber": "#06",
             "title": "Applied Anatomy: External Genitalia",
-            "durationMins": 31,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 27
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v7",
             "videoNumber": "#07",
             "title": "Vulval Cancer",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 49
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v8",
             "videoNumber": "#08",
             "title": "Investigations in Gynaecology: Hysteroscopy and HSG",
-            "durationMins": 52,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 54
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v9",
             "videoNumber": "#09",
             "title": "Development of Female Internal Genitalia",
-            "durationMins": 94,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 6
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v10",
             "videoNumber": "#10",
             "title": "Development of Vagina and Transverse Vaginal Septum",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 12
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v11",
             "videoNumber": "#11",
             "title": "Menstrual Cycle",
-            "durationMins": 100,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 50
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v12",
             "videoNumber": "#12",
             "title": "Hormones in Gynaecology: Part 1",
-            "durationMins": 35,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 26
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v13",
             "videoNumber": "#13",
             "title": "Hormones in Gynaecology: Part 2",
-            "durationMins": 85,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 6
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v14",
             "videoNumber": "#14",
             "title": "Characteristics of Normal Menstrual Cycle",
-            "durationMins": 15,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 52
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v15",
             "videoNumber": "#15",
             "title": "Atypical Uterine Bleeding",
-            "durationMins": 79,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 33
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v16",
             "videoNumber": "#16",
             "title": "Puberty and Precocious Puberty",
-            "durationMins": 74,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 35
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v17",
@@ -9534,15 +9528,15 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__gen__gynaecology__v18",
             "videoNumber": "#18",
             "title": "Hormone Replacement Therapy",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 23
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v19",
             "videoNumber": "#19",
             "title": "Hirsutism",
-            "durationMins": 28,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 35
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v20",
@@ -9554,142 +9548,142 @@ const syllabusData = [
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v21",
             "videoNumber": "#21",
-            "title": "Functional Columns of Cranial Nerve Nuclei",
-            "durationMins": 24,
-            "durationSecs": 0
+            "title": "Functional Ovarian Cysts",
+            "durationMins": 54,
+            "durationSecs": 17
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v22",
             "videoNumber": "#22",
             "title": "Asherman Syndrome",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 36
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v23",
             "videoNumber": "#23",
             "title": "Secondary Amenorrhea",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 14
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v24",
             "videoNumber": "#24",
             "title": "Dysmenorrhea and Pelvic Pain",
-            "durationMins": 11,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 19
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v25",
             "videoNumber": "#25",
             "title": "Endometriosis",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 33
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v26",
             "videoNumber": "#26",
             "title": "Comparison of Fibroid, Polyp and Adenomyosis",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 34
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v27",
             "videoNumber": "#27",
             "title": "Fibroid",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 7
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v28",
             "videoNumber": "#28",
-            "title": "Prolapse: Part 1 pa",
-            "durationMins": 72,
-            "durationSecs": 0
+            "title": "Prolapse: Part 1",
+            "durationMins": 49,
+            "durationSecs": 2
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v29",
             "videoNumber": "#29",
             "title": "Prolapse: Part 2",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 58
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v30",
             "videoNumber": "#30",
             "title": "Normal Sexual Development",
-            "durationMins": 59,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 20
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v31",
             "videoNumber": "#31",
             "title": "Disorders of Sexual Development (46 XX)",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 27
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v32",
             "videoNumber": "#32",
             "title": "Disorders of Sexual Development (46 XY)",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 55
           },
           {
             "id": "obstetrics___gynaecology__gen__gynaecology__v33",
             "videoNumber": "#33",
             "title": "Primary Amenorrhea",
-            "durationMins": 60,
-            "durationSecs": 0
+            "durationMins": 66,
+            "durationSecs": 3
           }
         ]
       },
       {
         "name": "GYNECOLOGIC INFECTIONS",
         "modules": 3,
-        "hours": 1.8,
+        "hours": 1.7,
         "videos": [
           {
             "id": "obstetrics___gynaecology__gynaecologic_infec___v1",
             "videoNumber": "#34",
             "title": "Vaginitis and Cervicitis",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 38,
+            "durationSecs": 24
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_infec___v2",
             "videoNumber": "#35",
             "title": "Pelvic Inflammatory Disease",
-            "durationMins": 38,
-            "durationSecs": 0
+            "durationMins": 36,
+            "durationSecs": 16
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_infec___v3",
             "videoNumber": "#36",
             "title": "Genital Tuberculosis",
-            "durationMins": 26,
-            "durationSecs": 0
+            "durationMins": 27,
+            "durationSecs": 20
           }
         ]
       },
       {
         "name": "INFERTILITY & CONTRACEPTION",
         "modules": 6,
-        "hours": 6.3,
+        "hours": 6,
         "videos": [
           {
             "id": "obstetrics___gynaecology__infertility___contraception__v1",
             "videoNumber": "#37",
-            "title": "Female Infertility: Part 1",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Female Infertility: Evaluation",
+            "durationMins": 64,
+            "durationSecs": 3
           },
           {
             "id": "obstetrics___gynaecology__infertility___contraception__v2",
             "videoNumber": "#38",
-            "title": "Female Infertility: Part 1",
-            "durationMins": 49,
-            "durationSecs": 0
+            "title": "Female Infertility: Ovulation Induction",
+            "durationMins": 58,
+            "durationSecs": 39
           },
           {
             "id": "obstetrics___gynaecology__infertility___contraception__v3",
@@ -9701,135 +9695,135 @@ const syllabusData = [
           {
             "id": "obstetrics___gynaecology__infertility___contraception__v4",
             "videoNumber": "#40",
-            "title": "Male Infertility —",
-            "durationMins": 97,
-            "durationSecs": 0
+            "title": "Male Infertility",
+            "durationMins": 49,
+            "durationSecs": 10
           },
           {
             "id": "obstetrics___gynaecology__infertility___contraception__v5",
             "videoNumber": "#41",
             "title": "Contraception: Part 1",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 56
           },
           {
             "id": "obstetrics___gynaecology__infertility___contraception__v6",
             "videoNumber": "#42",
             "title": "Contraception: Part 2",
-            "durationMins": 48,
-            "durationSecs": 0
+            "durationMins": 69,
+            "durationSecs": 11
           }
         ]
       },
       {
         "name": "GYNECOLOGIC ONCOLOGY",
         "modules": 8,
-        "hours": 8.8,
+        "hours": 7.4,
         "videos": [
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v1",
             "videoNumber": "#43",
             "title": "Endometrial Hyperplasia",
-            "durationMins": 32,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 56
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v2",
             "videoNumber": "#44",
             "title": "Endometrial Cancer",
-            "durationMins": 55,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 51
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v3",
             "videoNumber": "#45",
-            "title": "Carcinoma Larynx",
-            "durationMins": 88,
-            "durationSecs": 0
+            "title": "Carcinoma Cervix: Screening",
+            "durationMins": 64,
+            "durationSecs": 40
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v4",
             "videoNumber": "#46",
-            "title": "Carcinoma Larynx",
-            "durationMins": 88,
-            "durationSecs": 0
+            "title": "Carcinoma Cervix: Staging and Treatment",
+            "durationMins": 46,
+            "durationSecs": 9
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v5",
             "videoNumber": "#47",
             "title": "Cancer Cervix",
-            "durationMins": 53,
-            "durationSecs": 0
+            "durationMins": 61,
+            "durationSecs": 7
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v6",
             "videoNumber": "#48",
-            "title": "Ovarian cancer. Part 1",
-            "durationMins": 82,
-            "durationSecs": 0
+            "title": "Ovarian Cancer: Part 1",
+            "durationMins": 51,
+            "durationSecs": 9
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v7",
             "videoNumber": "#49",
-            "title": "Ovarian cancer. Part 1",
-            "durationMins": 82,
-            "durationSecs": 0
+            "title": "Ovarian Cancer: Part 2",
+            "durationMins": 48,
+            "durationSecs": 48
           },
           {
             "id": "obstetrics___gynaecology__gynaecologic_oncology__v8",
             "videoNumber": "#50",
             "title": "Gynaecology: Miscellaneous Topics",
-            "durationMins": 51,
-            "durationSecs": 0
+            "durationMins": 47,
+            "durationSecs": 20
           }
         ]
       },
       {
         "name": "FUNDAMENTALS OF REPRODUCTION",
         "modules": 7,
-        "hours": 5.6,
+        "hours": 6.3,
         "videos": [
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v1",
             "videoNumber": "#51",
             "title": "Gametogenesis",
-            "durationMins": 33,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 48
           },
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v2",
             "videoNumber": "#52",
             "title": "Fertilization and Implantation",
-            "durationMins": 80,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 15
           },
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v3",
             "videoNumber": "#53",
-            "title": "Placenta",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Placenta: Development",
+            "durationMins": 57,
+            "durationSecs": 59
           },
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v4",
             "videoNumber": "#54",
-            "title": "Placenta",
-            "durationMins": 46,
-            "durationSecs": 0
+            "title": "Placenta: Functions",
+            "durationMins": 63,
+            "durationSecs": 47
           },
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v5",
             "videoNumber": "#55",
             "title": "Amniotic Fluid",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 23
           },
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v6",
             "videoNumber": "#56",
-            "title": "Umbilical Cord and Doppler in Pregnancy",
-            "durationMins": 37,
-            "durationSecs": 0
+            "title": "Umbilical Cord",
+            "durationMins": 46,
+            "durationSecs": 49
           },
           {
             "id": "obstetrics___gynaecology__fundamentals_of_reproduction__v7",
@@ -9843,49 +9837,49 @@ const syllabusData = [
       {
         "name": "NORMAL PREGNANCY & ANTENATAL CARE",
         "modules": 9,
-        "hours": 8,
+        "hours": 8.4,
         "videos": [
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v1",
             "videoNumber": "#58",
             "title": "Basics of Pregnancy: Part 1",
-            "durationMins": 54,
-            "durationSecs": 0
+            "durationMins": 59,
+            "durationSecs": 42
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v2",
             "videoNumber": "#59",
             "title": "Basics of Pregnancy: Part 2",
-            "durationMins": 56,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 20
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v3",
             "videoNumber": "#60",
             "title": "Umbilical Cord and Doppler in Pregnancy",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 58,
+            "durationSecs": 57
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v4",
             "videoNumber": "#61",
-            "title": "Antenatal Care 7",
-            "durationMins": 63,
-            "durationSecs": 0
+            "title": "Antenatal Care",
+            "durationMins": 50,
+            "durationSecs": 20
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v5",
             "videoNumber": "#62",
             "title": "Ultrasound in Pregnancy: Part 1",
-            "durationMins": 65,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 37
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v6",
             "videoNumber": "#63",
             "title": "Ultrasound in Pregnancy: Part 2",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 48,
+            "durationSecs": 52
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v7",
@@ -9898,50 +9892,50 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v8",
             "videoNumber": "#65",
             "title": "Antepartum Fetal Monitoring",
-            "durationMins": 46,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 51
           },
           {
             "id": "obstetrics___gynaecology__normal_pregnancy___antenatal_care__v9",
             "videoNumber": "#66",
             "title": "Intrapartum Fetal Monitoring",
-            "durationMins": 72,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 5
           }
         ]
       },
       {
         "name": "MEDICAL & SURGICAL COMPLICATIONS IN PREGNANCY",
         "modules": 14,
-        "hours": 10.9,
+        "hours": 11.6,
         "videos": [
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v1",
             "videoNumber": "#67",
             "title": "Maternal Adaptations in Pregnancy",
-            "durationMins": 70,
-            "durationSecs": 0
+            "durationMins": 39,
+            "durationSecs": 56
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v2",
             "videoNumber": "#68",
             "title": "Anemia in Pregnancy: Part 1",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 43
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v3",
             "videoNumber": "#69",
             "title": "Anemia in Pregnancy: Part 2",
-            "durationMins": 34,
-            "durationSecs": 0
+            "durationMins": 43,
+            "durationSecs": 17
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v4",
             "videoNumber": "#70",
             "title": "Drugs in Pregnancy",
-            "durationMins": 22,
-            "durationSecs": 0
+            "durationMins": 42,
+            "durationSecs": 43
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v5",
@@ -9954,8 +9948,8 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v6",
             "videoNumber": "#72",
             "title": "Thyroid Disorders in Pregnancy",
-            "durationMins": 8,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 27
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v7",
@@ -9967,16 +9961,16 @@ const syllabusData = [
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v8",
             "videoNumber": "#74",
-            "title": "Diabetes in Pregnancy: Part 1",
-            "durationMins": 64,
-            "durationSecs": 0
+            "title": "Diabetes in Pregnancy",
+            "durationMins": 39,
+            "durationSecs": 49
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v9",
             "videoNumber": "#75",
-            "title": "Respiratory Failure and Acute Respiratory Distress Syndrome",
-            "durationMins": 51,
-            "durationSecs": 0
+            "title": "Respiratory Disorders in Pregnancy",
+            "durationMins": 47,
+            "durationSecs": 8
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v10",
@@ -9989,29 +9983,29 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v11",
             "videoNumber": "#77",
             "title": "Pregnancy-Induced Hypertension: Part 1",
-            "durationMins": 47,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 47
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v12",
             "videoNumber": "#78",
             "title": "Pregnancy-Induced Hypertension: Part 2",
-            "durationMins": 58,
-            "durationSecs": 0
+            "durationMins": 49,
+            "durationSecs": 4
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v13",
             "videoNumber": "#79",
             "title": "Pregnancy-Induced Hypertension: Part 3",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 54,
+            "durationSecs": 43
           },
           {
             "id": "obstetrics___gynaecology__medical___surgical_complications_in_pregnancy__v14",
             "videoNumber": "#80",
             "title": "Liver Disorders in Pregnancy",
-            "durationMins": 37,
-            "durationSecs": 0
+            "durationMins": 100,
+            "durationSecs": 26
           }
         ]
       },
@@ -10024,22 +10018,22 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__obstetric_complications__v1",
             "videoNumber": "#81",
             "title": "Abortion: Part 1",
-            "durationMins": 66,
-            "durationSecs": 0
+            "durationMins": 53,
+            "durationSecs": 21
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v2",
             "videoNumber": "#82",
             "title": "Abortion: Part 2",
-            "durationMins": 27,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 8
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v3",
             "videoNumber": "#83",
-            "title": "Ectopic Pregnancy: Part 1",
-            "durationMins": 45,
-            "durationSecs": 0
+            "title": "Ectopic Pregnancy",
+            "durationMins": 61,
+            "durationSecs": 38
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v4",
@@ -10059,50 +10053,50 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__obstetric_complications__v6",
             "videoNumber": "#86",
             "title": "Gestational Trophoblastic Disease",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 45,
+            "durationSecs": 2
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v7",
             "videoNumber": "#87",
             "title": "Antepartum Hemorrhage: Part 1",
-            "durationMins": 81,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 20
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v8",
             "videoNumber": "#88",
             "title": "Antepartum Hemorrhage: Part 2",
-            "durationMins": 44,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 36
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v9",
             "videoNumber": "#89",
             "title": "Placenta Accreta Spectrum",
-            "durationMins": 19,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 25
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v10",
             "videoNumber": "#90",
             "title": "Twin Pregnancy: Part 1",
-            "durationMins": 50,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 26
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v11",
             "videoNumber": "#91",
             "title": "Twin Pregnancy: Part 2",
-            "durationMins": 61,
-            "durationSecs": 0
+            "durationMins": 62,
+            "durationSecs": 33
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v12",
             "videoNumber": "#92",
             "title": "Preterm Labor",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 44,
+            "durationSecs": 51
           },
           {
             "id": "obstetrics___gynaecology__obstetric_complications__v13",
@@ -10122,36 +10116,36 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__labour___puerperium__v1",
             "videoNumber": "#94",
             "title": "Maternal Pelvis",
-            "durationMins": 69,
-            "durationSecs": 0
+            "durationMins": 50,
+            "durationSecs": 46
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v2",
             "videoNumber": "#95",
             "title": "Contracted Pelvis, CPD and Types of Pelvis",
-            "durationMins": 20,
-            "durationSecs": 0
+            "durationMins": 60,
+            "durationSecs": 7
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v3",
             "videoNumber": "#96",
             "title": "Fetal Skull",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 56,
+            "durationSecs": 23
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v4",
             "videoNumber": "#97",
-            "title": "Terminology related to Labor",
-            "durationMins": 73,
-            "durationSecs": 0
+            "title": "Terminology Related to Labor",
+            "durationMins": 53,
+            "durationSecs": 50
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v5",
             "videoNumber": "#98",
-            "title": "Stages of Labor. Normal and Abnormal",
-            "durationMins": 69,
-            "durationSecs": 0
+            "title": "Stages of Labor: Normal and Abnormal",
+            "durationMins": 58,
+            "durationSecs": 31
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v6",
@@ -10164,15 +10158,15 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__labour___puerperium__v7",
             "videoNumber": "#100",
             "title": "Normal Labor",
-            "durationMins": 73,
-            "durationSecs": 0
+            "durationMins": 65,
+            "durationSecs": 6
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v8",
             "videoNumber": "#101",
             "title": "Induction of Labor",
-            "durationMins": 41,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 54
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v9",
@@ -10185,60 +10179,63 @@ const syllabusData = [
             "id": "obstetrics___gynaecology__labour___puerperium__v10",
             "videoNumber": "#103",
             "title": "Postpartum Hemorrhage",
-            "durationMins": 71,
-            "durationSecs": 0
+            "durationMins": 64,
+            "durationSecs": 21
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v11",
             "videoNumber": "#104",
             "title": "Other Complications of Third Stage of Labor",
-            "durationMins": 63,
-            "durationSecs": 0
+            "durationMins": 57,
+            "durationSecs": 3
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v12",
             "videoNumber": "#105",
-            "title": "Vulval hematoma, Perineal Tear and Episiotomy 1}",
-            "durationMins": 35,
-            "durationSecs": 0
+            "title": "Vulval Hematoma, Perineal Tear and Episiotomy",
+            "durationMins": 54,
+            "durationSecs": 37
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v13",
             "videoNumber": "#106",
             "title": "Malpresentation: Part 1",
-            "durationMins": 76,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 45
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v14",
             "videoNumber": "#107",
             "title": "Malpresentation: Part 2",
-            "durationMins": 67,
-            "durationSecs": 0
+            "durationMins": 63,
+            "durationSecs": 3
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v15",
             "videoNumber": "#108",
             "title": "Instrumental Delivery",
-            "durationMins": 70,
-            "durationSecs": 0
+            "durationMins": 51,
+            "durationSecs": 4
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v16",
             "videoNumber": "#109",
             "title": "Cesarean Section",
-            "durationMins": 45,
-            "durationSecs": 0
+            "durationMins": 46,
+            "durationSecs": 46
           },
           {
             "id": "obstetrics___gynaecology__labour___puerperium__v17",
             "videoNumber": "#110",
             "title": "Puerperium",
-            "durationMins": 40,
-            "durationSecs": 0
+            "durationMins": 72,
+            "durationSecs": 45
           }
         ]
       }
     ]
   }
 ];
+if (typeof window !== 'undefined') {
+  window.syllabusData = syllabusData;
+}
