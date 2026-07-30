@@ -3251,412 +3251,384 @@ const syllabusData = [
     "subject": "Community Medicine",
     "chapters": [
       {
-        "name": "GENERAL",
-        "modules": 3,
-        "hours": 1.6,
+        "name": "DEMOGRAPHY AND FAMILY PLANNING",
+        "modules": 8,
+        "hours": 5.1,
         "videos": [
           {
-            "id": "community_medicine__v1",
+            "id": "cm__dem__v1",
             "videoNumber": "#01",
-            "title": "Skew and Tiles",
-            "durationMins": 19,
+            "title": "How to Approach Community Medicine Edition 8",
+            "durationMins": 4,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v2",
+            "id": "cm__dem__v2",
             "videoNumber": "#02",
-            "title": "Sampling Methods and Sample Size Calculation",
-            "durationMins": 24,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v3",
-            "videoNumber": "#03",
-            "title": "Graphs",
-            "durationMins": 55,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "#RO",
-        "modules": 4,
-        "hours": 2.8,
-        "videos": [
-          {
-            "id": "community_medicine__v1",
-            "videoNumber": "#04",
-            "title": "Biostatistics: Questions and Answers",
-            "durationMins": 29,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v2",
-            "videoNumber": "#05",
-            "title": "TB: Epidemiology and Investigations",
-            "durationMins": 45,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v3",
-            "videoNumber": "#06",
-            "title": "NTEP: Targets, Diagnosis and Management Guidelines a",
-            "durationMins": 42,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v4",
-            "videoNumber": "#07",
-            "title": "NTEP. Strategies, Organisation and Indicators",
-            "durationMins": 49,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "FRO",
-        "modules": 49,
-        "hours": 30.6,
-        "videos": [
-          {
-            "id": "community_medicine__v1",
-            "videoNumber": "#08",
-            "title": "NACP. Targets, Diagnosis and Management",
-            "durationMins": 60,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v2",
-            "videoNumber": "#09",
-            "title": "NACP: Strategies, Organisation and Indicators",
-            "durationMins": 30,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v3",
-            "videoNumber": "#10",
-            "title": "NVBDCP: Malaria Epidemiology",
-            "durationMins": 38,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v4",
-            "videoNumber": "#11",
-            "title": "NVBDCP: Malaria Diagnosis, Treatment and Control",
-            "durationMins": 35,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v5",
-            "videoNumber": "#12",
-            "title": "Occupational Health",
-            "durationMins": 44,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v6",
-            "videoNumber": "#13",
-            "title": "ESI and Factories Act",
-            "durationMins": 28,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v7",
-            "videoNumber": "#14",
-            "title": "Concepts in Community Medicine",
-            "durationMins": 29,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v8",
-            "videoNumber": "#15",
-            "title": "Concepts of Control and Prevention",
-            "durationMins": 40,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v9",
-            "videoNumber": "#16",
-            "title": "Health and Disability Indicators",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v10",
-            "videoNumber": "#17",
-            "title": "Disaster Management [1",
-            "durationMins": 38,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v11",
-            "videoNumber": "#18",
-            "title": "Health Communication",
-            "durationMins": 32,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v12",
-            "videoNumber": "#19",
-            "title": "International Health Organisations",
-            "durationMins": 28,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v13",
-            "videoNumber": "#20",
-            "title": "Social Medicine",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v14",
-            "videoNumber": "#21",
-            "title": "History and Evolution of medicine",
-            "durationMins": 33,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v15",
-            "videoNumber": "#22",
-            "title": "Preventive Geriatrics",
-            "durationMins": 10,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v16",
-            "videoNumber": "#23",
-            "title": "Mental Health Programme 1]",
-            "durationMins": 12,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v17",
-            "videoNumber": "#24",
-            "title": "Genetics and Health",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v18",
-            "videoNumber": "#25",
-            "title": "Analytical and Experimental Epidemiology [4",
-            "durationMins": 61,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v19",
-            "videoNumber": "#26",
-            "title": "Bias and Confounding",
-            "durationMins": 34,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v20",
-            "videoNumber": "#27",
-            "title": "Advanced Epidemiology [4",
-            "durationMins": 44,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v21",
-            "videoNumber": "#28",
-            "title": "Screening of Disease Concepts",
-            "durationMins": 35,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v22",
-            "videoNumber": "#29",
-            "title": "Determinants in Screening of Disease",
-            "durationMins": 25,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v23",
-            "videoNumber": "#30",
-            "title": "Advanced Concepts in Screening of Disease /~",
-            "durationMins": 72,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v24",
-            "videoNumber": "#31",
-            "title": "Data Types and Scales",
-            "durationMins": 35,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v25",
-            "videoNumber": "#32",
-            "title": "Measures of Central Tendency and Variation [4",
-            "durationMins": 20,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v26",
-            "videoNumber": "#33",
-            "title": "Normal Distribution Curve [J",
-            "durationMins": 26,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v27",
-            "videoNumber": "#34",
-            "title": "Concept of p-value",
-            "durationMins": 34,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v28",
-            "videoNumber": "#35",
-            "title": "Tests of Significance, Probability Rules and Regression Analysis",
+            "title": "Demographic Cycle",
             "durationMins": 27,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v29",
-            "videoNumber": "#36",
+            "id": "cm__dem__v3",
+            "videoNumber": "#03",
+            "title": "Demographic Trends",
+            "durationMins": 31,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__dem__v4",
+            "videoNumber": "#04",
+            "title": "Fertility Rates",
+            "durationMins": 31,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__dem__v5",
+            "videoNumber": "#05",
+            "title": "Survey Techniques",
+            "durationMins": 28,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__dem__v6",
+            "videoNumber": "#06",
+            "title": "Family Planning and Contraception: Part 1",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__dem__v7",
+            "videoNumber": "#07",
+            "title": "Family Planning and Contraception: Part 2",
+            "durationMins": 65,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__dem__v8",
+            "videoNumber": "#08",
+            "title": "National Family Planning Programme",
+            "durationMins": 37,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "MATERNAL AND CHILD HEALTH",
+        "modules": 7,
+        "hours": 4.5,
+        "videos": [
+          {
+            "id": "cm__mch__v1",
+            "videoNumber": "#09",
+            "title": "Indicators of MCH Care",
+            "durationMins": 49,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__mch__v2",
+            "videoNumber": "#10",
+            "title": "Preventive Obstetrics: Antenatal Care and Post Natal Care",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__mch__v3",
+            "videoNumber": "#11",
+            "title": "Preventive Paediatrics: Early care",
+            "durationMins": 32,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__mch__v4",
+            "videoNumber": "#12",
             "title": "Preventive Paediatrics: Growth and Development",
             "durationMins": 52,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v30",
-            "videoNumber": "#37",
+            "id": "cm__mch__v5",
+            "videoNumber": "#13",
             "title": "Social Paediatrics",
             "durationMins": 20,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v31",
-            "videoNumber": "#38",
+            "id": "cm__mch__v6",
+            "videoNumber": "#14",
             "title": "RMNCAH+N: Part 1",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v32",
-            "videoNumber": "#39",
+            "id": "cm__mch__v7",
+            "videoNumber": "#15",
             "title": "RMNCAH+N: Part 2 - IMNCI, FRU, Organisation of MCH Care",
             "durationMins": 39,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "VACCINE AND IMMUNIZATION",
+        "modules": 4,
+        "hours": 3.1,
+        "videos": [
           {
-            "id": "community_medicine__v33",
-            "videoNumber": "#40",
+            "id": "cm__imm__v1",
+            "videoNumber": "#16",
             "title": "Universal Immunization Programme",
             "durationMins": 62,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v34",
-            "videoNumber": "#41",
-            "title": "Immunization: Frequently Asked Questions ——",
+            "id": "cm__imm__v2",
+            "videoNumber": "#17",
+            "title": "Immunization: Frequently Asked Questions",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v35",
-            "videoNumber": "#42",
+            "id": "cm__imm__v3",
+            "videoNumber": "#18",
             "title": "Cold Chain and Vaccine Requirement",
             "durationMins": 40,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v36",
-            "videoNumber": "#43",
+            "id": "cm__imm__v4",
+            "videoNumber": "#19",
             "title": "Vaccine Strains, Waste Management and AEFI",
             "durationMins": 45,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "EPIDEMIOLOGY",
+        "modules": 6,
+        "hours": 3.4,
+        "videos": [
           {
-            "id": "community_medicine__v37",
-            "videoNumber": "#44",
-            "title": "Aim of Epidemiology and Historical Perspective [4",
+            "id": "cm__epi__v1",
+            "videoNumber": "#20",
+            "title": "Aim of Epidemiology and Historical Perspective",
             "durationMins": 15,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v38",
-            "videoNumber": "#45",
+            "id": "cm__epi__v2",
+            "videoNumber": "#21",
             "title": "Basics in Epidemiology",
             "durationMins": 26,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v39",
-            "videoNumber": "#46",
-            "title": "Epidemiological Methods and Descriptive Epidemiology [4",
+            "id": "cm__epi__v3",
+            "videoNumber": "#22",
+            "title": "Epidemiological Methods and Descriptive Epidemiology",
             "durationMins": 23,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v40",
-            "videoNumber": "#47",
-            "title": "Nutrition: Food products, Adulterants and Standards",
-            "durationMins": 51,
+            "id": "cm__epi__v4",
+            "videoNumber": "#23",
+            "title": "Analytical and Experimental Epidemiology",
+            "durationMins": 61,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v41",
-            "videoNumber": "#48",
+            "id": "cm__epi__v5",
+            "videoNumber": "#24",
+            "title": "Bias and Confounding",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__epi__v6",
+            "videoNumber": "#25",
+            "title": "Advanced Epidemiology",
+            "durationMins": 44,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "SCREENING OF DISEASE",
+        "modules": 3,
+        "hours": 2.2,
+        "videos": [
+          {
+            "id": "cm__scr__v1",
+            "videoNumber": "#26",
+            "title": "Screening of Disease Concepts",
+            "durationMins": 35,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__scr__v2",
+            "videoNumber": "#27",
+            "title": "Determinants in Screening of Disease",
+            "durationMins": 25,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__scr__v3",
+            "videoNumber": "#28",
+            "title": "Advanced Concepts in Screening of Disease",
+            "durationMins": 72,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "BIOSTATISTICS",
+        "modules": 5,
+        "hours": 2.4,
+        "videos": [
+          {
+            "id": "cm__bio__v1",
+            "videoNumber": "#29",
+            "title": "Data Types and Scales",
+            "durationMins": 35,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v2",
+            "videoNumber": "#30",
+            "title": "Measures of Central Tendency and Variation",
+            "durationMins": 20,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v3",
+            "videoNumber": "#31",
+            "title": "Normal Distribution Curve",
+            "durationMins": 26,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v4",
+            "videoNumber": "#32",
+            "title": "Concept of p-value",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__bio__v5",
+            "videoNumber": "#33",
+            "title": "Tests of Significance, Probability Rules and Regression Analysis",
+            "durationMins": 27,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "NUTRITION",
+        "modules": 4,
+        "hours": 2.8,
+        "videos": [
+          {
+            "id": "cm__nut__v1",
+            "videoNumber": "#34",
+            "title": "Nutrition: Concepts and Macronutrients",
+            "durationMins": 56,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nut__v2",
+            "videoNumber": "#35",
+            "title": "Nutrition: Micronutrients",
+            "durationMins": 41,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nut__v3",
+            "videoNumber": "#36",
+            "title": "Nutrition: Recommended Dietary allowance & Millets",
+            "durationMins": 17,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__nut__v4",
+            "videoNumber": "#37",
+            "title": "Nutrition: Food products, Adulterants and Standards",
+            "durationMins": 51,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "ENVIRONMENT",
+        "modules": 8,
+        "hours": 5.5,
+        "videos": [
+          {
+            "id": "cm__env__v1",
+            "videoNumber": "#38",
             "title": "Air and Health",
             "durationMins": 39,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v42",
-            "videoNumber": "#49",
+            "id": "cm__env__v2",
+            "videoNumber": "#39",
             "title": "Water Sources and Quality of Water",
             "durationMins": 47,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v43",
-            "videoNumber": "#50",
+            "id": "cm__env__v3",
+            "videoNumber": "#40",
             "title": "Water Purification Methods",
             "durationMins": 42,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v44",
-            "videoNumber": "#51",
+            "id": "cm__env__v4",
+            "videoNumber": "#41",
             "title": "Housing, Ventilation, Light, Sound, Radiation",
             "durationMins": 30,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v45",
-            "videoNumber": "#52",
+            "id": "cm__env__v5",
+            "videoNumber": "#42",
             "title": "Waste Management",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v46",
-            "videoNumber": "#53",
+            "id": "cm__env__v6",
+            "videoNumber": "#43",
             "title": "Entomology: Mosquitoes",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v47",
-            "videoNumber": "#54",
+            "id": "cm__env__v7",
+            "videoNumber": "#44",
             "title": "Entomology: Lice, Ticks, Mites and Sandfly",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v48",
-            "videoNumber": "#55",
+            "id": "cm__env__v8",
+            "videoNumber": "#45",
             "title": "Mosquito Control Measures and Insecticides",
             "durationMins": 41,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "BIOMEDICAL WASTE MANAGEMENT",
+        "modules": 1,
+        "hours": 0.8,
+        "videos": [
           {
-            "id": "community_medicine__v49",
-            "videoNumber": "#56",
+            "id": "cm__bmw__v1",
+            "videoNumber": "#46",
             "title": "Biomedical Waste Management",
             "durationMins": 49,
             "durationSecs": 0
@@ -3664,167 +3636,230 @@ const syllabusData = [
         ]
       },
       {
-        "name": "DEMOGRAPHY AND FAMILY PLANNING",
-        "modules": 6,
-        "hours": 2.9,
+        "name": "OCCUPATIONAL HEALTH",
+        "modules": 2,
+        "hours": 1.2,
         "videos": [
           {
-            "id": "community_medicine__v1",
-            "videoNumber": "#57",
-            "title": "How to Approach Community Medicine Edition 8 [4",
-            "durationMins": 4,
+            "id": "cm__occ__v1",
+            "videoNumber": "#47",
+            "title": "Occupational Health",
+            "durationMins": 44,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v2",
-            "videoNumber": "#58",
-            "title": "Demographic Cycle [4",
-            "durationMins": 27,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v3",
-            "videoNumber": "#59",
-            "title": "Demographic Trends",
-            "durationMins": 31,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v4",
-            "videoNumber": "#60",
-            "title": "Fertility Rates",
-            "durationMins": 31,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v5",
-            "videoNumber": "#61",
-            "title": "Survey Techniques",
+            "id": "cm__occ__v2",
+            "videoNumber": "#48",
+            "title": "ESI and Factories Act",
             "durationMins": 28,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v6",
-            "videoNumber": "#62",
-            "title": "Family Planning and Contraception: Part 1 [4",
-            "durationMins": 51,
             "durationSecs": 0
           }
         ]
       },
       {
-        "name": "PRO /",
-        "modules": 16,
-        "hours": 10.4,
+        "name": "CONCEPT OF HEALTH AND DISEASE",
+        "modules": 3,
+        "hours": 1.9,
         "videos": [
           {
-            "id": "community_medicine__v1",
-            "videoNumber": "#63",
-            "title": "Family Planning and Contraception: Part 2 [J LL]",
-            "durationMins": 65,
+            "id": "cm__chd__v1",
+            "videoNumber": "#49",
+            "title": "Concepts in Community Medicine",
+            "durationMins": 29,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v2",
-            "videoNumber": "#64",
-            "title": "National Family Planning Programme [4",
-            "durationMins": 37,
+            "id": "cm__chd__v2",
+            "videoNumber": "#50",
+            "title": "Concepts of Control and Prevention",
+            "durationMins": 40,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v3",
-            "videoNumber": "#65",
-            "title": "Indicators of MCH Care [4",
-            "durationMins": 49,
+            "id": "cm__chd__v3",
+            "videoNumber": "#51",
+            "title": "Health and Disability Indicators",
+            "durationMins": 47,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "DISASTER MANAGEMENT",
+        "modules": 1,
+        "hours": 0.6,
+        "videos": [
           {
-            "id": "community_medicine__v4",
-            "videoNumber": "#66",
-            "title": "Preventive Obstetrics: Antenatal Care and Post Natal Care [4",
-            "durationMins": 51,
+            "id": "cm__dis__v1",
+            "videoNumber": "#52",
+            "title": "Disaster Management",
+            "durationMins": 38,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "HEALTH COMMUNICATION",
+        "modules": 1,
+        "hours": 0.5,
+        "videos": [
           {
-            "id": "community_medicine__v5",
-            "videoNumber": "#67",
-            "title": "Preventive Paediatrics: Early care [4",
+            "id": "cm__hc__v1",
+            "videoNumber": "#53",
+            "title": "Health Communication",
             "durationMins": 32,
             "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "INTERNATIONAL HEALTH ORGANISATIONS",
+        "modules": 1,
+        "hours": 0.5,
+        "videos": [
+          {
+            "id": "cm__iho__v1",
+            "videoNumber": "#54",
+            "title": "International Health Organisations",
+            "durationMins": 28,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "SOCIAL MEDICINE",
+        "modules": 1,
+        "hours": 0.8,
+        "videos": [
+          {
+            "id": "cm__soc__v1",
+            "videoNumber": "#55",
+            "title": "Social Medicine",
+            "durationMins": 47,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "MISCELLANEOUS TOPICS",
+        "modules": 4,
+        "hours": 1.6,
+        "videos": [
+          {
+            "id": "cm__misc__v1",
+            "videoNumber": "#56",
+            "title": "History and Evolution of medicine",
+            "durationMins": 33,
+            "durationSecs": 0
           },
           {
-            "id": "community_medicine__v6",
-            "videoNumber": "#68",
+            "id": "cm__misc__v2",
+            "videoNumber": "#57",
+            "title": "Preventive Geriatrics",
+            "durationMins": 10,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__misc__v3",
+            "videoNumber": "#58",
+            "title": "Mental Health Programme",
+            "durationMins": 12,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__misc__v4",
+            "videoNumber": "#59",
+            "title": "Genetics and Health",
+            "durationMins": 43,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "NATIONAL HEALTH PROGRAMMES",
+        "modules": 8,
+        "hours": 4.3,
+        "videos": [
+          {
+            "id": "cm__nhp__v1",
+            "videoNumber": "#60",
             "title": "NVBDCP: Indicators",
             "durationMins": 36,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v7",
-            "videoNumber": "#69",
+            "id": "cm__nhp__v2",
+            "videoNumber": "#61",
             "title": "Japanese Encephalitis",
             "durationMins": 17,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v8",
-            "videoNumber": "#70",
+            "id": "cm__nhp__v3",
+            "videoNumber": "#62",
             "title": "Dengue",
             "durationMins": 23,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v9",
-            "videoNumber": "#71",
+            "id": "cm__nhp__v4",
+            "videoNumber": "#63",
             "title": "Lymphatic Filariasis",
             "durationMins": 22,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v10",
-            "videoNumber": "#72",
+            "id": "cm__nhp__v5",
+            "videoNumber": "#64",
             "title": "Kala-Azar",
             "durationMins": 19,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v11",
-            "videoNumber": "#73",
+            "id": "cm__nhp__v6",
+            "videoNumber": "#65",
             "title": "National Leprosy Eradication Program",
             "durationMins": 38,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v12",
-            "videoNumber": "#74",
-            "title": "National Polio Surveillance Project 1}",
+            "id": "cm__nhp__v7",
+            "videoNumber": "#66",
+            "title": "National Polio Surveillance Project",
             "durationMins": 55,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v13",
-            "videoNumber": "#75",
+            "id": "cm__nhp__v8",
+            "videoNumber": "#67",
             "title": "NIDDCP, IDSP and ICDS",
             "durationMins": 41,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "HEALTHCARE PLANNING IN INDIA",
+        "modules": 3,
+        "hours": 2.3,
+        "videos": [
           {
-            "id": "community_medicine__v14",
-            "videoNumber": "#76",
+            "id": "cm__hcp__v1",
+            "videoNumber": "#68",
             "title": "Recent Advances in Community Medicine - 2023",
             "durationMins": 29,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v15",
-            "videoNumber": "#77",
+            "id": "cm__hcp__v2",
+            "videoNumber": "#69",
             "title": "Health Care System in India",
             "durationMins": 66,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v16",
-            "videoNumber": "#78",
+            "id": "cm__hcp__v3",
+            "videoNumber": "#70",
             "title": "Health Planning and Management",
             "durationMins": 45,
             "durationSecs": 0
@@ -3832,92 +3867,155 @@ const syllabusData = [
         ]
       },
       {
-        "name": "FORENSIC TRAUMATOLOGY",
-        "modules": 5,
-        "hours": 4,
+        "name": "INFECTIOUS DISEASE EPIDEMIOLOGY",
+        "modules": 3,
+        "hours": 2.3,
         "videos": [
           {
-            "id": "community_medicine__v1",
-            "videoNumber": "#79",
-            "title": "Transportation Injuries",
-            "durationMins": 42,
+            "id": "cm__ide__v1",
+            "videoNumber": "#71",
+            "title": "Infectious Diseases: Basic Definitions, Chain of Transmission",
+            "durationMins": 40,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v2",
-            "videoNumber": "#80",
-            "title": "Indian Legal System",
-            "durationMins": 55,
+            "id": "cm__ide__v2",
+            "videoNumber": "#72",
+            "title": "Infectious Diseases: Agent, Host, Case, Carrier",
+            "durationMins": 47,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v3",
-            "videoNumber": "#81",
-            "title": "Medical Ethics [J]",
-            "durationMins": 37,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v4",
-            "videoNumber": "#82",
-            "title": "15 oe",
-            "durationMins": 74,
-            "durationSecs": 0
-          },
-          {
-            "id": "community_medicine__v5",
-            "videoNumber": "#83",
-            "title": "Consent in Medical Practice",
-            "durationMins": 32,
+            "id": "cm__ide__v3",
+            "videoNumber": "#73",
+            "title": "Infectious Diseases: Modes of Transmission, PPE, Handwashing",
+            "durationMins": 48,
             "durationSecs": 0
           }
         ]
       },
       {
-        "name": "FORENSIC PATHOLOGY ——",
-        "modules": 6,
-        "hours": 5.6,
+        "name": "COMMUNICABLE DISEASES",
+        "modules": 14,
+        "hours": 7.2,
         "videos": [
           {
-            "id": "community_medicine__v1",
+            "id": "cm__com__v1",
+            "videoNumber": "#74",
+            "title": "Smallpox and Chickenpox",
+            "durationMins": 23,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v2",
+            "videoNumber": "#75",
+            "title": "Measles, Mumps and Rubella",
+            "durationMins": 57,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v3",
+            "videoNumber": "#76",
+            "title": "Flu, Diphtheria and Pertussis",
+            "durationMins": 30,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v4",
+            "videoNumber": "#77",
+            "title": "Meningitis",
+            "durationMins": 16,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v5",
+            "videoNumber": "#78",
+            "title": "Cholera and Diarrhoea Management",
+            "durationMins": 36,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v6",
+            "videoNumber": "#79",
+            "title": "Typhoid",
+            "durationMins": 28,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v7",
+            "videoNumber": "#80",
+            "title": "Hepatitis",
+            "durationMins": 39,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v8",
+            "videoNumber": "#81",
+            "title": "Soil Transmitted Helminthic Infections",
+            "durationMins": 27,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v9",
+            "videoNumber": "#82",
+            "title": "Zoonoses and Rabies",
+            "durationMins": 32,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v10",
+            "videoNumber": "#83",
+            "title": "Plague, Yellow fever and KFD",
+            "durationMins": 56,
+            "durationSecs": 0
+          },
+          {
+            "id": "cm__com__v11",
             "videoNumber": "#84",
-            "title": "Autopsy Procedures [4 1}",
-            "durationMins": 68,
+            "title": "Tetanus",
+            "durationMins": 17,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v2",
+            "id": "cm__com__v12",
             "videoNumber": "#85",
-            "title": "Early Postmortem Changes [4",
-            "durationMins": 72,
+            "title": "Rickettsia",
+            "durationMins": 22,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v3",
+            "id": "cm__com__v13",
             "videoNumber": "#86",
-            "title": "Late Postmortem Changes",
-            "durationMins": 43,
+            "title": "Leptospirosis",
+            "durationMins": 16,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v4",
+            "id": "cm__com__v14",
             "videoNumber": "#87",
-            "title": "Human Identification: Part 1",
-            "durationMins": 42,
+            "title": "Ebola, Zika, and Nipah",
+            "durationMins": 27,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "NON - COMMUNICABLE DISEASES",
+        "modules": 2,
+        "hours": 1,
+        "videos": [
           {
-            "id": "community_medicine__v5",
+            "id": "cm__ncd__v1",
             "videoNumber": "#88",
-            "title": "Human Identification: Part 2",
-            "durationMins": 76,
+            "title": "CVD, Hypertension and Obesity",
+            "durationMins": 33,
             "durationSecs": 0
           },
           {
-            "id": "community_medicine__v6",
+            "id": "cm__ncd__v2",
             "videoNumber": "#89",
-            "title": "Human Identification: Part 3",
-            "durationMins": 34,
+            "title": "Rheumatic Fever, Cancer, and Sickle Cell Disease",
+            "durationMins": 29,
             "durationSecs": 0
           }
         ]
