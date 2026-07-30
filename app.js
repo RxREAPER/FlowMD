@@ -82,6 +82,28 @@
     obstetrics___gynaecology: 'icons/obstetrics___gynaecology.png'
   };
 
+  const SUBJECT_SVG_ICONS = {
+    anaesthesia: `<svg viewBox="0 0 48 48" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 28c0-6 4-10 10-10s10 4 10 10"/><path d="M18 28v4c0 2 2 4 6 4s6-2 6-4v-4"/><path d="M12 24h-4v8h4"/><path d="M36 24h4v8h-4"/><circle cx="38" cy="18" r="3"/><path d="M36 18h-4"/><path d="M10 18l4-4"/><path d="M14 14v-4h6"/><path d="M34 32l4 4"/></svg>`,
+    anatomy: `<svg viewBox="0 0 48 48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="10" r="4"/><path d="M24 14v10"/><path d="M18 20h12"/><path d="M24 24v10"/><path d="M18 44l6-10 6 10"/><path d="M14 20l-4 6"/><path d="M34 20l4 6"/><path d="M18 34l-6 10"/><path d="M30 34l6 10"/></svg>`,
+    biochemistry: `<svg viewBox="0 0 48 48" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h12"/><path d="M20 8v14l-8 14c-1 2 0 4 2 4h20c2 0 3-2 2-4l-8-14V8"/><circle cx="22" cy="32" r="2"/><circle cx="28" cy="30" r="1.5"/><circle cx="25" cy="34" r="1"/><path d="M14 6l2-2"/><path d="M34 6l-2-2"/></svg>`,
+    community_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="18" r="6"/><circle cx="12" cy="22" r="4"/><circle cx="36" cy="22" r="4"/><path d="M18 36c0-4 3-6 6-6s6 2 6 6"/><path d="M8 38c0-3 2-5 4-5"/><path d="M36 38c0-3 2-5 4-5"/><path d="M24 10v-4"/><path d="M20 14h8"/></svg>`,
+    dermatology: `<svg viewBox="0 0 48 48" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="10"/><path d="M20 18c1-2 3-2 4 0s3 2 4 0"/><path d="M19 24c2 1 4 1 6 0s4-1 6 0"/><circle cx="18" cy="34" r="4"/><path d="M22 34h8"/><circle cx="34" cy="34" r="2"/><path d="M32 10l4-4"/><path d="M36 10l-2-6"/><path d="M38 8l2-4"/></svg>`,
+    forensic_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12l6 6"/><path d="M20 18l16-6"/><path d="M36 12l-6 6"/><path d="M30 18l-4 14"/><path d="M26 32l-6 6"/><path d="M20 38l-4-2"/><path d="M16 36l-2-6"/><path d="M14 30l4-12"/><rect x="28" y="8" width="12" height="6" rx="1"/><path d="M30 14v4h8v-4"/></svg>`,
+    medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="14" r="6"/><path d="M24 20v6"/><circle cx="24" cy="32" r="4"/><path d="M24 36v4"/><path d="M18 40h12"/><path d="M14 14h-4"/><path d="M34 14h4"/><path d="M16 8l-4-4"/><path d="M32 8l4-4"/></svg>`,
+    microbiology: `<svg viewBox="0 0 48 48" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="26" rx="12" ry="10"/><path d="M12 26c0-6 5-10 12-10s12 4 12 10"/><circle cx="20" cy="24" r="2"/><circle cx="28" cy="22" r="1.5"/><circle cx="24" cy="28" r="2.5"/><circle cx="18" cy="30" r="1"/><path d="M24 16v-6"/><circle cx="24" cy="8" r="2"/></svg>`,
+    obstetrics_gynaecology: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="12" r="5"/><path d="M24 17v8"/><path d="M16 25c0 6 3 10 8 10s8-4 8-10"/><path d="M16 25c-4 0-6 3-6 6s2 4 6 4"/><path d="M32 25c4 0 6 3 6 6s-2 4-6 4"/><path d="M20 35l4 6 4-6"/></svg>`,
+    ophthalmology: `<svg viewBox="0 0 48 48" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="24" rx="14" ry="8"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="24" r="1.5"/><path d="M24 4v6"/><path d="M24 38v6"/><path d="M4 24h6"/><path d="M38 24h6"/><path d="M10 10l4 4"/><path d="M34 34l4 4"/><path d="M38 10l-4 4"/><path d="M14 34l-4 4"/></svg>`,
+    orthopaedics: `<svg viewBox="0 0 48 48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6c-4 0-6 4-6 8v8c0 4 2 6 4 8l2 4v8h12v-8l2-4c2-2 4-4 4-8v-8c0-4-2-8-6-8"/><path d="M18 20h12"/><path d="M16 28h16"/><circle cx="24" cy="14" r="3"/></svg>`,
+    otorhinolaryngology_ent: `<svg viewBox="0 0 48 48" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12c4 0 6 3 6 6s-2 6-6 6h-2v8c0 2-2 4-4 4"/><path d="M26 36h-6c-2 0-4-2-4-4v-4"/><ellipse cx="28" cy="20" rx="6" ry="8"/><path d="M22 18c-2-4-6-4-8-2s-2 6 0 8c2 2 4 6 4 10"/><path d="M18 16c-4-2-8 0-8 4"/></svg>`,
+    paediatrics: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><circle cx="21" cy="14" r="1.5"/><circle cx="27" cy="14" r="1.5"/><path d="M21 19c1 1 3 1 4 0"/><path d="M24 24v6c0 4 2 6 4 8h4"/><path d="M24 24v6c0 4-2 6-4 8h-4"/><path d="M16 30l-4 4"/><path d="M32 30l4 4"/><path d="M22 38h4"/></svg>`,
+    pathology: `<svg viewBox="0 0 48 48" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 42V18l-4-8h20l-4 8v24"/><path d="M14 10h20"/><circle cx="24" cy="28" r="4"/><circle cx="20" cy="34" r="2"/><circle cx="28" cy="32" r="1.5"/><path d="M22 18h4"/><path d="M24 18v-4"/><path d="M20 8l-2-4"/><path d="M28 8l2-4"/></svg>`,
+    pharmacology: `<svg viewBox="0 0 48 48" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="16" height="24" rx="2"/><path d="M20 16V10c0-2 2-4 4-4s4 2 4 4v6"/><path d="M16 24h16"/><path d="M20 8h8"/><path d="M22 28h4"/><path d="M24 28v6"/><path d="M36 20l6-6"/><path d="M38 26l4-2"/></svg>`,
+    physiology: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 42S8 32 8 20c0-6 4-10 8-10 3 0 5 2 8 6 3-4 5-6 8-6 4 0 8 4 8 10 0 12-16 22-16 22z"/><path d="M4 24h8l4-8 4 16 4-12 4 8 4-4h8"/></svg>`,
+    psychiatry: `<svg viewBox="0 0 48 48" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 38c-4-2-6-6-6-12 0-8 6-14 14-14s14 6 14 14c0 6-2 10-6 12"/><path d="M16 26c0-4 4-8 8-8"/><path d="M32 26c0-4-4-8-8-8"/><path d="M20 32c2 2 6 2 8 0"/><path d="M18 20c-2-4-2-8 0-12"/><path d="M30 20c2-4 2-8 0-12"/><path d="M24 8v-4"/></svg>`,
+    radiology: `<svg viewBox="0 0 48 48" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="6" width="28" height="36" rx="2"/><path d="M18 14h12"/><path d="M24 14v20"/><path d="M18 20h12"/><path d="M18 26h12"/><path d="M18 14l-4-4"/><path d="M30 14l4-4"/><path d="M18 34l-4 4"/><path d="M30 34l4 4"/></svg>`,
+    surgery: `<svg viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40l20-20"/><path d="M28 20l4-4"/><path d="M32 16l4-4"/><path d="M36 12l4-4"/><path d="M28 20c-2-4-2-8 0-12"/><path d="M26 22c-4-2-8-2-12 0"/><path d="M14 22l-4 4"/><path d="M10 26l-2 4"/></svg>`
+  };
+
   // --- Pxlkit Crisp Pixel SVG Helpers ---
   const PXL_ICONS = {
     fire: `<svg viewBox="0 0 16 16" width="18" height="18" class="pxl-icon-svg" fill="none"><path fill="#f59e0b" d="M7 1h2v3H7zM5 4h6v2H5z"/><path fill="#ef4444" d="M4 6h8v4H4z"/><path fill="#ffd700" d="M6 8h4v4H6z"/><path fill="#ef4444" d="M3 10h10v4H3zM5 14h6v2H5z"/></svg>`,
@@ -101,6 +123,34 @@
     return 'icons/medicine.png';
   }
 
+  function getSubjectSvgIcon(subjectIdOrName) {
+    if (!subjectIdOrName) return SUBJECT_SVG_ICONS.medicine;
+    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
+    if (SUBJECT_SVG_ICONS[key]) return SUBJECT_SVG_ICONS[key];
+    for (const [id, svg] of Object.entries(SUBJECT_SVG_ICONS)) {
+      if (key.includes(id) || id.includes(key)) return svg;
+    }
+    return SUBJECT_SVG_ICONS.medicine;
+  }
+
+  function getSubjectAccentColor(subjectIdOrName) {
+    const colorMap = {
+      anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
+      community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
+      medicine: '#3b82f6', microbiology: '#22c55e', obstetrics_gynaecology: '#ef4444',
+      ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology_ent: '#14b8a6',
+      paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
+      physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444'
+    };
+    if (!subjectIdOrName) return '#3b82f6';
+    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
+    if (colorMap[key]) return colorMap[key];
+    for (const [id, c] of Object.entries(colorMap)) {
+      if (key.includes(id) || id.includes(key)) return c;
+    }
+    return '#3b82f6';
+  }
+
   function getDataset() {
     if (typeof syllabusData !== 'undefined' && Array.isArray(syllabusData)) return syllabusData;
     if (typeof window !== 'undefined' && window.syllabusData && Array.isArray(window.syllabusData)) return window.syllabusData;
@@ -116,6 +166,7 @@
     goals: { ...DEFAULT_GOALS },
     personal: { ...DEFAULT_PERSONAL },
     theme: 'dark',
+    themeStyle: 'modern',
     searchQuery: '',
     streakData: { lastStudyDate: null, currentStreak: 0 },
     dailyHistory: {},
@@ -169,6 +220,13 @@
       } else {
         state.theme = 'dark';
         localStorage.setItem(STORAGE_KEYS.THEME, 'dark');
+      }
+
+      const savedThemeStyle = localStorage.getItem('marrow_planner_theme_style');
+      if (savedThemeStyle === 'modern' || savedThemeStyle === 'retro') {
+        state.themeStyle = savedThemeStyle;
+      } else {
+        state.themeStyle = 'modern';
       }
 
       const savedStreak = localStorage.getItem(STORAGE_KEYS.STREAK);
@@ -240,6 +298,7 @@
       localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
       localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
       localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
+      localStorage.setItem('marrow_planner_theme_style', state.themeStyle || 'modern');
       localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
       localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
       localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
@@ -494,6 +553,8 @@
         completedHours: (subCompletedDuration / 60).toFixed(1),
         percentage: subPercentage,
         icon: getSubjectIconSrc(subject.id || subject.subject),
+        svgIcon: getSubjectSvgIcon(subject.id || subject.subject),
+        accentColor: getSubjectAccentColor(subject.id || subject.subject),
         raw: subject
       };
     });
@@ -613,6 +674,7 @@
         items: [
           { id: 'act-sync-goals', label: 'Synchronize Daily Targets & Pace', shortcut: 'Ctrl+G', icon: 'track_changes', action: () => { closeSpotlightModal(); openGoalModal(); } },
           { id: 'act-toggle-theme', label: 'Toggle Light / Dark Mode', shortcut: 'Ctrl+T', icon: 'contrast', action: () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; applyTheme(state.theme); saveState(); } },
+          { id: 'act-toggle-style', label: `Switch to ${state.themeStyle === 'modern' ? 'Retro RPG' : 'Modern'} Theme`, shortcut: 'Ctrl+Shift+T', icon: 'palette', action: () => { state.themeStyle = state.themeStyle === 'modern' ? 'retro' : 'modern'; applyTheme(state.theme); saveState(); closeSpotlightModal(); showToast(`Switched to ${state.themeStyle === 'retro' ? 'Retro RPG' : 'Modern'} theme`, 'palette'); } },
           { id: 'act-profile', label: 'Open Doctor Profile & Exam Settings', shortcut: 'Ctrl+P', icon: 'account_circle', action: () => { closeSpotlightModal(); openProfileBottomSheet(); } }
         ]
       },
@@ -648,7 +710,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 6px;">
           ${(typeof MARROW_CURRICULUM !== 'undefined' ? MARROW_CURRICULUM : []).slice(0, 8).map(s => `
             <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 8px 10px; display: flex; align-items: center; gap: 8px;">
-              <img src="${s.icon}" style="width: 22px; height: 22px; object-fit: contain;" alt="${s.name}">
+              <div style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:${getSubjectAccentColor(s.id)};">${getSubjectSvgIcon(s.id)}</div>
               <span style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${s.name}</span>
             </div>
           `).join('')}
@@ -714,7 +776,7 @@
         ${searchData.subjects.map(s => `
           <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="${s.icon}" style="width: 28px; height: 28px; object-fit: contain;" alt="${s.name}">
+              <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:${getSubjectAccentColor(s.id)};">${getSubjectSvgIcon(s.id)}</div>
               <span style="font-weight: 700; font-size: 0.95rem; font-family: var(--font-display);">${s.name}</span>
             </div>
             <span class="v2-hud-badge">${s.videosCount} vids</span>
@@ -1100,19 +1162,13 @@
   }
 
   // --- Theme Helper ---
-  function applyTheme(theme) {
+  function applyTheme(theme, themeStyle) {
     const curTheme = theme || state.theme || 'dark';
+    const curStyle = themeStyle || state.themeStyle || 'modern';
 
     document.documentElement.setAttribute('data-theme', curTheme);
     document.documentElement.setAttribute('data-theme-accent', 'cobalt');
-    document.documentElement.setAttribute('data-shadow-style', 'offset');
-
-    // FlowMD Logo preserved in topbar (inline SVG with theme-aware currentColor)
-
-    const favicon = document.querySelector('link[rel="icon"]');
-    if (favicon) {
-      favicon.href = 'flowmd_mark.png';
-    }
+    document.documentElement.setAttribute('data-theme-style', curStyle);
   }
 
   function resetPageScrollTop() {
@@ -1188,11 +1244,10 @@
     const overallPct = stats ? stats.percentage : 0;
 
     return `
-      <!-- PxlKit 16-Bit RPG Subject Completion Heatmap Command HUD -->
-      <div class="pxl-feature-card pxl-subject-heatmap-card" style="margin-top: 24px; margin-bottom: 24px; padding: 20px; background-color: var(--retro-surface, #0d1017); border: 2px solid var(--retro-cyan, #00f0ff); box-shadow: 4px 4px 0 0 #000000;">
+      <div class="pxl-feature-card pxl-subject-heatmap-card" style="margin-top: 24px; margin-bottom: 24px; padding: 20px;">
         
         <!-- Header Bar -->
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--retro-border, #282f42); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <svg class="pxl-icon" viewBox="0 0 16 16" width="20" height="20" fill="none">
               <rect x="2" y="2" width="5" height="5" fill="#00f0ff" stroke="#000000" stroke-width="1"/>
@@ -1200,21 +1255,17 @@
               <rect x="2" y="9" width="5" height="5" fill="#ffaa00" stroke="#000000" stroke-width="1"/>
               <rect x="9" y="9" width="5" height="5" fill="#ff5555" stroke="#000000" stroke-width="1"/>
             </svg>
-            <h3 style="font-family: var(--font-display), 'Pixelify Sans', monospace; font-size: 1.15rem; font-weight: 700; color: var(--retro-cyan, #00f0ff); margin: 0; display: flex; align-items: center; gap: 6px;">
-              SUBJECT COMPLETION HEATMAP
-            </h3>
+            <h3 class="heatmap-card-title">SUBJECT COMPLETION HEATMAP</h3>
             <span class="help-icon-btn" data-help-type="subject-heatmap" title="Subject Mastery Tier Rules">
               <svg class="pxl-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
-                <circle cx="8" cy="8" r="7" fill="rgba(0, 240, 255, 0.2)" stroke="#00f0ff" stroke-width="2" />
+                <circle cx="8" cy="8" r="7" fill="rgba(0, 240, 255, 0.2)" stroke="currentColor" stroke-width="2" />
                 <path d="M8 4.5V5.5M8 7.5V11.5" stroke="#ffffff" stroke-width="2" stroke-linecap="square" />
               </svg>
             </span>
           </div>
           
           <!-- Live Mastery Counter Badge -->
-          <span class="v2-hud-badge" style="color: var(--retro-gold, #ffcc00); border-color: var(--retro-gold, #ffcc00); font-family: var(--font-hud); font-size: 0.85rem;">
-            OVERALL MASTERY: ${overallPct}%
-          </span>
+          <span class="v2-hud-badge">OVERALL MASTERY: ${overallPct}%</span>
         </div>
 
         <!-- Telemetry Overview Bar -->
@@ -1241,10 +1292,10 @@
           </div>
         </div>
 
-        <!-- Interactive 16-Bit Legend Filter Bar -->
+        <!-- Interactive Tier Filter Bar -->
         <div class="pxl-heatmap-filter-bar">
-          <span style="font-family: var(--font-hud); font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">FILTER TIERS:</span>
-          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+          <span class="heatmap-filter-label">FILTER TIERS:</span>
+          <div class="heatmap-filter-group">
             <button type="button" class="pxl-heatmap-filter-btn active" data-filter="all">ALL (${subjects.length})</button>
             <button type="button" class="pxl-heatmap-filter-btn tier-critical" data-filter="critical">&lt;25% (${countCritical})</button>
             <button type="button" class="pxl-heatmap-filter-btn tier-pace" data-filter="pace">25%–50% (${countPace})</button>
@@ -1253,7 +1304,7 @@
           </div>
         </div>
 
-        <!-- 16-Bit Pixel Heatmap Grid -->
+        <!-- Heatmap Grid -->
         <div class="pxl-heatmap-grid">
           ${subjects.map(sub => {
             let tierClass = 'critical';
@@ -1275,27 +1326,20 @@
             }
 
             return `
-              <div class="pxl-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="border-color: ${tierColor}; background-color: ${tierBg};">
+              <div class="pxl-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="--tier-color: ${tierColor}; --tier-bg: ${tierBg}; --subject-accent: ${getSubjectAccentColor(sub.id)};">
                 
-                <!-- Top Icon & Tier Badge -->
-                <div class="pxl-tile-top">
-                  <div class="pxl-tile-icon-box" style="border-color: ${tierColor};">
-                    <img src="${sub.icon}" alt="${sub.name}" class="pxl-tile-icon">
-                  </div>
-                  <span class="pxl-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(0)}%</span>
+                <!-- Subject SVG Icon -->
+                <div class="pxl-tile-icon-area">
+                  <div class="pxl-tile-svg-icon">${sub.svgIcon}</div>
                 </div>
 
-                <!-- Subject Title -->
+                <!-- Subject Name -->
                 <div class="pxl-tile-name" title="${sub.name}">${sub.name}</div>
 
-                <!-- Telemetry Sub-text -->
-                <div class="pxl-tile-telemetry">
-                  <span>${sub.completedVideos}/${sub.totalVideos} vids</span>
-                </div>
-
-                <!-- Micro 16-Bit HP Progress Bar -->
-                <div class="pxl-tile-hp-bar">
-                  <div class="pxl-tile-hp-fill" style="width: ${Math.max(4, sub.percentage)}%; background-color: ${tierColor};"></div>
+                <!-- Tier Badge -->
+                <div class="pxl-tile-bottom">
+                  <span class="pxl-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(0)}%</span>
+                  <span class="pxl-tile-telemetry">${sub.completedVideos}/${sub.totalVideos}</span>
                 </div>
               </div>
             `;
@@ -1328,17 +1372,17 @@
       const dailyPctPlan = Math.min(100, Math.round((todayDoneForPlan / queue.baseTargetPace) * 100));
 
       return `
-        <div class="plan-quest-block" style="border-left: 4px solid ${planColor}; background: ${planColor}0a; border-radius: 6px; padding: 14px 14px 12px 16px; margin-bottom: 12px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="plan-badge" style="background: ${planColor}; color: #ffffff; font-size: 0.76rem; padding: 3px 10px; border-radius: 4px; font-family: var(--font-hud); font-weight: 900; box-shadow: 2px 2px 0 0 #000000;">${plan.label}</span>
-              <span style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text-primary);">${queue.subjectName}</span>
+        <div class="plan-quest-block" style="--plan-accent: ${planColor};">
+          <div class="plan-quest-header">
+            <div class="plan-quest-header-left">
+              <span class="plan-quest-badge" style="background:${planColor};">${plan.label}</span>
+              <span class="plan-quest-subject-name">${queue.subjectName}</span>
             </div>
-            <span style="font-family: var(--font-hud); font-size: 0.88rem; color: var(--text-muted);">${todayDoneForPlan}/${queue.baseTargetPace} • ${dailyPctPlan}%</span>
+            <span class="plan-quest-progress">${todayDoneForPlan}/${queue.baseTargetPace} • ${dailyPctPlan}%</span>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-            <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted);">
+          <div class="plan-quest-stats-row">
+            <div class="plan-quest-target-text">
               TARGET: <strong>${queue.baseTargetPace} VIDS/DAY</strong>
             </div>
             <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height: 30px; padding: 0 10px; font-size: 0.82rem;">
@@ -1349,7 +1393,7 @@
 
           ${queue.isDailyTargetAchieved ? `
             ${(plan.extraBatchesCompletedToday || 0) > 0 ? `
-              <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--retro-purple, #a855f7);">
+              <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);">
                 <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;">⚡</div>
                 <div class="v2-alert-content">
                   <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA BATCH #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
@@ -1360,13 +1404,13 @@
               </div>
             ` : `
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px;">
-                <div class="v2-alert-icon-box" style="background: var(--v2-pine-green, #10b981);">${PXL_ICONS.trophy}</div>
+                <div class="v2-alert-icon-box" style="background: var(--accent-success, #10b981);">${PXL_ICONS.trophy}</div>
                 <div class="v2-alert-content">
-                  <div class="v2-alert-category" style="color: var(--v2-pine-green, #10b981);">${plan.label} DAILY BATCH ▶ COMPLETED</div>
+                  <div class="v2-alert-category" style="color: var(--accent-success, #10b981);">${plan.label} DAILY BATCH ▶ COMPLETED</div>
                   <div class="v2-alert-title">Daily Target Achieved!</div>
                   <div class="v2-alert-body">All ${queue.baseTargetPace} videos done for ${queue.subjectName}.</div>
                 </div>
-                <div class="v2-alert-bottom-bar" style="width:100%; background:var(--v2-pine-green,#10b981);"></div>
+                <div class="v2-alert-bottom-bar" style="width:100%; background:var(--accent-success,#10b981);"></div>
               </div>
             `}
             <button class="v2-arcade-btn btn-advance-queue" data-plan-id="${plan.id}" style="width:100%; height:40px; font-weight:700; font-size:0.9rem; justify-content:center; gap:8px;">
@@ -1390,11 +1434,11 @@
                       <input type="checkbox" class="queue-chk" data-video-id="${v.id}" data-plan-id="${plan.id}" ${isDone ? 'checked' : ''}>
                       <span class="v2-pixel-checkbox-box"></span>
                       <div>
-                        <div class="v2-quest-title"><span style="color:${planColor}; font-family:var(--font-hud); margin-right:4px;">${vNum}</span> ${v.title}</div>
-                        <div style="font-size:0.78rem; color:var(--text-muted); font-family:var(--font-hud); margin-top:2px;">${v.chapterName}</div>
+                        <div class="v2-quest-title"><span class="quest-video-num">${vNum}</span> ${v.title}</div>
+                        <div class="quest-video-chapter">${v.chapterName}</div>
                       </div>
                     </label>
-                    <div style="font-family:var(--font-hud); font-size:0.95rem; color:var(--text-muted); font-weight:700;">${durStr}</div>
+                    <div class="quest-video-dur">${durStr}</div>
                   </div>
                 `;
               }).join('')}
@@ -1409,34 +1453,28 @@
 
     DOM.appMain.innerHTML = `
       <!-- Hero Card -->
-      <div class="pxl-feature-card-wrapper" style="margin-bottom: 16px;">
+      <div style="margin-bottom: 16px;">
         <div class="pxl-feature-card hero-banner-card">
           <div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
               ${hasDualPlans ? `
-                <span class="hero-top-badge" style="background:#e11d48; color:#ffffff; font-family:var(--font-hud); font-size:0.82rem; font-weight:900; padding:4px 10px; border-radius:4px; box-shadow:2px 2px 0 0 #000000; text-transform:uppercase; letter-spacing:0.05em;">
-                  ⚡ DUAL-TRACK MODE
-                </span>
+                <span class="hero-top-badge dual-track">⚡ DUAL-TRACK MODE</span>
               ` : ''}
-              <span style="margin-left:auto; font-family:var(--font-hud); font-size:0.85rem; color:var(--retro-gold,#ffcc00);">
-                🔥 ${streakCount} day streak
-              </span>
+              <span class="hero-streak-text">🔥 ${streakCount} day streak</span>
             </div>
-            <h1 class="hero-card-title" style="font-family:var(--font-display); font-size:1.45rem; font-weight:800; color:#ffffff; margin-bottom:6px; letter-spacing:0.02em; text-shadow:2px 2px 0 #000000;">
-              WELCOME BACK, ${docName.toUpperCase()}!
-            </h1>
-            <p class="hero-card-subtitle" style="font-family:var(--font-hud); font-size:1.05rem; color:#a0aec0; margin-bottom:14px; font-weight:600;">
+            <h1 class="hero-card-title">WELCOME BACK, ${docName.toUpperCase()}!</h1>
+            <p class="hero-card-subtitle">
               ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject).join(' + ')}` : `${plans[0]?.targetSubject || 'Entire Syllabus'}`} — ${stats.percentage}% Mastered
             </p>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-hud); font-size:1.1rem; color:#ffffff; margin-bottom:6px; font-weight:700;">
-                <span style="display:flex; align-items:center; gap:6px;">
-                  <span style="color:var(--accent-primary, #00f0ff); font-weight:800;">▶</span>
+              <div class="hero-stat-row">
+                <span class="hero-stat-label">
+                  <span class="icon">▶</span>
                   <span>OVERALL SYLLABUS HP MASTERY</span>
                 </span>
-                <span style="font-weight:800; color:var(--retro-gold,#ffcc00); font-size:1.2rem;">${stats.percentage}%</span>
+                <span class="hero-stat-value">${stats.percentage}%</span>
               </div>
-              <div class="v2-hp-bar-bg" style="height:22px;">
+              <div class="v2-hp-bar-bg hero-hp-bar">
                 <div class="v2-hp-bar-fill" style="width:${stats.percentage}%;"></div>
               </div>
             </div>
@@ -1446,21 +1484,17 @@
 
       <!-- Android PWA Install Banner -->
       ${state.canInstallPWA ? `
-        <div id="pwa-install-banner-card" class="v2-pixel-card" style="padding: 16px; margin-bottom: 20px; border-left: 4px solid var(--retro-cyan, #00f0ff); background: rgba(0, 240, 255, 0.05); border: 2px solid var(--v2-ink); box-shadow: 4px 4px 0 0 #000000;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div style="flex: 1; min-width: 240px;">
+        <div id="pwa-install-banner-card" class="v2-pixel-card pwa-install-banner">
+          <div class="pwa-install-banner-content">
+            <div class="pwa-install-text">
               <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="v2-hud-badge" style="color: var(--retro-cyan, #00f0ff); border-color: var(--retro-cyan, #00f0ff); font-size: 0.76rem;">📱 MOBILE PWA</span>
+                <span class="v2-hud-badge">📱 MOBILE PWA</span>
               </div>
-              <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">
-                Install FlowMD Android App
-              </h3>
-              <p style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">
-                Get offline access & hardware back-button integration!
-              </p>
+              <h3 class="pwa-install-title">Install FlowMD Android App</h3>
+              <p class="pwa-install-desc">Get offline access & hardware back-button integration!</p>
             </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="v2-arcade-btn" id="btn-pwa-install-now" style="height: 38px; background: var(--retro-cyan, #00f0ff); color: #0f172a; font-weight: 800; font-size: 0.88rem;">
+            <div class="pwa-install-buttons">
+              <button type="button" class="v2-arcade-btn" id="btn-pwa-install-now" style="height: 38px; font-size: 0.88rem;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">get_app</span>
                 <span>Install</span>
               </button>
@@ -1474,10 +1508,10 @@
 
       <!-- All-Quests-Done Banner -->
       ${allQuestsDone ? `
-        <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 16px;">
+        <div class="v2-achievement-alert congrats-card-pop all-quests-banner">
           <div class="v2-alert-icon-box" style="background: #ffd700;">${PXL_ICONS.trophy}</div>
           <div class="v2-alert-content">
-            <div class="v2-alert-category" style="color:#ffd700;">🏆 ALL DAILY QUESTS COMPLETE!</div>
+            <div class="v2-alert-category all-quests-category">🏆 ALL DAILY QUESTS COMPLETE!</div>
             <div class="v2-alert-title">Outstanding Performance!</div>
             <div class="v2-alert-body">Every plan's daily target has been achieved today!</div>
           </div>
@@ -1609,7 +1643,7 @@
         <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
           <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <img src="${sub.icon}" style="width: 34px; height: 34px; object-fit: contain;" alt="${sub.name}">
+              <div style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</div>
               <div>
                 <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
                 <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
@@ -1658,7 +1692,7 @@
       </div>
 
       <div class="v2-pixel-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 16px;">
-        <img src="${subObj.icon}" style="width: 46px; height: 46px; object-fit: contain;" alt="${subObj.name}">
+        <div style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;color:${subObj.accentColor};">${subObj.svgIcon}</div>
         <div style="flex: 1;">
           <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;">${subObj.name}</div>
           <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); margin: 2px 0 6px 0;">${subObj.completedVideos} OF ${subObj.totalVideos} COMPLETED (${subObj.percentage}%)</div>
