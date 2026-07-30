@@ -1351,102 +1351,88 @@ const syllabusData = [
     "chapters": [
       {
         "name": "GENERAL PHARMACOLOGY",
-        "modules": 5,
-        "hours": 2.3,
+        "modules": 12,
+        "hours": 8.7,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__gen__v1",
             "videoNumber": "#01",
-            "title": "@m How to Approach Pharmacology Edition 8 [4",
+            "title": "How to Approach Pharmacology Edition 8",
             "durationMins": 8,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__gen__v2",
             "videoNumber": "#02",
             "title": "Introduction to Pharmacokinetics and Pharmacodynamics",
             "durationMins": 16,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__gen__v3",
             "videoNumber": "#03",
-            "title": "Pharmacokinetics: Absorption - Part 1 [4",
+            "title": "Pharmacokinetics: Absorption - Part 1",
             "durationMins": 30,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__gen__v4",
             "videoNumber": "#04",
             "title": "Pharmacokinetics: Absorption - Part 2",
             "durationMins": 52,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__gen__v5",
             "videoNumber": "#05",
             "title": "Pharmacokinetics: Distribution",
             "durationMins": 30,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "FRO",
-        "modules": 2,
-        "hours": 1.6,
-        "videos": [
+          },
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__gen__v6",
             "videoNumber": "#06",
             "title": "Pharmacokinetics: Metabolism",
             "durationMins": 38,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__gen__v7",
             "videoNumber": "#07",
             "title": "Pharmacokinetics: Excretion",
             "durationMins": 60,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "§ F",
-        "modules": 5,
-        "hours": 4.7,
-        "videos": [
+          },
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__gen__v8",
             "videoNumber": "#08",
             "title": "Pharmacodynamics: Potency, Efficacy and Dose Response Curve",
             "durationMins": 61,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__gen__v9",
             "videoNumber": "#09",
             "title": "Pharmacodynamics: Drug Receptors and Interactions",
             "durationMins": 70,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__gen__v10",
             "videoNumber": "#10",
             "title": "Drug Development and Clinical Trials",
             "durationMins": 49,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__gen__v11",
             "videoNumber": "#11",
             "title": "ADR and Pharmacovigilance, Pharmacogenetics and Pharmacogenomics",
             "durationMins": 45,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__gen__v12",
             "videoNumber": "#12",
             "title": "General Pharmacology: Miscellaneous",
             "durationMins": 57,
@@ -1460,49 +1446,49 @@ const syllabusData = [
         "hours": 6.5,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__ans__v1",
             "videoNumber": "#13",
             "title": "Introduction to Autonomic Nervous System (ANS)",
             "durationMins": 54,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__ans__v2",
             "videoNumber": "#14",
             "title": "Cholinergic Drugs",
             "durationMins": 73,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__ans__v3",
             "videoNumber": "#15",
-            "title": "@n  Anti-cholinergic Drugs",
+            "title": "Anti-cholinergic Drugs",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__ans__v4",
             "videoNumber": "#16",
             "title": "Sympathetic Nervous System: Neurotransmitters and Receptors",
             "durationMins": 42,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__ans__v5",
             "videoNumber": "#17",
             "title": "Adrenergic Drugs: Part 1",
             "durationMins": 62,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v6",
+            "id": "pharm__ans__v6",
             "videoNumber": "#18",
             "title": "Adrenergic Drugs: Part 2",
             "durationMins": 59,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v7",
+            "id": "pharm__ans__v7",
             "videoNumber": "#19",
             "title": "Anti-adrenergic Drugs",
             "durationMins": 51,
@@ -1513,54 +1499,54 @@ const syllabusData = [
       {
         "name": "CARDIOVASCULAR SYSTEM",
         "modules": 7,
-        "hours": 6.3,
+        "hours": 6.4,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__cvs__v1",
             "videoNumber": "#20",
             "title": "Anti-arrhythmic Drugs: Part 1",
             "durationMins": 66,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__cvs__v2",
             "videoNumber": "#21",
             "title": "Anti-arrhythmic Drugs: Part 2",
             "durationMins": 45,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__cvs__v3",
             "videoNumber": "#22",
             "title": "Drugs used in CHF",
             "durationMins": 75,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__cvs__v4",
             "videoNumber": "#23",
             "title": "Vasodilators",
             "durationMins": 69,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__cvs__v5",
             "videoNumber": "#24",
             "title": "Anti-hypertensive Drugs",
             "durationMins": 33,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v6",
+            "id": "pharm__cvs__v6",
             "videoNumber": "#25",
             "title": "Anti-anginal Drugs",
             "durationMins": 27,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v7",
+            "id": "pharm__cvs__v7",
             "videoNumber": "#26",
-            "title": "@n  Hypolipidemic Drugs",
+            "title": "Hypolipidemic Drugs",
             "durationMins": 66,
             "durationSecs": 0
           }
@@ -1569,17 +1555,17 @@ const syllabusData = [
       {
         "name": "RENAL SYSTEM",
         "modules": 2,
-        "hours": 2.5,
+        "hours": 2.6,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__ren__v1",
             "videoNumber": "#27",
             "title": "Diuretics: Part 1",
             "durationMins": 68,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__ren__v2",
             "videoNumber": "#28",
             "title": "Diuretics: Part 2",
             "durationMins": 85,
@@ -1590,75 +1576,75 @@ const syllabusData = [
       {
         "name": "CENTRAL AND PERIPHERAL NERVOUS SYSTEM",
         "modules": 10,
-        "hours": 8.3,
+        "hours": 8.2,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__cns__v1",
             "videoNumber": "#29",
             "title": "Anti-epileptic Drugs: Part 1",
             "durationMins": 69,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__cns__v2",
             "videoNumber": "#30",
             "title": "Anti-epileptic Drugs: Part 2",
             "durationMins": 29,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__cns__v3",
             "videoNumber": "#31",
             "title": "Sedative Hypnotic Drugs",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__cns__v4",
             "videoNumber": "#32",
             "title": "Opioids: Part 1",
             "durationMins": 47,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__cns__v5",
             "videoNumber": "#33",
             "title": "Opioids: Part 2",
             "durationMins": 54,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v6",
+            "id": "pharm__cns__v6",
             "videoNumber": "#34",
             "title": "Affect Disorders: Part 1",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v7",
+            "id": "pharm__cns__v7",
             "videoNumber": "#35",
             "title": "Affect Disorders: Part 2",
             "durationMins": 77,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v8",
+            "id": "pharm__cns__v8",
             "videoNumber": "#36",
             "title": "Anti-psychotic Drugs",
             "durationMins": 60,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v9",
+            "id": "pharm__cns__v9",
             "videoNumber": "#37",
             "title": "Neurodegenerative Disorders",
             "durationMins": 50,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v10",
+            "id": "pharm__cns__v10",
             "videoNumber": "#38",
-            "title": "@n Alcohol and Smoking Dependence",
+            "title": "Alcohol and Smoking Dependence",
             "durationMins": 35,
             "durationSecs": 0
           }
@@ -1667,94 +1653,94 @@ const syllabusData = [
       {
         "name": "ANTIMICROBIALS",
         "modules": 13,
-        "hours": 10.9,
+        "hours": 10.8,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__anti__v1",
             "videoNumber": "#39",
             "title": "Introduction to Antibacterial Drugs",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__anti__v2",
             "videoNumber": "#40",
             "title": "Cell Wall Synthesis Inhibitors: Part 1",
             "durationMins": 64,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__anti__v3",
             "videoNumber": "#41",
-            "title": "Cell Wall Synthesis Inhibitors: Part 2 —",
+            "title": "Cell Wall Synthesis Inhibitors: Part 2",
             "durationMins": 56,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__anti__v4",
             "videoNumber": "#42",
             "title": "Cell Wall Synthesis Inhibitors: Part 3",
             "durationMins": 41,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__anti__v5",
             "videoNumber": "#43",
             "title": "Protein Synthesis Inhibitors: Part 1",
             "durationMins": 51,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v6",
+            "id": "pharm__anti__v6",
             "videoNumber": "#44",
             "title": "Protein Synthesis Inhibitors: Part 2",
             "durationMins": 37,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v7",
+            "id": "pharm__anti__v7",
             "videoNumber": "#45",
             "title": "Other Antibacterial Drugs",
             "durationMins": 66,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v8",
+            "id": "pharm__anti__v8",
             "videoNumber": "#46",
             "title": "Anti-fungal Drugs",
             "durationMins": 42,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v9",
+            "id": "pharm__anti__v9",
             "videoNumber": "#47",
             "title": "Non-retroviral Drugs",
             "durationMins": 68,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v10",
+            "id": "pharm__anti__v10",
             "videoNumber": "#48",
             "title": "Anti-retroviral Drugs",
             "durationMins": 38,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v11",
+            "id": "pharm__anti__v11",
             "videoNumber": "#49",
             "title": "Anti-mycobacterial Drugs",
             "durationMins": 55,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v12",
+            "id": "pharm__anti__v12",
             "videoNumber": "#50",
             "title": "Anti-protozoal Drugs",
-            "durationMins": 69,
+            "durationMins": 63,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v13",
+            "id": "pharm__anti__v13",
             "videoNumber": "#51",
             "title": "Anti-helminthic Drugs",
             "durationMins": 19,
@@ -1764,60 +1750,53 @@ const syllabusData = [
       },
       {
         "name": "ENDOCRINE SYSTEM",
-        "modules": 1,
-        "hours": 0.9,
+        "modules": 7,
+        "hours": 4,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__endo__v1",
             "videoNumber": "#52",
             "title": "Anti-diabetic Drugs: Part 1",
             "durationMins": 53,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "— LL]",
-        "modules": 6,
-        "hours": 3.1,
-        "videos": [
+          },
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__endo__v2",
             "videoNumber": "#53",
-            "title": "Anti-diabetic Drugs: Part 2 RD",
+            "title": "Anti-diabetic Drugs: Part 2",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__endo__v3",
             "videoNumber": "#54",
             "title": "Drugs Acting on Reproductive System",
             "durationMins": 31,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__endo__v4",
             "videoNumber": "#55",
             "title": "Growth Hormone and Related Drugs",
             "durationMins": 24,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__endo__v5",
             "videoNumber": "#56",
             "title": "Steroids",
             "durationMins": 26,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__endo__v6",
             "videoNumber": "#57",
             "title": "Drugs acting on Bone",
             "durationMins": 30,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v6",
+            "id": "pharm__endo__v7",
             "videoNumber": "#58",
             "title": "Drugs acting on Thyroid",
             "durationMins": 28,
@@ -1831,35 +1810,35 @@ const syllabusData = [
         "hours": 3.1,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__aut__v1",
             "videoNumber": "#59",
             "title": "Anti-histaminics",
             "durationMins": 38,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__aut__v2",
             "videoNumber": "#60",
             "title": "Serotonin-related Drugs",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__aut__v3",
             "videoNumber": "#61",
             "title": "Eicosanoids",
             "durationMins": 55,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__aut__v4",
             "videoNumber": "#62",
             "title": "Gout",
             "durationMins": 24,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v5",
+            "id": "pharm__aut__v5",
             "videoNumber": "#63",
             "title": "Rheumatoid Arthritis",
             "durationMins": 24,
@@ -1873,14 +1852,14 @@ const syllabusData = [
         "hours": 2.1,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__hem__v1",
             "videoNumber": "#64",
             "title": "Anti-aggregants and Hematopoietic Agents",
             "durationMins": 44,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__hem__v2",
             "videoNumber": "#65",
             "title": "Anti-coagulants and Fibrinolytics",
             "durationMins": 82,
@@ -1890,31 +1869,18 @@ const syllabusData = [
       },
       {
         "name": "RESPIRATORY SYSTEM",
-        "modules": 0,
-        "hours": 0,
-        "videos": []
-      },
-      {
-        "name": "HEMA OLOGY",
-        "modules": 1,
-        "hours": 0.6,
+        "modules": 2,
+        "hours": 0.8,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__resp__v1",
             "videoNumber": "#66",
             "title": "Bronchial Asthma",
             "durationMins": 35,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "RED",
-        "modules": 1,
-        "hours": 0.3,
-        "videos": [
+          },
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__resp__v2",
             "videoNumber": "#67",
             "title": "Anti-tussives",
             "durationMins": 15,
@@ -1928,21 +1894,21 @@ const syllabusData = [
         "hours": 1.6,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__gi__v1",
             "videoNumber": "#68",
             "title": "Peptic Ulcer Disease",
             "durationMins": 46,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__gi__v2",
             "videoNumber": "#69",
             "title": "Prokinetics and Antiemetics",
             "durationMins": 23,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__gi__v3",
             "videoNumber": "#70",
             "title": "Laxatives and Antidiarrheal Drugs",
             "durationMins": 24,
@@ -1956,7 +1922,7 @@ const syllabusData = [
         "hours": 0.6,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__imm__v1",
             "videoNumber": "#71",
             "title": "Immunomodulators",
             "durationMins": 37,
@@ -1970,28 +1936,28 @@ const syllabusData = [
         "hours": 3.1,
         "videos": [
           {
-            "id": "pharmacology__v1",
+            "id": "pharm__neo__v1",
             "videoNumber": "#72",
             "title": "Introduction to Anti-cancer Drugs",
             "durationMins": 68,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v2",
+            "id": "pharm__neo__v2",
             "videoNumber": "#73",
-            "title": "‘@m  Non-cell Cycle Specific Drugs",
+            "title": "Non-cell Cycle Specific Drugs",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v3",
+            "id": "pharm__neo__v3",
             "videoNumber": "#74",
             "title": "Cell Cycle Specific Drugs",
             "durationMins": 41,
             "durationSecs": 0
           },
           {
-            "id": "pharmacology__v4",
+            "id": "pharm__neo__v4",
             "videoNumber": "#75",
             "title": "Miscellaneous Drugs",
             "durationMins": 32,
