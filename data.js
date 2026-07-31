@@ -5,8 +5,8 @@
 
 const syllabusData = [
   {
-    "name": "Anatomy",
     "id": "anatomy",
+    "subject": "Anatomy",
     "chapters": [
       {
         "name": "EMBRYOLOGY",
@@ -669,8 +669,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Biochemistry",
     "id": "biochemistry",
+    "subject": "Biochemistry",
     "chapters": [
       {
         "name": "GENERAL",
@@ -1053,8 +1053,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Physiology",
     "id": "physiology",
+    "subject": "Physiology",
     "chapters": [
       {
         "name": "RENAL PHYSIOLOGY",
@@ -1346,8 +1346,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Pharmacology",
     "id": "pharmacology",
+    "subject": "Pharmacology",
     "chapters": [
       {
         "name": "GENERAL PHARMACOLOGY",
@@ -1968,8 +1968,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Microbiology",
     "id": "microbiology",
+    "subject": "Microbiology",
     "chapters": [
       {
         "name": "GEN. MICROBIO. & GEN. BACTERIO",
@@ -2618,8 +2618,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Pathology",
     "id": "pathology",
+    "subject": "Pathology",
     "chapters": [
       {
         "name": "GENERAL PATHOLOGY",
@@ -3247,8 +3247,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Community Medicine",
     "id": "community_medicine",
+    "subject": "Community Medicine",
     "chapters": [
       {
         "name": "DEMOGRAPHY AND FAMILY PLANNING",
@@ -4100,8 +4100,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Forensic Medicine",
     "id": "forensic_medicine",
+    "subject": "Forensic Medicine",
     "chapters": [
       {
         "name": "FORENSIC TRAUMATOLOGY",
@@ -4456,8 +4456,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Ophthalmology",
     "id": "ophthalmology",
+    "subject": "Ophthalmology",
     "chapters": [
       {
         "name": "BASIC ANATOMY OF EYE",
@@ -4910,8 +4910,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Otorhinolaryngology (ENT)",
     "id": "otorhinolaryngology__ent_",
+    "subject": "Otorhinolaryngology (ENT)",
     "chapters": [
       {
         "name": "EAR",
@@ -5399,8 +5399,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Anaesthesia",
     "id": "anaesthesia",
+    "subject": "Anaesthesia",
     "chapters": [
       {
         "name": "ANAESTHESIA",
@@ -5608,8 +5608,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Dermatology",
     "id": "dermatology",
+    "subject": "Dermatology",
     "chapters": [
       {
         "name": "DERMATOLOGY",
@@ -5803,8 +5803,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Psychiatry",
     "id": "psychiatry",
+    "subject": "Psychiatry",
     "chapters": [
       {
         "name": "PSYCHIATRY",
@@ -5970,8 +5970,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Radiology",
     "id": "radiology",
+    "subject": "Radiology",
     "chapters": [
       {
         "name": "FUNDAMENTALS OF RADIOLOGY",
@@ -6291,8 +6291,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Medicine",
     "id": "medicine",
+    "subject": "Medicine",
     "chapters": [
       {
         "name": "GASTROENTEROLOGY",
@@ -7788,8 +7788,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Surgery",
     "id": "surgery",
+    "subject": "Surgery",
     "chapters": [
       {
         "name": "GENERAL SURGERY",
@@ -8459,8 +8459,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Orthopaedics",
     "id": "orthopaedics",
+    "subject": "Orthopaedics",
     "chapters": [
       {
         "name": "ORTHOPAEDICS",
@@ -8647,8 +8647,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Paediatrics",
     "id": "paediatrics",
+    "subject": "Paediatrics",
     "chapters": [
       {
         "name": "NEONATOLOGY",
@@ -9143,8 +9143,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Obstetrics & Gynaecology",
     "id": "obstetrics___gynaecology",
+    "subject": "Obstetrics & Gynaecology",
     "chapters": [
       {
         "name": "GENERAL GYNAECOLOGY",
@@ -9989,8 +9989,8 @@ const syllabusData = [
     ]
   },
   {
-    "name": "Revision Videos",
     "id": "revision_videos",
+    "subject": "Revision Videos",
     "chapters": [
       {
         "name": "ANATOMY",
