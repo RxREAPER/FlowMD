@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marrow-planner-v1';
+const CACHE_NAME = 'marrow-planner-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -11,16 +11,32 @@ const ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // Catch errors silently so it doesn't break installation
       return cache.addAll(ASSETS).catch(e => console.log('Cache add failed', e));
     })
   );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  if (request.method !== 'GET') return;
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    fetch(request)
+      .then((networkResponse) => {
+        const copy = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        return networkResponse;
+      })
+      .catch(() => caches.match(request))
   );
 });

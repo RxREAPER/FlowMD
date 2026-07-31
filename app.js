@@ -60,7 +60,7 @@
     visibleCards: { daily: true, weekly: true, monthly: true }
   };
 
-  const SUBJECT_ICONS = {
+const SUBJECT_ICONS = {
     anatomy: 'icons/anatomy.png',
     physiology: 'icons/physiology.png',
     biochemistry: 'icons/biochemistry.png',
@@ -79,16 +79,40 @@
     surgery: 'icons/surgery.png',
     orthopaedics: 'icons/orthopaedics.png',
     paediatrics: 'icons/paediatrics.png',
-    obstetrics___gynaecology: 'icons/obstetrics___gynaecology.png'
+    obstetrics___gynaecology: 'icons/obstetrics___gynaecology.png',
+    revision_videos: 'icons/revision_videos.png'
+  };
+
+  const SUBJECT_SVG_ICONS = {
+    anatomy: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6c-3.3 0-6 2.7-6 6v4c0 3.3 2.7 6 6 6s6-2.7 6-6v-4c0-3.3-2.7-6-6-6z"/><path d="M24 16v10"/><path d="M14 20h20"/><path d="M24 26v10"/><path d="M14 42l6-10 6 10"/><path d="M10 20l-4 6"/><path d="M38 20l4 6"/><path d="M14 36l-6 10"/><path d="M34 36l6 10"/></svg>`,
+    physiology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 44c16 0 28-16 28-22 0-6-12-10-28-10S-4 16-4 22c0 6 12 10 28 10z"/><path d="M10 28c6-6 12-6 18 0 6 6 6 12 0 18"/></svg>`,
+    biochemistry: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h12"/><path d="M20 10v16l-8 16c-1 2 0 4 2 4h20c2 0 3-2 2-4l-8-16V10"/><circle cx="22" cy="34" r="2"/><circle cx="28" cy="32" r="1.5"/><circle cx="25" cy="36" r="1"/><path d="M14 8l2-2"/><path d="M34 8l-2-2"/></svg>`,
+    pathology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 42V18l-4-8h20l-4 8v24"/><path d="M14 10h20"/><circle cx="24" cy="28" r="4"/><circle cx="20" cy="34" r="2"/><circle cx="28" cy="32" r="1.5"/><path d="M22 18h4"/><path d="M24 18v-4"/><path d="M20 8l-2-4"/><path d="M28 8l2-4"/></svg>`,
+    pharmacology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="16" height="24" rx="2"/><path d="M20 16V10c0-2 2-4 4-4s4 2 4 4v6"/><path d="M16 24h16"/><path d="M20 8h8"/><path d="M22 28h4"/><path d="M24 28v6"/><path d="M36 20l6-6"/><path d="M38 26l4-2"/></svg>`,
+    microbiology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="26" rx="12" ry="10"/><path d="M12 26c0-6 5-10 12-10s12 4 12 10"/><circle cx="20" cy="24" r="2"/><circle cx="28" cy="22" r="1.5"/><circle cx="24" cy="28" r="2.5"/><circle cx="18" cy="30" r="1"/><path d="M24 16v-6"/><circle cx="24" cy="8" r="2"/></svg>`,
+    community_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="18" r="6"/><circle cx="12" cy="22" r="4"/><circle cx="36" cy="22" r="4"/><path d="M18 36c0-4 3-6 6-6s6 2 6 6"/><path d="M8 38c0-3 2-5 4-5"/><path d="M36 38c0-3 2-5 4-5"/><path d="M24 10v-4"/><path d="M20 14h8"/></svg>`,
+    forensic_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12l6 6"/><path d="M20 18l16-6"/><path d="M36 12l-6 6"/><path d="M30 18l-4 14"/><path d="M26 32l-6 6"/><path d="M20 38l-4-2"/><path d="M16 36l-2-6"/><path d="M14 30l4-12"/><rect x="28" y="8" width="12" height="6" rx="1"/><path d="M30 14v4h8v-4"/></svg>`,
+    ophthalmology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="24" rx="14" ry="8"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="24" r="1.5"/><path d="M24 4v6"/><path d="M24 38v6"/><path d="M4 24h6"/><path d="M38 24h6"/><path d="M10 10l4 4"/><path d="M34 34l4 4"/><path d="M38 10l-4 4"/><path d="M14 34l-4 4"/></svg>`,
+    orthopaedics: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6c-4 0-6 4-6 8v8c0 4 2 6 4 8l2 4v8h12v-8l2-4c2-2 4-4 4-8v-8c0-4-2-8-6-8"/><path d="M18 20h12"/><path d="M16 28h16"/><circle cx="24" cy="14" r="3"/></svg>`,
+    otorhinolaryngology__ent_: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12c4 0 6 3 6 6s-2 6-6 6h-2v8c0 2-2 4-4 4"/><path d="M26 36h-6c-2 0-4-2-4-4v-4"/><ellipse cx="28" cy="20" rx="6" ry="8"/><path d="M22 18c-2-4-6-4-8-2s-2 6 0 8c2 2 4 6 4 10"/><path d="M18 16c-4-2-8 0-8 4"/></svg>`,
+    paediatrics: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><circle cx="21" cy="14" r="1.5"/><circle cx="27" cy="14" r="1.5"/><path d="M21 19c1 1 3 1 4 0"/><path d="M24 24v6c0 4 2 6 4 8h4"/><path d="M24 24v6c0 4-2 6-4 8h-4"/><path d="M16 30l-4 4"/><path d="M32 30l4 4"/><path d="M22 38h4"/></svg>`,
+    radiology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="6" width="28" height="36" rx="2"/><path d="M18 14h12"/><path d="M24 14v20"/><path d="M18 20h12"/><path d="M18 26h12"/><path d="M18 14l-4-4"/><path d="M30 14l4-4"/><path d="M18 34l-4 4"/><path d="M30 34l4 4"/></svg>`,
+    surgery: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40l20-20"/><path d="M28 20l4-4"/><path d="M32 16l4-4"/><path d="M36 12l4-4"/><path d="M28 20c-2-4-2-8 0-12"/><path d="M26 22c-4-2-8-2-12 0"/><path d="M14 22l-4 4"/><path d="M10 26l-2 4"/></svg>`,
+    anaesthesia: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 28c0-6 4-10 10-10s10 4 10 10"/><path d="M18 28v4c0 2 2 4 6 4s6-2 6-4v-4"/><path d="M12 24h-4v8h4"/><path d="M36 24h4v8h-4"/><circle cx="38" cy="18" r="3"/><path d="M36 18h-4"/><path d="M10 18l4-4"/><path d="M14 14v-4h6"/><path d="M34 32l4 4"/></svg>`,
+    dermatology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="10"/><path d="M20 18c1-2 3-2 4 0s3 2 4 0"/><path d="M19 24c2 1 4 1 6 0s4-1 6 0"/><circle cx="18" cy="34" r="4"/><path d="M22 34h8"/><circle cx="34" cy="34" r="2"/><path d="M32 10l4-4"/><path d="M36 10l-2-6"/><path d="M38 8l2-4"/></svg>`,
+    psychiatry: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 38c-4-2-6-6-6-12 0-8 6-14 14-14s14 6 14 14c0 6-2 10-6 12"/><path d="M16 26c0-4 4-8 8-8"/><path d="M32 26c0-4-4-8-8-8"/><path d="M20 32c2 2 6 2 8 0"/><path d="M18 20c-2-4-2-8 0-12"/><path d="M30 20c2-4 2-8 0-12"/><path d="M24 8v-4"/></svg>`,
+    medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="14" r="6"/><path d="M24 20v6"/><circle cx="24" cy="32" r="4"/><path d="M24 36v4"/><path d="M18 40h12"/><path d="M14 14h-4"/><path d="M34 14h4"/><path d="M16 8l-4-4"/><path d="M32 8l4-4"/></svg>`,
+    obstetrics___gynaecology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="12" r="5"/><path d="M24 17v8"/><path d="M16 25c0 6 3 10 8 10s8-4 8-10"/><path d="M16 25c-4 0-6 3-6 6s2 4 6 4"/><path d="M32 25c4 0 6 3 6 6s-2 4-6 4"/><path d="M20 35l4 6 4-6"/></svg>`,
+    revision_videos: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8a16 16 0 1 0 4 31.4"/><path d="M24 8a16 16 0 1 1-4 31.4"/><path d="M24 6v8"/><path d="M24 14l-4-6 4-2 4 2-4 6z"/><path d="M20 30h8"/><path d="M20 26h6"/><path d="M20 34h4"/></svg>`
   };
 
   const SUBJECT_COLORS = {
     anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
     community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
-    medicine: '#3b82f6', microbiology: '#22c55e', obstetrics_gynaecology: '#ef4444',
-    ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology_ent: '#14b8a6',
+    medicine: '#3b82f6', microbiology: '#22c55e', obstetrics___gynaecology: '#ef4444',
+    ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology__ent_: '#14b8a6',
     paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
-    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444'
+    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444', revision_videos: '#8b5cf6'
   };
 
   function getSubjectIconSrc(subjectIdOrName) {
@@ -101,7 +125,17 @@
     return 'icons/medicine.png';
   }
 
-  function getSubjectAccentColor(subjectIdOrName) {
+  function getSubjectSvgIcon(subjectIdOrName) {
+    if (!subjectIdOrName) return SUBJECT_SVG_ICONS.medicine;
+    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
+    if (SUBJECT_SVG_ICONS[key]) return SUBJECT_SVG_ICONS[key];
+    for (const [id, svg] of Object.entries(SUBJECT_SVG_ICONS)) {
+      if (key.includes(id) || id.includes(key)) return svg;
+    }
+    return SUBJECT_SVG_ICONS.medicine;
+  }
+
+function getSubjectAccentColor(subjectIdOrName) {
     if (!subjectIdOrName) return '#3b82f6';
     const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
     if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
@@ -513,6 +547,7 @@
         completedHours: (subCompletedDuration / 60).toFixed(1),
         percentage: subPercentage,
         icon: getSubjectIconSrc(subject.id || subject.subject),
+        svgIcon: getSubjectSvgIcon(subject.id || subject.subject),
         accentColor: getSubjectAccentColor(subject.id || subject.subject),
         raw: subject
       };
@@ -629,7 +664,7 @@
     // Defined PxlKit PixelCommand Groups (Actions & Navigation)
     const commandGroups = [
       {
-        heading: '⚡ Quick Actions',
+        heading: '<span class="material-symbols-outlined" style="font-size:18px;">bolt</span> Quick Actions',
         items: [
           { id: 'act-sync-goals', label: 'Synchronize Daily Targets & Pace', shortcut: 'Ctrl+G', icon: 'track_changes', action: () => { closeSpotlightModal(); openGoalModal(); } },
           { id: 'act-toggle-theme', label: 'Toggle Light / Dark Mode', shortcut: 'Ctrl+T', icon: 'contrast', action: () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; applyTheme(state.theme); saveState(); } },
@@ -638,7 +673,7 @@
         ]
       },
       {
-        heading: '🧭 Navigation',
+        heading: '<span class="material-symbols-outlined" style="font-size:18px;">explore</span> Navigation',
         items: [
           { id: 'nav-home', label: 'Go to Dashboard', keywords: ['home', 'dashboard', 'start'], icon: 'dashboard', action: () => { closeSpotlightModal(); switchView('dashboard'); } },
           { id: 'nav-curriculum', label: 'Go to Curriculum & Subjects', keywords: ['subjects', 'syllabus', 'lectures', 'curriculum'], icon: 'menu_book', action: () => { closeSpotlightModal(); switchView('curriculum'); } },
@@ -665,11 +700,11 @@
           `).join('')}
         `).join('')}
 
-        <div class="pxl-command-group-header">📚 Top Medical Subjects</div>
+        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">menu_book</span> Top Medical Subjects</div>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-top: 6px;">
           ${(typeof MARROW_CURRICULUM !== 'undefined' ? MARROW_CURRICULUM : []).slice(0, 8).map(s => `
             <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 8px 10px; display: flex; align-items: center; gap: 8px;">
-              <img src="${getSubjectIconSrc(s.id)}" style="width:22px;height:22px;object-fit:contain;border-radius:4px;" alt="${s.name}">
+              <img src="${getSubjectIconSrc(s.id)}" class="subject-icon-small" alt="${s.name}">
               <span style="font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${s.name}</span>
             </div>
           `).join('')}
@@ -718,7 +753,7 @@
 
     container.innerHTML = `
       ${matchingCmds.length > 0 ? `
-        <div class="pxl-command-group-header">⚡ Matching Commands (${matchingCmds.length})</div>
+        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">bolt</span> Matching Commands (${matchingCmds.length})</div>
         ${matchingCmds.map(item => `
           <div class="pxl-command-item cmd-action-btn" data-cmd-id="${item.id}">
             <div class="pxl-command-label">
@@ -731,12 +766,12 @@
       ` : ''}
 
       ${searchData.subjects.length > 0 ? `
-        <div class="pxl-command-group-header">📚 Subjects (${searchData.subjects.length})</div>
+        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">menu_book</span> Subjects (${searchData.subjects.length})</div>
         ${searchData.subjects.map(s => `
           <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="${getSubjectIconSrc(s.id)}" style="width:28px;height:28px;object-fit:contain;border-radius:6px;" alt="${s.name}">
-              <span style="font-weight: 700; font-size: 0.95rem; font-family: var(--font-display);">${s.name}</span>
+                <img src="${getSubjectIconSrc(s.id)}" class="subject-icon-medium" alt="${s.name}">
+                <span style="font-weight: 700; font-size: 0.95rem; font-family: var(--font-display);">${s.name}</span>
             </div>
             <span class="v2-hud-badge">${s.videosCount} vids</span>
           </div>
@@ -744,7 +779,7 @@
       ` : ''}
 
       ${searchData.chapters.length > 0 ? `
-        <div class="pxl-command-group-header">📖 Chapters (${searchData.chapters.length})</div>
+        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span> Chapters (${searchData.chapters.length})</div>
         ${searchData.chapters.map(c => `
           <div class="v2-pixel-card spotlight-item" data-type="chapter" data-id="${c.subjectId}" data-chap="${c.chapterName}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px;">
             <div style="font-weight: 700; font-size: 0.92rem; font-family: var(--font-display);">${c.chapterName}</div>
@@ -754,7 +789,7 @@
       ` : ''}
 
       ${searchData.videos.length > 0 ? `
-        <div class="pxl-command-group-header">🎬 Video Topics (${searchData.videos.length})</div>
+        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">play_circle</span> Video Topics (${searchData.videos.length})</div>
         <div class="v2-quest-card" style="padding-top: 14px; margin-top: 6px;">
           ${searchData.videos.map(v => {
             const isDone = v.isCompleted;
@@ -1018,7 +1053,7 @@
                <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
                <div class="pxl-alert-content">
                  <div class="pxl-alert-title">Advance Batch Early</div>
-                 <div class="pxl-alert-message">Completing your daily batch unlocks 🚀 Advance to Next Target Batch early to stay ahead of schedule.</div>
+                 <div class="pxl-alert-message">Completing your daily batch unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Advance to Next Target Batch early to stay ahead of schedule.</div>
                </div>
              </div>`
           );
@@ -1353,7 +1388,7 @@
           ${queue.isDailyTargetAchieved ? `
             ${(plan.extraBatchesCompletedToday || 0) > 0 ? `
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);">
-                <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;">⚡</div>
+                <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;"><span class="material-symbols-outlined" style="font-size:18px;">bolt</span></div>
                 <div class="v2-alert-content">
                   <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA BATCH #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
                   <div class="v2-alert-title">🔥 Overachievement Bonus Unlocked!</div>
@@ -1379,7 +1414,7 @@
           ` : (queue.allSubjectDone ? `
             <div class="congrats-card-pop" style="text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
               ${PXL_ICONS.trophy}
-              <span>All ${queue.subjectName} videos completed! 🎉</span>
+              <span>All ${queue.subjectName} videos completed! <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">celebration</span></span>
             </div>
           ` : `
             <div style="display:flex; flex-direction:column; gap: 2px;">
@@ -1417,9 +1452,9 @@
           <div>
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
               ${hasDualPlans ? `
-                <span class="hero-top-badge dual-track">⚡ DUAL-TRACK MODE</span>
+                <span class="hero-top-badge dual-track"><span class="material-symbols-outlined" style="font-size:16px;">bolt</span> DUAL-TRACK MODE</span>
               ` : ''}
-              <span class="hero-streak-text">🔥 ${streakCount} day streak</span>
+              <span class="hero-streak-text"><span class="material-symbols-outlined" style="font-size:16px;">local_fire_department</span> ${streakCount} day streak</span>
             </div>
             <h1 class="hero-card-title">WELCOME BACK, ${docName.toUpperCase()}!</h1>
             <p class="hero-card-subtitle">
@@ -1447,7 +1482,7 @@
           <div class="pwa-install-banner-content">
             <div class="pwa-install-text">
               <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="v2-hud-badge">📱 MOBILE PWA</span>
+                <span class="v2-hud-badge"><span class="material-symbols-outlined" style="font-size:16px;">smartphone</span> MOBILE PWA</span>
               </div>
               <h3 class="pwa-install-title">Install FlowMD Android App</h3>
               <p class="pwa-install-desc">Get offline access & hardware back-button integration!</p>
@@ -1470,7 +1505,7 @@
         <div class="v2-achievement-alert congrats-card-pop all-quests-banner">
           <div class="v2-alert-icon-box" style="background: #ffd700;">${PXL_ICONS.trophy}</div>
           <div class="v2-alert-content">
-            <div class="v2-alert-category all-quests-category">🏆 ALL DAILY QUESTS COMPLETE!</div>
+            <div class="v2-alert-category all-quests-category"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">emoji_events</span> ALL DAILY QUESTS COMPLETE!</div>
             <div class="v2-alert-title">Outstanding Performance!</div>
             <div class="v2-alert-body">Every plan's daily target has been achieved today!</div>
           </div>
@@ -1602,7 +1637,7 @@
         <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
           <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <img src="${sub.icon}" style="width:34px;height:34px;object-fit:contain;border-radius:6px;" alt="${sub.name}">
+              <img src="${sub.icon}" class="subject-icon-medium" alt="${sub.name}">
               <div>
                 <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
                 <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
@@ -1651,7 +1686,7 @@
       </div>
 
       <div class="v2-pixel-card" style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 16px;">
-        <img src="${subObj.icon}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;" alt="${subObj.name}">
+        <img src="${subObj.icon}" class="subject-icon-large" alt="${subObj.name}">
         <div style="flex: 1;">
           <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;">${subObj.name}</div>
           <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); margin: 2px 0 6px 0;">${subObj.completedVideos} OF ${subObj.totalVideos} COMPLETED (${subObj.percentage}%)</div>
@@ -1820,7 +1855,7 @@
                   <!-- Background Badge Pill for 100% Readability -->
                   <rect x="${p.x - 14}" y="${p.y - 20}" width="28" height="15" rx="3" fill="#0d1017" stroke="${p.isMet ? '#00ff88' : (p.count > 0 ? '#00f0ff' : '#282f42')}" stroke-width="1" />
                   <text x="${p.x}" y="${p.y - 8}" fill="${p.count > 0 ? (p.isMet ? '#00ff88' : '#00f0ff') : '#64748b'}" font-family="'VT323', monospace" font-size="14" font-weight="bold" text-anchor="middle">
-                    ${p.count}${p.isMet && p.count > 0 ? '★' : ''}
+                    ${p.count}${p.isMet && p.count > 0 ? '<span style="color:#ffd700;">★</span>' : ''}
                   </text>
                   <rect x="${p.x - 4}" y="${p.y - 4}" width="8" height="8" fill="${p.isMet ? '#00ff88' : (p.count > 0 ? '#00f0ff' : '#282f42')}" stroke="#090a0f" stroke-width="2" />
                 </g>
@@ -1844,7 +1879,7 @@
                   ${p.count}
                 </div>
                 <div style="font-family: var(--font-hud), monospace; font-size: 0.68rem; font-weight: 700; color: ${p.isMet ? '#00ff88' : '#64748b'};">
-                  ${p.isMet ? '★ MET' : (p.count > 0 ? 'PARTIAL' : '0 VIDS')}
+                  ${p.isMet ? '<span style="color:#00ff88;">◆ MET</span>' : (p.count > 0 ? 'PARTIAL' : '0 VIDS')}
                 </div>
               </div>
             `).join('')}
@@ -1925,7 +1960,7 @@
               <path d="M2 14L6 9L9 11L14 3" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="square" />
             </svg>
             <span>Study Intelligence Report</span>
-            ${hasDualPlans ? `<span class="v2-hud-badge" style="color:#f43f5e; border-color:#f43f5e; font-size:0.72rem;">⚡ DUAL-TRACK</span>` : ''}
+            ${hasDualPlans ? `<span class="v2-hud-badge" style="color:#f43f5e; border-color:#f43f5e; font-size:0.72rem;"><span class="material-symbols-outlined" style="font-size:14px;">bolt</span> DUAL-TRACK</span>` : ''}
           </h2>
           <p style="font-family:var(--font-hud); font-size:0.95rem; color:var(--text-muted); margin:2px 0 0 0;">
             ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject).join(' + ')}` : 'Track your goals, pace, and subject progress.'}
@@ -1964,7 +1999,7 @@
       <!-- Global Goal Pulse Grid -->
       <div style="margin:14px 0 20px 0;">
         <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
-          <span style="color:var(--retro-cyan,#00f0ff);">🎯</span>
+          <span style="color:var(--retro-cyan,#00f0ff);"><span class="material-symbols-outlined" style="font-size:18px;">target</span></span>
           <span>Goal Pulse — Today / Week / Month</span>
         </div>
         <div class="pxl-goal-pulse-grid">
@@ -1972,7 +2007,7 @@
             <div class="pxl-pulse-header">
               <span class="pxl-pulse-title">Today's Daily Goal</span>
               <span class="v2-hud-badge" style="${todayDone >= totalVidsDay ? 'color:var(--retro-green,#00ff88); border-color:var(--retro-green,#00ff88);' : 'color:var(--retro-gold,#ffcc00); border-color:var(--retro-gold,#ffcc00);'} font-size:0.72rem;">
-                ${todayDone >= totalVidsDay ? 'DONE 🎉' : 'IN PROGRESS'}
+                ${todayDone >= totalVidsDay ? 'DONE <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">celebration</span>' : 'IN PROGRESS'}
               </span>
             </div>
             <div class="pxl-pulse-value" style="color:var(--retro-cyan,#00f0ff);">
@@ -2021,7 +2056,7 @@
                 <div class="pxl-pulse-header">
                   <span class="pxl-pulse-title">${ps.plan.label} ETA</span>
                   <span class="v2-hud-badge" style="${behind ? 'color:var(--retro-red,#ff5555); border-color:var(--retro-red,#ff5555);' : 'color:var(--retro-green,#00ff88); border-color:var(--retro-green,#00ff88);'} font-size:0.72rem;">
-                    ${behind ? '⚠️ LATE' : '⚡ ON TRACK'}
+                    ${behind ? '<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">warning</span> LATE' : '<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">bolt</span> ON TRACK'}
                   </span>
                 </div>
                 <div class="pxl-pulse-value" style="color:${planColor}; font-size:1.3rem;">${ps.finishDateStr}</div>
@@ -2046,7 +2081,7 @@
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
-      const shareText = `🎯 FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
+      const shareText = `<span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">target</span> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome'));
       } else {
@@ -2291,14 +2326,14 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--retro-cyan, #00f0ff); padding-bottom: 12px;">
           <div>
             <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, #ffcc00); letter-spacing: 0.08em; text-transform: uppercase;">
-              📌 FLOWMD DEVELOPER SUPPORT
+              <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">push_pin</span> FLOWMD DEVELOPER SUPPORT
             </div>
             <h3 style="font-family: var(--font-display), monospace; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0; display: flex; align-items: center; gap: 8px;">
               <span class="material-symbols-outlined" style="color: var(--retro-cyan, #00f0ff);">support_agent</span>
               <span>Contact Developer & Support</span>
             </h3>
           </div>
-          <button id="btn-close-contact-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1;">&times;</button>
+          <button id="btn-close-contact-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1;"><span class="material-symbols-outlined" style="font-size:20px;">close</span></button>
         </div>
 
         <div id="contact-form-container">
@@ -2306,11 +2341,11 @@
             <div class="form-group" style="margin-bottom: 12px;">
               <label for="contact-category" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Topic / Category</label>
               <select id="contact-category" class="form-select" style="height: 42px; font-weight: 600; font-family: inherit;">
-                <option value="bug_report">🐛 Bug Report / Technical Issue</option>
-                <option value="feature_request">💡 Feature Suggestion / Idea</option>
-                <option value="dual_track_help">⚡ Dual-Track Setup Assistance</option>
-                <option value="general_feedback" selected>📬 General Feedback & Inquiry</option>
-                <option value="data_sync_help">☁️ Google Cloud Sync Question</option>
+<option value="bug_report"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">bug_report</span> Bug Report / Technical Issue</option>
+                  <option value="feature_request"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">lightbulb</span> Feature Suggestion / Idea</option>
+                  <option value="dual_track_help"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">bolt</span> Dual-Track Setup Assistance</option>
+                  <option value="general_feedback" selected><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">mail</span> General Feedback & Inquiry</option>
+                  <option value="data_sync_help"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">cloud</span> Google Cloud Sync Question</option>
               </select>
             </div>
 
@@ -2322,9 +2357,9 @@
               <div class="form-group" style="margin: 0;">
                 <label for="contact-priority" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Priority Level</label>
                 <select id="contact-priority" class="form-select" style="height: 42px; font-family: inherit;">
-                  <option value="normal" selected>🟢 Normal (Routine)</option>
-                  <option value="high">🟡 High (Important)</option>
-                  <option value="urgent">🔴 Urgent (App Blocking)</option>
+                  <option value="normal" selected><span class="material-symbols-outlined" style="font-size:15px;color:#10b981;">circle</span> Normal (Routine)</option>
+                  <option value="high"><span class="material-symbols-outlined" style="font-size:15px;color:#f59e0b;">circle</span> High (Important)</option>
+                  <option value="urgent"><span class="material-symbols-outlined" style="font-size:15px;color:#ef4444;">circle</span> Urgent (App Blocking)</option>
                 </select>
               </div>
             </div>
@@ -2419,7 +2454,7 @@
         containerEl.innerHTML = `
           <div style="text-align: center; padding: 20px 10px;">
             <div style="width: 56px; height: 56px; background: var(--success-bg, rgba(16,185,129,0.15)); color: var(--success, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 32px; font-weight: bold;">
-              ✓
+              <span class="material-symbols-outlined" style="font-size:28px;">check_circle</span>
             </div>
             <h4 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">Ticket Submitted Successfully!</h4>
             <p style="font-family: var(--font-hud); font-size: 1rem; color: var(--text-secondary); margin-bottom: 16px;">
@@ -2537,7 +2572,7 @@
     const stats = getSyllabusStats();
     if (!selectedSubjectVal || selectedSubjectVal === 'all' || selectedSubjectVal === 'Entire Syllabus') {
       return {
-        name: 'Entire Syllabus (19 Subjects)',
+        name: 'Entire Syllabus (20 Subjects)',
         totalVideos: stats.totalVideos,
         completedVideos: stats.completedVideos,
         remainingVideos: Math.max(1, stats.totalVideos - stats.completedVideos),
@@ -2597,37 +2632,37 @@
       badge: "1 / 6",
       targetSelector: '#brand-home-link',
       view: 'dashboard',
-      body: `<p>Welcome to <strong>FlowMD</strong> 🚀 — your 16-bit NEET-PG preparation engine. Tap <strong>FlowMD</strong> from anywhere to jump back to your Dashboard.</p>`
+      body: `<p>Welcome to <strong>FlowMD</strong> <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">rocket_launch</span> — your 16-bit NEET-PG preparation engine. Tap <strong>FlowMD</strong> from anywhere to jump back to your Dashboard.</p>`
     },
     {
       badge: "2 / 6",
       targetSelector: '.v2-quest-header-badge',
       view: 'dashboard',
-      body: `<p>⚡ <strong>Daily Quests</strong> — your core study engine. Each day you get a fresh batch of videos to complete. Finish them to keep your streak alive!</p>`
+      body: `<p><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">bolt</span> <strong>Daily Quests</strong> — your core study engine. Each day you get a fresh batch of videos to complete. Finish them to keep your streak alive!</p>`
     },
     {
       badge: "3 / 6",
       targetSelector: '.section-title-row',
       view: 'dashboard',
-      body: `<p>🎯 <strong>Preparation Goals</strong> — set your daily video pace, exam deadline, and priority subject. The app auto-calculates your catch-up velocity in real time.</p>`
+      body: `<p><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">target</span> <strong>Preparation Goals</strong> — set your daily video pace, exam deadline, and priority subject. The app auto-calculates your catch-up velocity in real time.</p>`
     },
     {
       badge: "4 / 6",
       targetSelector: '[data-view="analytics"]',
       view: 'dashboard',
-      body: `<p>📈 <strong>Analytics</strong> — tap here to see your 7-day & 30-day pace charts, subject velocity matrix, and automatic exam-date projections.</p>`
+      body: `<p><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">trending_up</span> <strong>Analytics</strong> — tap here to see your 7-day & 30-day pace charts, subject velocity matrix, and automatic exam-date projections.</p>`
     },
     {
       badge: "5 / 6",
       targetSelector: '[data-view="curriculum"]',
       view: 'dashboard',
-      body: `<p>📚 <strong>Curriculum</strong> — browse all 19 MBBS subjects, filter chapters, and mark completed topics across 2,000+ high-yield lectures.</p>`
+      body: `<p><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">menu_book</span> <strong>Curriculum</strong> — browse all 20 MBBS subjects, filter chapters, and mark completed topics across 2,000+ high-yield lectures.</p>`
     },
     {
       badge: "6 / 6",
       targetSelector: '[data-view="profile"]',
       view: 'dashboard',
-      body: `<p>👤 <strong>Profile & Settings</strong> — customize your doctor profile, toggle light/dark theme, and submit support tickets here. You're all set — let's crush NEET-PG! 🏆</p>`
+      body: `<p><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">person</span> <strong>Profile & Settings</strong> — customize your doctor profile, toggle light/dark theme, and submit support tickets here. You're all set — let's crush NEET-PG! <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">emoji_events</span></p>`
     }
   ];
 
@@ -3146,7 +3181,7 @@
         <div class="pxl-alert-title">${title}</div>
         <div class="pxl-alert-message">${message}</div>
       </div>
-      <button type="button" class="pxl-toast-close" onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #94a3b8; font-family: monospace; font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1;">✕</button>
+      <button type="button" class="pxl-toast-close" onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #94a3b8; font-family: monospace; font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1;"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
     `;
 
     container.appendChild(toast);
