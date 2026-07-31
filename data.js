@@ -58,7 +58,7 @@ const syllabusData = [
           {
             "id": "anatomy__v6",
             "videoNumber": "#06",
-            "title": "Histology: Part 2.",
+            "title": "Histology: Part 2",
             "durationMins": 34,
             "durationSecs": 0
           },
@@ -157,8 +157,8 @@ const syllabusData = [
       },
       {
         "name": "HEAD AND NECK",
-        "modules": 7,
-        "hours": 4.9,
+        "modules": 17,
+        "hours": 11.6,
         "videos": [
           {
             "id": "anatomy__v19",
@@ -208,14 +208,7 @@ const syllabusData = [
             "title": "Infratemporal Fossa",
             "durationMins": 74,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "FRO",
-        "modules": 10,
-        "hours": 6.7,
-        "videos": [
+          },
           {
             "id": "anatomy__v26",
             "videoNumber": "#26",
@@ -296,7 +289,7 @@ const syllabusData = [
           {
             "id": "anatomy__v36",
             "videoNumber": "#36",
-            "title": "Introduction to Upper Limb []",
+            "title": "Introduction to Upper Limb",
             "durationMins": 12,
             "durationSecs": 0
           },
@@ -367,8 +360,8 @@ const syllabusData = [
       },
       {
         "name": "THORAX",
-        "modules": 5,
-        "hours": 2.5,
+        "modules": 12,
+        "hours": 5.2,
         "videos": [
           {
             "id": "anatomy__v46",
@@ -394,76 +387,216 @@ const syllabusData = [
           {
             "id": "anatomy__v49",
             "videoNumber": "#49",
-            "title": "Arteries of Lower Limb",
-            "durationMins": 24,
+            "title": "Fetal circulation",
+            "durationMins": 14,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v50",
             "videoNumber": "#50",
-            "title": "Layers of the Sole and Arches of the Foot",
-            "durationMins": 27,
+            "title": "Thorax Osteology",
+            "durationMins": 17,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "GENERAL ANATOMY",
-        "modules": 2,
-        "hours": 1.3,
-        "videos": [
+          },
           {
             "id": "anatomy__v51",
             "videoNumber": "#51",
-            "title": "General Anatomy",
-            "durationMins": 34,
+            "title": "Intercostal Spaces and its Contents",
+            "durationMins": 27,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v52",
             "videoNumber": "#52",
-            "title": "Development of Kidneys and Renal Anatomy",
-            "durationMins": 41,
+            "title": "Pericardium and External Features of Heart",
+            "durationMins": 31,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "#RO",
-        "modules": 5,
-        "hours": 3.1,
-        "videos": [
+          },
           {
             "id": "anatomy__v53",
             "videoNumber": "#53",
-            "title": "Development of Gonads",
-            "durationMins": 32,
+            "title": "Blood Supply of Heart",
+            "durationMins": 27,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v54",
             "videoNumber": "#54",
-            "title": "Perineum: Part 1",
-            "durationMins": 52,
+            "title": "Right Atrium, Right Ventricle and Nerve Supply",
+            "durationMins": 20,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v55",
             "videoNumber": "#55",
-            "title": "Perineum: Part 2",
+            "title": "Pleura and Lungs",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v56",
             "videoNumber": "#56",
-            "title": "Female Internal Genitalia",
-            "durationMins": 45,
+            "title": "Mediastinum and Its Contents",
+            "durationMins": 22,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v57",
             "videoNumber": "#57",
+            "title": "Diaphragm",
+            "durationMins": 22,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "GENERAL ANATOMY",
+        "modules": 1,
+        "hours": 0.6,
+        "videos": [
+          {
+            "id": "anatomy__v58",
+            "videoNumber": "#58",
+            "title": "General Anatomy",
+            "durationMins": 34,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "ABDOMEN",
+        "modules": 19,
+        "hours": 9.8,
+        "videos": [
+          {
+            "id": "anatomy__v59",
+            "videoNumber": "#59",
+            "title": "Gut Tube and Respiratory System Development",
+            "durationMins": 19,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v60",
+            "videoNumber": "#60",
+            "title": "Foregut Development",
+            "durationMins": 24,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v61",
+            "videoNumber": "#61",
+            "title": "Midgut development",
+            "durationMins": 31,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v62",
+            "videoNumber": "#62",
+            "title": "Hindgut Development",
+            "durationMins": 11,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v63",
+            "videoNumber": "#63",
+            "title": "Development of Kidneys and Renal Anatomy",
+            "durationMins": 41,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v64",
+            "videoNumber": "#64",
+            "title": "Development of Gonads",
+            "durationMins": 32,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v65",
+            "videoNumber": "#65",
+            "title": "Anterior Abdominal wall",
+            "durationMins": 24,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v66",
+            "videoNumber": "#66",
+            "title": "Inguinal Canal",
+            "durationMins": 33,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v67",
+            "videoNumber": "#67",
+            "title": "Peritoneum",
+            "durationMins": 38,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v68",
+            "videoNumber": "#68",
+            "title": "Anatomy of Stomach",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v69",
+            "videoNumber": "#69",
+            "title": "Duodenum and Pancreas",
+            "durationMins": 44,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v70",
+            "videoNumber": "#70",
+            "title": "Large Intestine",
+            "durationMins": 10,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v71",
+            "videoNumber": "#71",
+            "title": "Liver",
+            "durationMins": 26,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v72",
+            "videoNumber": "#72",
+            "title": "Extrahepatic Biliary Apparatus and Spleen",
+            "durationMins": 27,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v73",
+            "videoNumber": "#73",
+            "title": "Blood Supply of Abdomen and Pelvis",
+            "durationMins": 36,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v74",
+            "videoNumber": "#74",
+            "title": "Perineum: Part 1",
+            "durationMins": 52,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v75",
+            "videoNumber": "#75",
+            "title": "Perineum: Part 2",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v76",
+            "videoNumber": "#76",
+            "title": "Female Internal Genitalia",
+            "durationMins": 45,
+            "durationSecs": 0
+          },
+          {
+            "id": "anatomy__v77",
+            "videoNumber": "#77",
             "title": "Rectum and Anal Canal",
             "durationMins": 25,
             "durationSecs": 0
@@ -472,196 +605,56 @@ const syllabusData = [
       },
       {
         "name": "LOWER LIMB",
-        "modules": 27,
-        "hours": 12.9,
+        "modules": 7,
+        "hours": 4.3,
         "videos": [
-          {
-            "id": "anatomy__v58",
-            "videoNumber": "#58",
-            "title": "id vein",
-            "durationMins": 16,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v59",
-            "videoNumber": "#59",
-            "title": "Front of thigh, Adductor canal and Popliteal Fossa",
-            "durationMins": 71,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v60",
-            "videoNumber": "#60",
-            "title": "Gluteal region and Hamstring muscles",
-            "durationMins": 40,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v61",
-            "videoNumber": "#61",
-            "title": "Knee joint",
-            "durationMins": 28,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v62",
-            "videoNumber": "#62",
-            "title": "Leg and Ankle Joint",
-            "durationMins": 50,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v63",
-            "videoNumber": "#63",
-            "title": "Fetal circulation",
-            "durationMins": 14,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v64",
-            "videoNumber": "#64",
-            "title": "Thorax Osteology",
-            "durationMins": 17,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v65",
-            "videoNumber": "#65",
-            "title": "Intercostal Spaces and its Contents",
-            "durationMins": 27,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v66",
-            "videoNumber": "#66",
-            "title": "Pericardium and External Features of Heart",
-            "durationMins": 31,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v67",
-            "videoNumber": "#67",
-            "title": "Blood Supply of Heart",
-            "durationMins": 27,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v68",
-            "videoNumber": "#68",
-            "title": "Right Atrium, Right Ventricle and Nerve Supply",
-            "durationMins": 20,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v69",
-            "videoNumber": "#69",
-            "title": "Pleura and Lungs",
-            "durationMins": 34,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v70",
-            "videoNumber": "#70",
-            "title": "Mediastinum and Its Contents",
-            "durationMins": 22,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v71",
-            "videoNumber": "#71",
-            "title": "Diaphragm",
-            "durationMins": 22,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v72",
-            "videoNumber": "#72",
-            "title": "Gut Tube and Respiratory System Development",
-            "durationMins": 19,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v73",
-            "videoNumber": "#73",
-            "title": "Foregut Development",
-            "durationMins": 24,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v74",
-            "videoNumber": "#74",
-            "title": "Midgut development",
-            "durationMins": 31,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v75",
-            "videoNumber": "#75",
-            "title": "Hindgut Development",
-            "durationMins": 11,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v76",
-            "videoNumber": "#76",
-            "title": "Anterior Abdominal wall",
-            "durationMins": 24,
-            "durationSecs": 0
-          },
-          {
-            "id": "anatomy__v77",
-            "videoNumber": "#77",
-            "title": "Inguinal Canal",
-            "durationMins": 33,
-            "durationSecs": 0
-          },
           {
             "id": "anatomy__v78",
             "videoNumber": "#78",
-            "title": "Peritoneum",
-            "durationMins": 38,
+            "title": "Cutaneous innervation of lower limb, Lumbar plexus and Great saphenous vein",
+            "durationMins": 16,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v79",
             "videoNumber": "#79",
-            "title": "Anatomy of Stomach",
-            "durationMins": 34,
+            "title": "Front of thigh, Adductor canal and Popliteal Fossa",
+            "durationMins": 71,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v80",
             "videoNumber": "#80",
-            "title": "Duodenum and Pancreas",
-            "durationMins": 44,
+            "title": "Gluteal region and Hamstring muscles",
+            "durationMins": 40,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v81",
             "videoNumber": "#81",
-            "title": "Large Intestine",
-            "durationMins": 10,
+            "title": "Knee joint",
+            "durationMins": 28,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v82",
             "videoNumber": "#82",
-            "title": "Liver",
-            "durationMins": 26,
+            "title": "Leg and Ankle Joint",
+            "durationMins": 50,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v83",
             "videoNumber": "#83",
-            "title": "Extrahepatic Biliary Apparatus and Spleen",
-            "durationMins": 27,
+            "title": "Arteries of Lower Limb",
+            "durationMins": 24,
             "durationSecs": 0
           },
           {
             "id": "anatomy__v84",
             "videoNumber": "#84",
-            "title": "Blood Supply of Abdomen and Pelvis",
-            "durationMins": 36,
+            "title": "Layers of the Sole and Arches of the Foot",
+            "durationMins": 27,
             "durationSecs": 0
           }
         ]
