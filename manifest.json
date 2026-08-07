@@ -1,17 +1,48 @@
 {
   "name": "FlowMD — Plan. Study. Track. Succeed.",
   "short_name": "FlowMD",
-  "description": "FlowMD - Medical exam study planner and tracker.",
-  "start_url": "./",
+  "description": "FlowMD - Medical exam study planner and tracker. PWA-optimized for mobile.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b0f19",
   "theme_color": "#0b0f19",
+  "categories": ["education", "health"],
   "icons": [
     {
       "src": "assets/APP LOGO.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "assets/APP LOGO.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/APP LOGO.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Curriculum",
+      "short_name": "Curriculum",
+      "description": "Browse curriculum subjects and chapters",
+      "url": "./?view=curriculum",
+      "icons": [{ "src": "assets/APP LOGO.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View study dashboard and progress",
+      "url": "./?view=dashboard",
+      "icons": [{ "src": "assets/APP LOGO.svg", "sizes": "192x192" }]
     }
   ]
 }

@@ -1,12 +1,17 @@
-const CACHE_NAME = 'marrow-planner-v3';
+const CACHE_NAME = 'marrow-planner-pwa-v4';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
   './icon.svg',
-  './manifest.json'
+  './manifest.json',
+  './device-mode.css',
+  './device-mode_legacy.css',
+  './style_legacy.css'
 ];
+
+const CURRICULUM_CACHE = 'marrow-curriculum-v1';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -20,7 +25,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== CURRICULUM_CACHE).map((k) => caches.delete(k)))
     )
   );
   self.clients.claim();
@@ -29,6 +34,20 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
+
+  const url = new URL(request.url);
+
+  if (url.pathname.includes('curriculum') || url.pathname.endsWith('/')) {
+    event.respondWith(
+      caches.open(CURRICULUM_CACHE).then((cache) => {
+        return fetch(request).then((networkResponse) => {
+          cache.put(request, networkResponse.clone());
+          return networkResponse;
+        }).catch(() => cache.match(request));
+      })
+    );
+    return;
+  }
 
   event.respondWith(
     fetch(request)

@@ -1050,139 +1050,118 @@ const syllabusData = [
     "subject": "Physiology",
     "chapters": [
       {
-        "name": "RENAL PHYSIOLOGY",
-        "modules": 1,
-        "hours": 0.9,
+        "name": "GENERAL PHYSIOLOGY",
+        "modules": 9,
+        "hours": 6.5,
         "videos": [
           {
             "id": "physiology__v1",
             "videoNumber": "#01",
-            "title": "Acid Base Balance",
-            "durationMins": 57,
+            "title": "How to Approach Physiology Edition 8",
+            "durationMins": 7,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "ENDOCRINE PHYSIOLOGY",
-        "modules": 5,
-        "hours": 4.5,
-        "videos": [
+          },
           {
             "id": "physiology__v2",
             "videoNumber": "#02",
-            "title": "Pituitary Gland",
-            "durationMins": 48,
+            "title": "Homeostasis",
+            "durationMins": 37,
             "durationSecs": 0
           },
           {
             "id": "physiology__v3",
             "videoNumber": "#03",
-            "title": "Thyroid Gland",
-            "durationMins": 51,
+            "title": "Cellular Physiology",
+            "durationMins": 49,
             "durationSecs": 0
           },
           {
             "id": "physiology__v4",
             "videoNumber": "#04",
-            "title": "Endocrine Pancreas",
-            "durationMins": 49,
+            "title": "Cell Organelles",
+            "durationMins": 58,
             "durationSecs": 0
           },
           {
             "id": "physiology__v5",
             "videoNumber": "#05",
-            "title": "Adrenal Gland",
-            "durationMins": 63,
+            "title": "Cytoskeletal Filaments and Cellular Junctions",
+            "durationMins": 48,
             "durationSecs": 0
           },
           {
             "id": "physiology__v6",
             "videoNumber": "#06",
-            "title": "Calcium Homeostasis",
-            "durationMins": 57,
+            "title": "Cellular Messengers and Receptors",
+            "durationMins": 52,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "REPRODUCTIVE PHYSIOLOGY",
-        "modules": 2,
-        "hours": 1.9,
-        "videos": [
+          },
           {
             "id": "physiology__v7",
             "videoNumber": "#07",
-            "title": "Male Reproduction",
-            "durationMins": 51,
+            "title": "Membrane Transport",
+            "durationMins": 53,
             "durationSecs": 0
           },
           {
             "id": "physiology__v8",
             "videoNumber": "#08",
-            "title": "Female Reproduction",
-            "durationMins": 61,
+            "title": "Membrane Potentials",
+            "durationMins": 40,
             "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "EXERCISE PHYSIOLOGY",
-        "modules": 1,
-        "hours": 0.7,
-        "videos": [
+          },
           {
             "id": "physiology__v9",
             "videoNumber": "#09",
-            "title": "Exercise Physiology",
-            "durationMins": 40,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "FRO",
-        "modules": 1,
-        "hours": 0.8,
-        "videos": [
-          {
-            "id": "physiology__v10",
-            "videoNumber": "#10",
-            "title": "Regulation of Body Temperature",
-            "durationMins": 47,
+            "title": "Cellular Fluids",
+            "durationMins": 49,
             "durationSecs": 0
           }
         ]
       },
       {
         "name": "NERVE MUSCLE PHYSIOLOGY",
-        "modules": 4,
-        "hours": 4,
+        "modules": 6,
+        "hours": 5.8,
         "videos": [
+          {
+            "id": "physiology__v10",
+            "videoNumber": "#10",
+            "title": "Characteristics of Nerve Fibres",
+            "durationMins": 64,
+            "durationSecs": 0
+          },
           {
             "id": "physiology__v11",
             "videoNumber": "#11",
-            "title": "Skeletal Muscles",
-            "durationMins": 63,
+            "title": "Classification of Nerve Fibres",
+            "durationMins": 44,
             "durationSecs": 0
           },
           {
             "id": "physiology__v12",
             "videoNumber": "#12",
-            "title": "Properties of Skeletal Muscles",
-            "durationMins": 52,
+            "title": "Skeletal Muscles",
+            "durationMins": 63,
             "durationSecs": 0
           },
           {
             "id": "physiology__v13",
             "videoNumber": "#13",
-            "title": "Cardiac and Smooth Muscles",
-            "durationMins": 48,
+            "title": "Properties of Skeletal Muscles",
+            "durationMins": 52,
             "durationSecs": 0
           },
           {
             "id": "physiology__v14",
             "videoNumber": "#14",
+            "title": "Cardiac and Smooth Muscles",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v15",
+            "videoNumber": "#15",
             "title": "Synaptic Transmission and Neurotransmitters",
             "durationMins": 74,
             "durationSecs": 0
@@ -1195,78 +1174,78 @@ const syllabusData = [
         "hours": 10.1,
         "videos": [
           {
-            "id": "physiology__v15",
-            "videoNumber": "#15",
+            "id": "physiology__v16",
+            "videoNumber": "#16",
             "title": "Sensory Receptors",
             "durationMins": 71,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v16",
-            "videoNumber": "#16",
+            "id": "physiology__v17",
+            "videoNumber": "#17",
             "title": "Somatosensory Pathways",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v17",
-            "videoNumber": "#17",
+            "id": "physiology__v18",
+            "videoNumber": "#18",
             "title": "Vision",
             "durationMins": 68,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v18",
-            "videoNumber": "#18",
+            "id": "physiology__v19",
+            "videoNumber": "#19",
             "title": "Hearing, Smell and Taste",
             "durationMins": 53,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v19",
-            "videoNumber": "#19",
+            "id": "physiology__v20",
+            "videoNumber": "#20",
             "title": "Descending Motor Pathways",
             "durationMins": 58,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v20",
-            "videoNumber": "#20",
+            "id": "physiology__v21",
+            "videoNumber": "#21",
             "title": "Spinal Reflexes",
             "durationMins": 60,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v21",
-            "videoNumber": "#21",
+            "id": "physiology__v22",
+            "videoNumber": "#22",
             "title": "Cerebellum and Basal Ganglia",
             "durationMins": 63,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v22",
-            "videoNumber": "#22",
+            "id": "physiology__v23",
+            "videoNumber": "#23",
             "title": "Limbic System and Hypothalamus",
             "durationMins": 43,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v23",
-            "videoNumber": "#23",
+            "id": "physiology__v24",
+            "videoNumber": "#24",
             "title": "Learning and Memory",
             "durationMins": 57,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v24",
-            "videoNumber": "#24",
+            "id": "physiology__v25",
+            "videoNumber": "#25",
             "title": "CSF, CBF and BBB",
             "durationMins": 34,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v25",
-            "videoNumber": "#25",
+            "id": "physiology__v26",
+            "videoNumber": "#26",
             "title": "EEG and Sleep",
             "durationMins": 57,
             "durationSecs": 0
@@ -1275,63 +1254,301 @@ const syllabusData = [
       },
       {
         "name": "THE RESPIRATORY SYSTEM",
-        "modules": 4,
-        "hours": 3.4,
+        "modules": 9,
+        "hours": 7,
         "videos": [
           {
-            "id": "physiology__v26",
-            "videoNumber": "#26",
+            "id": "physiology__v27",
+            "videoNumber": "#27",
             "title": "Structure Function Relationship in Lung",
             "durationMins": 51,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v27",
-            "videoNumber": "#27",
+            "id": "physiology__v28",
+            "videoNumber": "#28",
             "title": "Mechanics of Breathing",
             "durationMins": 53,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v28",
-            "videoNumber": "#28",
+            "id": "physiology__v29",
+            "videoNumber": "#29",
             "title": "Lung Volumes and Capacities",
             "durationMins": 49,
             "durationSecs": 0
           },
           {
-            "id": "physiology__v29",
-            "videoNumber": "#29",
-            "title": "Alveolar Ventilation and Pulmonary Circulation",
-            "durationMins": 52,
-            "durationSecs": 0
-          }
-        ]
-      },
-      {
-        "name": "SRC",
-        "modules": 3,
-        "hours": 2.4,
-        "videos": [
-          {
             "id": "physiology__v30",
             "videoNumber": "#30",
-            "title": "Ventilation Perfusion Ratio",
-            "durationMins": 29,
+            "title": "Alveolar Ventilation and Pulmonary Circulation",
+            "durationMins": 52,
             "durationSecs": 0
           },
           {
             "id": "physiology__v31",
             "videoNumber": "#31",
-            "title": "Diffusion and Transport of Gases",
-            "durationMins": 61,
+            "title": "Ventilation Perfusion Ratio",
+            "durationMins": 29,
             "durationSecs": 0
           },
           {
             "id": "physiology__v32",
             "videoNumber": "#32",
+            "title": "Diffusion and Transport of Gases",
+            "durationMins": 61,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v33",
+            "videoNumber": "#33",
             "title": "Neural Regulation of Respiration",
             "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v34",
+            "videoNumber": "#34",
+            "title": "Chemical Regulation of Respiration",
+            "durationMins": 41,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v35",
+            "videoNumber": "#35",
+            "title": "Environmental Physiology",
+            "durationMins": 35,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "THE CARDIOVASCULAR SYSTEM",
+        "modules": 9,
+        "hours": 7.2,
+        "videos": [
+          {
+            "id": "physiology__v36",
+            "videoNumber": "#36",
+            "title": "Cardiac Action Potentials",
+            "durationMins": 45,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v37",
+            "videoNumber": "#37",
+            "title": "ECG and JVP",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v38",
+            "videoNumber": "#38",
+            "title": "Cardiac Cycle",
+            "durationMins": 61,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v39",
+            "videoNumber": "#39",
+            "title": "Cardiac Output",
+            "durationMins": 55,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v40",
+            "videoNumber": "#40",
+            "title": "Hematopoiesis & Blood Groups",
+            "durationMins": 46,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v41",
+            "videoNumber": "#41",
+            "title": "Characteristics of Blood Vessels",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v42",
+            "videoNumber": "#42",
+            "title": "Hemodynamics",
+            "durationMins": 37,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v43",
+            "videoNumber": "#43",
+            "title": "Vascular Injury",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v44",
+            "videoNumber": "#44",
+            "title": "Regulation of Blood Pressure",
+            "durationMins": 59,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "GASTROINTESTINAL SYSTEM",
+        "modules": 4,
+        "hours": 3.6,
+        "videos": [
+          {
+            "id": "physiology__v45",
+            "videoNumber": "#45",
+            "title": "Gastrointestinal Secretions",
+            "durationMins": 79,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v46",
+            "videoNumber": "#46",
+            "title": "Gastrointestinal Hormones",
+            "durationMins": 39,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v47",
+            "videoNumber": "#47",
+            "title": "Digestion and Absorption",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v48",
+            "videoNumber": "#48",
+            "title": "Gastrointestinal Motility",
+            "durationMins": 56,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "RENAL PHYSIOLOGY",
+        "modules": 5,
+        "hours": 4.4,
+        "videos": [
+          {
+            "id": "physiology__v49",
+            "videoNumber": "#49",
+            "title": "Glomerular Filtration Rate",
+            "durationMins": 62,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v50",
+            "videoNumber": "#50",
+            "title": "Proximal Convoluted Tubule",
+            "durationMins": 42,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v51",
+            "videoNumber": "#51",
+            "title": "Loop of Henle and Distal Convoluted Tubule",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v52",
+            "videoNumber": "#52",
+            "title": "Collecting Duct and Micturition Reflex",
+            "durationMins": 57,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v53",
+            "videoNumber": "#53",
+            "title": "Acid Base Balance",
+            "durationMins": 57,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "ENDOCRINE PHYSIOLOGY",
+        "modules": 5,
+        "hours": 4.5,
+        "videos": [
+          {
+            "id": "physiology__v54",
+            "videoNumber": "#54",
+            "title": "Pituitary Gland",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v55",
+            "videoNumber": "#55",
+            "title": "Thyroid Gland",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v56",
+            "videoNumber": "#56",
+            "title": "Endocrine Pancreas",
+            "durationMins": 49,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v57",
+            "videoNumber": "#57",
+            "title": "Adrenal Gland",
+            "durationMins": 63,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v58",
+            "videoNumber": "#58",
+            "title": "Calcium Homeostasis",
+            "durationMins": 57,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "REPRODUCTIVE PHYSIOLOGY",
+        "modules": 2,
+        "hours": 1.9,
+        "videos": [
+          {
+            "id": "physiology__v59",
+            "videoNumber": "#59",
+            "title": "Male Reproduction",
+            "durationMins": 51,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v60",
+            "videoNumber": "#60",
+            "title": "Female Reproduction",
+            "durationMins": 61,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "EXERCISE PHYSIOLOGY",
+        "modules": 2,
+        "hours": 1.4,
+        "videos": [
+          {
+            "id": "physiology__v61",
+            "videoNumber": "#61",
+            "title": "Exercise Physiology",
+            "durationMins": 40,
+            "durationSecs": 0
+          },
+          {
+            "id": "physiology__v62",
+            "videoNumber": "#62",
+            "title": "Regulation of Body Temperature",
+            "durationMins": 47,
             "durationSecs": 0
           }
         ]

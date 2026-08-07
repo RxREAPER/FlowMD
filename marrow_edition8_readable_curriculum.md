@@ -10,7 +10,7 @@ This document provides a clean, human-readable hierarchy of **All 20 Medical Sub
 |---|---|---|---|---|---|
 | 1 | **Anatomy** | `anatomy` | 9 | 84 Videos | 47.7 hrs |
 | 2 | **Biochemistry** | `biochemistry` | 1 | 53 Videos | 42.0 hrs |
-| 3 | **Physiology** | `physiology` | 9 | 32 Videos | 28.6 hrs |
+| 3 | **Physiology** | `physiology` | 10 | 62 Videos | 52.5 hrs |
 | 4 | **Pharmacology** | `pharmacology` | 13 | 75 Videos | 58.3 hrs |
 | 5 | **Microbiology** | `microbiology` | 8 | 84 Videos | 63.0 hrs |
 | 6 | **Pathology** | `pathology` | 10 | 79 Videos | 64.5 hrs |
@@ -28,7 +28,7 @@ This document provides a clean, human-readable hierarchy of **All 20 Medical Sub
 | 18 | **Paediatrics** | `paediatrics` | 15 | 55 Videos | 40.6 hrs |
 | 19 | **Obstetrics & Gynaecology** | `obstetrics___gynaecology` | 9 | 111 Videos | 97.5 hrs |
 | 20 | **Revision Videos** | `revision_videos` | 20 | 260 Videos | 239.5 hrs |
-| | **GRAND TOTAL** | **20 Subjects** | **166 Units** | **1523 Videos** | **1176.2 Hours** |
+| | **GRAND TOTAL** | **20 Subjects** | **167 Units** | **1553 Videos** | **1200.1 Hours** |
 
 ---
 
@@ -203,57 +203,89 @@ This document provides a clean, human-readable hierarchy of **All 20 Medical Sub
 
 ## 3. Physiology
 * **Subject ID**: `physiology`
-* **Total Content**: 9 Units | 32 Videos | 28.6 Hours
+* **Total Content**: 10 Units | 62 Videos | 52.5 Hours
 
-### Unit 1: RENAL PHYSIOLOGY (1 Videos • 0.9h)
-* **#01** `[physiology__v1]` | Acid Base Balance *(57m)*
+### Unit 1: GENERAL PHYSIOLOGY (9 Videos • 6.5h)
+* **#01** `[physiology__v1]` | How to Approach Physiology Edition 8 *(7m)*
+* **#02** `[physiology__v2]` | Homeostasis *(37m)*
+* **#03** `[physiology__v3]` | Cellular Physiology *(49m)*
+* **#04** `[physiology__v4]` | Cell Organelles *(58m)*
+* **#05** `[physiology__v5]` | Cytoskeletal Filaments and Cellular Junctions *(48m)*
+* **#06** `[physiology__v6]` | Cellular Messengers and Receptors *(52m)*
+* **#07** `[physiology__v7]` | Membrane Transport *(53m)*
+* **#08** `[physiology__v8]` | Membrane Potentials *(40m)*
+* **#09** `[physiology__v9]` | Cellular Fluids *(49m)*
 
-### Unit 2: ENDOCRINE PHYSIOLOGY (5 Videos • 4.5h)
-* **#02** `[physiology__v2]` | Pituitary Gland *(48m)*
-* **#03** `[physiology__v3]` | Thyroid Gland *(51m)*
-* **#04** `[physiology__v4]` | Endocrine Pancreas *(49m)*
-* **#05** `[physiology__v5]` | Adrenal Gland *(63m)*
-* **#06** `[physiology__v6]` | Calcium Homeostasis *(57m)*
+### Unit 2: NERVE MUSCLE PHYSIOLOGY (6 Videos • 5.8h)
+* **#10** `[physiology__v10]` | Characteristics of Nerve Fibres *(64m)*
+* **#11** `[physiology__v11]` | Classification of Nerve Fibres *(44m)*
+* **#12** `[physiology__v12]` | Skeletal Muscles *(63m)*
+* **#13** `[physiology__v13]` | Properties of Skeletal Muscles *(52m)*
+* **#14** `[physiology__v14]` | Cardiac and Smooth Muscles *(48m)*
+* **#15** `[physiology__v15]` | Synaptic Transmission and Neurotransmitters *(74m)*
 
-### Unit 3: REPRODUCTIVE PHYSIOLOGY (2 Videos • 1.9h)
-* **#07** `[physiology__v7]` | Male Reproduction *(51m)*
-* **#08** `[physiology__v8]` | Female Reproduction *(61m)*
+### Unit 3: CENTRAL NERVOUS SYSTEM (11 Videos • 10.1h)
+* **#16** `[physiology__v16]` | Sensory Receptors *(71m)*
+* **#17** `[physiology__v17]` | Somatosensory Pathways *(43m)*
+* **#18** `[physiology__v18]` | Vision *(68m)*
+* **#19** `[physiology__v19]` | Hearing, Smell and Taste *(53m)*
+* **#20** `[physiology__v20]` | Descending Motor Pathways *(58m)*
+* **#21** `[physiology__v21]` | Spinal Reflexes *(60m)*
+* **#22** `[physiology__v22]` | Cerebellum and Basal Ganglia *(63m)*
+* **#23** `[physiology__v23]` | Limbic System and Hypothalamus *(43m)*
+* **#24** `[physiology__v24]` | Learning and Memory *(57m)*
+* **#25** `[physiology__v25]` | CSF, CBF and BBB *(34m)*
+* **#26** `[physiology__v26]` | EEG and Sleep *(57m)*
 
-### Unit 4: EXERCISE PHYSIOLOGY (1 Videos • 0.7h)
-* **#09** `[physiology__v9]` | Exercise Physiology *(40m)*
+### Unit 4: THE RESPIRATORY SYSTEM (9 Videos • 7h)
+* **#27** `[physiology__v27]` | Structure Function Relationship in Lung *(51m)*
+* **#28** `[physiology__v28]` | Mechanics of Breathing *(53m)*
+* **#29** `[physiology__v29]` | Lung Volumes and Capacities *(49m)*
+* **#30** `[physiology__v30]` | Alveolar Ventilation and Pulmonary Circulation *(52m)*
+* **#31** `[physiology__v31]` | Ventilation Perfusion Ratio *(29m)*
+* **#32** `[physiology__v32]` | Diffusion and Transport of Gases *(61m)*
+* **#33** `[physiology__v33]` | Neural Regulation of Respiration *(51m)*
+* **#34** `[physiology__v34]` | Chemical Regulation of Respiration *(41m)*
+* **#35** `[physiology__v35]` | Environmental Physiology *(35m)*
 
-### Unit 5: FRO (1 Videos • 0.8h)
-* **#10** `[physiology__v10]` | Regulation of Body Temperature *(47m)*
+### Unit 5: THE CARDIOVASCULAR SYSTEM (9 Videos • 7.2h)
+* **#36** `[physiology__v36]` | Cardiac Action Potentials *(45m)*
+* **#37** `[physiology__v37]` | ECG and JVP *(51m)*
+* **#38** `[physiology__v38]` | Cardiac Cycle *(61m)*
+* **#39** `[physiology__v39]` | Cardiac Output *(55m)*
+* **#40** `[physiology__v40]` | Hematopoiesis & Blood Groups *(46m)*
+* **#41** `[physiology__v41]` | Characteristics of Blood Vessels *(43m)*
+* **#42** `[physiology__v42]` | Hemodynamics *(37m)*
+* **#43** `[physiology__v43]` | Vascular Injury *(34m)*
+* **#44** `[physiology__v44]` | Regulation of Blood Pressure *(59m)*
 
-### Unit 6: NERVE MUSCLE PHYSIOLOGY (4 Videos • 4h)
-* **#11** `[physiology__v11]` | Skeletal Muscles *(63m)*
-* **#12** `[physiology__v12]` | Properties of Skeletal Muscles *(52m)*
-* **#13** `[physiology__v13]` | Cardiac and Smooth Muscles *(48m)*
-* **#14** `[physiology__v14]` | Synaptic Transmission and Neurotransmitters *(74m)*
+### Unit 6: GASTROINTESTINAL SYSTEM (4 Videos • 3.6h)
+* **#45** `[physiology__v45]` | Gastrointestinal Secretions *(79m)*
+* **#46** `[physiology__v46]` | Gastrointestinal Hormones *(39m)*
+* **#47** `[physiology__v47]` | Digestion and Absorption *(43m)*
+* **#48** `[physiology__v48]` | Gastrointestinal Motility *(56m)*
 
-### Unit 7: CENTRAL NERVOUS SYSTEM (11 Videos • 10.1h)
-* **#15** `[physiology__v15]` | Sensory Receptors *(71m)*
-* **#16** `[physiology__v16]` | Somatosensory Pathways *(43m)*
-* **#17** `[physiology__v17]` | Vision *(68m)*
-* **#18** `[physiology__v18]` | Hearing, Smell and Taste *(53m)*
-* **#19** `[physiology__v19]` | Descending Motor Pathways *(58m)*
-* **#20** `[physiology__v20]` | Spinal Reflexes *(60m)*
-* **#21** `[physiology__v21]` | Cerebellum and Basal Ganglia *(63m)*
-* **#22** `[physiology__v22]` | Limbic System and Hypothalamus *(43m)*
-* **#23** `[physiology__v23]` | Learning and Memory *(57m)*
-* **#24** `[physiology__v24]` | CSF, CBF and BBB *(34m)*
-* **#25** `[physiology__v25]` | EEG and Sleep *(57m)*
+### Unit 7: RENAL PHYSIOLOGY (5 Videos • 4.4h)
+* **#49** `[physiology__v49]` | Glomerular Filtration Rate *(62m)*
+* **#50** `[physiology__v50]` | Proximal Convoluted Tubule *(42m)*
+* **#51** `[physiology__v51]` | Loop of Henle and Distal Convoluted Tubule *(48m)*
+* **#52** `[physiology__v52]` | Collecting Duct and Micturition Reflex *(57m)*
+* **#53** `[physiology__v53]` | Acid Base Balance *(57m)*
 
-### Unit 8: THE RESPIRATORY SYSTEM (4 Videos • 3.4h)
-* **#26** `[physiology__v26]` | Structure Function Relationship in Lung *(51m)*
-* **#27** `[physiology__v27]` | Mechanics of Breathing *(53m)*
-* **#28** `[physiology__v28]` | Lung Volumes and Capacities *(49m)*
-* **#29** `[physiology__v29]` | Alveolar Ventilation and Pulmonary Circulation *(52m)*
+### Unit 8: ENDOCRINE PHYSIOLOGY (5 Videos • 4.5h)
+* **#54** `[physiology__v54]` | Pituitary Gland *(48m)*
+* **#55** `[physiology__v55]` | Thyroid Gland *(51m)*
+* **#56** `[physiology__v56]` | Endocrine Pancreas *(49m)*
+* **#57** `[physiology__v57]` | Adrenal Gland *(63m)*
+* **#58** `[physiology__v58]` | Calcium Homeostasis *(57m)*
 
-### Unit 9: SRC (3 Videos • 2.4h)
-* **#30** `[physiology__v30]` | Ventilation Perfusion Ratio *(29m)*
-* **#31** `[physiology__v31]` | Diffusion and Transport of Gases *(61m)*
-* **#32** `[physiology__v32]` | Neural Regulation of Respiration *(51m)*
+### Unit 9: REPRODUCTIVE PHYSIOLOGY (2 Videos • 1.9h)
+* **#59** `[physiology__v59]` | Male Reproduction *(51m)*
+* **#60** `[physiology__v60]` | Female Reproduction *(61m)*
+
+### Unit 10: EXERCISE PHYSIOLOGY (2 Videos • 1.4h)
+* **#61** `[physiology__v61]` | Exercise Physiology *(40m)*
+* **#62** `[physiology__v62]` | Regulation of Body Temperature *(47m)*
 
 ---
 
