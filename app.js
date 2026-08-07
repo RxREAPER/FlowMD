@@ -1454,6 +1454,9 @@ function getSubjectAccentColor(subjectIdOrName) {
                   ${renderFacultyPill(getSubjectFaculty(sub.id), sub.id)}
                 </div>
 
+                <!-- Hours -->
+                <div class="pxl-tile-hours" style="font-family: var(--font-hud); font-size: 0.68rem; color: var(--text-muted); margin: 2px 0;">${sub.completedHours} / ${sub.totalHours}h</div>
+
                 <!-- Tier Badge -->
                 <div class="pxl-tile-bottom">
                   <span class="pxl-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(0)}%</span>
@@ -2012,187 +2015,48 @@ function getSubjectAccentColor(subjectIdOrName) {
     let filteredSubjects = stats.subjectsStats;
 
     DOM.appMain.innerHTML = `
-      <div class="pwa-curriculum-scroll">
-        <div class="pxl-breadcrumb">
-          <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
-          <span class="pxl-breadcrumb-separator">&gt;</span>
-          <span class="pxl-breadcrumb-item active">Curriculum</span>
-        </div>
+      <div class="pxl-breadcrumb">
+        <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
+        <span class="pxl-breadcrumb-separator">&gt;</span>
+        <span class="pxl-breadcrumb-item active">Curriculum</span>
+      </div>
 
-        <div class="section-title-row">
-          <h2 class="section-title" style="font-family: var(--font-display);">Curriculum</h2>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
-          </div>
-        </div>
-
-        <div class="pwa-curriculum-stats">
-          <div class="pwa-stat-chip">
-            <div class="pwa-stat-value">${stats.totalVideos || '—'}</div>
-            <div class="pwa-stat-label">Videos</div>
-          </div>
-          <div class="pwa-stat-chip">
-            <div class="pwa-stat-value">${stats.completedVideos || '—'}</div>
-            <div class="pwa-stat-label">Completed</div>
-          </div>
-          <div class="pwa-stat-chip">
-            <div class="pwa-stat-value">${stats.percentage}%</div>
-            <div class="pwa-stat-label">Progress</div>
-          </div>
-        </div>
-
-        <div class="pwa-subject-tab-bar" id="pwa-subject-tabs">
-          ${filteredSubjects.map(sub => `
-            <div class="pwa-subject-tab ${state.activeSubjectId === sub.id ? 'active' : ''}" data-subject-id="${sub.id}" role="tab" tabindex="0" aria-selected="${state.activeSubjectId === sub.id}" aria-label="${sub.name}">
-              <div class="pwa-subject-tab-icon"><img src="${sub.icon}" alt="${sub.name}"></div>
-              <div class="pwa-subject-tab-label">${sub.name}</div>
-              <div class="pwa-subject-tab-progress"><div class="pwa-subject-tab-progress-fill" style="width:${sub.percentage}%"></div></div>
-            </div>
-          `).join('')}
-        </div>
-
-        <div id="pwa-curriculum-detail">
-          ${state.activeSubjectId ? renderCurriculumSubjectDetail(stats) : `
-            <div class="pwa-empty-state">
-              <span class="material-symbols-outlined">school</span>
-              <div class="pwa-empty-state-text">Select a subject to explore chapters and videos</div>
-            </div>
-          `}
-        </div>
-
-        <div id="pwa-install-banner" class="pwa-install-banner">
-          <span class="material-symbols-outlined" style="vertical-align: middle;">install_mobile</span>
-          <span>Install FlowMD for the best experience</span>
-          <button class="pwa-install-btn" id="btn-pwa-install">Install</button>
-          <button class="pwa-install-btn" id="btn-pwa-dismiss" style="background: var(--bg-surface-raised); color: var(--text-muted); margin-left: 6px;">Dismiss</button>
+      <div class="section-title-row">
+        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum &amp; Subjects</h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          ${renderEditionChip()}
+          <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
         </div>
       </div>
+
+      ${filteredSubjects.map(sub => `
+        <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
+            <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+              <img src="${sub.icon}" class="subject-icon-medium" alt="${sub.name}">
+              <div style="min-width: 0;">
+                <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
+                <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="v2-hud-badge" style="${sub.percentage === 100 ? 'color: var(--success); border-color: var(--success);' : ''}">${sub.percentage}%</span>
+              <span class="material-symbols-outlined" style="color: var(--text-muted);">chevron_right</span>
+            </div>
+          </div>
+        </div>
+      `).join('')}
     `;
 
-    // Subject tab click handlers
-    document.querySelectorAll('.pwa-subject-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        state.activeSubjectId = tab.getAttribute('data-subject-id');
-        renderCurriculumView(stats);
-      });
-      tab.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          state.activeSubjectId = tab.getAttribute('data-subject-id');
-          renderCurriculumView(stats);
-        }
+    document.querySelectorAll('.curriculum-sub-row').forEach(row => {
+      row.addEventListener('click', () => {
+        state.activeSubjectId = row.getAttribute('data-subject-id');
+        switchView('subject_detail');
       });
     });
-
-    // PWA install prompt
-    const installBanner = document.getElementById('pwa-install-banner');
-    const installBtn = document.getElementById('btn-pwa-install');
-    const dismissBtn = document.getElementById('btn-pwa-dismiss');
-    if (installBanner && installBtn && dismissBtn) {
-      if (state.canInstallPWA && deferredInstallPrompt) {
-        installBanner.classList.add('visible');
-      }
-      installBtn.addEventListener('click', async () => {
-        if (deferredInstallPrompt) {
-          deferredInstallPrompt.prompt();
-          const { outcome } = await deferredInstallPrompt.userChoice;
-          if (outcome === 'accepted') { state.canInstallPWA = false; installBanner.classList.remove('visible'); }
-          deferredInstallPrompt = null;
-        }
-      });
-      dismissBtn.addEventListener('click', () => installBanner.classList.remove('visible'));
-    }
   }
 
-  function renderCurriculumSubjectDetail(stats) {
-    const subObj = stats.subjectsStats.find(s => s.id === state.activeSubjectId);
-    if (!subObj) return '';
-
-    const focusedChapterSet = new Set();
-    (state.plans || []).forEach(p => {
-      if (p && p.targetSubject === subObj.name) {
-        getScopedChapterNames(p).forEach(n => focusedChapterSet.add(n));
-      }
-    });
-    const hasFocusScope = focusedChapterSet.size > 0;
-
-    const activeChapter = state.activeChapterName || (subObj.raw.chapters && subObj.raw.chapters[0] ? subObj.raw.chapters[0].name : '');
-
-    return `
-      <div class="pwa-subject-detail-header">
-        <button class="pwa-back-btn" id="btn-curriculum-back" aria-label="Back to subjects">
-          <span class="material-symbols-outlined">arrow_back</span>
-          <span>Subjects</span>
-        </button>
-        <div class="pwa-subject-detail-icon"><img src="${subObj.icon}" alt="${subObj.name}"></div>
-        <div class="pwa-subject-detail-info">
-          <div class="pwa-subject-detail-name">${subObj.name}</div>
-          <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos</div>
-          <div class="pwa-subject-detail-progress"><div class="pwa-subject-detail-progress-fill" style="width:${subObj.percentage}%"></div></div>
-        </div>
-      </div>
-
-      ${hasFocusScope ? `
-        <div class="pwa-focus-banner">
-          <span class="material-symbols-outlined">filter_alt</span>
-          <span>${focusedChapterSet.size} focused chapter${focusedChapterSet.size > 1 ? 's' : ''} — chapters outside focus are dimmed</span>
-        </div>
-      ` : ''}
-
-      <div class="pwa-chapter-tab-bar" id="pwa-chapter-tabs">
-        ${(subObj.raw.chapters || []).map(chap => {
-          const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
-          const isActive = chap.name === activeChapter;
-          const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
-          return `
-            <div class="pwa-chapter-tab ${isActive ? 'active' : ''}" data-chap-name="${chap.name}" style="${dimStyle}" role="tab" tabindex="0" aria-selected="${isActive}" aria-label="${chap.name}">
-              <span>${chap.name}</span>
-              <span class="chap-badge">(${chap.videos ? chap.videos.length : 0})</span>
-            </div>
-          `;
-        }).join('')}
-      </div>
-
-      <div class="pwa-tab-content" id="pwa-chapter-content">
-        ${renderCurriculumVideoList(subObj, activeChapter, hasFocusScope, focusedChapterSet)}
-      </div>
-    `;
-  }
-
-  function renderCurriculumVideoList(subObj, activeChapter, hasFocusScope, focusedChapterSet) {
-    const chap = (subObj.raw.chapters || []).find(c => c.name === activeChapter);
-    if (!chap || !chap.videos) {
-      return `<div class="pwa-empty-state"><span class="material-symbols-outlined">video_library</span><div class="pwa-empty-state-text">No videos in this chapter</div></div>`;
-    }
-
-    return `
-      <div class="pwa-video-list">
-        ${chap.videos.map(v => {
-          const isDone = !!state.completedVideos[v.id];
-          const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
-          let vNum = v.videoNumber || '#1';
-          vNum = '#' + vNum.replace(/^#+/, '');
-          const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
-          const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
-
-          return `
-            <div class="pwa-video-item ${isDone ? 'completed' : ''}" data-video-id="${v.id}" style="${dimStyle}" role="button" tabindex="0" aria-label="${v.title} ${isDone ? 'completed' : 'not completed'}">
-              <div class="pwa-video-checkbox">
-                <span class="material-symbols-outlined">check</span>
-              </div>
-              <div class="pwa-video-info">
-                <div class="pwa-video-title"><span style="color: var(--accent-primary); font-family: var(--font-hud); margin-right: 4px;">${vNum}</span> ${v.title}</div>
-                <div class="pwa-video-meta">${v.durationMins || 0}m ${v.durationSecs || 0}s</div>
-              </div>
-              <div class="pwa-video-duration">${durStr}</div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-  }
-
-// --- View 3: Subject Detail View — Nested Tabs ---
+// --- View 3: Subject Detail View — Chapter Accordions ---
   function renderSubjectDetailView(stats) {
     const subObj = stats.subjectsStats.find(s => s.id === state.activeSubjectId) || stats.subjectsStats[0];
     if (!subObj) {
@@ -2208,14 +2072,12 @@ function getSubjectAccentColor(subjectIdOrName) {
     });
     const hasFocusScope = focusedChapterSet.size > 0;
 
-    const activeChapter = state.activeChapterName || (subObj.raw.chapters && subObj.raw.chapters[0] ? subObj.raw.chapters[0].name : '');
-
     DOM.appMain.innerHTML = `
       <div class="pwa-curriculum-scroll">
         <div class="pxl-breadcrumb">
           <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
           <span class="pxl-breadcrumb-separator">&gt;</span>
-          <span class="pxl-breadcrumb-item nav-bc-curriculum">Curriculum</span>
+          <span class="pxl-breadcrumb-item nav-bc-curriculum" data-view="curriculum">Curriculum</span>
           <span class="pxl-breadcrumb-separator">&gt;</span>
           <span class="pxl-breadcrumb-item active">${subObj.name}</span>
         </div>
@@ -2228,7 +2090,9 @@ function getSubjectAccentColor(subjectIdOrName) {
           <div class="pwa-subject-detail-icon"><img src="${subObj.icon}" alt="${subObj.name}"></div>
           <div class="pwa-subject-detail-info">
             <div class="pwa-subject-detail-name">${subObj.name}</div>
+            <div class="pwa-subject-detail-faculty">${renderFacultyCard(subObj.faculty || getSubjectFaculty(subObj.id), subObj.id)}</div>
             <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done</div>
+            ${renderHoursMeter(subObj.completedHours, subObj.totalHours)}
             <div class="pwa-subject-detail-progress"><div class="pwa-subject-detail-progress-fill" style="width:${subObj.percentage}%"></div></div>
           </div>
         </div>
@@ -2240,71 +2104,89 @@ function getSubjectAccentColor(subjectIdOrName) {
           </div>
         ` : ''}
 
-        <div class="pwa-chapter-tab-bar" id="pwa-chapter-tabs">
-          ${(subObj.raw.chapters || []).map(chap => {
-            const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
-            const isActive = chap.name === activeChapter;
-            const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
-            return `
-              <div class="pwa-chapter-tab ${isActive ? 'active' : ''}" data-chap-name="${chap.name}" style="${dimStyle}" role="tab" tabindex="0" aria-selected="${isActive}" aria-label="${chap.name}">
-                <span>${chap.name}</span>
-                <span class="chap-badge">(${chap.videos ? chap.videos.length : 0})</span>
-              </div>
-            `;
-          }).join('')}
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 2px;">
+          <span style="font-family: var(--font-hud); font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">
+            ${subObj.raw.chapters ? subObj.raw.chapters.length : 0} UNITS / CHAPTERS
+          </span>
+          <button class="v2-arcade-btn" id="btn-toggle-all-chapters" style="height: 30px; padding: 0 10px; font-size: 0.8rem; background: var(--bg-surface-raised); color: var(--text-primary);">
+            <span class="material-symbols-outlined" style="font-size: 16px;">unfold_more</span>
+            <span>${Object.values(state.expandedChapters).some(v => v === true) ? 'Collapse All' : 'Expand All'}</span>
+          </button>
         </div>
 
-        <div class="pwa-tab-content" id="pwa-chapter-content">
-          ${renderCurriculumVideoList(subObj, activeChapter, hasFocusScope, focusedChapterSet)}
-        </div>
+        ${subObj.raw.chapters ? subObj.raw.chapters.map(chap => {
+          const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
+          const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
+          return `
+            <div class="accordion-header ${state.expandedChapters[chap.name] === true ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;${dimStyle}">
+              <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
+              <span class="material-symbols-outlined accordion-icon">expand_more</span>
+            </div>
+
+            <div class="accordion-body ${state.expandedChapters[chap.name] === true ? 'active' : ''}">
+              <div class="v2-quest-card" style="padding-top: 14px; margin-top: 4px; margin-bottom: 10px;">
+                ${chap.videos ? chap.videos.map(v => {
+                  const isDone = !!state.completedVideos[v.id];
+                  const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
+                  let vNum = v.videoNumber || '#1';
+                  vNum = '#' + vNum.replace(/^#+/, '');
+
+                  return `
+                    <div class="v2-quest-row ${isDone ? 'completed' : ''}">
+                      <label class="v2-pixel-checkbox-label">
+                        <input type="checkbox" class="react-task-checkbox" data-video-id="${v.id}" ${isDone ? 'checked' : ''}>
+                        <span class="v2-pixel-checkbox-box"></span>
+                        <div>
+                          <div class="v2-quest-title"><span style="color: var(--accent-primary); font-family: var(--font-hud); margin-right: 4px;">${vNum}</span> ${v.title}</div>
+                        </div>
+                      </label>
+                      <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); font-weight: 700;">${durStr}</div>
+                    </div>
+                  `;
+                }).join('') : ''}
+              </div>
+            </div>
+          `;
+        }).join('') : ''}
       </div>
     `;
 
     document.getElementById('btn-back-to-curriculum')?.addEventListener('click', () => switchView('curriculum'));
 
-    document.querySelectorAll('.pwa-chapter-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        state.activeChapterName = tab.getAttribute('data-chap-name');
+    document.querySelector('.nav-bc-curriculum')?.addEventListener('click', () => switchView('curriculum'));
+
+    document.getElementById('btn-toggle-all-chapters')?.addEventListener('click', () => {
+      const isAnyExpanded = Object.values(state.expandedChapters).some(v => v === true);
+      const newExpandedState = !isAnyExpanded;
+      if (subObj.raw.chapters) {
+        subObj.raw.chapters.forEach(chap => {
+          state.expandedChapters[chap.name] = newExpandedState;
+        });
+      }
+      renderSubjectDetailView(stats);
+    });
+
+    document.querySelectorAll('.accordion-header').forEach(hdr => {
+      hdr.addEventListener('click', () => {
+        const chapName = hdr.getAttribute('data-chap-name');
+        state.expandedChapters[chapName] = !state.expandedChapters[chapName];
         renderSubjectDetailView(stats);
-      });
-      tab.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          state.activeChapterName = tab.getAttribute('data-chap-name');
-          renderSubjectDetailView(stats);
-        }
       });
     });
 
-    document.querySelectorAll('.pwa-video-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const vidId = item.getAttribute('data-video-id');
-        if (state.completedVideos[vidId]) {
-          delete state.completedVideos[vidId];
-          markStudyActivity(false);
-        } else {
+    document.querySelectorAll('.react-task-checkbox').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        const vidId = e.target.getAttribute('data-video-id');
+        if (e.target.checked) {
           state.completedVideos[vidId] = true;
           markStudyActivity(true);
           showToast('Marked as Completed!', 'check_circle');
+        } else {
+          delete state.completedVideos[vidId];
+          markStudyActivity(false);
         }
         saveState();
         renderSubjectDetailView(getSyllabusStats());
-      });
-      item.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const vidId = item.getAttribute('data-video-id');
-          if (state.completedVideos[vidId]) {
-            delete state.completedVideos[vidId];
-            markStudyActivity(false);
-          } else {
-            state.completedVideos[vidId] = true;
-            markStudyActivity(true);
-            showToast('Marked as Completed!', 'check_circle');
-          }
-          saveState();
-          renderSubjectDetailView(getSyllabusStats());
-        }
       });
     });
   }
