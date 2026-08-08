@@ -1,9 +1,14 @@
-const CACHE_NAME = 'marrow-planner-pwa-v4';
+const CACHE_NAME = 'marrow-planner-pwa-v5';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './js/core/namespace.js',
+  './js/core/constants.js',
+  './js/core/subjects.js',
+  './js/core/logo.js',
+  './js/features/toast.js',
   './icon.svg',
   './manifest.json'
 ];

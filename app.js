@@ -4,231 +4,37 @@
    Complete Redesign of Presentation Layer while preserving 100% logic parity
    ============================================================ */
 
-// --- Shared SVG Icon Set (PxlKit) ---
-const PXL_ICONS = {
-  trophy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M2 5h4v2H2zM18 5h4v2h-4zM5 3h14v3c0 4-3 6-7 6s-7-2-7-6V3zm7 7c2.5 0 4-1.6 4-4H8c0 2.4 1.5 4 4 4zm-1 4h2v3h2v2h-6v-2h2v-3z"/></svg>',
-  rocket: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2c3.5 2 5 5.5 5 9l2 1v4l-3-1c-.5 1.5-1 3-2.5 4l-1.5-2h-2L8 19c-1.5-1-2-2.5-2.5-4l-3 1v-4l2-1c0-3.5 1.5-7 5-9zm0 3c-1.5 1.5-2.5 3.5-2.5 6v1h5v-1c0-2.5-1-4.5-2.5-6z"/></svg>'
-};
-
 (function () {
   'use strict';
 
-  // --- Constants & LocalStorage Keys ---
-  const STORAGE_KEYS = {
-    COMPLETED_VIDEOS: 'marrow_planner_completed_videos',
-    GOALS: 'marrow_planner_goals',
-    THEME: 'marrow_planner_theme',
-    STREAK: 'marrow_planner_streak',
-    DAILY_BATCH: 'marrow_planner_daily_batch',
-    PERSONAL: 'marrow_planner_personal',
-    URGENCY: 'marrow_planner_urgency',
-    DAILY_HISTORY: 'marrow_planner_daily_history',
-    QUEUE_BATCH: 'marrow_planner_queue_completed_in_batch',
-    QUEUE_BATCH_VIDEOS: 'marrow_planner_queue_batch_videos',
-    TUTORIAL_SEEN: 'flowmd_tutorial_seen',
-    // Dual-Subject Tracking v2
-    PLANS: 'flowmd_plans_v2',
-    DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject'
-  };
+  // --- Imported leaf modules (js/core/*, js/features/*) ---
+  const {
+    PXL_ICONS,
+    STORAGE_KEYS,
+    STUDY_SOURCES,
+    DEFAULT_PLAN,
+    PLAN_A_ACCENT,
+    PLAN_B_ACCENT,
+    DEFAULT_PERSONAL,
+    DEFAULT_GOALS,
+    SUBJECT_ICONS,
+    SUBJECT_SVG_ICONS,
+    SUBJECT_COLORS,
+    SUBJECT_FACULTY
+  } = window.FlowMD.constants;
 
-  // --- Study Sources ---
-  const STUDY_SOURCES = [
-    { id: 'marrow_8', label: 'Marrow Edition 8', short: 'Marrow 8' },
-    { id: 'marrow_6_5', label: 'Marrow Edition 6.5', short: 'Marrow 6.5' },
-    { id: 'prepladder_x', label: 'Prepladder X', short: 'Prepladder X' }
-  ];
+  const {
+    getSubjectIconSrc,
+    getSubjectSvgIcon,
+    getSubjectAccentColor,
+    getSubjectFaculty,
+    getSubjectColor,
+    getSubjectName
+  } = window.FlowMD.subjects;
 
-  // --- Dual-Subject Plan Defaults ---
-  const DEFAULT_PLAN = (id, label, accentColor) => ({
-    id,
-    label,
-    accentColor,
-    targetSubject: '',
-    targetDate: '2026-08-15',
-    videosPerDay: 8,
-    videosPerWeek: 56,
-    videosPerMonth: 240,
-    dailyTargetHours: 3.5,
-    queueBatchVideoIds: [],
-    queueCompletedInBatch: 0,
-    targetUnits: []
-  });
+  const { getFlowMDLogoSVG } = window.FlowMD.logo;
 
-  const PLAN_A_ACCENT = '#3b82f6';   // cobalt blue
-  const PLAN_B_ACCENT = '#f43f5e';   // rose pink
-
-  const DEFAULT_PERSONAL = {
-    doctorName: 'Dr. Aspirant'
-  };
-
-  const DEFAULT_GOALS = {
-    goalMode: 'video',
-    targetDate: '2026-08-15',
-    videosPerDay: 8,
-    videosPerWeek: 56,
-    videosPerMonth: 202,
-    dailyTargetHours: 3.5,
-    weeklyTargetHours: 24.5,
-    monthlyTargetHours: 105,
-    targetSubject: '',
-    visibleCards: { daily: true, weekly: true, monthly: true }
-  };
-
-const SUBJECT_ICONS = {
-    anatomy: 'icons/anatomy.png',
-    physiology: 'icons/physiology.png',
-    biochemistry: 'icons/biochemistry.png',
-    pathology: 'icons/pathology.png',
-    pharmacology: 'icons/pharmacology.png',
-    microbiology: 'icons/microbiology.png',
-    community_medicine: 'icons/community_medicine.png',
-    forensic_medicine: 'icons/forensic_medicine.png',
-    ophthalmology: 'icons/ophthalmology.png',
-    otorhinolaryngology__ent_: 'icons/otorhinolaryngology__ent_.png',
-    anaesthesia: 'icons/anaesthesia.png',
-    dermatology: 'icons/dermatology.png',
-    psychiatry: 'icons/psychiatry.png',
-    radiology: 'icons/radiology.png',
-    medicine: 'icons/medicine.png',
-    surgery: 'icons/surgery.png',
-    orthopaedics: 'icons/orthopaedics.png',
-    paediatrics: 'icons/paediatrics.png',
-    obstetrics___gynaecology: 'icons/obstetrics___gynaecology.png',
-    revision_videos: 'icons/revision_videos.png'
-  };
-
-  const SUBJECT_SVG_ICONS = {
-    anatomy: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6c-3.3 0-6 2.7-6 6v4c0 3.3 2.7 6 6 6s6-2.7 6-6v-4c0-3.3-2.7-6-6-6z"/><path d="M24 16v10"/><path d="M14 20h20"/><path d="M24 26v10"/><path d="M14 42l6-10 6 10"/><path d="M10 20l-4 6"/><path d="M38 20l4 6"/><path d="M14 36l-6 10"/><path d="M34 36l6 10"/></svg>`,
-    physiology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 44c16 0 28-16 28-22 0-6-12-10-28-10S-4 16-4 22c0 6 12 10 28 10z"/><path d="M10 28c6-6 12-6 18 0 6 6 6 12 0 18"/></svg>`,
-    biochemistry: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h12"/><path d="M20 10v16l-8 16c-1 2 0 4 2 4h20c2 0 3-2 2-4l-8-16V10"/><circle cx="22" cy="34" r="2"/><circle cx="28" cy="32" r="1.5"/><circle cx="25" cy="36" r="1"/><path d="M14 8l2-2"/><path d="M34 8l-2-2"/></svg>`,
-    pathology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 42V18l-4-8h20l-4 8v24"/><path d="M14 10h20"/><circle cx="24" cy="28" r="4"/><circle cx="20" cy="34" r="2"/><circle cx="28" cy="32" r="1.5"/><path d="M22 18h4"/><path d="M24 18v-4"/><path d="M20 8l-2-4"/><path d="M28 8l2-4"/></svg>`,
-    pharmacology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="16" height="24" rx="2"/><path d="M20 16V10c0-2 2-4 4-4s4 2 4 4v6"/><path d="M16 24h16"/><path d="M20 8h8"/><path d="M22 28h4"/><path d="M24 28v6"/><path d="M36 20l6-6"/><path d="M38 26l4-2"/></svg>`,
-    microbiology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="26" rx="12" ry="10"/><path d="M12 26c0-6 5-10 12-10s12 4 12 10"/><circle cx="20" cy="24" r="2"/><circle cx="28" cy="22" r="1.5"/><circle cx="24" cy="28" r="2.5"/><circle cx="18" cy="30" r="1"/><path d="M24 16v-6"/><circle cx="24" cy="8" r="2"/></svg>`,
-    community_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="18" r="6"/><circle cx="12" cy="22" r="4"/><circle cx="36" cy="22" r="4"/><path d="M18 36c0-4 3-6 6-6s6 2 6 6"/><path d="M8 38c0-3 2-5 4-5"/><path d="M36 38c0-3 2-5 4-5"/><path d="M24 10v-4"/><path d="M20 14h8"/></svg>`,
-    forensic_medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12l6 6"/><path d="M20 18l16-6"/><path d="M36 12l-6 6"/><path d="M30 18l-4 14"/><path d="M26 32l-6 6"/><path d="M20 38l-4-2"/><path d="M16 36l-2-6"/><path d="M14 30l4-12"/><rect x="28" y="8" width="12" height="6" rx="1"/><path d="M30 14v4h8v-4"/></svg>`,
-    ophthalmology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="24" rx="14" ry="8"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="24" r="1.5"/><path d="M24 4v6"/><path d="M24 38v6"/><path d="M4 24h6"/><path d="M38 24h6"/><path d="M10 10l4 4"/><path d="M34 34l4 4"/><path d="M38 10l-4 4"/><path d="M14 34l-4 4"/></svg>`,
-    orthopaedics: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6c-4 0-6 4-6 8v8c0 4 2 6 4 8l2 4v8h12v-8l2-4c2-2 4-4 4-8v-8c0-4-2-8-6-8"/><path d="M18 20h12"/><path d="M16 28h16"/><circle cx="24" cy="14" r="3"/></svg>`,
-    otorhinolaryngology__ent_: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 12c4 0 6 3 6 6s-2 6-6 6h-2v8c0 2-2 4-4 4"/><path d="M26 36h-6c-2 0-4-2-4-4v-4"/><ellipse cx="28" cy="20" rx="6" ry="8"/><path d="M22 18c-2-4-6-4-8-2s-2 6 0 8c2 2 4 6 4 10"/><path d="M18 16c-4-2-8 0-8 4"/></svg>`,
-    paediatrics: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="16" r="8"/><circle cx="21" cy="14" r="1.5"/><circle cx="27" cy="14" r="1.5"/><path d="M21 19c1 1 3 1 4 0"/><path d="M24 24v6c0 4 2 6 4 8h4"/><path d="M24 24v6c0 4-2 6-4 8h-4"/><path d="M16 30l-4 4"/><path d="M32 30l4 4"/><path d="M22 38h4"/></svg>`,
-    radiology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="6" width="28" height="36" rx="2"/><path d="M18 14h12"/><path d="M24 14v20"/><path d="M18 20h12"/><path d="M18 26h12"/><path d="M18 14l-4-4"/><path d="M30 14l4-4"/><path d="M18 34l-4 4"/><path d="M30 34l4 4"/></svg>`,
-    surgery: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40l20-20"/><path d="M28 20l4-4"/><path d="M32 16l4-4"/><path d="M36 12l4-4"/><path d="M28 20c-2-4-2-8 0-12"/><path d="M26 22c-4-2-8-2-12 0"/><path d="M14 22l-4 4"/><path d="M10 26l-2 4"/></svg>`,
-    anaesthesia: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 28c0-6 4-10 10-10s10 4 10 10"/><path d="M18 28v4c0 2 2 4 6 4s6-2 6-4v-4"/><path d="M12 24h-4v8h4"/><path d="M36 24h4v8h-4"/><circle cx="38" cy="18" r="3"/><path d="M36 18h-4"/><path d="M10 18l4-4"/><path d="M14 14v-4h6"/><path d="M34 32l4 4"/></svg>`,
-    dermatology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="10"/><path d="M20 18c1-2 3-2 4 0s3 2 4 0"/><path d="M19 24c2 1 4 1 6 0s4-1 6 0"/><circle cx="18" cy="34" r="4"/><path d="M22 34h8"/><circle cx="34" cy="34" r="2"/><path d="M32 10l4-4"/><path d="M36 10l-2-6"/><path d="M38 8l2-4"/></svg>`,
-    psychiatry: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 38c-4-2-6-6-6-12 0-8 6-14 14-14s14 6 14 14c0 6-2 10-6 12"/><path d="M16 26c0-4 4-8 8-8"/><path d="M32 26c0-4-4-8-8-8"/><path d="M20 32c2 2 6 2 8 0"/><path d="M18 20c-2-4-2-8 0-12"/><path d="M30 20c2-4 2-8 0-12"/><path d="M24 8v-4"/></svg>`,
-    medicine: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="14" r="6"/><path d="M24 20v6"/><circle cx="24" cy="32" r="4"/><path d="M24 36v4"/><path d="M18 40h12"/><path d="M14 14h-4"/><path d="M34 14h4"/><path d="M16 8l-4-4"/><path d="M32 8l4-4"/></svg>`,
-    obstetrics___gynaecology: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="12" r="5"/><path d="M24 17v8"/><path d="M16 25c0 6 3 10 8 10s8-4 8-10"/><path d="M16 25c-4 0-6 3-6 6s2 4 6 4"/><path d="M32 25c4 0 6 3 6 6s-2 4-6 4"/><path d="M20 35l4 6 4-6"/></svg>`,
-    revision_videos: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 8a16 16 0 1 0 4 31.4"/><path d="M24 8a16 16 0 1 1-4 31.4"/><path d="M24 6v8"/><path d="M24 14l-4-6 4-2 4 2-4 6z"/><path d="M20 30h8"/><path d="M20 26h6"/><path d="M20 34h4"/></svg>`
-  };
-
-  const SUBJECT_COLORS = {
-    anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
-    community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
-    medicine: '#3b82f6', microbiology: '#22c55e', obstetrics___gynaecology: '#ef4444',
-    ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology__ent_: '#14b8a6',
-    paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
-    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444', revision_videos: '#8b5cf6'
-  };
-
-  const SUBJECT_FACULTY = {
-    anatomy: 'Dr. Raviraj',
-    physiology: 'Dr. Krishna Kumar',
-    biochemistry: 'Dr. Rebecca James',
-    pathology: 'Dr. Ila Jain Khandelwal',
-    pharmacology: 'Dr. Ranjan Kumar Patel',
-    microbiology: 'Dr. Shivika',
-    community_medicine: 'Dr. Mukhmohit Singh',
-    forensic_medicine: 'Dr. Magendran J',
-    ophthalmology: 'Dr. Utsav Bansal',
-    otorhinolaryngology__ent_: 'Dr. Manisha Sinha Budhiraja',
-    anaesthesia: 'Dr. Rama Krishna Chaitanya',
-    dermatology: 'Dr. Malcolm Pinto',
-    psychiatry: 'Dr. Mohan Sunil Kumar',
-    radiology: 'Dr. Mayur Arun Kulkarni',
-    medicine: 'Dr. Rakesh S Nair',
-    surgery: 'Dr. Rohan Khandelwal',
-    orthopaedics: 'Dr. Abbas Ali',
-    paediatrics: 'Dr. Singaram',
-    obstetrics___gynaecology: 'Dr. Sakshi Arora',
-    revision_videos: 'Multiple Marrow Faculties (Subject-Wise Revision Series)'
-  };
-
-  function getSubjectIconSrc(subjectIdOrName) {
-    if (!subjectIdOrName) return 'icons/medicine.png';
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (SUBJECT_ICONS[key]) return SUBJECT_ICONS[key];
-    for (const [id, src] of Object.entries(SUBJECT_ICONS)) {
-      if (key.includes(id) || id.includes(key)) return src;
-    }
-    return 'icons/medicine.png';
-  }
-
-  function getSubjectSvgIcon(subjectIdOrName) {
-    if (!subjectIdOrName) return SUBJECT_SVG_ICONS.medicine;
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (SUBJECT_SVG_ICONS[key]) return SUBJECT_SVG_ICONS[key];
-    for (const [id, svg] of Object.entries(SUBJECT_SVG_ICONS)) {
-      if (key.includes(id) || id.includes(key)) return svg;
-    }
-    return SUBJECT_SVG_ICONS.medicine;
-  }
-
-function getSubjectAccentColor(subjectIdOrName) {
-    if (!subjectIdOrName) return '#3b82f6';
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
-    for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
-      if (key.includes(id) || id.includes(key)) return c;
-    }
-    return '#3b82f6';
-  }
-
-  function getSubjectFaculty(subjectIdOrName) {
-    if (!subjectIdOrName) return 'Marrow Faculty';
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (SUBJECT_FACULTY[key]) return SUBJECT_FACULTY[key];
-    for (const [id, faculty] of Object.entries(SUBJECT_FACULTY)) {
-      if (key.includes(id) || id.includes(key)) return faculty;
-    }
-    return 'Marrow Faculty';
-  }
-
-  function getSubjectColor(subjectIdOrName) {
-    if (!subjectIdOrName) return '#3b82f6';
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
-    for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
-      if (key.includes(id) || id.includes(key)) return c;
-    }
-    return '#3b82f6';
-  }
-
-  function getSubjectName(subjectIdOrName) {
-    if (!subjectIdOrName) return '';
-    const key = subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
-    const subjectNames = {
-      anatomy: 'Anatomy',
-      physiology: 'Physiology',
-      biochemistry: 'Biochemistry',
-      pathology: 'Pathology',
-      pharmacology: 'Pharmacology',
-      microbiology: 'Microbiology',
-      community_medicine: 'Community Medicine',
-      forensic_medicine: 'Forensic Medicine',
-      ophthalmology: 'Ophthalmology',
-      otorhinolaryngology__ent_: 'ENT',
-      anaesthesia: 'Anaesthesia',
-      dermatology: 'Dermatology',
-      psychiatry: 'Psychiatry',
-      radiology: 'Radiology',
-      medicine: 'Medicine',
-      surgery: 'Surgery',
-      orthopaedics: 'Orthopaedics',
-      paediatrics: 'Paediatrics',
-      obstetrics___gynaecology: 'Obstetrics & Gynaecology',
-      revision_videos: 'Revision Videos'
-    };
-    return subjectNames[key] || subjectIdOrName.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-  }
+  const { showToast, dismissToast } = window.FlowMD.toast;
 
   // --- Multi-Source Data Layer ---
   const SOURCE_DATA = {};
@@ -1190,90 +996,6 @@ function getSubjectAccentColor(subjectIdOrName) {
         switchView('curriculum');
       }
     });
-  }
-
-  // --- FlowMD 16-Bit Pixel-Art Vector Logo Component ---
-  function getFlowMDLogoSVG(theme = 'dark', mode = 'full', heightPx = 40) {
-    const isDark = theme === 'dark';
-    const mainColor = isDark ? '#ffffff' : '#1e293b';
-    const pinkColor = isDark ? '#ff3b5c' : '#ff1f46';
-    const subTextColor = isDark ? '#94a3b8' : '#64748b';
-    const scatterColor = isDark ? '#cbd5e1' : '#475569';
-
-    if (mode === 'icon') {
-      return `
-        <svg viewBox="0 0 160 90" style="height: ${heightPx}px; width: auto; overflow: visible; display: inline-block; vertical-align: middle; filter: drop-shadow(0 0 6px ${isDark ? 'rgba(255,59,92,0.5)' : 'rgba(255,31,70,0.3)'});" class="flowmd-pixel-icon-svg">
-          <!-- Pixel Scatter (Top Left) -->
-          <rect x="10" y="8" width="5" height="5" fill="${scatterColor}" />
-          <rect x="18" y="4" width="5" height="5" fill="${pinkColor}" />
-          <rect x="6" y="16" width="5" height="5" fill="${mainColor}" />
-
-          <!-- Pixel Letter F -->
-          <path d="M 22 18 h 45 v 10 h -32 v 16 h 26 v 10 h -26 v 30 h -13 Z" fill="none" stroke="${mainColor}" stroke-width="4" stroke-linejoin="miter" />
-
-          <!-- 16-Bit Pixel Heart -->
-          <path d="M 68 28 h 10 v -6 h 12 v 6 h 10 v 10 h -6 v 10 h -6 v 8 h -6 v 6 h -8 v -6 h -6 v -8 h -6 v -10 h -6 Z" fill="none" stroke="${pinkColor}" stroke-width="3.2" stroke-linecap="square" />
-          
-          <!-- ECG Pulse Line -->
-          <path d="M 18 45 h 44 l 5 -14 l 6 26 l 6 -18 l 5 6 h 50" fill="none" stroke="${pinkColor}" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter" />
-
-          <!-- Pixel Letter M -->
-          <path d="M 98 18 h 12 l 14 24 l 14 -24 h 12 v 56 h -12 v -34 l -14 24 h -0 l -14 -24 v 34 h -12 Z" fill="none" stroke="${mainColor}" stroke-width="4" stroke-linejoin="miter" />
-
-          <!-- Pixel Scatter (Bottom Right) -->
-          <rect x="144" y="60" width="5" height="5" fill="${pinkColor}" />
-          <rect x="152" y="68" width="5" height="5" fill="${scatterColor}" />
-          <rect x="140" y="74" width="5" height="5" fill="${pinkColor}" />
-        </svg>
-      `;
-    }
-
-    return `
-      <svg viewBox="0 0 350 100" style="height: ${heightPx}px; width: auto; overflow: visible; display: inline-block; vertical-align: middle; filter: drop-shadow(0 0 12px ${pinkColor}) drop-shadow(0 0 3px ${mainColor}) drop-shadow(0 0 1px ${pinkColor});" class="flowmd-logo-svg">
-        <!-- Pixel Scatter (Top Left) -->
-        <rect x="8" y="6" width="5" height="5" fill="${scatterColor}" />
-        <rect x="16" y="2" width="5" height="5" fill="${pinkColor}" />
-        <rect x="4" y="14" width="5" height="5" fill="${mainColor}" />
-
-        <!-- Pixel Letter F -->
-        <path d="M 20 16 h 45 v 10 h -32 v 16 h 26 v 10 h -26 v 30 h -13 Z" fill="none" stroke="${mainColor}" stroke-width="4" stroke-linejoin="miter" />
-
-        <!-- 16-Bit Pixel Heart -->
-        <path d="M 66 26 h 10 v -6 h 12 v 6 h 10 v 10 h -6 v 10 h -6 v 8 h -6 v 6 h -8 v -6 h -6 v -8 h -6 v -10 h -6 Z" fill="none" stroke="${pinkColor}" stroke-width="3.2" stroke-linecap="square" />
-        
-        <!-- ECG Pulse Line -->
-        <path d="M 16 43 h 44 l 5 -14 l 6 26 l 6 -18 l 5 6 h 50" fill="none" stroke="${pinkColor}" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter" />
-
-        <!-- Pixel Letter M -->
-        <path d="M 96 16 h 12 l 14 24 l 14 -24 h 12 v 56 h -12 v -34 l -14 24 h -0 l -14 -24 v 34 h -12 Z" fill="none" stroke="${mainColor}" stroke-width="4" stroke-linejoin="miter" />
-
-        <!-- Pixel Scatter (Bottom Right) -->
-        <rect x="142" y="58" width="5" height="5" fill="${pinkColor}" />
-        <rect x="150" y="66" width="5" height="5" fill="${scatterColor}" />
-        <rect x="138" y="72" width="5" height="5" fill="${pinkColor}" />
-
-        <!-- FLowMD Typography -->
-        <g transform="translate(175, 48)">
-          <text x="0" y="0" fill="${mainColor}" font-family="'Pixelify Sans', monospace" font-size="34" font-weight="700" letter-spacing="1">FL</text>
-          
-          <!-- Micro Heart for 'o' -->
-          <g transform="translate(38, -18) scale(0.65)">
-            <path d="M 8 6 h 5 v -3 h 6 v 3 h 5 v 5 h -3 v 5 h -3 v 4 h -3 v 3 h -4 v -3 h -3 v -4 h -3 v -5 h -3 Z" fill="${pinkColor}" />
-            <path d="M 0 10 h 24" stroke="#ffffff" stroke-width="2" />
-          </g>
-          
-          <text x="56" y="0" fill="${mainColor}" font-family="'Pixelify Sans', monospace" font-size="34" font-weight="700" letter-spacing="1">w</text>
-          <text x="82" y="0" fill="${pinkColor}" font-family="'Pixelify Sans', monospace" font-size="34" font-weight="700" letter-spacing="1">MD</text>
-        </g>
-
-        <!-- Tagline: [ PLAN. STUDY. TRACK. SUCCEED. ] -->
-        <g transform="translate(175, 68)">
-          <text x="0" y="0" fill="${pinkColor}" font-family="'VT323', monospace" font-size="14" font-weight="bold">[</text>
-          <text x="8" y="0" fill="${subTextColor}" font-family="'VT323', monospace" font-size="12.5" font-weight="bold" letter-spacing="1.2">PLAN. STUDY. TRACK. SUCCEED.</text>
-          <text x="144" y="0" fill="${pinkColor}" font-family="'VT323', monospace" font-size="14" font-weight="bold">]</text>
-        </g>
-      </svg>
-    `;
   }
 
   // --- Theme Helper ---
@@ -3104,115 +2826,6 @@ function getSubjectAccentColor(subjectIdOrName) {
 
 
 
-  // --- Unified Toast System ---
-  const toastQueue = [];
-  let toastActive = false;
-  const MAX_TOASTS = 3;
-
-  function showToast(message, type = 'success', title = '') {
-    // Remove old toasts if queue full
-    if (toastQueue.length >= MAX_TOASTS) {
-      toastQueue.shift().remove();
-    }
-
-    if (!toastActive) {
-      if (!document.getElementById('toast-container')) {
-        const container = document.createElement('div');
-        container.id = 'toast-container';
-        container.style.cssText = `
-          position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-          display: flex; flex-direction: column; gap: 8px;
-          pointer-events: none; max-width: 360px;
-        `;
-        document.body.appendChild(container);
-      }
-    }
-
-    const toast = document.createElement('div');
-    const alertTone = type === 'warning' ? 'warning' : type === 'error' ? 'danger' : type === 'info' ? 'info' : 'success';
-    const alertIcon = type === 'warning' ? 'warning' : type === 'error' ? 'error' : type === 'info' ? 'info' : 'check_circle';
-    
-    toast.className = `pxl-alert pxl-alert-${alertTone} pxl-toast-alert`;
-    toast.style.cssText = `
-      pointer-events: auto; min-width: 280px; max-width: 360px;
-      animation: toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 24px -4px rgba(0,0,0,0.2);
-    `;
-    
-    const titleHtml = title ? `<div class="pxl-alert-title">${title}</div>` : '';
-    toast.innerHTML = `
-      <span class="material-symbols-outlined pxl-alert-icon">${alertIcon}</span>
-      <div class="pxl-alert-content">${titleHtml}<div class="pxl-alert-message">${message}</div></div>
-      <button class="pxl-alert-close-btn" aria-label="Dismiss"><span class="material-symbols-outlined">close</span></button>
-    `;
-
-    const container = document.getElementById('toast-container');
-    container.appendChild(toast);
-    toastQueue.push(toast);
-    toastActive = true;
-
-    toast.querySelector('.pxl-alert-close-btn').addEventListener('click', () => dismissToast(toast));
-
-    // Auto-dismiss
-    const duration = type === 'error' ? 6000 : 4000;
-    setTimeout(() => dismissToast(toast), duration);
-
-    return toast;
-  }
-
-  // Expose minimal toast API for external/testing use
-  window.showToast = showToast;
-
-  function dismissToast(toast) {
-    if (toast.classList.contains('dismissing')) return;
-    toast.classList.add('dismissing');
-    toast.style.animation = 'toastSlideOut 0.2s ease-in forwards';
-    setTimeout(() => {
-      toast.remove();
-      const idx = toastQueue.indexOf(toast);
-      if (idx > -1) toastQueue.splice(idx, 1);
-      toastActive = toastQueue.length > 0;
-    }, 200);
-  }
-
-  // --- Toast Animations (injected once) ---
-  if (!document.getElementById('toast-animations')) {
-    const style = document.createElement('style');
-    style.id = 'toast-animations';
-    style.textContent = `
-      @keyframes toastSlideIn {
-        from { opacity: 0; transform: translateX(100%) translateY(20px); }
-        to { opacity: 1; transform: translateX(0) translateY(0); }
-      }
-      @keyframes toastSlideOut {
-        from { opacity: 1; transform: translateX(0); }
-        to { opacity: 0; transform: translateX(120%) translateY(-10px); }
-      }
-      .pxl-toast-alert {
-        display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px;
-        border-radius: 10px; border: 1px solid var(--border-color);
-        background: var(--bg-surface-raised); color: var(--text-primary);
-        font-family: var(--font-hud), 'Inter', sans-serif; font-size: 0.85rem;
-      }
-      .pxl-toast-alert .pxl-alert-content { flex: 1; }
-      .pxl-toast-alert .pxl-alert-title { font-weight: 700; margin-bottom: 4px; }
-      .pxl-toast-alert .pxl-alert-message { color: var(--text-secondary); line-height: 1.4; }
-      .pxl-toast-alert .pxl-alert-close-btn {
-        background: none; border: none; color: var(--text-muted); cursor: pointer;
-        padding: 2px; display: flex; align-items: center; justify-content: center;
-        font-size: 18px; line-height: 1; opacity: 0.6; transition: opacity 0.15s;
-        flex-shrink: 0; margin-top: -2px;
-      }
-      .pxl-toast-alert .pxl-alert-close-btn:hover { opacity: 1; color: var(--text-primary); }
-      [data-theme-style="retro"] .pxl-toast-alert {
-        border: 2px solid var(--v2-ink); border-radius: 0; box-shadow: 4px 4px 0 0 var(--v2-ink);
-        background: var(--bg-surface-raised); font-family: var(--font-hud), "VT323", monospace;
-      }
-      [data-theme-style="retro"] .pxl-toast-alert .pxl-alert-close-btn { color: var(--v2-ink); }
-    `;
-    document.head.appendChild(style);
-  }
-
   // Read the currently selected chapter for a plan tab in the goal modal.
   // Returns [] when "All Chapters" (full subject) is active, or [singleName] when one chapter is focused.
   function getSelectedUnitsForPlanKey(isPlanB) {
@@ -3821,9 +3434,6 @@ function getSubjectAccentColor(subjectIdOrName) {
       render();
     });
   }
-
-  // Expose minimal toast API for external/testing use
-  window.showToast = showToast;
 
   // --- Run Initialization ---
   if (document.readyState === 'loading') {
