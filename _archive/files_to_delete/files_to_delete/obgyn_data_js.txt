@@ -1,0 +1,154 @@
+Obstetrics: Antenatal Care and Post Natal Care",
+            "durationMins": 58,
+            "durationSecs": 1
+          },
+          {
+            "id": "community_medicine__maternal___child_health__v3",
+            "videoNumber": "#11",
+            "title": "Preventive Paediatrics: Early Care",
+            "durationMins": 65,
+            "durationSecs": 28
+          },
+          {
+            "id": "community_medicine__maternal___child_health__v4",
+            "videoNumber": "#12",
+            "title": "Preventive Paediatrics: Growth and Development",
+            "durationMins": 55,
+            "durationSecs": 41
+          },
+          {
+            "id": "community_medicine__maternal___child_health__v5",
+            "videoNumber": "#13",
+            "title": "Social Paediatrics",
+            "durationMins": 54,
+            "durationSecs": 25
+          }
+        ]
+      },
+      {
+        "name": "VACCINE & IMMUNIZATION",
+        "modules": 4,
+        "hours": 3.2,
+        "videos": [
+          {
+            "id": "community_medicine__vaccine___immunization__v1",
+            "videoNumber": "#14",
+            "title": "Immunization Basics and Types of Vaccines",
+            "durationMins": 44,
+            "durationSecs": 46
+          },
+          {
+            "id": "community_medicine__vaccine___immunization__v2",
+            "videoNumber": "#15",
+            "title": "UIP and Cold Chain",
+            "durationMins": 54,
+            "durationSecs": 3
+          },
+          {
+            "id": "community_medicine__vaccine___immunization__v3",
+            "videoNumber": "#16",
+            "title": "Cold Chain and Vaccine Requirement",
+            "durationMins": 45,
+            "durationSecs": 31
+          },
+          {
+            "id": "community_medicine__vaccine___immunization__v4",
+            "videoNumber": "#17",
+            "title": "Vaccine Strains, Waste Management and AEFI",
+            "durationMins": 47,
+            "durationSecs": 40
+          }
+        ]
+      },
+      {
+        "name": "EPIDEMIOLOGY",
+        "modules": 6,
+        "hours": 3.4,
+        "videos": [
+          {
+            "id": "community_medicine__epidemiology__v1",
+            "videoNumber": "#18",
+            "title": "Aim of Epidemiology and Historical Perspective",
+            "durationMins": 27,
+            "durationSecs": 16
+          },
+          {
+            "id": "community_medicine__epidemiology__v2",
+            "videoNumber": "#19",
+            "title": "Basics in Epidemiology",
+            "durationMins": 36,
+            "durationSecs": 10
+          },
+          {
+            "id": "community_medicine__epidemiology__v3",
+            "videoNumber": "#20",
+            "title": "Epidemiological Methods and Descriptive Epidemiology",
+            "durationMins": 39,
+            "durationSecs": 44
+          },
+          {
+            "id": "community_medicine__epidemiology__v4",
+            "videoNumber": "#21",
+            "title": "Analytical and Experimental Epidemiology",
+            "durationMins": 35,
+            "durationSecs": 29
+          },
+          {
+            "id": "community_medicine__epidemiology__v5",
+            "videoNumber": "#22",
+            "title": "Causation in Epidemiology",
+            "durationMins": 27,
+            "durationSecs": 15
+          },
+          {
+            "id": "community_medicine__epidemiology__v6",
+            "videoNumber": "#23",
+            "title": "Epidemiological Measures",
+            "durationMins": 38,
+            "durationSecs": 6
+          }
+        ]
+      },
+      {
+        "name": "SCREENING OF DISEASES",
+        "modules": 3,
+        "hours": 2.2,
+        "videos": [
+          {
+            "id": "community_medicine__screening_of_diseases__v1",
+            "videoNumber": "#24",
+            "title": "Screening of Disease Concepts",
+            "durationMins": 42,
+            "durationSecs": 3
+          },
+          {
+            "id": "community_medicine__screening_of_diseases__v2",
+            "videoNumber": "#25",
+            "title": "Determinants in Screening of Disease",
+            "durationMins": 37,
+            "durationSecs": 45
+          },
+          {
+            "id": "community_medicine__screening_of_diseases__v3",
+            "videoNumber": "#26",
+            "title": "Advanced Concepts in Screening of Disease",
+            "durationMins": 52,
+            "durationSecs": 12
+          }
+        ]
+      },
+      {
+        "name": "BIOSTATICS",
+        "modules": 9,
+        "hours": 4.5,
+        "videos": [
+          {
+            "id": "community_medicine__biostatics__v1",
+            "videoNumber": "#27",
+            "title": "Data Types and Scales",
+            "durationMins": 35,
+            "durationSecs": 59
+          },
+          {
+            "id": "community_medicine__biostatics__v2",
+ 

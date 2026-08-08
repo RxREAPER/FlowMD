@@ -1,0 +1,234 @@
+- generic [ref=f1e2]:
+  - banner [ref=f1e3]:
+    - generic "FlowMD Home" [ref=f1e5] [cursor=pointer]:
+      - img "FlowMD" [ref=f1e6]:
+        - generic [ref=f1e8]: F
+        - generic [ref=f1e9]: Flow
+        - generic [ref=f1e10]: MD
+    - generic [ref=f1e11]:
+      - generic "Account & Profile" [ref=f1e12] [cursor=pointer]: AS
+      - generic "Toggle Light / Dark Mode" [ref=f1e14] [cursor=pointer]:
+        - generic [ref=f1e15]:
+          - generic [ref=f1e16]: light_mode
+          - generic [ref=f1e17]: dark_mode
+  - generic "Click to Search" [ref=f1e20] [cursor=pointer]:
+    - generic [ref=f1e21]: search
+    - textbox "Search 19 subjects, chapters, topics..." [ref=f1e22]
+  - main [ref=f1e23]:
+    - generic [ref=f1e26]:
+      - generic [ref=f1e28]:
+        - generic [ref=f1e29]: local_fire_department
+        - text: 0 day streak
+      - heading "WELCOME BACK, DR. ASPIRANT!" [level=1] [ref=f1e30]
+      - paragraph [ref=f1e31]: Entire Syllabus — 0% Mastered
+      - generic [ref=f1e33]:
+        - generic [ref=f1e34]:
+          - generic [ref=f1e35]: ▶
+          - generic [ref=f1e36]: OVERALL SYLLABUS HP MASTERY
+        - generic [ref=f1e37]: 0%
+    - generic [ref=f1e39]:
+      - generic [ref=f1e40]: DAILY QUESTS — Entire Syllabus
+      - generic [ref=f1e42]:
+        - generic [ref=f1e43]:
+          - generic [ref=f1e44]:
+            - generic [ref=f1e45]: Plan A
+            - generic [ref=f1e46]: Entire Syllabus
+          - generic [ref=f1e47]: 0/8 • 0%
+        - generic [ref=f1e48]:
+          - generic [ref=f1e49]:
+            - text: "TARGET:"
+            - strong [ref=f1e50]: 8 VIDS/DAY
+          - button "Open Entire Syllabus arrow_forward" [ref=f1e51] [cursor=pointer]:
+            - generic [ref=f1e52]: Open Entire Syllabus
+            - generic [ref=f1e53]: arrow_forward
+        - generic [ref=f1e54]:
+          - generic [ref=f1e55]:
+            - generic [ref=f1e58] [cursor=pointer]:
+              - generic [ref=f1e59]: "#01 How to Approach Anatomy Edition 8"
+              - generic [ref=f1e60]: EMBRYOLOGY
+            - generic [ref=f1e61]: 3m 0s
+          - generic [ref=f1e62]:
+            - generic [ref=f1e65] [cursor=pointer]:
+              - generic [ref=f1e66]: "#02 Gametogenesis"
+              - generic [ref=f1e67]: EMBRYOLOGY
+            - generic [ref=f1e68]: 33m 0s
+          - generic [ref=f1e69]:
+            - generic [ref=f1e72] [cursor=pointer]:
+              - generic [ref=f1e73]: "#03 1st and 2nd Week of Development"
+              - generic [ref=f1e74]: EMBRYOLOGY
+            - generic [ref=f1e75]: 38m 0s
+          - generic [ref=f1e76]:
+            - generic [ref=f1e79] [cursor=pointer]:
+              - generic [ref=f1e80]: "#04 3rd Week Development"
+              - generic [ref=f1e81]: EMBRYOLOGY
+            - generic [ref=f1e82]: 35m 0s
+          - generic [ref=f1e83]:
+            - generic [ref=f1e86] [cursor=pointer]:
+              - generic [ref=f1e87]: "#05 Histology: Part 1"
+              - generic [ref=f1e88]: HISTOLOGY
+            - generic [ref=f1e89]: 47m 0s
+          - generic [ref=f1e90]:
+            - generic [ref=f1e93] [cursor=pointer]:
+              - generic [ref=f1e94]: "#06 Histology: Part 2."
+              - generic [ref=f1e95]: HISTOLOGY
+            - generic [ref=f1e96]: 34m 0s
+          - generic [ref=f1e97]:
+            - generic [ref=f1e100] [cursor=pointer]:
+              - generic [ref=f1e101]: "#07 Histology: Part 3"
+              - generic [ref=f1e102]: HISTOLOGY
+            - generic [ref=f1e103]: 50m 0s
+          - generic [ref=f1e104]:
+            - generic [ref=f1e107] [cursor=pointer]:
+              - generic [ref=f1e108]: "#08 Development of Neural Tube"
+              - generic [ref=f1e109]: NEUROANATOMY
+            - generic [ref=f1e110]: 21m 0s
+          - generic [ref=f1e111]:
+            - generic [ref=f1e114] [cursor=pointer]:
+              - generic [ref=f1e115]: "#09 Functional Columns of Cranial Nerve Nuclei"
+              - generic [ref=f1e116]: NEUROANATOMY
+            - generic [ref=f1e117]: 24m 0s
+          - generic [ref=f1e118]:
+            - generic [ref=f1e121] [cursor=pointer]:
+              - generic [ref=f1e122]: "#10 Neuroanatomy basics"
+              - generic [ref=f1e123]: NEUROANATOMY
+            - generic [ref=f1e124]: 7m 0s
+          - generic [ref=f1e125]:
+            - generic [ref=f1e128] [cursor=pointer]:
+              - generic [ref=f1e129]: "#11 CSF and Ventricles"
+              - generic [ref=f1e130]: NEUROANATOMY
+            - generic [ref=f1e131]: 65m 0s
+          - generic [ref=f1e132]:
+            - generic [ref=f1e135] [cursor=pointer]:
+              - generic [ref=f1e136]: "#19 Pharyngeal Arches, Clefts and Pouches"
+              - generic [ref=f1e137]: HEAD AND NECK
+            - generic [ref=f1e138]: 36m 0s
+          - generic [ref=f1e139]:
+            - generic [ref=f1e142] [cursor=pointer]:
+              - generic [ref=f1e143]: "#20 Development of Tongue, Pituitary, Face, Palate and Thyroid"
+              - generic [ref=f1e144]: HEAD AND NECK
+            - generic [ref=f1e145]: 25m 0s
+          - generic [ref=f1e146]:
+            - generic [ref=f1e149] [cursor=pointer]:
+              - generic [ref=f1e150]: "#21 Osteology of Head and Neck"
+              - generic [ref=f1e151]: HEAD AND NECK
+            - generic [ref=f1e152]: 37m 0s
+          - generic [ref=f1e153]:
+            - generic [ref=f1e156] [cursor=pointer]:
+              - generic [ref=f1e157]: "#22 Scalp and Face"
+              - generic [ref=f1e158]: HEAD AND NECK
+            - generic [ref=f1e159]: 27m 0s
+          - generic [ref=f1e160]:
+            - generic [ref=f1e163] [cursor=pointer]:
+              - generic [ref=f1e164]: "#26 Pterygopalatine Fossa"
+              - generic [ref=f1e165]: FRO
+            - generic [ref=f1e166]: 39m 0s
+          - generic [ref=f1e167]:
+            - generic [ref=f1e170] [cursor=pointer]:
+              - generic [ref=f1e171]: "#27 Glands in Head and Neck"
+              - generic [ref=f1e172]: FRO
+            - generic [ref=f1e173]: 53m 0s
+          - generic [ref=f1e174]:
+            - generic [ref=f1e177] [cursor=pointer]:
+              - generic [ref=f1e178]: "#28 Dural Folds and Dural Venous Sinuses"
+              - generic [ref=f1e179]: FRO
+            - generic [ref=f1e180]: 43m 0s
+          - generic [ref=f1e181]:
+            - generic [ref=f1e184] [cursor=pointer]:
+              - generic [ref=f1e185]: "#29 Orbit and Extra Ocular Muscles"
+              - generic [ref=f1e186]: FRO
+            - generic [ref=f1e187]: 43m 0s
+          - generic [ref=f1e188]:
+            - generic [ref=f1e191] [cursor=pointer]:
+              - generic [ref=f1e192]: "#36 Introduction to Upper Limb []"
+              - generic [ref=f1e193]: UPPER LIMB
+            - generic [ref=f1e194]: 12m 0s
+          - generic [ref=f1e195]:
+            - generic [ref=f1e198] [cursor=pointer]:
+              - generic [ref=f1e199]: "#37 Pectoral Region, Back and Scapular Region"
+              - generic [ref=f1e200]: UPPER LIMB
+            - generic [ref=f1e201]: 62m 0s
+          - generic [ref=f1e202]:
+            - generic [ref=f1e205] [cursor=pointer]:
+              - generic [ref=f1e206]: "#38 Brachial Plexus and Axillary Nerve"
+              - generic [ref=f1e207]: UPPER LIMB
+            - generic [ref=f1e208]: 55m 0s
+          - generic [ref=f1e209]:
+            - generic [ref=f1e212] [cursor=pointer]:
+              - generic [ref=f1e213]: "#39 Radial Nerve, Dorsal Digital Expansion and Anatomical Snuffbox"
+              - generic [ref=f1e214]: UPPER LIMB
+            - generic [ref=f1e215]: 66m 0s
+          - generic [ref=f1e216]:
+            - generic [ref=f1e219] [cursor=pointer]:
+              - generic [ref=f1e220]: "#46 Heart Tube and Septum Formation"
+              - generic [ref=f1e221]: THORAX
+            - generic [ref=f1e222]: 35m 0s
+          - generic [ref=f1e223]:
+            - generic [ref=f1e226] [cursor=pointer]:
+              - generic [ref=f1e227]: "#47 Development of Veins"
+              - generic [ref=f1e228]: THORAX
+            - generic [ref=f1e229]: 40m 0s
+          - generic [ref=f1e230]:
+            - generic [ref=f1e233] [cursor=pointer]:
+              - generic [ref=f1e234]: "#48 Development of arch arteries"
+              - generic [ref=f1e235]: THORAX
+            - generic [ref=f1e236]: 24m 0s
+          - generic [ref=f1e237]:
+            - generic [ref=f1e240] [cursor=pointer]:
+              - generic [ref=f1e241]: "#49 Arteries of Lower Limb"
+              - generic [ref=f1e242]: THORAX
+            - generic [ref=f1e243]: 24m 0s
+          - generic [ref=f1e244]:
+            - generic [ref=f1e247] [cursor=pointer]:
+              - generic [ref=f1e248]: "#51 General Anatomy"
+              - generic [ref=f1e249]: GENERAL ANATOMY
+            - generic [ref=f1e250]: 34m 0s
+          - generic [ref=f1e251]:
+            - generic [ref=f1e254] [cursor=pointer]:
+              - generic [ref=f1e255]: "#52 Development of Kidneys and Renal Anatomy"
+              - generic [ref=f1e256]: GENERAL ANATOMY
+            - generic [ref=f1e257]: 41m 0s
+          - generic [ref=f1e258]:
+            - generic [ref=f1e261] [cursor=pointer]:
+              - generic [ref=f1e262]: "#53 Development of Gonads"
+              - generic [ref=f1e263]: "#RO"
+            - generic [ref=f1e264]: 32m 0s
+          - generic [ref=f1e265]:
+            - generic [ref=f1e268] [cursor=pointer]:
+              - generic [ref=f1e269]: "#54 Perineum: Part 1"
+              - generic [ref=f1e270]: "#RO"
+            - generic [ref=f1e271]: 52m 0s
+          - generic [ref=f1e272]:
+            - generic [ref=f1e275] [cursor=pointer]:
+              - generic [ref=f1e276]: "#55 Perineum: Part 2"
+              - generic [ref=f1e277]: "#RO"
+            - generic [ref=f1e278]: 34m 0s
+          - generic [ref=f1e279]:
+            - generic [ref=f1e282] [cursor=pointer]:
+              - generic [ref=f1e283]: "#56 Female Internal Genitalia"
+              - generic [ref=f1e284]: "#RO"
+            - generic [ref=f1e285]: 45m 0s
+          - generic [ref=f1e286]:
+            - generic [ref=f1e289] [cursor=pointer]:
+              - generic [ref=f1e290]: "#58 id vein"
+              - generic [ref=f1e291]: LOWER LIMB
+            - generic [ref=f1e292]: 16m 0s
+          - generic [ref=f1e293]:
+            - generic [ref=f1e296] [cursor=pointer]:
+              - generic [ref=f1e297]: "#59 Front of thigh, Adductor canal and Popliteal Fossa"
+              - generic [ref=f1e298]: LOWER LIMB
+            - generic [ref=f1e299]: 71m 0s
+          - generic [ref=f1e300]:
+            - generic [ref=f1e303] [cursor=pointer]:
+              - generic [ref=f1e304]: "#60 Gluteal region and Hamstring muscles"
+              - generic [ref=f1e305]: LOWER LIMB
+            - generic [ref=f1e306]: 40m 0s
+          - generic [ref=f1e307]:
+            - generic [ref=f1e310] [cursor=pointer]:
+              - generic [ref=f1e311]: "#61 Knee joint"
+              - generic [ref=f1e312]: LOWER LIMB
+            - generic [ref=f1e313]: 28m 0s
+  - navigation [ref=f1e314]:
+    - button "Dashboard" [ref=f1e315] [cursor=pointer]
+    - button "Curriculum" [ref=f1e319] [cursor=pointer]
+    - button "Analytics" [ref=f1e326] [cursor=pointer]
+    - button "Profile" [ref=f1e332] [cursor=pointer]

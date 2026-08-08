@@ -1,0 +1,209 @@
+- generic [ref=f2e2]:
+  - banner [ref=f2e3]:
+    - generic "FlowMD Home" [ref=f2e5] [cursor=pointer]:
+      - img "FlowMD" [ref=f2e6]:
+        - generic [ref=f2e8]: F
+        - generic [ref=f2e9]: Flow
+        - generic [ref=f2e10]: MD
+    - generic [ref=f2e11]:
+      - generic "Account & Profile" [ref=f2e12] [cursor=pointer]: AS
+      - generic "Toggle Light / Dark Mode" [ref=f2e14] [cursor=pointer]:
+        - generic [ref=f2e15]:
+          - generic [ref=f2e16]: light_mode
+          - generic [ref=f2e17]: dark_mode
+  - generic "Click to Search" [ref=f2e20] [cursor=pointer]:
+    - generic [ref=f2e21]: search
+    - textbox "Search 19 subjects, chapters, topics..." [ref=f2e22]
+  - main [ref=f2e23]:
+    - generic [ref=f2e955]:
+      - generic [ref=f2e956] [cursor=pointer]: Home
+      - generic [ref=f2e957]: ">"
+      - generic [ref=f2e958]: Curriculum
+    - generic [ref=f2e959]:
+      - heading "Curriculum & Subjects" [level=2] [ref=f2e960]
+      - generic [ref=f2e961]: 20 SUBJECTS
+    - generic [ref=f2e963] [cursor=pointer]:
+      - generic [ref=f2e964]:
+        - img "Anatomy" [ref=f2e965]
+        - generic [ref=f2e966]:
+          - generic [ref=f2e967]: Anatomy
+          - generic [ref=f2e968]: 10 CHAPTERS • 84 VIDEOS
+      - generic [ref=f2e969]:
+        - generic [ref=f2e970]: 0%
+        - generic [ref=f2e971]: chevron_right
+    - generic [ref=f2e973] [cursor=pointer]:
+      - generic [ref=f2e974]:
+        - img "Biochemistry" [ref=f2e975]
+        - generic [ref=f2e976]:
+          - generic [ref=f2e977]: Biochemistry
+          - generic [ref=f2e978]: 1 CHAPTERS • 53 VIDEOS
+      - generic [ref=f2e979]:
+        - generic [ref=f2e980]: 0%
+        - generic [ref=f2e981]: chevron_right
+    - generic [ref=f2e983] [cursor=pointer]:
+      - generic [ref=f2e984]:
+        - img "Physiology" [ref=f2e985]
+        - generic [ref=f2e986]:
+          - generic [ref=f2e987]: Physiology
+          - generic [ref=f2e988]: 9 CHAPTERS • 32 VIDEOS
+      - generic [ref=f2e989]:
+        - generic [ref=f2e990]: 0%
+        - generic [ref=f2e991]: chevron_right
+    - generic [ref=f2e993] [cursor=pointer]:
+      - generic [ref=f2e994]:
+        - img "Pharmacology" [ref=f2e995]
+        - generic [ref=f2e996]:
+          - generic [ref=f2e997]: Pharmacology
+          - generic [ref=f2e998]: 13 CHAPTERS • 75 VIDEOS
+      - generic [ref=f2e999]:
+        - generic [ref=f2e1000]: 0%
+        - generic [ref=f2e1001]: chevron_right
+    - generic [ref=f2e1003] [cursor=pointer]:
+      - generic [ref=f2e1004]:
+        - img "Microbiology" [ref=f2e1005]
+        - generic [ref=f2e1006]:
+          - generic [ref=f2e1007]: Microbiology
+          - generic [ref=f2e1008]: 8 CHAPTERS • 84 VIDEOS
+      - generic [ref=f2e1009]:
+        - generic [ref=f2e1010]: 0%
+        - generic [ref=f2e1011]: chevron_right
+    - generic [ref=f2e1013] [cursor=pointer]:
+      - generic [ref=f2e1014]:
+        - img "Pathology" [ref=f2e1015]
+        - generic [ref=f2e1016]:
+          - generic [ref=f2e1017]: Pathology
+          - generic [ref=f2e1018]: 10 CHAPTERS • 79 VIDEOS
+      - generic [ref=f2e1019]:
+        - generic [ref=f2e1020]: 0%
+        - generic [ref=f2e1021]: chevron_right
+    - generic [ref=f2e1023] [cursor=pointer]:
+      - generic [ref=f2e1024]:
+        - img "Community Medicine" [ref=f2e1025]
+        - generic [ref=f2e1026]:
+          - generic [ref=f2e1027]: Community Medicine
+          - generic [ref=f2e1028]: 21 CHAPTERS • 100 VIDEOS
+      - generic [ref=f2e1029]:
+        - generic [ref=f2e1030]: 0%
+        - generic [ref=f2e1031]: chevron_right
+    - generic [ref=f2e1033] [cursor=pointer]:
+      - generic [ref=f2e1034]:
+        - img "Forensic Medicine" [ref=f2e1035]
+        - generic [ref=f2e1036]:
+          - generic [ref=f2e1037]: Forensic Medicine
+          - generic [ref=f2e1038]: 6 CHAPTERS • 44 VIDEOS
+      - generic [ref=f2e1039]:
+        - generic [ref=f2e1040]: 0%
+        - generic [ref=f2e1041]: chevron_right
+    - generic [ref=f2e1043] [cursor=pointer]:
+      - generic [ref=f2e1044]:
+        - img "Ophthalmology" [ref=f2e1045]
+        - generic [ref=f2e1046]:
+          - generic [ref=f2e1047]: Ophthalmology
+          - generic [ref=f2e1048]: 12 CHAPTERS • 52 VIDEOS
+      - generic [ref=f2e1049]:
+        - generic [ref=f2e1050]: 0%
+        - generic [ref=f2e1051]: chevron_right
+    - generic [ref=f2e1053] [cursor=pointer]:
+      - generic [ref=f2e1054]:
+        - img "Otorhinolaryngology (ENT)" [ref=f2e1055]
+        - generic [ref=f2e1056]:
+          - generic [ref=f2e1057]: Otorhinolaryngology (ENT)
+          - generic [ref=f2e1058]: 4 CHAPTERS • 65 VIDEOS
+      - generic [ref=f2e1059]:
+        - generic [ref=f2e1060]: 0%
+        - generic [ref=f2e1061]: chevron_right
+    - generic [ref=f2e1063] [cursor=pointer]:
+      - generic [ref=f2e1064]:
+        - img "Anaesthesia" [ref=f2e1065]
+        - generic [ref=f2e1066]:
+          - generic [ref=f2e1067]: Anaesthesia
+          - generic [ref=f2e1068]: 1 CHAPTERS • 28 VIDEOS
+      - generic [ref=f2e1069]:
+        - generic [ref=f2e1070]: 0%
+        - generic [ref=f2e1071]: chevron_right
+    - generic [ref=f2e1073] [cursor=pointer]:
+      - generic [ref=f2e1074]:
+        - img "Dermatology" [ref=f2e1075]
+        - generic [ref=f2e1076]:
+          - generic [ref=f2e1077]: Dermatology
+          - generic [ref=f2e1078]: 1 CHAPTERS • 26 VIDEOS
+      - generic [ref=f2e1079]:
+        - generic [ref=f2e1080]: 0%
+        - generic [ref=f2e1081]: chevron_right
+    - generic [ref=f2e1083] [cursor=pointer]:
+      - generic [ref=f2e1084]:
+        - img "Psychiatry" [ref=f2e1085]
+        - generic [ref=f2e1086]:
+          - generic [ref=f2e1087]: Psychiatry
+          - generic [ref=f2e1088]: 1 CHAPTERS • 22 VIDEOS
+      - generic [ref=f2e1089]:
+        - generic [ref=f2e1090]: 0%
+        - generic [ref=f2e1091]: chevron_right
+    - generic [ref=f2e1093] [cursor=pointer]:
+      - generic [ref=f2e1094]:
+        - img "Radiology" [ref=f2e1095]
+        - generic [ref=f2e1096]:
+          - generic [ref=f2e1097]: Radiology
+          - generic [ref=f2e1098]: 3 CHAPTERS • 42 VIDEOS
+      - generic [ref=f2e1099]:
+        - generic [ref=f2e1100]: 0%
+        - generic [ref=f2e1101]: chevron_right
+    - generic [ref=f2e1103] [cursor=pointer]:
+      - generic [ref=f2e1104]:
+        - img "Medicine" [ref=f2e1105]
+        - generic [ref=f2e1106]:
+          - generic [ref=f2e1107]: Medicine
+          - generic [ref=f2e1108]: 11 CHAPTERS • 202 VIDEOS
+      - generic [ref=f2e1109]:
+        - generic [ref=f2e1110]: 0%
+        - generic [ref=f2e1111]: chevron_right
+    - generic [ref=f2e1113] [cursor=pointer]:
+      - generic [ref=f2e1114]:
+        - img "Surgery" [ref=f2e1115]
+        - generic [ref=f2e1116]:
+          - generic [ref=f2e1117]: Surgery
+          - generic [ref=f2e1118]: 11 CHAPTERS • 84 VIDEOS
+      - generic [ref=f2e1119]:
+        - generic [ref=f2e1120]: 0%
+        - generic [ref=f2e1121]: chevron_right
+    - generic [ref=f2e1123] [cursor=pointer]:
+      - generic [ref=f2e1124]:
+        - img "Orthopaedics" [ref=f2e1125]
+        - generic [ref=f2e1126]:
+          - generic [ref=f2e1127]: Orthopaedics
+          - generic [ref=f2e1128]: 2 CHAPTERS • 25 VIDEOS
+      - generic [ref=f2e1129]:
+        - generic [ref=f2e1130]: 0%
+        - generic [ref=f2e1131]: chevron_right
+    - generic [ref=f2e1133] [cursor=pointer]:
+      - generic [ref=f2e1134]:
+        - img "Paediatrics" [ref=f2e1135]
+        - generic [ref=f2e1136]:
+          - generic [ref=f2e1137]: Paediatrics
+          - generic [ref=f2e1138]: 15 CHAPTERS • 55 VIDEOS
+      - generic [ref=f2e1139]:
+        - generic [ref=f2e1140]: 0%
+        - generic [ref=f2e1141]: chevron_right
+    - generic [ref=f2e1143] [cursor=pointer]:
+      - generic [ref=f2e1144]:
+        - img "Obstetrics & Gynaecology" [ref=f2e1145]
+        - generic [ref=f2e1146]:
+          - generic [ref=f2e1147]: Obstetrics & Gynaecology
+          - generic [ref=f2e1148]: 9 CHAPTERS • 111 VIDEOS
+      - generic [ref=f2e1149]:
+        - generic [ref=f2e1150]: 0%
+        - generic [ref=f2e1151]: chevron_right
+    - generic [ref=f2e1153] [cursor=pointer]:
+      - generic [ref=f2e1154]:
+        - img "Revision Videos" [ref=f2e1155]
+        - generic [ref=f2e1156]:
+          - generic [ref=f2e1157]: Revision Videos
+          - generic [ref=f2e1158]: 20 CHAPTERS • 265 VIDEOS
+      - generic [ref=f2e1159]:
+        - generic [ref=f2e1160]: 0%
+        - generic [ref=f2e1161]: chevron_right
+  - navigation [ref=f2e314]:
+    - button "Dashboard" [ref=f2e315] [cursor=pointer]
+    - button "Curriculum" [active] [ref=f2e319] [cursor=pointer]
+    - button "Analytics" [ref=f2e326] [cursor=pointer]
+    - button "Profile" [ref=f2e332] [cursor=pointer]

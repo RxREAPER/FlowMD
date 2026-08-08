@@ -5,10 +5,7 @@ const ASSETS = [
   './style.css',
   './app.js',
   './icon.svg',
-  './manifest.json',
-  './device-mode.css',
-  './device-mode_legacy.css',
-  './style_legacy.css'
+  './manifest.json'
 ];
 
 const CURRICULUM_CACHE = 'marrow-curriculum-v1';

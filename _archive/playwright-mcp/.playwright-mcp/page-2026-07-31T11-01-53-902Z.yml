@@ -1,0 +1,280 @@
+- generic [ref=f2e2]:
+  - banner [ref=f2e3]:
+    - generic "FlowMD Home" [ref=f2e5] [cursor=pointer]:
+      - img "FlowMD" [ref=f2e6]:
+        - generic [ref=f2e8]: F
+        - generic [ref=f2e9]: Flow
+        - generic [ref=f2e10]: MD
+    - generic [ref=f2e11]:
+      - generic "Account & Profile" [ref=f2e12] [cursor=pointer]: AS
+      - generic "Toggle Light / Dark Mode" [ref=f2e14] [cursor=pointer]:
+        - generic [ref=f2e15]:
+          - generic [ref=f2e16]: light_mode
+          - generic [ref=f2e17]: dark_mode
+  - generic "Click to Search" [ref=f2e20] [cursor=pointer]:
+    - generic [ref=f2e21]: search
+    - textbox "Search 19 subjects, chapters, topics..." [ref=f2e22]
+  - main [ref=f2e23]:
+    - generic [ref=f2e639]:
+      - generic [ref=f2e640] [cursor=pointer]: Home
+      - generic [ref=f2e641]: ">"
+      - generic [ref=f2e642]: Analytics
+    - generic [ref=f2e643]:
+      - generic [ref=f2e644]:
+        - heading "Study Intelligence Report" [level=2] [ref=f2e645]
+        - paragraph [ref=f2e649]: Track your goals, pace, and subject progress.
+      - button "share Share Report" [ref=f2e651] [cursor=pointer]:
+        - generic [ref=f2e652]: share
+        - generic [ref=f2e653]: Share Report
+    - generic [ref=f2e654]:
+      - generic [ref=f2e655]:
+        - heading "Preparation Setup & Target Goals" [level=3] [ref=f2e656]
+        - generic [ref=f2e657]: 15 DAYS LEFT
+      - generic [ref=f2e658]:
+        - generic [ref=f2e659]:
+          - generic [ref=f2e660]:
+            - text: "PRIORITY FOCUS:"
+            - strong [ref=f2e661]: Entire Syllabus
+          - generic [ref=f2e662]: 8 VIDS/DAY
+        - generic [ref=f2e663]:
+          - text: "Target Completion:"
+          - strong [ref=f2e664]: 2026-08-15
+          - text: (56 vids/wk • 202 vids/mo)
+      - button "track_changes Synchronize Pace & Goals" [ref=f2e665] [cursor=pointer]:
+        - generic [ref=f2e666]: track_changes
+        - text: Synchronize Pace & Goals
+    - generic [ref=f2e667]:
+      - generic [ref=f2e668]:
+        - generic [ref=f2e669]: target
+        - generic [ref=f2e671]: Goal Pulse — Today / Week / Month
+      - generic [ref=f2e672]:
+        - generic [ref=f2e673]:
+          - generic [ref=f2e674]:
+            - generic [ref=f2e675]: Today's Daily Goal
+            - generic [ref=f2e676]: IN PROGRESS
+          - generic [ref=f2e677]: 0/8
+          - generic [ref=f2e678]: combined videos today
+        - generic [ref=f2e680]:
+          - generic [ref=f2e681]:
+            - generic [ref=f2e682]: Weekly Goal
+            - generic [ref=f2e683]: 0% COMPLETE
+          - generic [ref=f2e684]: 0/56
+          - generic [ref=f2e685]: videos this week
+        - generic [ref=f2e687]:
+          - generic [ref=f2e688]:
+            - generic [ref=f2e689]: Monthly Goal
+            - generic [ref=f2e690]: 0% COMPLETE
+          - generic [ref=f2e691]: 0/240
+          - generic [ref=f2e692]: videos in 30 days
+        - generic [ref=f2e694]:
+          - generic [ref=f2e695]:
+            - generic [ref=f2e696]: Plan A ETA
+            - generic [ref=f2e697]:
+              - generic [ref=f2e698]: warning
+              - text: LATE
+          - generic [ref=f2e699]: 7 Feb 2027
+          - generic [ref=f2e700]: Entire Syllabus @ 8/day
+          - generic [ref=f2e701]: 177d behind deadline (2026-08-15)
+    - generic [ref=f2e702]:
+      - generic [ref=f2e703]:
+        - generic [ref=f2e704]: 7-DAY EXECUTION CHART
+        - generic [ref=f2e706]: "TARGET: 8 VIDS/DAY"
+      - generic [ref=f2e707]:
+        - img [ref=f2e709]:
+          - generic [ref=f2e710]: TARGET (8 VIDS/DAY)
+          - generic [ref=f2e711]: "0"
+          - generic [ref=f2e715]: "0"
+          - generic [ref=f2e719]: "0"
+          - generic [ref=f2e723]: "0"
+          - generic [ref=f2e727]: "0"
+          - generic [ref=f2e731]: "0"
+          - generic [ref=f2e735]: "0"
+          - generic [ref=f2e739]: 25 Jul
+          - generic [ref=f2e740]: 26 Jul
+          - generic [ref=f2e741]: 27 Jul
+          - generic [ref=f2e742]: 28 Jul
+          - generic [ref=f2e743]: 29 Jul
+          - generic [ref=f2e744]: 30 Jul
+          - generic [ref=f2e745]: 31 Jul
+        - generic [ref=f2e746]:
+          - generic [ref=f2e747]:
+            - generic [ref=f2e748]: 25 Jul
+            - generic [ref=f2e749]: "0"
+            - generic [ref=f2e750]: 0 VIDS
+          - generic [ref=f2e751]:
+            - generic [ref=f2e752]: 26 Jul
+            - generic [ref=f2e753]: "0"
+            - generic [ref=f2e754]: 0 VIDS
+          - generic [ref=f2e755]:
+            - generic [ref=f2e756]: 27 Jul
+            - generic [ref=f2e757]: "0"
+            - generic [ref=f2e758]: 0 VIDS
+          - generic [ref=f2e759]:
+            - generic [ref=f2e760]: 28 Jul
+            - generic [ref=f2e761]: "0"
+            - generic [ref=f2e762]: 0 VIDS
+          - generic [ref=f2e763]:
+            - generic [ref=f2e764]: 29 Jul
+            - generic [ref=f2e765]: "0"
+            - generic [ref=f2e766]: 0 VIDS
+          - generic [ref=f2e767]:
+            - generic [ref=f2e768]: 30 Jul
+            - generic [ref=f2e769]: "0"
+            - generic [ref=f2e770]: 0 VIDS
+          - generic [ref=f2e771]:
+            - generic [ref=f2e772]: 31 Jul
+            - generic [ref=f2e773]: "0"
+            - generic [ref=f2e774]: 0 VIDS
+    - generic [ref=f2e776]:
+      - generic [ref=f2e777]:
+        - generic [ref=f2e778]:
+          - heading "SUBJECT COMPLETION HEATMAP" [level=3] [ref=f2e784]
+          - generic "Subject Mastery Tier Rules" [ref=f2e785] [cursor=pointer]
+        - generic [ref=f2e788]: "OVERALL MASTERY: 0%"
+      - generic [ref=f2e789]:
+        - generic [ref=f2e790]:
+          - generic [ref=f2e792]: "CRITICAL (<25%):"
+          - generic [ref=f2e793]: "20"
+        - generic [ref=f2e794]:
+          - generic [ref=f2e796]: "IN PROGRESS (25-50%):"
+          - generic [ref=f2e797]: "0"
+        - generic [ref=f2e798]:
+          - generic [ref=f2e800]: "ADVANCED (50-75%):"
+          - generic [ref=f2e801]: "0"
+        - generic [ref=f2e802]:
+          - generic [ref=f2e804]: "MASTERED (75%+):"
+          - generic [ref=f2e805]: "0"
+      - generic [ref=f2e806]:
+        - generic [ref=f2e807]: "FILTER TIERS:"
+        - generic [ref=f2e808]:
+          - button "ALL (20)" [ref=f2e809] [cursor=pointer]
+          - button "<25% (20)" [ref=f2e810] [cursor=pointer]
+          - button "25%–50% (0)" [ref=f2e811] [cursor=pointer]
+          - button "50%–75% (0)" [ref=f2e812] [cursor=pointer]
+          - button "75%+ (0)" [ref=f2e813] [cursor=pointer]
+      - generic [ref=f2e814]:
+        - 'generic "Click to open Anatomy: 0.0% (0/84 videos)" [ref=f2e815] [cursor=pointer]':
+          - img "Anatomy" [ref=f2e817]
+          - generic "Anatomy" [ref=f2e818]
+          - generic [ref=f2e819]:
+            - generic [ref=f2e820]: 0%
+            - generic [ref=f2e821]: 0/84
+        - 'generic "Click to open Biochemistry: 0.0% (0/53 videos)" [ref=f2e822] [cursor=pointer]':
+          - img "Biochemistry" [ref=f2e824]
+          - generic "Biochemistry" [ref=f2e825]
+          - generic [ref=f2e826]:
+            - generic [ref=f2e827]: 0%
+            - generic [ref=f2e828]: 0/53
+        - 'generic "Click to open Physiology: 0.0% (0/32 videos)" [ref=f2e829] [cursor=pointer]':
+          - img "Physiology" [ref=f2e831]
+          - generic "Physiology" [ref=f2e832]
+          - generic [ref=f2e833]:
+            - generic [ref=f2e834]: 0%
+            - generic [ref=f2e835]: 0/32
+        - 'generic "Click to open Pharmacology: 0.0% (0/75 videos)" [ref=f2e836] [cursor=pointer]':
+          - img "Pharmacology" [ref=f2e838]
+          - generic "Pharmacology" [ref=f2e839]
+          - generic [ref=f2e840]:
+            - generic [ref=f2e841]: 0%
+            - generic [ref=f2e842]: 0/75
+        - 'generic "Click to open Microbiology: 0.0% (0/84 videos)" [ref=f2e843] [cursor=pointer]':
+          - img "Microbiology" [ref=f2e845]
+          - generic "Microbiology" [ref=f2e846]
+          - generic [ref=f2e847]:
+            - generic [ref=f2e848]: 0%
+            - generic [ref=f2e849]: 0/84
+        - 'generic "Click to open Pathology: 0.0% (0/79 videos)" [ref=f2e850] [cursor=pointer]':
+          - img "Pathology" [ref=f2e852]
+          - generic "Pathology" [ref=f2e853]
+          - generic [ref=f2e854]:
+            - generic [ref=f2e855]: 0%
+            - generic [ref=f2e856]: 0/79
+        - 'generic "Click to open Community Medicine: 0.0% (0/100 videos)" [ref=f2e857] [cursor=pointer]':
+          - img "Community Medicine" [ref=f2e859]
+          - generic "Community Medicine" [ref=f2e860]
+          - generic [ref=f2e861]:
+            - generic [ref=f2e862]: 0%
+            - generic [ref=f2e863]: 0/100
+        - 'generic "Click to open Forensic Medicine: 0.0% (0/44 videos)" [ref=f2e864] [cursor=pointer]':
+          - img "Forensic Medicine" [ref=f2e866]
+          - generic "Forensic Medicine" [ref=f2e867]
+          - generic [ref=f2e868]:
+            - generic [ref=f2e869]: 0%
+            - generic [ref=f2e870]: 0/44
+        - 'generic "Click to open Ophthalmology: 0.0% (0/52 videos)" [ref=f2e871] [cursor=pointer]':
+          - img "Ophthalmology" [ref=f2e873]
+          - generic "Ophthalmology" [ref=f2e874]
+          - generic [ref=f2e875]:
+            - generic [ref=f2e876]: 0%
+            - generic [ref=f2e877]: 0/52
+        - 'generic "Click to open Otorhinolaryngology (ENT): 0.0% (0/65 videos)" [ref=f2e878] [cursor=pointer]':
+          - img "Otorhinolaryngology (ENT)" [ref=f2e880]
+          - generic "Otorhinolaryngology (ENT)" [ref=f2e881]
+          - generic [ref=f2e882]:
+            - generic [ref=f2e883]: 0%
+            - generic [ref=f2e884]: 0/65
+        - 'generic "Click to open Anaesthesia: 0.0% (0/28 videos)" [ref=f2e885] [cursor=pointer]':
+          - img "Anaesthesia" [ref=f2e887]
+          - generic "Anaesthesia" [ref=f2e888]
+          - generic [ref=f2e889]:
+            - generic [ref=f2e890]: 0%
+            - generic [ref=f2e891]: 0/28
+        - 'generic "Click to open Dermatology: 0.0% (0/26 videos)" [ref=f2e892] [cursor=pointer]':
+          - img "Dermatology" [ref=f2e894]
+          - generic "Dermatology" [ref=f2e895]
+          - generic [ref=f2e896]:
+            - generic [ref=f2e897]: 0%
+            - generic [ref=f2e898]: 0/26
+        - 'generic "Click to open Psychiatry: 0.0% (0/22 videos)" [ref=f2e899] [cursor=pointer]':
+          - img "Psychiatry" [ref=f2e901]
+          - generic "Psychiatry" [ref=f2e902]
+          - generic [ref=f2e903]:
+            - generic [ref=f2e904]: 0%
+            - generic [ref=f2e905]: 0/22
+        - 'generic "Click to open Radiology: 0.0% (0/42 videos)" [ref=f2e906] [cursor=pointer]':
+          - img "Radiology" [ref=f2e908]
+          - generic "Radiology" [ref=f2e909]
+          - generic [ref=f2e910]:
+            - generic [ref=f2e911]: 0%
+            - generic [ref=f2e912]: 0/42
+        - 'generic "Click to open Medicine: 0.0% (0/202 videos)" [ref=f2e913] [cursor=pointer]':
+          - img "Medicine" [ref=f2e915]
+          - generic "Medicine" [ref=f2e916]
+          - generic [ref=f2e917]:
+            - generic [ref=f2e918]: 0%
+            - generic [ref=f2e919]: 0/202
+        - 'generic "Click to open Surgery: 0.0% (0/84 videos)" [ref=f2e920] [cursor=pointer]':
+          - img "Surgery" [ref=f2e922]
+          - generic "Surgery" [ref=f2e923]
+          - generic [ref=f2e924]:
+            - generic [ref=f2e925]: 0%
+            - generic [ref=f2e926]: 0/84
+        - 'generic "Click to open Orthopaedics: 0.0% (0/25 videos)" [ref=f2e927] [cursor=pointer]':
+          - img "Orthopaedics" [ref=f2e929]
+          - generic "Orthopaedics" [ref=f2e930]
+          - generic [ref=f2e931]:
+            - generic [ref=f2e932]: 0%
+            - generic [ref=f2e933]: 0/25
+        - 'generic "Click to open Paediatrics: 0.0% (0/55 videos)" [ref=f2e934] [cursor=pointer]':
+          - img "Paediatrics" [ref=f2e936]
+          - generic "Paediatrics" [ref=f2e937]
+          - generic [ref=f2e938]:
+            - generic [ref=f2e939]: 0%
+            - generic [ref=f2e940]: 0/55
+        - 'generic "Click to open Obstetrics & Gynaecology: 0.0% (0/111 videos)" [ref=f2e941] [cursor=pointer]':
+          - img "Obstetrics & Gynaecology" [ref=f2e943]
+          - generic "Obstetrics & Gynaecology" [ref=f2e944]
+          - generic [ref=f2e945]:
+            - generic [ref=f2e946]: 0%
+            - generic [ref=f2e947]: 0/111
+        - 'generic "Click to open Revision Videos: 0.0% (0/265 videos)" [ref=f2e948] [cursor=pointer]':
+          - img "Revision Videos" [ref=f2e950]
+          - generic "Revision Videos" [ref=f2e951]
+          - generic [ref=f2e952]:
+            - generic [ref=f2e953]: 0%
+            - generic [ref=f2e954]: 0/265
+  - navigation [ref=f2e314]:
+    - button "Dashboard" [ref=f2e315] [cursor=pointer]
+    - button "Curriculum" [ref=f2e319] [cursor=pointer]
+    - button "Analytics" [active] [ref=f2e326] [cursor=pointer]
+    - button "Profile" [ref=f2e332] [cursor=pointer]

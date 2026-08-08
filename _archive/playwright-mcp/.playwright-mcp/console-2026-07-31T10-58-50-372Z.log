@@ -1,0 +1,3 @@
+[     266ms] [WARNING] [2026-07-31T10:58:50.637Z]  @firebase/firestore: Firestore (10.8.0): enableMultiTabIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead. @ https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js:0
+[     811ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ http://127.0.0.1:8123/index.html:0
+[     874ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ http://127.0.0.1:8123/index.html:0
