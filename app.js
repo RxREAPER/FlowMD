@@ -1546,7 +1546,7 @@ function updateTopbarSource() {
         </div>
         <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
         <div class="obw-title" style="font-size:1rem; margin-bottom:8px;">☁️ Cloud Sync</div>
-        <div class="obw-sub">Sign in with Google to keep completions, streaks, plans & preferences synced across all your devices — works offline, free forever.</div>
+        <div class="obw-sub">Sign in with Google to keep completions, streaks, plans & preferences synced across all your devices — works offline.</div>
         <div class="obw-sub" style="margin-top:12px;">Sign in anytime from <b>Profile → Settings → Google Cloud Sync</b>.</div>
       `;
     }
@@ -2882,13 +2882,13 @@ function updateTopbarSource() {
             Synced as ${syncEmail}
           </div>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online. Free on Firebase Spark.
+            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online.
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline, free forever.
+            Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
