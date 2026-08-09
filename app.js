@@ -1531,7 +1531,7 @@ function updateTopbarSource() {
             <span class="material-symbols-outlined" style="margin-right:8px;">cloud_sync</span>
             Sign in with Google
           </button>
-          <button type="button" class="obw-skip" id="obw-skip-signin" style="background:none;border:none;color:var(--text-muted);">Skip for now</button>
+          <button type="button" class="v2-arcade-btn obw-skip" id="obw-skip-signin" style="width:100%; background:transparent; color:var(--text-secondary); border:1px solid var(--border);">Skip for now</button>
         </div>
         <div class="obw-sub" style="margin-top:8px;">You can sign in later from Profile → Settings.</div>
       `;
@@ -1545,17 +1545,8 @@ function updateTopbarSource() {
           <div class="obw-guide-item"><span class="obw-guide-num">3</span><span>📊 Analytics tracks pace & exam readiness; Curriculum browses all subjects.</span></div>
         </div>
         <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
-        <div class="obw-title" style="font-size:1rem; margin-bottom:8px;">☁️ Cloud Sync Features</div>
-        <div class="obw-sub">When you sign in with Google, your data stays in sync across all your devices:</div>
-        <ul style="text-align:left; margin:12px 0 0 16px; font-size:0.85rem; color:var(--text-secondary); line-height:1.8;">
-          <li>✅ Video completions, streaks & daily history</li>
-          <li>✅ Study plans, goals & pace targets</li>
-          <li>✅ Subject urgency & focus chapters</li>
-          <li>✅ Theme & UI preferences</li>
-          <li>✅ Real-time sync (~1s) — change on phone, see on desktop instantly</li>
-          <li>✅ Works offline — auto-syncs when back online</li>
-          <li>✅ Free on Firebase Spark plan — no subscription needed</li>
-        </ul>
+        <div class="obw-title" style="font-size:1rem; margin-bottom:8px;">☁️ Cloud Sync</div>
+        <div class="obw-sub">Sign in with Google to keep completions, streaks, plans & preferences synced across all your devices — works offline, free forever.</div>
         <div class="obw-sub" style="margin-top:12px;">Sign in anytime from <b>Profile → Settings → Google Cloud Sync</b>.</div>
       `;
     }
@@ -2891,22 +2882,13 @@ function updateTopbarSource() {
             Synced as ${syncEmail}
           </div>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Your data syncs in real-time across all signed-in devices (~1s latency).
-            Works offline — changes auto-sync when you're back online.
-            Free on Firebase Spark plan — no subscription needed.
+            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online. Free on Firebase Spark.
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            When enabled, your data syncs in real-time across all signed-in devices (~1s latency):
-            <ul style="text-align:left; margin:8px 0 0 16px; line-height:1.7;">
-              <li>Video completions, streaks & daily history</li>
-              <li>Study plans, goals & pace targets</li>
-              <li>Subject urgency & focus chapters</li>
-              <li>Theme & UI preferences</li>
-            </ul>
-            Works offline — changes auto-sync when back online. Free on Firebase Spark plan.
+            Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline, free forever.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google

@@ -176,7 +176,7 @@ async function run() {
     check('Step 3 renders 3 guide items',
       (await page.locator('.obw-guide-item').count()) === 3);
     check('Step 3 includes Cloud Sync features list',
-      (await page.locator('.obw-card').innerText()).includes('Cloud Sync Features'));
+      (await page.locator('.obw-card').innerText()).includes('Cloud Sync'));
 
     await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step3-light.png') });
 
