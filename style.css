@@ -2224,6 +2224,56 @@ body {
   background-color: #f59e0b;
 }
 
+/* --- Manual Sync Button --- */
+.sync-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface-raised);
+  color: var(--accent-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sync-btn:hover {
+  background: var(--accent-primary);
+  color: #0b0f19;
+  border-color: var(--accent-primary);
+  transform: rotate(180deg);
+}
+
+.sync-btn:active {
+  transform: rotate(180deg) scale(0.95);
+}
+
+[data-theme="light"] .sync-btn {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme-style="retro"] .sync-btn {
+  font-family: var(--font-hud), "VT323", monospace;
+  font-size: 1rem;
+  border: 2px solid var(--v2-ink);
+  border-radius: 0;
+  background-color: var(--bg-surface-raised);
+  box-shadow: 2px 2px 0 0 var(--v2-ink);
+  color: var(--retro-cyan);
+}
+
+[data-theme-style="retro"] .sync-btn:hover {
+  background-color: var(--retro-cyan);
+  color: var(--v2-ink);
+  border-color: var(--retro-cyan);
+  transform: rotate(180deg);
+  box-shadow: 0 0 0 0 var(--v2-ink);
+}
+
 .topbar-arcade-btn {
   background-color: var(--bg-surface-raised);
   border: 2px solid var(--v2-ink, #161310);
@@ -6170,6 +6220,47 @@ body {
   background: #eff6ff;
   border-color: #bfdbfe;
   color: #2563eb;
+}
+
+/* --- Offline Indicator (Topbar) --- */
+.offline-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #f59e0b;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  animation: pulse-soft 2s infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+[data-theme="light"] .offline-indicator {
+  background: rgba(217, 119, 6, 0.15);
+  border-color: #d97706;
+  color: #d97706;
+}
+
+[data-theme-style="retro"] .offline-indicator {
+  font-family: var(--font-hud), "VT323", monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  background-color: var(--bg-surface-raised);
+  border: 2px solid #f59e0b;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 0 #f59e0b;
+  color: #f59e0b;
 }
 
 /* --- Topbar source hint --- */

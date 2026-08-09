@@ -61,13 +61,23 @@
       if (!db || !uid) return;
       try {
         const payload = {
-          completedVideos: stateData.completedVideos || [],
+          completedVideos: stateData.completedVideos || {},
           speed: stateData.speed || 1.5,
           goals: stateData.goals || {},
           streakData: stateData.streakData || {},
           personal: stateData.personal || {},
           subjectUrgency: stateData.subjectUrgency || {},
           dailyBatch: stateData.dailyBatch || null,
+          dailyHistory: stateData.dailyHistory || {},
+          dailyHistoryBySubject: stateData.dailyHistoryBySubject || {},
+          plans: stateData.plans || [],
+          activePlanId: stateData.activePlanId || 'plan_a',
+          activeSource: stateData.activeSource || 'marrow_8',
+          isConfigured: stateData.isConfigured || false,
+          themeStyle: stateData.themeStyle || 'modern',
+          queueCompletedInBatch: stateData.queueCompletedInBatch || 0,
+          queueBatchVideoIds: stateData.queueBatchVideoIds || [],
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           lastSyncedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         await db.collection('users').doc(uid).set(payload, { merge: true });
@@ -90,6 +100,20 @@
         console.error('Error loading state from Firebase:', err);
         return null;
       }
+    },
+
+    // Real-time listener for cross-device sync
+    subscribeToCloud(uid, onChange) {
+      if (!db || !uid) return () => {};
+      const unsub = db.collection('users').doc(uid)
+        .onSnapshot((doc) => {
+          if (doc.exists) {
+            onChange(doc.data());
+          }
+        }, (err) => {
+          console.error('onSnapshot error:', err);
+        });
+      return unsub;
     }
   };
 })();

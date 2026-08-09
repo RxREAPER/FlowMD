@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowMD — Offline</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Space Mono', monospace;
+      background: #0b0f19;
+      color: #e8e8e8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+    .container { max-width: 400px; }
+    .icon {
+      width: 80px; height: 80px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(6, 182, 212, 0.3);
+    }
+    .icon svg { width: 40px; height: 40px; color: #0b0f19; }
+    h1 { font-size: 24px; margin-bottom: 8px; font-weight: 700; }
+    p { color: #9ca3af; margin-bottom: 24px; line-height: 1.5; }
+    .retry-btn {
+      background: #06b6d4; color: #0b0f19;
+      border: none; padding: 14px 32px; font-size: 14px;
+      font-weight: 700; border-radius: 8px; cursor: pointer;
+      font-family: 'Space Mono', monospace;
+      transition: background 0.2s;
+    }
+    .retry-btn:hover { background: #0891b2; }
+    .hint { margin-top: 16px; font-size: 12px; color: #6b7280; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+      </svg>
+    </div>
+    <h1>You're Offline</h1>
+    <p>FlowMD works offline once installed. Connect to the internet to sync your progress and access the latest curriculum.</p>
+    <button class="retry-btn" onclick="window.location.reload()">Try Again</button>
+    <p class="hint">Tip: Install FlowMD from your browser menu for full offline access.</p>
+  </div>
+</body>
+</html>

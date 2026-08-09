@@ -146,6 +146,7 @@
     queueBatchVideoIds: [],
     isConfigured: false,
     activeSource: 'marrow_8',
+    isOffline: false,
     // Dual-Subject Tracking v2
     plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)],
     activePlanId: 'plan_a',
@@ -289,6 +290,7 @@
   let deferredInstallPrompt = null;
   function saveState() {
     try {
+      state.lastLocalUpdate = Date.now();
       localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
       localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
       localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
@@ -569,9 +571,19 @@
 
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;
+    let cloudUnsub = null;
+
     window.FirebaseSync.onAuthChange(async (user) => {
+      // Clean up previous listener
+      if (cloudUnsub) {
+        cloudUnsub();
+        cloudUnsub = null;
+      }
+
       if (user) {
         showToast(`Signed in as ${user.email}`, 'account_circle');
+        state.isOffline = false;
+        
         const cloudState = await window.FirebaseSync.loadFromCloud(user.uid);
         if (cloudState) {
           // Merge cloud → local with LOCAL winning on conflicts: the device's
@@ -581,6 +593,14 @@
           state.goals = { ...(cloudState.goals || {}), ...state.goals };
           state.personal = { ...(cloudState.personal || {}), ...state.personal };
           state.dailyHistory = { ...(cloudState.dailyHistory || {}), ...state.dailyHistory };
+          state.dailyHistoryBySubject = { ...(cloudState.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
+          state.plans = cloudState.plans ? [...cloudState.plans] : state.plans;
+          state.activePlanId = cloudState.activePlanId || state.activePlanId;
+          state.activeSource = cloudState.activeSource || state.activeSource;
+          state.isConfigured = cloudState.isConfigured || state.isConfigured;
+          state.themeStyle = cloudState.themeStyle || state.themeStyle;
+          state.queueCompletedInBatch = cloudState.queueCompletedInBatch || state.queueCompletedInBatch;
+          state.queueBatchVideoIds = cloudState.queueBatchVideoIds ? [...cloudState.queueBatchVideoIds] : state.queueBatchVideoIds;
           if (cloudState.streakData) state.streakData = { ...cloudState.streakData, ...(state.streakData || {}) };
           saveState();
         } else {
@@ -588,12 +608,87 @@
         }
         state.personal.isSynced = true;
         state.personal.syncEmail = user.email;
+
+        // Subscribe to real-time updates
+        cloudUnsub = window.FirebaseSync.subscribeToCloud(user.uid, (cloudData) => {
+          mergeCloudState(cloudData);
+        });
       } else {
         state.personal.isSynced = false;
         state.personal.syncEmail = '';
+        state.isOffline = false;
       }
       render();
     });
+
+    // Periodic connectivity check
+    window.addEventListener('online', () => {
+      state.isOffline = false;
+      if (window.FirebaseSync.currentUser) {
+        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
+      }
+      updateOfflineIndicator();
+    });
+    window.addEventListener('offline', () => {
+      state.isOffline = true;
+      updateOfflineIndicator();
+    });
+  }
+
+  // Merge cloud state with local (timestamp-based conflict resolution)
+  function mergeCloudState(cloudData) {
+    try {
+      // If cloud has newer updatedAt, use cloud for non-completion fields
+      // For completedVideos, always merge with local winning
+      const cloudUpdated = cloudData.updatedAt?.toMillis?.() || 0;
+      const localUpdated = state.lastLocalUpdate || 0;
+
+      // Local completions always win (they're the source of truth for offline work)
+      state.completedVideos = { ...(cloudData.completedVideos || {}), ...state.completedVideos };
+
+      // For other fields, use timestamp to decide
+      if (cloudUpdated > localUpdated) {
+        state.goals = { ...(cloudData.goals || {}), ...state.goals };
+        state.personal = { ...(cloudData.personal || {}), ...state.personal };
+        state.dailyHistory = { ...(cloudData.dailyHistory || {}), ...state.dailyHistory };
+        state.dailyHistoryBySubject = { ...(cloudData.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
+        state.plans = cloudData.plans ? [...cloudData.plans] : state.plans;
+        state.activePlanId = cloudData.activePlanId || state.activePlanId;
+        state.activeSource = cloudData.activeSource || state.activeSource;
+        state.isConfigured = cloudData.isConfigured || state.isConfigured;
+        state.themeStyle = cloudData.themeStyle || state.themeStyle;
+        state.queueCompletedInBatch = cloudData.queueCompletedInBatch || state.queueCompletedInBatch;
+        state.queueBatchVideoIds = cloudData.queueBatchVideoIds ? [...cloudData.queueBatchVideoIds] : state.queueBatchVideoIds;
+        if (cloudData.streakData) state.streakData = { ...cloudData.streakData, ...(state.streakData || {}) };
+      } else {
+        // Local is newer - push to cloud
+        if (window.FirebaseSync.currentUser) {
+          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
+        }
+      }
+      saveState();
+      render();
+    } catch (e) {
+      console.warn('mergeCloudState error:', e);
+    }
+  }
+
+  // Manual sync function
+  function manualSync() {
+    if (!window.FirebaseSync || !window.FirebaseSync.currentUser) {
+      showToast('Sign in to sync', 'error');
+      return Promise.resolve(false);
+    }
+    state.lastLocalUpdate = Date.now();
+    try {
+      showToast('Syncing...', 'sync');
+      window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
+      showToast('Synced successfully', 'check_circle');
+      return Promise.resolve(true);
+    } catch (e) {
+      showToast('Sync failed: ' + e.message, 'error');
+      return Promise.resolve(false);
+    }
   }
 
   // --- Syllabus Math Engine ---
@@ -885,6 +980,7 @@
     DOM.brandHomeLink = document.getElementById('brand-home-link');
     DOM.topbarSourceBadge = document.getElementById('topbar-source-badge');
     DOM.topbarSourceBadgeText = document.querySelector('.edition-badge-text');
+    DOM.manualSyncBtn = document.getElementById('manual-sync-btn');
   }
 
   // --- Interactive Info Popover Helper ---
@@ -978,6 +1074,10 @@
           openSourceSettingsModal();
         }
       });
+    }
+
+    if (DOM.manualSyncBtn) {
+      DOM.manualSyncBtn.addEventListener('click', manualSync);
     }
 
     // Delegated click for any in-view edition chip → source settings dialog
@@ -1293,12 +1393,23 @@
       </button>`;
   }
 
-  function updateTopbarSource() {
+function updateTopbarSource() {
     const badge = document.getElementById('topbar-source-badge');
     if (!badge) return;
     const textEl = badge.querySelector('.edition-badge-text');
     if (textEl) textEl.textContent = getEditionShort();
-    badge.title = 'Study Source: ' + getSourceLabel(state.activeSource || 'marrow_8') + ' — tap to change';
+    badge.title = 'Study Source: ' + getSourceLabel(state.activeSource || 'marrow_8') + ' \u2014 tap to change';
+    updateOfflineIndicator();
+  }
+
+  function updateOfflineIndicator() {
+    const indicator = document.getElementById('topbar-offline-indicator');
+    if (!indicator) return;
+    if (state.isOffline) {
+      indicator.style.display = 'flex';
+    } else {
+      indicator.style.display = 'none';
+    }
   }
 
   // --- Cool faculty + lecture-time presentation helpers ---

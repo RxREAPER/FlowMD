@@ -56,6 +56,11 @@
           <span class="material-symbols-outlined">auto_stories</span>
           <span class="edition-badge-text">Marrow 8</span>
         </span>
+        <!-- Offline Indicator (hidden by default, shown by app.js when offline) -->
+        <span class="offline-indicator" id="topbar-offline-indicator" style="display: none;" title="You are offline">
+          <span class="material-symbols-outlined" style="font-size: 16px;">wifi_off</span>
+          <span style="font-size: 0.7rem; margin-left: 4px;">Offline</span>
+        </span>
         <span class="topbar-source-hint" style="font-size: 0.7rem; color: var(--text-muted); margin-left: 8px; font-weight: 400;">(you can change study source anytime later from Profile → Settings → Study Source)</span>
       </div>
 
@@ -74,6 +79,11 @@
             <div class="retro-theme-thumb" id="theme-slider-thumb"></div>
           </div>
         </div>
+
+        <!-- Manual Sync Button (shown when signed in) -->
+        <button class="sync-btn" id="manual-sync-btn" title="Sync Now" style="display: none;" aria-label="Sync with cloud">
+          <span class="material-symbols-outlined" style="font-size: 20px;">sync</span>
+        </button>
       </div>
     </header>
 

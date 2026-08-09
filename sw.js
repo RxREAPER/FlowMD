@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marrow-planner-pwa-v6';
+const CACHE_NAME = 'marrow-planner-pwa-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -13,7 +13,15 @@ const ASSETS = [
   './js/core/logo.js',
   './js/features/toast.js',
   './icon.svg',
-  './manifest.json'
+  './manifest.json',
+  './offline.html'
+];
+
+// Firebase SDKs (cross-origin) - cached on first load
+const FIREBASE_SDKS = [
+  'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js',
+  'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js'
 ];
 
 const CURRICULUM_CACHE = 'marrow-curriculum-v1';
@@ -42,6 +50,7 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
   const cacheKey = url.origin + url.pathname;
+  const isFirebaseSDK = FIREBASE_SDKS.some(sdk => request.url.startsWith(sdk));
 
   if (url.pathname.includes('curriculum') || url.pathname.endsWith('/')) {
     event.respondWith(
@@ -55,6 +64,22 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Firebase SDKs: cache on first load, serve from cache when offline
+  if (isFirebaseSDK) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.match(request).then((cached) => {
+          return cached || fetch(request).then((networkResponse) => {
+            cache.put(request, networkResponse.clone());
+            return networkResponse;
+          });
+        });
+      })
+    );
+    return;
+  }
+
+  // Same-origin: network-first with offline fallback to offline.html
   event.respondWith(
     fetch(request)
       .then((networkResponse) => {
@@ -62,6 +87,12 @@ self.addEventListener('fetch', (event) => {
         caches.open(CACHE_NAME).then((cache) => cache.put(cacheKey, copy));
         return networkResponse;
       })
-      .catch(() => caches.match(cacheKey))
+      .catch(() => caches.match(cacheKey).then((cached) => {
+        // If not cached and it's a navigation request, return offline.html
+        if (!cached && request.mode === 'navigate') {
+          return caches.match('./offline.html');
+        }
+        return cached || caches.match('./offline.html');
+      }))
   );
 });
