@@ -310,7 +310,7 @@
       if (window.FirebaseSync && window.FirebaseSync.currentUser) {
         if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
         cloudSyncTimeout = setTimeout(() => {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
+          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
         }, 800);
       }
     } catch (e) {
@@ -604,7 +604,7 @@
           if (cloudState.streakData) state.streakData = { ...cloudState.streakData, ...(state.streakData || {}) };
           saveState();
         } else {
-          window.FirebaseSync.syncToCloud(user.uid, state);
+          window.FirebaseSync.syncToCloud(user.uid, state, user);
         }
         state.personal.isSynced = true;
         state.personal.syncEmail = user.email;
@@ -625,7 +625,7 @@
     window.addEventListener('online', () => {
       state.isOffline = false;
       if (window.FirebaseSync.currentUser) {
-        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
+        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
       }
       updateOfflineIndicator();
     });
@@ -682,7 +682,7 @@
     state.lastLocalUpdate = Date.now();
     try {
       showToast('Syncing...', 'sync');
-      window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
+      window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
       showToast('Synced successfully', 'check_circle');
       return Promise.resolve(true);
     } catch (e) {
@@ -1467,13 +1467,13 @@ function updateTopbarSource() {
   }
 
   function renderOnboardingWizard(step) {
-    obwStep = Math.max(0, Math.min(2, step || 0));
+    obwStep = Math.max(0, Math.min(3, step || 0));
     if (!obwSeeded) {
       obwSeeded = true;
       if (state.personal && state.personal.doctorName) obwName = state.personal.doctorName;
     }
-    const total = 3;
-    const dots = [0, 1, 2].map(i =>
+    const total = 4;
+    const dots = [0, 1, 2, 3].map(i =>
       `<span class="obw-dot ${i === obwStep ? 'active' : ''} ${i < obwStep ? 'done' : ''}"></span>`
     ).join('');
     const stepLabel = `FIRST SETUP · STEP ${obwStep + 1} OF ${total}`;
@@ -1523,6 +1523,19 @@ function updateTopbarSource() {
           </div>
         </div>
         <div class="obw-sub" style="margin-top:12px;">Change anytime from the Profile tab.</div>
+      `;
+    } else if (obwStep === 2) {
+      body = `
+        <div class="obw-title">☁️ Sync across devices</div>
+        <div class="obw-sub">Sign in with Google to backup progress & sync to other devices.</div>
+        <div style="margin-top:16px;">
+          <button type="button" class="v2-arcade-btn obw-cta" id="obw-signin" style="width:100%;">
+            <span class="material-symbols-outlined" style="margin-right:8px;">cloud_sync</span>
+            Sign in with Google
+          </button>
+          <button type="button" class="obw-skip" id="obw-skip-signin" style="margin-top:12px;background:none;border:none;color:var(--text-muted);">Skip for now</button>
+        </div>
+        <div class="obw-sub" style="margin-top:12px;">You can sign in later from Profile → Settings.</div>
       `;
     } else {
       body = `
@@ -1597,11 +1610,43 @@ function updateTopbarSource() {
           applyTheme(state.theme);
         }
         if (obwStep === 2) {
+          // Step 2 is now sign-in; handle skip or wait for sign-in callback
+          // Skip button handled separately
+        } else if (obwStep === 3) {
           finishOnboarding();
         } else {
           triggerHaptic('step');
           renderOnboardingWizard(obwStep + 1);
         }
+      });
+    }
+
+    // Sign-in button
+    const signinBtn = document.getElementById('obw-signin');
+    if (signinBtn) {
+      signinBtn.addEventListener('click', async () => {
+        if (!window.FirebaseSync) return;
+        signinBtn.disabled = true;
+        signinBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px;">sync</span> Signing in...';
+        try {
+          await window.FirebaseSync.signInWithGoogle();
+          showToast('Signed in successfully!', 'check_circle');
+          triggerHaptic('step');
+          renderOnboardingWizard(obwStep + 1);
+        } catch (e) {
+          showToast('Sign-in failed: ' + e.message, 'error');
+          signinBtn.disabled = false;
+          signinBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px;">cloud_sync</span> Sign in with Google';
+        }
+      });
+    }
+
+    // Skip sign-in button
+    const skipSigninBtn = document.getElementById('obw-skip-signin');
+    if (skipSigninBtn) {
+      skipSigninBtn.addEventListener('click', () => {
+        triggerHaptic('step');
+        renderOnboardingWizard(obwStep + 1);
       });
     }
   }

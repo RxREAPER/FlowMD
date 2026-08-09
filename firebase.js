@@ -57,7 +57,7 @@
     },
 
     // Save app state to Firestore under /users/{uid}/data/userState
-    async syncToCloud(uid, stateData) {
+    async syncToCloud(uid, stateData, user) {
       if (!db || !uid) return;
       try {
         const payload = {
@@ -77,6 +77,9 @@
           themeStyle: stateData.themeStyle || 'modern',
           queueCompletedInBatch: stateData.queueCompletedInBatch || 0,
           queueBatchVideoIds: stateData.queueBatchVideoIds || [],
+          // Google account info (for profile display)
+          googleDisplayName: user?.displayName || null,
+          googlePhotoURL: user?.photoURL || null,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           lastSyncedAt: firebase.firestore.FieldValue.serverTimestamp()
         };

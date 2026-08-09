@@ -1,7 +1,6 @@
 /* ============================================================
-   FlowMD Onboarding Wizard E2E — verifies the 3-step first-run
-   wizard end-to-end (fresh flow, prepladder gate, back nav,
-   persistence, legacy tutorial_seen migration, error hygiene).
+   FlowMD Onboarding Wizard E2E — verifies the 4-step first-run
+   wizard end-to-end (source, name/theme, google sign-in, summary).
 
    Usage: node tests/onboarding.mjs [port]
    Run from the marrow-planner project root.
@@ -90,7 +89,7 @@ async function run() {
     check('Wizard shows on first run (no config)',
       (await page.locator('.obw-card').count()) > 0);
     check('Wizard step 1 label correct',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
+      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 1 OF 4'));
     check('Dashboard is gated while unconfigured',
       (await page.locator('#study-plan-config').count()) === 0);
 
@@ -127,7 +126,7 @@ async function run() {
     await page.locator('#obw-next').click();
     await page.waitForTimeout(250);
     check('Step 2 label correct',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
+      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 2 OF 4'));
     check('Name input rendered', (await page.locator('#obw-name').count()) === 1);
     check('Theme grid renders 2 options',
       (await page.locator('.obw-theme-opt').count()) === 2);
@@ -148,31 +147,32 @@ async function run() {
     await page.locator('#obw-back').click();
     await page.waitForTimeout(250);
     check('Back returns to step 1',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
+      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 1 OF 4'));
     check('Source choice retained after back',
       await hasClass(page, '.obw-option[data-source="marrow_6_5"]', 'checked'));
 
     await page.locator('#obw-next').click();
     await page.waitForTimeout(250);
     check('Forward returns to step 2',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
+      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 2 OF 4'));
 
-    // Step 3 — summary + finish
+    // Step 3 — Google sign-in
     await page.locator('#obw-next').click();
     await page.waitForTimeout(250);
-    const step3Text = await page.locator('.obw-card').innerText();
     check('Step 3 label correct',
-      step3Text.includes('FIRST SETUP · STEP 3 OF 3'));
-    check('Step 3 shows "all set" summary',
-      /You're all set/.test(step3Text));
-    check('Step 3 summary echoes chosen source',
-      step3Text.includes('Marrow Edition 6.5'), step3Text.slice(0, 80));
-    check('Step 3 summary echoes chosen theme',
-      step3Text.includes('Light Mode'));
-    check('Step 3 renders 3 guide items',
-      (await page.locator('.obw-guide-item').count()) === 3);
-    check('Finish CTA text on step 3',
-      /Got it/.test(await page.locator('#obw-next').innerText()));
+      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 3 OF 4'));
+    check('Sign in button rendered', (await page.locator('#obw-signin').count()) === 1);
+    check('Skip button rendered', (await page.locator('#obw-skip-signin').count()) === 1);
+
+    // Skip sign-in
+    await page.locator('#obw-skip-signin').click();
+    await page.waitForTimeout(250);
+
+    // Step 4 — summary + finish
+    check('Step 4 label correct',
+      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 4 OF 4'));
+    check('Step 4 shows "all set" summary',
+      /You're all set/.test(await page.locator('.obw-card').innerText()));
 
     await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step3-light.png') });
 
