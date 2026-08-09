@@ -1467,13 +1467,13 @@ function updateTopbarSource() {
   }
 
   function renderOnboardingWizard(step) {
-    obwStep = Math.max(0, Math.min(3, step || 0));
+    obwStep = Math.max(0, Math.min(2, step || 0));
     if (!obwSeeded) {
       obwSeeded = true;
       if (state.personal && state.personal.doctorName) obwName = state.personal.doctorName;
     }
-    const total = 4;
-    const dots = [0, 1, 2, 3].map(i =>
+    const total = 3;
+    const dots = [0, 1, 2].map(i =>
       `<span class="obw-dot ${i === obwStep ? 'active' : ''} ${i < obwStep ? 'done' : ''}"></span>`
     ).join('');
     const stepLabel = `FIRST SETUP · STEP ${obwStep + 1} OF ${total}`;
@@ -1523,19 +1523,17 @@ function updateTopbarSource() {
           </div>
         </div>
         <div class="obw-sub" style="margin-top:12px;">Change anytime from the Profile tab.</div>
-      `;
-    } else if (obwStep === 2) {
-      body = `
-        <div class="obw-title">☁️ Sync across devices</div>
-        <div class="obw-sub">Sign in with Google to backup progress & sync to other devices.</div>
-        <div style="margin-top:16px;">
+        <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
+        <div class="obw-title" style="font-size:1rem; margin-bottom:8px;">☁️ Cloud Sync (Optional)</div>
+        <div class="obw-sub">Sign in with Google to backup progress & sync across devices.</div>
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
           <button type="button" class="v2-arcade-btn obw-cta" id="obw-signin" style="width:100%;">
             <span class="material-symbols-outlined" style="margin-right:8px;">cloud_sync</span>
             Sign in with Google
           </button>
-          <button type="button" class="obw-skip" id="obw-skip-signin" style="margin-top:12px;background:none;border:none;color:var(--text-muted);">Skip for now</button>
+          <button type="button" class="obw-skip" id="obw-skip-signin" style="background:none;border:none;color:var(--text-muted);">Skip for now</button>
         </div>
-        <div class="obw-sub" style="margin-top:12px;">You can sign in later from Profile → Settings.</div>
+        <div class="obw-sub" style="margin-top:8px;">You can sign in later from Profile → Settings.</div>
       `;
     } else {
       body = `
@@ -1546,6 +1544,19 @@ function updateTopbarSource() {
           <div class="obw-guide-item"><span class="obw-guide-num">2</span><span>✅ Check off videos daily. Your streak & progress update automatically.</span></div>
           <div class="obw-guide-item"><span class="obw-guide-num">3</span><span>📊 Analytics tracks pace & exam readiness; Curriculum browses all subjects.</span></div>
         </div>
+        <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
+        <div class="obw-title" style="font-size:1rem; margin-bottom:8px;">☁️ Cloud Sync Features</div>
+        <div class="obw-sub">When you sign in with Google, your data stays in sync across all your devices:</div>
+        <ul style="text-align:left; margin:12px 0 0 16px; font-size:0.85rem; color:var(--text-secondary); line-height:1.8;">
+          <li>✅ Video completions, streaks & daily history</li>
+          <li>✅ Study plans, goals & pace targets</li>
+          <li>✅ Subject urgency & focus chapters</li>
+          <li>✅ Theme & UI preferences</li>
+          <li>✅ Real-time sync (~1s) — change on phone, see on desktop instantly</li>
+          <li>✅ Works offline — auto-syncs when back online</li>
+          <li>✅ Free on Firebase Spark plan — no subscription needed</li>
+        </ul>
+        <div class="obw-sub" style="margin-top:12px;">Sign in anytime from <b>Profile → Settings → Google Cloud Sync</b>.</div>
       `;
     }
 
@@ -1610,9 +1621,6 @@ function updateTopbarSource() {
           applyTheme(state.theme);
         }
         if (obwStep === 2) {
-          // Step 2 is now sign-in; handle skip or wait for sign-in callback
-          // Skip button handled separately
-        } else if (obwStep === 3) {
           finishOnboarding();
         } else {
           triggerHaptic('step');
@@ -2882,9 +2890,24 @@ function updateTopbarSource() {
             <span class="material-symbols-outlined">cloud_done</span>
             Synced as ${syncEmail}
           </div>
+          <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
+            Your data syncs in real-time across all signed-in devices (~1s latency).
+            Works offline — changes auto-sync when you're back online.
+            Free on Firebase Spark plan — no subscription needed.
+          </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
+          <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
+            When enabled, your data syncs in real-time across all signed-in devices (~1s latency):
+            <ul style="text-align:left; margin:8px 0 0 16px; line-height:1.7;">
+              <li>Video completions, streaks & daily history</li>
+              <li>Study plans, goals & pace targets</li>
+              <li>Subject urgency & focus chapters</li>
+              <li>Theme & UI preferences</li>
+            </ul>
+            Works offline — changes auto-sync when back online. Free on Firebase Spark plan.
+          </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
           </button>
