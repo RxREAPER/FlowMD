@@ -1,8 +1,8 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 1 (Multi-Source Syllabus Support)
-- **Status**: Code complete + automated QA green (58/58), awaiting commit/deploy
+- **Phase**: 5 (Docs + Final QA — COMPLETE)
+- **Status**: All 5 phases complete. 58/58 Playwright checks green. Ready for production deploy (manual CI gate).
 
 ## Completed
 - [x] Firebase Hosting deployment live at flowmd-04.web.app
@@ -31,15 +31,20 @@
 - [x] **Cloud-merge data-loss fix**: login merge now local-wins-on-conflict (offline completions no longer clobbered by stale cloud snapshot), streakData merged
 - [x] **Playwright declared**: `playwright` added to devDependencies + `npm test` script (was extraneous/unwired); CI installs chromium
 
+## Phases 2–4 (Current Session)
+- [x] **Phase 2 — PWA Offline**: Service worker registered in `init()`; caches all runtime assets including data files; query-string-safe cache keys strip `?v=XXX` for offline matching
+- [x] **Phase 3 — localStorage Schema + Day Boundary**: Schema version key with migration runner; `safeParse` guard; v1→v2 migration for video ID namespacing; UTC→local day boundary via `todayKey()`/`toLocalDateKey()` (IST-safe)
+- [x] **Phase 4 — Error Boundaries**: `safeRender` wrapper on all 5 view functions; graceful error card with "Reload App" button; exclamation icon added
+
 ## In Progress
-- Commit + deploy (requires explicit user confirmation — 3 unpushed commits + pre-existing WIP on `main`)
+- None — all phases complete
 
 ## Next
-- On approval: commit staged changes, push, run `npm run deploy`
-- Future rounds (deferred): service-worker registration (PWA offline), localStorage schema versioning + migration, UTC→local day boundary, sync of `plans`/`dailyHistoryBySubject` keys, workspace junk cleanup
+- Deploy to production when explicitly approved (CI has manual gate: `workflow_dispatch`)
 
 ## Notes
 - Cache-busting version: v158 (index.html `?v=158`)
 - Live: https://flowmd-04.web.app
 - Repo: https://github.com/mohammedsafi0414/FlowMD
+- Backup refs: `backup/pre-hardening`, `backup/pre-hardening-20260809-113936`, `backup/pre-modular-20260808-123655`epo: https://github.com/mohammedsafi0414/FlowMD
 - git is available (2.55.0) — STATE.md previously claimed "git not on PATH"; that was incorrect
