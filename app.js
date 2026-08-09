@@ -1093,6 +1093,23 @@
   }
 
   // --- Main Render Dispatcher ---
+  // --- Safe render wrapper: any view crash must not leave the app blank ---
+  function safeRender(viewFn, viewName, stats) {
+    try {
+      viewFn(stats);
+    } catch (e) {
+      console.error('Render error in ' + viewName + ':', e);
+      if (DOM.appMain) {
+        DOM.appMain.innerHTML = '<div class="pxl-card" style="padding:24px;text-align:center;">' +
+          '<div class="pxl-icon" style="color:#ef4444;margin:0 auto 12px;">' + escapeHtml(PXL_ICONS.exclamation || '') + '</div>' +
+          '<h3>Something went wrong</h3>' +
+          '<p class="pxl-text-muted" style="margin-top:8px;">' + escapeHtml(e.message || 'Unknown error') + '</p>' +
+          '<button class="pxl-btn pxl-btn-primary" style="margin-top:16px;" onclick="location.reload()">Reload App</button>' +
+        '</div>';
+      }
+    }
+  }
+
   function render() {
     if (!DOM.appMain) DOM.appMain = document.getElementById('app-main');
     if (!DOM.appMain) return;
@@ -1101,11 +1118,11 @@
     updateTopbarSource();
     const stats = getSyllabusStats();
 
-    if (state.currentView === 'dashboard') renderDashboardView(stats);
-    else if (state.currentView === 'curriculum') renderCurriculumView(stats);
-    else if (state.currentView === 'subject_detail') renderSubjectDetailView(stats);
-    else if (state.currentView === 'analytics') renderAnalyticsView(stats);
-    else renderProfileView(stats);
+    if (state.currentView === 'dashboard') safeRender(renderDashboardView, 'dashboard', stats);
+    else if (state.currentView === 'curriculum') safeRender(renderCurriculumView, 'curriculum', stats);
+    else if (state.currentView === 'subject_detail') safeRender(renderSubjectDetailView, 'subject_detail', stats);
+    else if (state.currentView === 'analytics') safeRender(renderAnalyticsView, 'analytics', stats);
+    else safeRender(renderProfileView, 'profile', stats);
   }
 
   function updateTopbarInitials() {

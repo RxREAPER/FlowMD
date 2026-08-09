@@ -35,9 +35,10 @@
   }
 
   // --- Shared SVG Icon Set (PxlKit) ---
-  const PXL_ICONS = {
+const PXL_ICONS = {
     trophy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M2 5h4v2H2zM18 5h4v2h-4zM5 3h14v3c0 4-3 6-7 6s-7-2-7-6V3zm7 7c2.5 0 4-1.6 4-4H8c0 2.4 1.5 4 4 4zm-1 4h2v3h2v2h-6v-2h2v-3z"/></svg>',
-    rocket: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2c3.5 2 5 5.5 5 9l2 1v4l-3-1c-.5 1.5-1 3-2.5 4l-1.5-2h-2L8 19c-1.5-1-2-2.5-2.5-4l-3 1v-4l2-1c0-3.5 1.5-7 5-9zm0 3c-1.5 1.5-2.5 3.5-2.5 6v1h5v-1c0-2.5-1-4.5-2.5-6z"/></svg>'
+    rocket: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2c3.5 2 5 5.5 5 9l2 1v4l-3-1c-.5 1.5-1 3-2.5 4l-1.5-2h-2L8 19c-1.5-1-2-2.5-2.5-4l-3 1v-4l2-1c0-3.5 1.5-7 5-9zm0 3c-1.5 1.5-2.5 3.5-2.5-6v1h5v-1c0-2.5-1-4.5-2.5-6z"/></svg>',
+    exclamation: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'
   };
 
   // --- LocalStorage Schema Version (bump when stored shapes change;
