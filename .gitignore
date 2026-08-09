@@ -11,12 +11,18 @@ firestore-debug.log
 Thumbs.db
 .idea/
 .vscode/
+.opencode/
 
 # Local media backups & large assets
 *.mp4
 *.zip
 *.mov
 *.avi
+*.exe
+
+# Archived dev artifacts (kept out of repo + hosting; recoverable via git history)
+_archive/
+tests/screenshots/
 flowmd_clean_extracted.png
 flowmd_extracted_clean_logo.png
 flowmd_extracted_clean_logo.svg

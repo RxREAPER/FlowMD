@@ -10,6 +10,8 @@
   // --- Imported leaf modules (js/core/*, js/features/*) ---
   const {
     PXL_ICONS,
+    escapeHtml,
+    escapeAttr,
     STORAGE_KEYS,
     STUDY_SOURCES,
     DEFAULT_PLAN,
@@ -514,10 +516,14 @@
         showToast(`Signed in as ${user.email}`, 'account_circle');
         const cloudState = await window.FirebaseSync.loadFromCloud(user.uid);
         if (cloudState) {
-          if (cloudState.completedVideos) state.completedVideos = { ...state.completedVideos, ...cloudState.completedVideos };
-          if (cloudState.goals) state.goals = { ...state.goals, ...cloudState.goals };
-          if (cloudState.personal) state.personal = { ...state.personal, ...cloudState.personal };
-          if (cloudState.dailyHistory) state.dailyHistory = { ...state.dailyHistory, ...cloudState.dailyHistory };
+          // Merge cloud → local with LOCAL winning on conflicts: the device's
+          // offline completions must never be clobbered by a stale cloud snapshot.
+          // Cloud still fills gaps (keys absent locally). See .planning/codebase/CONCERNS.md #3.
+          state.completedVideos = { ...(cloudState.completedVideos || {}), ...state.completedVideos };
+          state.goals = { ...(cloudState.goals || {}), ...state.goals };
+          state.personal = { ...(cloudState.personal || {}), ...state.personal };
+          state.dailyHistory = { ...(cloudState.dailyHistory || {}), ...state.dailyHistory };
+          if (cloudState.streakData) state.streakData = { ...cloudState.streakData, ...(state.streakData || {}) };
           saveState();
         } else {
           window.FirebaseSync.syncToCloud(user.uid, state);
@@ -614,12 +620,14 @@
       const subName = subject.subject || '';
       const subId = subject.id || subName.toLowerCase().replace(/[^a-z0-9_]/g, '_');
       const subIcon = getSubjectIconSrc(subId);
+      const subSvgIcon = getSubjectSvgIcon(subId);
 
       if (subName.toLowerCase().includes(q)) {
         matchedSubjects.push({
           id: subId,
           name: subName,
           icon: subIcon,
+          svgIcon: subSvgIcon,
           chaptersCount: subject.chapters ? subject.chapters.length : 0,
           videosCount: subject.chapters ? subject.chapters.reduce((acc, c) => acc + (c.videos ? c.videos.length : 0), 0) : 0
         });
@@ -698,7 +706,7 @@
       // Search Guide — helps users understand the search functionality
       container.innerHTML = `
         <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">search</span> What Can You Search?</div>
-        <div style="font-family: var(--font-hud); font-size: 0.88rem; color: var(--text-muted); padding: 8px 0 4px 4px; line-height: 1.8;">
+        <div style="font-family: 'Poppins', sans-serif; font-size: 0.88rem; color: var(--text-muted); padding: 8px 0 4px 4px; line-height: 1.8;">
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Subjects</strong> — e.g. "anatomy", "pharmacology", "medicine"</div>
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Chapters</strong> — e.g. "cardiovascular", "neurology", "head and neck"</div>
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Video Topics</strong> — e.g. "glaucoma", "MI", "fracture", "biochemistry"</div>
@@ -713,8 +721,8 @@
 
     if (searchData.totalMatches === 0) {
       container.innerHTML = `
-        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: var(--font-hud); font-size: 1.1rem;">
-          No matching subjects, chapters, or video topics found for "${q}". Try: <br><span style="color: var(--text-primary);">anatomy, pharmacology, cardiology, biochemistry...</span>
+        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Poppins', sans-serif; font-size: 1.1rem;">
+          No matching subjects, chapters, or video topics found for "${escapeHtml(q)}". Try: <br><span style="color: var(--text-primary);">anatomy, pharmacology, cardiology, biochemistry...</span>
         </div>
       `;
       return;
@@ -727,7 +735,7 @@
         ${searchData.subjects.map(s => `
           <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div class="subject-icon-wrapper"><img src="${getSubjectIconSrc(s.id)}" alt="${s.name}"></div>
+                <div class="subject-icon-wrapper">${s.svgIcon}</div>
                 <span style="font-weight: 700; font-size: 0.95rem; font-family: var(--font-display);">${s.name}</span>
             </div>
             <span class="v2-hud-badge">${s.videosCount} vids</span>
@@ -815,9 +823,7 @@
     DOM.topbarAvatarInitials = document.getElementById('topbar-avatar-initials');
     DOM.bottomSheetOverlay = document.getElementById('bottom-sheet-overlay');
     DOM.bottomSheetContent = document.getElementById('bottom-sheet-content');
-    DOM.goalModal = document.getElementById('goal-modal');
-    DOM.modalCloseBtn = document.getElementById('modal-close-btn');
-    DOM.btnCancelGoals = document.getElementById('btn-cancel-goals');
+    DOM.studyPlanConfig = document.getElementById('study-plan-config');
     DOM.brandHomeLink = document.getElementById('brand-home-link');
     DOM.topbarSourceBadge = document.getElementById('topbar-source-badge');
     DOM.topbarSourceBadgeText = document.querySelector('.edition-badge-text');
@@ -845,7 +851,15 @@
     DOM.navItems.forEach(item => {
       item.addEventListener('click', () => {
         const view = item.getAttribute('data-view');
-        if (view) switchView(view);
+        if (view) {
+          // Trigger ripple effect
+          item.classList.remove('ripple-active');
+          void item.offsetWidth; // force reflow
+          item.classList.add('ripple-active');
+          setTimeout(() => item.classList.remove('ripple-active'), 500);
+
+          switchView(view);
+        }
       });
     });
 
@@ -873,7 +887,6 @@
       if (e.key === 'Escape') {
         closeSpotlightModal();
         closeInfoModal();
-        closeGoalModal();
         return;
       }
 
@@ -922,14 +935,6 @@
     if (DOM.bottomSheetOverlay) {
       DOM.bottomSheetOverlay.addEventListener('click', (e) => {
         if (e.target === DOM.bottomSheetOverlay) closeBottomSheet();
-      });
-    }
-
-    if (DOM.modalCloseBtn) DOM.modalCloseBtn.addEventListener('click', closeGoalModal);
-    if (DOM.btnCancelGoals) DOM.btnCancelGoals.addEventListener('click', closeGoalModal);
-    if (DOM.goalModal) {
-      DOM.goalModal.addEventListener('click', (e) => {
-        if (e.target === DOM.goalModal) closeGoalModal();
       });
     }
 
@@ -1164,17 +1169,12 @@
               <div class="pxl-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="--subject-accent: ${sub.accentColor};">
                 
                 <!-- Subject Icon -->
-                <div class="pxl-tile-icon-area">
-                  <img src="${sub.icon}" alt="${sub.name}" class="pxl-tile-icon-img">
+                <div class="pxl-tile-icon-area" style="color: ${sub.accentColor};">
+                  ${sub.svgIcon}
                 </div>
 
                 <!-- Subject Name -->
                 <div class="pxl-tile-name" title="${sub.name}">${sub.name}</div>
-
-                <!-- Faculty -->
-                <div class="pxl-tile-faculty" style="margin: 4px 0 2px 0;">
-                  ${renderFacultyPill(getSubjectFaculty(sub.id), sub.id)}
-                </div>
 
                 <!-- Hours -->
                 <div class="pxl-tile-hours" style="font-family: var(--font-hud); font-size: 0.68rem; color: var(--text-muted); margin: 2px 0;">${sub.completedHours} / ${sub.totalHours}h</div>
@@ -1327,7 +1327,7 @@
         <div class="obw-sub">Help us personalize your dashboard.</div>
         <div style="text-align:left; margin-top:16px;">
           <label class="gcm-label" for="obw-name">What should we call you?</label>
-          <input type="text" id="obw-name" class="obw-name-input" value="${obwName}" placeholder="Dr. Aspirant">
+          <input type="text" id="obw-name" class="obw-name-input" value="${escapeAttr(obwName)}" placeholder="Dr. Aspirant">
         </div>
         <div style="text-align:left; margin-top:16px;">
           <label class="gcm-label">Theme</label>
@@ -1340,7 +1340,7 @@
       `;
     } else {
       body = `
-        <div class="obw-title">✅ You're all set, ${obwName || 'Doctor'}!</div>
+        <div class="obw-title">✅ You're all set, ${escapeHtml(obwName || 'Doctor')}!</div>
         <div class="obw-sub">${getSourceLabel(obwSource)} • ${obwTheme === 'dark' ? 'Dark Mode' : 'Light Mode'}</div>
         <div class="obw-guide-list">
           <div class="obw-guide-item"><span class="obw-guide-num">1</span><span>📋 Set your study target — pick a subject and daily video pace.</span></div>
@@ -1429,6 +1429,246 @@
     saveState();
     triggerHaptic('finish');
     render();
+  }
+
+  // --- Study Plan Config: always-visible inline form card ---
+  function renderStudyPlanConfigCard() {
+    return `
+      <section id="study-plan-config" class="study-plan-config-section" aria-label="Study plan configuration">
+        <div class="spc-header">
+          <h2 class="spc-title">Study Plan Configuration</h2>
+          <p class="spc-sub">Set your daily pace, target deadline &amp; dual-track goals. Everything auto-synchronizes.</p>
+        </div>
+
+        <div class="spc-body">
+          <!-- Plan Selector Dropdown + Dual-Track Toggle -->
+          <div class="spc-toolbar">
+            <div class="spc-plan-select-wrap">
+              <span class="material-symbols-outlined spc-flag-icon">flag</span>
+              <select id="goal-plan-select" class="gcm-input spc-plan-select" aria-label="Select plan to configure">
+                <option value="plan_a">Plan A — Primary Target</option>
+              </select>
+              <span class="material-symbols-outlined spc-select-arrow">expand_more</span>
+            </div>
+            <label class="gcm-dual spc-dual-toggle">
+              <input type="checkbox" id="toggle-plan-b">
+              <span class="gcm-switch"><i></i></span>
+              <span class="gcm-dual-label">Dual-Track</span>
+            </label>
+          </div>
+
+          <!-- PLAN A FORM -->
+          <div id="goal-plan-a-form">
+            <div class="gcm-plan-head">
+              <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan A — Primary Target</span>
+              <span class="gcm-plan-role">Main <b>Subject Goal</b></span>
+            </div>
+
+            <form id="goal-form-a" onsubmit="return false;" class="gcm-form">
+              <div class="gcm-field">
+                <label class="gcm-label">Goal Mode</label>
+                <div class="gcm-seg">
+                  <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video"><span class="material-symbols-outlined">smart_display</span> Videos</button>
+                </div>
+              </div>
+
+              <div class="gcm-hint">
+                <span class="material-symbols-outlined">calculate</span>
+                <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
+              </div>
+
+              <div class="gcm-field">
+                <label class="gcm-label" for="select-target-subject">Priority Target Subject</label>
+                <div class="gcm-select-wrap">
+                  <select id="select-target-subject" class="gcm-input"></select>
+                  <span class="material-symbols-outlined">expand_more</span>
+                </div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="gcm-chips-count"></span></label>
+                </div>
+                <div class="gcm-hint" style="margin:4px 0 8px 0;">
+                  <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
+                  <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
+                </div>
+                <div class="gcm-chips" id="chapter-chips-a"></div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-hint" style="margin:0;">
+                  <span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span>
+                  <span>Syllabus source: <b id="goal-source-label">Marrow Edition 8</b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
+                </div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" for="input-target-date" style="margin:0;">Target Deadline</label>
+                  <span id="days-remaining-badge" class="gcm-badge">26 Days Left</span>
+                </div>
+                <input type="date" id="input-target-date" value="2026-08-15" class="gcm-input">
+              </div>
+
+              <div id="fields-video-mode" class="gcm-pace-grid" style="display:grid;">
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-day" value="8" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-week" value="56" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-month" value="240" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+              </div>
+
+              
+              <div class="gcm-guide math-guide-card">
+                <div class="gcm-guide-header math-guide-header">
+                  <span class="material-symbols-outlined">info</span>
+                  <span>How Plan A Date &amp; Pace Auto-Synchronize</span>
+                  <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
+                </div>
+                <div class="gcm-guide-body math-guide-body">
+                  <strong>Auto-Synchronization:</strong><br>
+                  &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan A <strong>Daily Pace</strong>.<br>
+                  &bull; Changing <strong>Daily Pace</strong> auto-updates Plan A <strong>Target Date</strong>.
+                </div>
+              </div>
+
+              <div class="gcm-actions">
+                <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Save &amp; Apply Plan A Target</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- PLAN B FORM -->
+          <div id="goal-plan-b-form" style="display:none;">
+            <div class="gcm-plan-head">
+              <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan B — Secondary Target</span>
+              <span class="gcm-plan-role">Parallel <b>Subject Goal</b></span>
+            </div>
+
+            <form id="goal-form-b" onsubmit="return false;" class="gcm-form">
+              <div class="gcm-field">
+                <label class="gcm-label">Goal Mode</label>
+                <div class="gcm-seg">
+                  <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video-b"><span class="material-symbols-outlined">smart_display</span> Videos</button>
+                </div>
+              </div>
+
+              <div class="gcm-hint">
+                <span class="material-symbols-outlined">calculate</span>
+                <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
+              </div>
+
+              <div class="gcm-field">
+                <label class="gcm-label" for="select-target-subject-b">Priority Target Subject</label>
+                <div class="gcm-select-wrap">
+                  <select id="select-target-subject-b" class="gcm-input"></select>
+                  <span class="material-symbols-outlined">expand_more</span>
+                </div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="gcm-chips-count"></span></label>
+                </div>
+                <div class="gcm-hint" style="margin:4px 0 8px 0;">
+                  <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
+                  <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
+                </div>
+                <div class="gcm-chips" id="chapter-chips-b"></div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
+                  <span id="days-remaining-badge-b" class="gcm-badge">26 Days Left</span>
+                </div>
+                <input type="date" id="input-target-date-b" value="2026-08-15" class="gcm-input">
+              </div>
+
+              <div id="fields-video-mode-b" class="gcm-pace-grid" style="display:grid;">
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-day-b" value="8" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-week-b" value="56" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-month-b" value="240" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+              </div>
+
+              
+              <div class="gcm-guide math-guide-card">
+                <div class="gcm-guide-header math-guide-header">
+                  <span class="material-symbols-outlined">info</span>
+                  <span>How Plan B Date &amp; Pace Auto-Synchronize</span>
+                  <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
+                </div>
+                <div class="gcm-guide-body math-guide-body">
+                  <strong>Auto-Synchronization:</strong><br>
+                  &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan B <strong>Daily Pace</strong>.<br>
+                  &bull; Changing <strong>Daily Pace</strong> auto-updates Plan B <strong>Target Date</strong>.
+                </div>
+              </div>
+
+              <div class="gcm-actions">
+                <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals-b">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Save &amp; Apply Plan B Target</span>
+                </button>
+                <button type="button" class="gcm-btn gcm-btn-danger" id="btn-remove-plan-b">
+                  <span class="material-symbols-outlined">disabled_by_default</span>
+                  <span>Disable / Remove Plan B</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>`;
   }
 
   // --- View 1: Dashboard View ---
@@ -1548,33 +1788,31 @@
 
     DOM.appMain.innerHTML = `
       <!-- Hero Card -->
-      <div style="margin-bottom: 16px;">
+      <div class="pxl-feature-card-wrapper">
         <div class="pxl-feature-card hero-banner-card">
-          <div>
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
-              ${renderEditionChip()}
-              ${hasDualPlans ? `
-                <span class="hero-top-badge dual-track"><span class="material-symbols-outlined" style="font-size:16px;">bolt</span> DUAL-TRACK MODE</span>
-              ` : ''}
-              <span class="hero-streak-text"><span class="material-symbols-outlined" style="font-size:16px;">local_fire_department</span> ${streakCount} day streak</span>
+          <div class="pxl-feature-card-header-badges">
+            ${renderEditionChip()}
+            ${hasDualPlans ? `
+              <span class="v2-hud-badge" style="color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-color: #e11d48;"><span class="material-symbols-outlined" style="font-size:16px;">bolt</span> DUAL-TRACK MODE</span>
+             ` : ''}
+            <span class="v2-hud-badge" style="margin-left:auto;"><span class="material-symbols-outlined" style="font-size:16px;">local_fire_department</span> ${streakCount} day streak</span>
+          </div>
+          <h1 class="pxl-feature-card-title">Welcome back, ${escapeHtml(docName)}!</h1>
+          <p class="pxl-feature-card-desc">
+            ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject || 'No subject set').join(' + ')}` : `${plans[0]?.targetSubject || 'No subject set'}`} — ${stats.percentage}% Mastered
+          </p>
+          <div class="hero-mastery-block">
+            <div class="hero-mastery-top">
+              <span class="hero-mastery-label"><span class="hero-mastery-dot"></span> Syllabus Mastery</span>
+              <span style="font-size:0.7rem; font-weight:600; color:var(--text-muted); font-family: var(--font-hud);">${stats.totalVideos > 0 ? stats.completedVideos + ' / ' + stats.totalVideos + ' videos' : 'No data yet'}</span>
             </div>
-            <h1 class="hero-card-title">WELCOME BACK, ${docName.toUpperCase()}!</h1>
-            <p class="hero-card-subtitle">
-              ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject || 'No subject set').join(' + ')}` : `${plans[0]?.targetSubject || 'No subject set'}`} — ${stats.percentage}% Mastered
-            </p>
-            <div class="hero-mastery-block">
-              <div class="hero-mastery-top">
-                <span class="hero-mastery-label"><span class="dot"></span> Syllabus Mastery</span>
-                <span style="font-size:0.7rem; font-weight:600; color:var(--text-muted);">${stats.totalVideos > 0 ? stats.completedVideos + ' / ' + stats.totalVideos + ' videos' : 'No data yet'}</span>
-              </div>
-              <div class="hero-mastery-value">${stats.percentage}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
-              <div class="v2-hp-bar-bg hero-hp-bar">
-                <div class="v2-hp-bar-fill" style="width:${stats.percentage}%;"></div>
-              </div>
-              <div class="hero-mastery-sub">
-                <span>${stats.percentage < 25 ? 'Just getting started' : stats.percentage < 50 ? 'Building momentum' : stats.percentage < 75 ? 'Strong progress' : stats.percentage < 90 ? 'Almost there' : 'Mastery achieved!'}</span>
-                <span>${stats.percentage < 100 ? (100 - stats.percentage) + '% to mastery' : 'Complete!'}</span>
-              </div>
+            <div class="hero-mastery-value">${stats.percentage}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
+            <div class="v2-hp-bar-bg hero-hp-bar">
+              <div class="v2-hp-bar-fill" style="width:${stats.percentage}%;"></div>
+            </div>
+            <div class="hero-mastery-sub">
+              <span>${stats.percentage < 25 ? 'Just getting started' : stats.percentage < 50 ? 'Building momentum' : stats.percentage < 75 ? 'Strong progress' : stats.percentage < 90 ? 'Almost there' : 'Mastery achieved!'}</span>
+              <span>${stats.percentage < 100 ? (100 - stats.percentage) + '% to mastery' : 'Complete!'}</span>
             </div>
           </div>
         </div>
@@ -1619,9 +1857,9 @@
 
       <!-- Daily Quest Section (per plan) -->
       <div class="v2-quest-card action-queue-card">
-        <div class="v2-quest-header-badge">
-          <span class="v2-quest-header-badge-text"><span class="material-symbols-outlined mat">emoji_events</span> Daily Quests</span>
-          <span class="v2-quest-header-badge-extra">${hasDualPlans ? 'DUAL TRACK' : `${allQueues[0]?.subjectName || 'All Topics'}`}</span>
+        <div class="anl-report-card-head">
+          <div class="anl-report-card-title"><span class="material-symbols-outlined mat">emoji_events</span> Daily Quests</div>
+          <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${hasDualPlans ? 'DUAL TRACK' : `${allQueues[0]?.subjectName || 'All Topics'}`}</span>
         </div>
         <div style="padding-top:4px;">
           ${hasTargetSet
@@ -1634,6 +1872,9 @@
               </div>`}
         </div>
       </div>
+
+      <!-- Study Plan Configuration (always-visible inline form) -->
+      ${renderStudyPlanConfigCard()}
     `;
 
     document.getElementById('btn-pwa-install-now')?.addEventListener('click', () => {
@@ -1667,7 +1908,7 @@
     });
 
     document.getElementById('btn-set-first-target')?.addEventListener('click', () => {
-      openGoalModal();
+      focusStudyPlanConfig();
     });
 
     // Per-plan advance batch
@@ -1728,6 +1969,9 @@
         });
       });
     });
+
+    // Always-visible inline Study Plan config card
+    initStudyPlanConfig();
   }
 
 
@@ -1755,7 +1999,7 @@
         <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
           <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
             <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-              <img src="${sub.icon}" class="subject-icon-medium" alt="${sub.name}">
+              <span class="subject-icon-medium" style="display:inline-flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</span>
               <div style="min-width: 0;">
                 <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
                 <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
@@ -1804,18 +2048,17 @@
           <span class="pxl-breadcrumb-item active">${subObj.name}</span>
         </div>
 
+        <!-- Back Button - separate at top -->
+        <button class="pwa-back-btn" id="btn-back-to-curriculum" aria-label="Back to curriculum">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+
         <div class="pwa-subject-detail-header">
-          <button class="pwa-back-btn" id="btn-back-to-curriculum" aria-label="Back to subjects">
-            <span class="material-symbols-outlined">arrow_back</span>
-            <span>Subjects</span>
-          </button>
-          <div class="pwa-subject-detail-icon"><img src="${subObj.icon}" alt="${subObj.name}"></div>
+          <div class="pwa-subject-detail-icon" style="color: ${subObj.accentColor};">${subObj.svgIcon}</div>
           <div class="pwa-subject-detail-info">
             <div class="pwa-subject-detail-name">${subObj.name}</div>
             <div class="pwa-subject-detail-faculty">${renderFacultyCard(subObj.faculty || getSubjectFaculty(subObj.id), subObj.id)}</div>
             <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done</div>
-            ${renderHoursMeter(subObj.completedHours, subObj.totalHours)}
-            <div class="pwa-subject-detail-progress"><div class="pwa-subject-detail-progress-fill" style="width:${subObj.percentage}%"></div></div>
           </div>
         </div>
 
@@ -2092,12 +2335,12 @@
 
     const goalTile = (o) => `
       <div class="anl-goal-tile" style="--tile:${o.color}">
+        <span class="anl-goal-badge-top" style="${o.badgeStyle || ''}">${o.badge}</span>
         <div class="anl-goal-head">
           <div class="anl-goal-tag">
             <span class="anl-goal-ico"><span class="material-symbols-outlined">${o.icon}</span></span>
             <span class="anl-goal-title">${o.title}</span>
           </div>
-          <span class="anl-goal-badge" style="${o.badgeStyle || ''}">${o.badge}</span>
         </div>
         <div class="anl-goal-value">${o.value}<span class="unit">${o.unit || ''}</span></div>
         <div class="anl-goal-desc">${o.desc}</div>
@@ -2217,7 +2460,7 @@
           </div>
           <div style="text-align:right;">
             <div class="lbl">Daily Pace</div>
-            <div class="val">${(state.goals.goalMode || 'video') === 'video' ? `<small>${state.goals.videosPerDay}</small> vids/day` : `<small>${state.goals.dailyTargetHours}</small> hrs/day`}</div>
+            <div class="val"><small>${state.goals.videosPerDay || 8}</small> vids/day</div>
           </div>
         </div>
         <div class="anl-report-facts">
@@ -2257,12 +2500,11 @@
       }
     });
 
-    document.getElementById('btn-analytics-open-goals')?.addEventListener('click', openGoalModal);
+    document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
   }
 
   // --- View 5: Synchronized Targets & Goals View ---
   function renderGoalsView(stats) {
-    const mode = state.goals.goalMode || 'video';
     const targetSub = state.goals.targetSubject || '';
     const targetDateStr = state.goals.targetDate || '2026-08-15';
     const daysLeft = Math.max(1, Math.ceil((new Date(targetDateStr) - new Date()) / 86400000));
@@ -2287,7 +2529,7 @@
 
       <div class="v2-pixel-card" style="padding: 20px; margin-bottom: 16px; background: linear-gradient(135deg, rgba(46, 93, 214, 0.12) 0%, rgba(99, 102, 241, 0.04) 100%);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <span class="v2-hud-badge" style="color: var(--accent-primary); border-color: var(--accent-primary);">MODE: ${mode === 'video' ? 'VIDEOS PACE' : 'HOURS PACE'}</span>
+          <span class="v2-hud-badge" style="color: var(--accent-primary); border-color: var(--accent-primary);">MODE: VIDEOS PACE</span>
           <span class="v2-hud-badge">${daysLeft} DAYS LEFT</span>
         </div>
 
@@ -2295,7 +2537,7 @@
           Priority Focus: ${targetSub}
         </h2>
         <p style="font-family: var(--font-hud); font-size: 1.1rem; color: var(--accent-primary); font-weight: 700;">
-          TARGET PACE: ${mode === 'video' ? state.goals.videosPerDay + ' VIDS/DAY (' + state.goals.videosPerWeek + ' VIDS/WK)' : state.goals.dailyTargetHours + ' HRS/DAY (' + state.goals.weeklyTargetHours + ' HRS/WK)'}
+          TARGET PACE: ${state.goals.videosPerDay || 8} VIDS/DAY (${state.goals.videosPerWeek || 56} VIDS/WK)
         </p>
 
         <div class="v2-hp-bar-bg" style="height: 14px; margin-top: 14px;">
@@ -2309,7 +2551,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-family: var(--font-hud); font-size: 1.5rem; font-weight: 700; color: var(--accent-primary);">
-              ${mode === 'video' ? state.goals.videosPerDay + ' Videos' : state.goals.dailyTargetHours + ' Hours'}
+               ${state.goals.videosPerDay || 8} Videos
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted);">Target per day</div>
           </div>
@@ -2322,7 +2564,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-family: var(--font-hud); font-size: 1.5rem; font-weight: 700; color: var(--accent-primary);">
-              ${mode === 'video' ? state.goals.videosPerWeek + ' Videos' : state.goals.weeklyTargetHours + ' Hours'}
+               ${state.goals.videosPerWeek || 56} Videos
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted);">Target per week</div>
           </div>
@@ -2335,7 +2577,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-family: var(--font-hud); font-size: 1.5rem; font-weight: 700; color: var(--accent-primary);">
-              ${mode === 'video' ? state.goals.videosPerMonth + ' Videos' : state.goals.monthlyTargetHours + ' Hours'}
+               ${state.goals.videosPerMonth || 240} Videos
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted);">Target per month</div>
           </div>
@@ -2344,7 +2586,7 @@
       </div>
     `;
 
-    document.getElementById('btn-edit-goals-page')?.addEventListener('click', openGoalModal);
+    document.getElementById('btn-edit-goals-page')?.addEventListener('click', focusStudyPlanConfig);
   }
 
   // --- View 6: Profile View (simplified) ---
@@ -2367,17 +2609,17 @@
       <div class="v2-pixel-card" style="padding: 20px; margin-bottom: 16px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
           <div class="pxl-avatar pxl-avatar-lg pxl-avatar-cyan">
-            ${(docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase()}
+            ${escapeHtml((docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase())}
           </div>
           <div>
-            <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${docName}</h2>
+            <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${escapeHtml(docName)}</h2>
           </div>
         </div>
 
         <form id="profile-edit-form">
           <div class="form-group">
             <label for="prof-doc-name">Doctor Name</label>
-            <input type="text" id="prof-doc-name" value="${docName}" class="form-input">
+            <input type="text" id="prof-doc-name" value="${escapeAttr(docName)}" class="form-input">
           </div>
           <button type="submit" class="v2-arcade-btn" style="height: 44px; width: 100%;">Save Profile Changes</button>
         </form>
@@ -2406,36 +2648,37 @@
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Google Cloud Sync</h3>
         ${isSynced ? `
-          <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: var(--font-hud); font-size: 1.05rem; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: 'Poppins', sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
             <span class="material-symbols-outlined">cloud_done</span>
             Synced as ${syncEmail}
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
+          <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
           </button>
         `}
       </div>
 
-      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary, #2563eb);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-          <div>
-            <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0;">
-              <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb);">support_agent</span>
-              <span>Developer Support & Contact</span>
-            </h3>
-          </div>
+      <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary, #2563eb);">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb); font-size: 20px;">support_agent</span>
+          <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin: 0;">Developer Support & Contact</h3>
         </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 14px;">
-          <button class="v2-arcade-btn" id="btn-open-contact-modal" style="height: 42px; background: var(--accent-primary, #2563eb); color: #ffffff;">
-            <span class="material-symbols-outlined">send</span> Send Support Ticket
-          </button>
-          <button class="v2-arcade-btn" id="btn-copy-support-email" style="height: 42px; background: var(--bg-surface-raised); color: var(--text-primary);">
-            <span class="material-symbols-outlined">content_copy</span> Copy Email (support@flowmd.app)
-          </button>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
+          Need help or have a question? Click below to reveal the developer contact email.
+        </p>
+        <button class="v2-arcade-btn" id="btn-show-support-email" style="height: 38px; width: 100%;">
+          <span class="material-symbols-outlined">mail</span> Show Contact Email
+        </button>
+        <div id="hidden-support-email" class="support-email-reveal" style="display: none; margin-top: 16px;">
+          <div class="support-email-inner">
+            <span class="support-email-text">ezioauditore9553@gmail.com</span>
+            <button class="v2-arcade-btn" id="btn-copy-support-email" style="height: 32px; padding: 0 12px; font-size: 0.78rem;">
+              <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span> Copy
+            </button>
+          </div>
         </div>
       </div>
 
@@ -2482,208 +2725,19 @@
       }
     });
 
-    document.getElementById('btn-open-contact-modal')?.addEventListener('click', openContactModal);
-
-    document.getElementById('btn-copy-support-email')?.addEventListener('click', () => {
-      const email = 'support@flowmd.app';
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(email).then(() => showToast('Support Email Copied: support@flowmd.app', 'content_copy'));
-      } else {
-        showToast('Support Email: support@flowmd.app', 'mail');
+    document.getElementById('btn-show-support-email')?.addEventListener('click', () => {
+      const reveal = document.getElementById('hidden-support-email');
+      if (reveal) {
+        reveal.style.display = 'block';
       }
     });
+
+    document.getElementById('btn-copy-support-email')?.addEventListener('click', () => {
+      navigator.clipboard.writeText('ezioauditore9553@gmail.com').then(() => {
+        showToast('Email copied to clipboard!', 'content_copy');
+      });
+    });
   }
-
-  // --- Developer Support & Contact Us Modal Controller ---
-  function openContactModal() {
-    const modal = document.createElement('div');
-    // Support modal is dynamically created — use inline styles for backdrop
-    // (not class-based .active toggling used by static HTML modals)
-    modal.style.cssText = [
-      'position:fixed', 'inset:0', 'width:100vw', 'height:100vh',
-      'background:rgba(0,0,0,0.82)', 'backdrop-filter:blur(8px)',
-      '-webkit-backdrop-filter:blur(8px)', 'z-index:99999',
-      'display:flex', 'align-items:center', 'justify-content:center',
-      'padding:16px', 'box-sizing:border-box'
-    ].join(';');
-
-    const userEmail = (state.personal && state.personal.syncEmail) || '';
-    const docName = (state.personal && state.personal.doctorName) || 'Dr. Aspirant';
-    const streak = typeof getStudyStreak === 'function' ? getStudyStreak() : 0;
-    const overallMastery = (typeof getSyllabusStats === 'function' && getSyllabusStats().percentage) || 0;
-    const sysInfo = `Doctor: ${docName} | Streak: ${streak}d | Mastery: ${overallMastery}% | App Version: v111.0`;
-
-    modal.innerHTML = `
-      <div class="modal-card" style="max-width: 520px; width: 92%;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--retro-cyan, #00f0ff); padding-bottom: 12px;">
-          <div>
-            <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, #ffcc00); letter-spacing: 0.08em; text-transform: uppercase;">
-              <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">push_pin</span> FLOWMD DEVELOPER SUPPORT
-            </div>
-            <h3 style="font-family: var(--font-display), monospace; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0; display: flex; align-items: center; gap: 8px;">
-              <span class="material-symbols-outlined" style="color: var(--retro-cyan, #00f0ff);">support_agent</span>
-              <span>Contact Developer & Support</span>
-            </h3>
-          </div>
-          <button id="btn-close-contact-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1;"><span class="material-symbols-outlined" style="font-size:20px;">close</span></button>
-        </div>
-
-        <div id="contact-form-container">
-          <form id="contact-support-form">
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label for="contact-category" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Topic / Category</label>
-              <select id="contact-category" class="form-select" style="height: 42px; font-weight: 600; font-family: inherit;">
-<option value="bug_report"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">bug_report</span> Bug Report / Technical Issue</option>
-                  <option value="feature_request"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">lightbulb</span> Feature Suggestion / Idea</option>
-                  <option value="dual_track_help"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">bolt</span> Dual-Track Setup Assistance</option>
-                  <option value="general_feedback" selected><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">mail</span> General Feedback & Inquiry</option>
-                  <option value="data_sync_help"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">cloud</span> Google Cloud Sync Question</option>
-              </select>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-              <div class="form-group" style="margin: 0;">
-                <label for="contact-email" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Your Email / Contact</label>
-                <input type="email" id="contact-email" class="form-input" value="${userEmail}" placeholder="doctor@example.com" style="height: 42px; font-family: inherit;">
-              </div>
-              <div class="form-group" style="margin: 0;">
-                <label for="contact-priority" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Priority Level</label>
-                <select id="contact-priority" class="form-select" style="height: 42px; font-family: inherit;">
-                  <option value="normal" selected><span class="material-symbols-outlined" style="font-size:15px;color:#10b981;">circle</span> Normal (Routine)</option>
-                  <option value="high"><span class="material-symbols-outlined" style="font-size:15px;color:#f59e0b;">circle</span> High (Important)</option>
-                  <option value="urgent"><span class="material-symbols-outlined" style="font-size:15px;color:#ef4444;">circle</span> Urgent (App Blocking)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label for="contact-subject" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Subject</label>
-              <input type="text" id="contact-subject" class="form-input" placeholder="e.g. Assistance with Dual-Track Plan B Schedule" style="height: 42px; font-family: inherit;">
-            </div>
-
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label for="contact-message" style="font-family: var(--font-hud); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">Detailed Description / Message</label>
-              <textarea id="contact-message" class="form-input" style="height: 90px; padding: 10px; font-family: inherit; line-height: 1.4; resize: vertical;" placeholder="Describe what you experienced or what feature you would love to see..."></textarea>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 16px; background: var(--bg-surface-raised, rgba(255,255,255,0.03)); padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 2px;">
-              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 0; font-family: var(--font-hud); font-size: 0.88rem; color: var(--text-primary);">
-                <input type="checkbox" id="contact-include-telemetry" checked style="width: 16px; height: 16px;">
-                <span>Include System Telemetry (Exam, Streak, Progress & Version)</span>
-              </label>
-              <div style="font-family: var(--font-hud); font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">
-                ⚡ ${sysInfo}
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 10px;">
-              <button type="submit" id="btn-submit-support-ticket" class="v2-arcade-btn" style="flex: 1; height: 46px; background: var(--accent-primary, #2563eb); color: #ffffff; font-size: 0.95rem;">
-                <span class="material-symbols-outlined">send</span> Submit Support Ticket
-              </button>
-              <button type="button" id="btn-cancel-contact-modal" class="v2-arcade-btn" style="height: 46px; background: var(--bg-surface-raised); color: var(--text-primary);">
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden'; // Bug Fix #5: lock body scroll while modal is open
-
-    const closeModal = () => {
-      modal.remove();
-      document.body.style.overflow = ''; // restore scroll on close
-    };
-    modal.querySelector('#btn-close-contact-modal').onclick = closeModal;
-    modal.querySelector('#btn-cancel-contact-modal').onclick = closeModal;
-
-    const handleFormSubmit = (e) => {
-      if (e) e.preventDefault();
-      const category = modal.querySelector('#contact-category')?.value || 'general_feedback';
-      const email = modal.querySelector('#contact-email')?.value || state.personal.syncEmail || 'doctor@flowmd.app';
-      const priority = modal.querySelector('#contact-priority')?.value || 'normal';
-      const subject = modal.querySelector('#contact-subject')?.value || 'General Support Ticket';
-      const message = modal.querySelector('#contact-message')?.value || 'Support request submitted from FlowMD App.';
-      const includeTelemetry = modal.querySelector('#contact-include-telemetry')?.checked ?? true;
-
-      // Bug Fix #4: validate required fields before submitting
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        showToast('Please enter a valid email address.', 'error');
-        return;
-      }
-      if (!message || message.trim().length < 10) {
-        showToast('Please describe your issue (min 10 characters).', 'error');
-        return;
-      }
-
-      const ticketId = 'FLOWMD-TKT-' + Math.floor(1000 + Math.random() * 9000);
-      const ticketData = {
-        ticketId,
-        category,
-        email,
-        priority,
-        subject,
-        message,
-        telemetry: includeTelemetry ? sysInfo : 'None',
-        createdAt: new Date().toISOString(),
-        status: 'Open'
-      };
-
-      if (!state.supportTickets) state.supportTickets = [];
-      state.supportTickets.unshift(ticketData);
-      saveState();
-
-      if (typeof db !== 'undefined' && db && db.collection) {
-        db.collection('support_tickets').add(ticketData).catch(err => console.log('Offline ticket queued', err));
-      }
-
-      showToast(`Support Ticket ${ticketId} Created!`, 'mark_email_read');
-
-      const containerEl = modal.querySelector('#contact-form-container');
-      if (containerEl) {
-        containerEl.innerHTML = `
-          <div style="text-align: center; padding: 20px 10px;">
-            <div style="width: 56px; height: 56px; background: var(--success-bg, rgba(16,185,129,0.15)); color: var(--success, #10b981); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 32px; font-weight: bold;">
-              <span class="material-symbols-outlined" style="font-size:28px;">check_circle</span>
-            </div>
-            <h4 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">Ticket Submitted Successfully!</h4>
-            <p style="font-family: var(--font-hud); font-size: 1rem; color: var(--text-secondary); margin-bottom: 16px;">
-              Reference ID: <strong style="color: var(--accent-primary, #2563eb); font-size: 1.1rem;">${ticketId}</strong>
-            </p>
-            <div style="background: var(--bg-surface-raised); border: 1px solid var(--border-color); padding: 12px; border-radius: 4px; text-align: left; font-size: 0.88rem; margin-bottom: 20px;">
-              <div><strong>Subject:</strong> ${subject}</div>
-              <div><strong>Category:</strong> ${category.replace('_', ' ').toUpperCase()} (${priority.toUpperCase()})</div>
-              <div><strong>Contact Email:</strong> ${email}</div>
-              <div style="margin-top: 6px; color: var(--text-muted); font-size: 0.8rem;">Our engineering team will review your ticket and reply to ${email} within 24 hours.</div>
-            </div>
-            <button class="v2-arcade-btn" id="btn-close-ticket-success" style="width: 100%; height: 44px; background: var(--v2-pine-green, #10b981); color: #fff;">Done</button>
-          </div>
-        `;
-
-        const doneBtn = modal.querySelector('#btn-close-ticket-success');
-        if (doneBtn) doneBtn.onclick = closeModal;
-      }
-    };
-
-    const formEl = modal.querySelector('#contact-support-form');
-    if (formEl) formEl.onsubmit = handleFormSubmit;
-    // Bug Fix #1: removed submitBtn.onclick — button is type="submit" inside the form,
-    // so form.onsubmit already handles it. Adding onclick too caused double-submission.
-  }
-
-  // --- Global Event Delegation for Contact & Support Feature Buttons ---
-  document.addEventListener('click', (e) => {
-    const contactBtn = e.target.closest('#btn-open-contact-modal, .btn-contact-support, #bs-btn-contact-developer, [data-action="open-contact"]');
-    if (contactBtn) {
-      e.preventDefault();
-      if (typeof closeBottomSheet === 'function') closeBottomSheet();
-      // Bug Fix #2: delay modal open to let bottom sheet slide-down transition finish (~300ms)
-      // before appending modal to body — prevents iOS Safari clipping issue
-      setTimeout(openContactModal, 320);
-    }
-  });
 
   // --- Profile Bottom Sheet Controller ---
   function openProfileBottomSheet() {
@@ -2695,24 +2749,21 @@
     DOM.bottomSheetContent.innerHTML = `
       <div style="text-align: center; margin-bottom: 16px;">
         <div class="pxl-avatar pxl-avatar-lg pxl-avatar-cyan" style="margin: 0 auto 8px auto;">
-          ${initials}
+          ${escapeHtml(initials)}
         </div>
-        <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;">${docName}</div>
+        <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;">${escapeHtml(docName)}</div>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <button class="v2-arcade-btn" id="bs-btn-view-profile" style="width: 100%; justify-content: flex-start;">
           <span class="material-symbols-outlined">person</span> View Full Profile & Settings
         </button>
-        <button class="v2-arcade-btn btn-contact-support" id="bs-btn-contact-developer" style="width: 100%; justify-content: flex-start; background: var(--accent-primary, #2563eb); color: #ffffff;">
-          <span class="material-symbols-outlined">support_agent</span> Contact Developer & Support
-        </button>
         <button class="v2-arcade-btn" id="bs-btn-view-goals" style="width: 100%; justify-content: flex-start;">
           <span class="material-symbols-outlined">tune</span> Synchronize Pace & Goals
         </button>
         ${isSynced ? `
           <button class="v2-arcade-btn" id="bs-btn-logout" style="width: 100%; justify-content: flex-start; background: var(--danger);">
-            <span class="material-symbols-outlined">logout</span> Sign Out (${syncEmail})
+            <span class="material-symbols-outlined">logout</span> Sign Out (${escapeHtml(syncEmail)})
           </button>
         ` : `
           <button class="v2-arcade-btn" id="bs-btn-login" style="width: 100%; justify-content: flex-start;">
@@ -2731,7 +2782,7 @@
 
     document.getElementById('bs-btn-view-goals')?.addEventListener('click', () => {
       closeBottomSheet();
-      openGoalModal();
+      focusStudyPlanConfig();
     });
 
     document.getElementById('bs-btn-login')?.addEventListener('click', async () => {
@@ -2839,8 +2890,15 @@
   }
 
   // --- Goal Modal Helpers (Dual-Plan Fully Functional) ---
-  function openGoalModal() {
-    if (!DOM.goalModal) return;
+  function focusStudyPlanConfig() {
+    if (state.currentView !== 'dashboard') {
+      switchView('dashboard');
+    }
+    const card = document.getElementById('study-plan-config');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function initStudyPlanConfig() {
     const subSelectA = document.getElementById('select-target-subject');
     const subSelectB = document.getElementById('select-target-subject-b');
     const srcLabelEl = document.getElementById('goal-source-label');
@@ -2956,7 +3014,7 @@
       container.innerHTML = `
         <div class="gcm-chips-search">
           <span class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);">search</span>
-          <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:var(--font-hud); font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
+          <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:'Poppins', sans-serif; font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
         </div>
         <div class="gcm-chips-list" style="max-height:280px; overflow-y:auto;">${allChip + chapters.map(c => {
         const name = String(c.name);
@@ -3006,35 +3064,42 @@
     const togglePlanB = document.getElementById('toggle-plan-b');
     if (togglePlanB) togglePlanB.checked = hasPlanB;
 
-    const tabA = document.getElementById('goal-tab-plan-a');
-    const tabB = document.getElementById('goal-tab-plan-b');
+    const planSelect = document.getElementById('goal-plan-select');
     const formA = document.getElementById('goal-plan-a-form');
     const formB = document.getElementById('goal-plan-b-form');
+    const dualStatusEl = document.getElementById('spc-dual-status');
 
-    function switchGoalTab(activeTab) {
-      if (activeTab === 'plan_a') {
-        if (tabA) { tabA.classList.add('active'); tabA.style.background = '#3b82f633'; tabA.style.opacity = '1'; }
-        if (tabB) { tabB.classList.remove('active'); tabB.style.background = 'transparent'; tabB.style.opacity = '0.8'; }
-        if (formA) formA.style.display = 'block';
-        if (formB) formB.style.display = 'none';
-        synchronizeModalPace('init', 'plan_a');
-      } else {
-        if (tabB) { tabB.classList.add('active'); tabB.style.background = '#f43f5e33'; tabB.style.opacity = '1'; }
-        if (tabA) { tabA.classList.remove('active'); tabA.style.background = 'transparent'; tabA.style.opacity = '0.8'; }
-        if (formB) formB.style.display = 'block';
-        if (formA) formA.style.display = 'none';
-        if (togglePlanB && !togglePlanB.checked) {
-          togglePlanB.checked = true;
-          if (state.plans.length < 2) {
-            state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
-          }
-        }
-        synchronizeModalPace('init', 'plan_b');
+    function syncPlanSelectOptions() {
+      if (!planSelect) return;
+      const hasB = state.plans.length >= 2 || (togglePlanB && togglePlanB.checked);
+      const optB = planSelect.querySelector('option[value="plan_b"]');
+      if (hasB && !optB) {
+        const opt = document.createElement('option');
+        opt.value = 'plan_b';
+        opt.textContent = 'Plan B — Secondary Target';
+        planSelect.appendChild(opt);
+      } else if (!hasB && optB) {
+        optB.remove();
       }
     }
 
-    if (tabA) tabA.onclick = () => switchGoalTab('plan_a');
-    if (tabB) tabB.onclick = () => switchGoalTab('plan_b');
+    function switchGoalTab(activePlan) {
+      const isB = (activePlan === 'plan_b');
+      if (planSelect) planSelect.value = isB ? 'plan_b' : 'plan_a';
+      if (formA) formA.style.display = isB ? 'none' : 'block';
+      if (formB) formB.style.display = isB ? 'block' : 'none';
+      if (dualStatusEl) dualStatusEl.textContent = isB ? 'On' : 'Off';
+      if (isB && togglePlanB && !togglePlanB.checked) {
+        togglePlanB.checked = true;
+        if (state.plans.length < 2) {
+          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
+        }
+      }
+      synchronizeModalPace('init', isB ? 'plan_b' : 'plan_a');
+    }
+
+    syncPlanSelectOptions();
+    if (planSelect) planSelect.onchange = () => switchGoalTab(planSelect.value);
 
     if (togglePlanB) {
       togglePlanB.onchange = () => {
@@ -3042,11 +3107,13 @@
           if (state.plans.length < 2) {
             state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
           }
+          syncPlanSelectOptions();
           switchGoalTab('plan_b');
         } else {
           if (state.plans.length >= 2) {
             state.plans.splice(1, 1);
           }
+          syncPlanSelectOptions();
           switchGoalTab('plan_a');
         }
         saveState();
@@ -3074,7 +3141,6 @@
 
         saveState();
         showToast('Plan A Target Configured & Saved!', 'check_circle', 'Plan A Updated');
-        closeGoalModal();
         render();
       };
     }
@@ -3096,7 +3162,6 @@
 
         saveState();
         showToast('Plan B Target Configured & Saved!', 'check_circle', 'Plan B Updated');
-        closeGoalModal();
         render();
       };
     }
@@ -3110,43 +3175,21 @@
         saveState();
         showToast('Plan B Target Disabled.', 'info', 'Single Plan Mode');
         switchGoalTab('plan_a');
-        closeGoalModal();
         render();
       };
     }
 
-    // Close & Cancel buttons
-    const btnCancelA = document.getElementById('btn-cancel-goals');
-    if (btnCancelA) btnCancelA.onclick = closeGoalModal;
-    const btnCancelB = document.getElementById('btn-cancel-goals-b');
-    if (btnCancelB) btnCancelB.onclick = closeGoalModal;
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-    if (modalCloseBtn) modalCloseBtn.onclick = closeGoalModal;
-
     // --- Mode Switchers for Plan A ---
     const btnVideoA = document.getElementById('tab-btn-video');
-    const btnHoursA = document.getElementById('tab-btn-hours');
     const fieldsVideoA = document.getElementById('fields-video-mode');
-    const fieldsHoursA = document.getElementById('fields-hours-mode');
+    state.goals.goalMode = 'video';
 
     function setModalModeA(mode) {
       state.goals.goalMode = mode;
-      if (mode === 'video') {
-        if (btnVideoA) btnVideoA.classList.add('active');
-        if (btnHoursA) btnHoursA.classList.remove('active');
-        if (fieldsVideoA) fieldsVideoA.style.display = 'block';
-        if (fieldsHoursA) fieldsHoursA.style.display = 'none';
-      } else {
-        if (btnHoursA) btnHoursA.classList.add('active');
-        if (btnVideoA) btnVideoA.classList.remove('active');
-        if (fieldsHoursA) fieldsHoursA.style.display = 'block';
-        if (fieldsVideoA) fieldsVideoA.style.display = 'none';
-      }
       synchronizeModalPace('init', 'plan_a');
     }
 
     if (btnVideoA) btnVideoA.onclick = () => setModalModeA('video');
-    if (btnHoursA) btnHoursA.onclick = () => setModalModeA('hours');
 
     if (subSelectA) subSelectA.onchange = () => {
       renderUnitChips('plan_a', subSelectA.value);
@@ -3157,28 +3200,15 @@
 
     // --- Mode Switchers for Plan B ---
     const btnVideoB = document.getElementById('tab-btn-video-b');
-    const btnHoursB = document.getElementById('tab-btn-hours-b');
     const fieldsVideoB = document.getElementById('fields-video-mode-b');
-    const fieldsHoursB = document.getElementById('fields-hours-mode-b');
+    state.goals.goalModeB = 'video';
 
     function setModalModeB(mode) {
       state.goals.goalModeB = mode;
-      if (mode === 'video') {
-        if (btnVideoB) btnVideoB.classList.add('active');
-        if (btnHoursB) btnHoursB.classList.remove('active');
-        if (fieldsVideoB) fieldsVideoB.style.display = 'block';
-        if (fieldsHoursB) fieldsHoursB.style.display = 'none';
-      } else {
-        if (btnHoursB) btnHoursB.classList.add('active');
-        if (btnVideoB) btnVideoB.classList.remove('active');
-        if (fieldsHoursB) fieldsHoursB.style.display = 'block';
-        if (fieldsVideoB) fieldsVideoB.style.display = 'none';
-      }
       synchronizeModalPace('init', 'plan_b');
     }
 
     if (btnVideoB) btnVideoB.onclick = () => setModalModeB('video');
-    if (btnHoursB) btnHoursB.onclick = () => setModalModeB('hours');
 
     if (subSelectB) subSelectB.onchange = () => {
       renderUnitChips('plan_b', subSelectB.value);
@@ -3202,7 +3232,7 @@
     });
 
     // Stepper buttons (±) for the pace inputs
-    document.querySelectorAll('#goal-modal .gcm-step').forEach(btn => {
+    document.querySelectorAll('#study-plan-config .gcm-step').forEach(btn => {
       btn.onclick = (e) => {
         e.preventDefault();
         const wrap = btn.closest('.gcm-pace-input-wrap');
@@ -3217,11 +3247,10 @@
         input.value = val;
         const isPlanB = !!btn.closest('#goal-plan-b-form');
         const planKey = isPlanB ? 'plan_b' : 'plan_a';
-        const isHours = !!input.closest('#fields-hours-mode' + (isPlanB ? '-b' : ''));
         const isDaily = /per-day|daily-target/.test(input.id);
         if (isDaily) {
-          synchronizeModalPace(isHours ? 'dailyHours' : 'dailyVids', planKey);
-        } else if (!isHours) {
+          synchronizeModalPace('dailyVids', planKey);
+        } else {
           const vidsWeek = document.getElementById(isPlanB ? 'input-videos-per-week-b' : 'input-videos-per-week');
           const vidsMonth = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
           const day = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
@@ -3233,7 +3262,6 @@
     switchGoalTab('plan_a');
     setModalModeA(state.goals.goalMode || 'video');
     setModalModeB(state.goals.goalModeB || 'video');
-    DOM.goalModal.style.display = 'flex';
   }
 
   function synchronizeModalPace(source, planKey = 'plan_a') {
@@ -3248,7 +3276,6 @@
     const badge = document.getElementById(isPlanB ? 'days-remaining-badge-b' : 'days-remaining-badge');
     const bannerText = document.getElementById(isPlanB ? 'smart-math-text-b' : 'smart-math-text');
     const vidsInput = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
-    const hoursInput = document.getElementById(isPlanB ? 'input-daily-target-b' : 'input-daily-target');
 
     let now = new Date();
     const planObj = isPlanB ? (state.plans[1] || {}) : (state.plans[0] || {});
@@ -3273,11 +3300,6 @@
       days = Math.ceil(metrics.remainingVideos / userVids);
       targetDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
       if (dateInput) dateInput.value = targetDate.toISOString().slice(0, 10);
-    } else if (source === 'dailyHours') {
-      const userHours = Math.max(0.5, parseFloat(hoursInput ? hoursInput.value : 0.5) || 0.5);
-      days = Math.ceil(metrics.remainingHours / userHours);
-      targetDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-      if (dateInput) dateInput.value = targetDate.toISOString().slice(0, 10);
     }
 
     if (badge) badge.textContent = `${days} Days Left`;
@@ -3291,16 +3313,6 @@
     if (vidsWeekEl) vidsWeekEl.value = weeklyVids;
     const vidsMonthEl = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
     if (vidsMonthEl) vidsMonthEl.value = monthlyVids;
-
-    const dailyHours = Math.max(0.1, (metrics.remainingHours / days)).toFixed(1);
-    const weeklyHours = (parseFloat(dailyHours) * 7).toFixed(1);
-    const monthlyHours = Math.round(parseFloat(dailyHours) * 30);
-
-    if (source !== 'dailyHours' && hoursInput) hoursInput.value = dailyHours;
-    const hrsWeekEl = document.getElementById(isPlanB ? 'input-weekly-target-b' : 'input-weekly-target');
-    if (hrsWeekEl) hrsWeekEl.value = weeklyHours;
-    const hrsMonthEl = document.getElementById(isPlanB ? 'input-monthly-target-b' : 'input-monthly-target');
-    if (hrsMonthEl) hrsMonthEl.value = monthlyHours;
 
     const dateFormatted = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
@@ -3318,10 +3330,6 @@
         }
       }
     }
-  }
-
-  function closeGoalModal() {
-    if (DOM.goalModal) DOM.goalModal.style.display = 'none';
   }
 
   // --- Study Source Settings Modal (separate dialog from Profile → Settings) ---

@@ -7,7 +7,11 @@
 
   const toastQueue = [];
   let toastActive = false;
-  const MAX_TOASTS = 3;
+  const MAX_TOASTS = 2;
+
+  const escapeHtml = (window.FlowMD.constants && window.FlowMD.constants.escapeHtml)
+    ? window.FlowMD.constants.escapeHtml
+    : (v) => String(v == null ? '' : v);
 
   function dismissToast(toast) {
     if (toast.classList.contains('dismissing')) return;
@@ -51,10 +55,10 @@
       box-shadow: 0 8px 24px -4px rgba(0,0,0,0.2);
     `;
     
-    const titleHtml = title ? `<div class="pxl-alert-title">${title}</div>` : '';
+    const titleHtml = title ? `<div class="pxl-alert-title">${escapeHtml(title)}</div>` : '';
     toast.innerHTML = `
       <span class="material-symbols-outlined pxl-alert-icon">${alertIcon}</span>
-      <div class="pxl-alert-content">${titleHtml}<div class="pxl-alert-message">${message}</div></div>
+      <div class="pxl-alert-content">${titleHtml}<div class="pxl-alert-message">${escapeHtml(message)}</div></div>
       <button class="pxl-alert-close-btn" aria-label="Dismiss"><span class="material-symbols-outlined">close</span></button>
     `;
 

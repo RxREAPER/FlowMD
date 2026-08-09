@@ -1,17 +1,68 @@
-name: Deploy to Firebase Hosting
+name: FlowMD CI / Deploy
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  # Runs on every push to main (and manually). Never deploys.
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Install Playwright browser
+        run: npx playwright install chromium
+
+      - name: Run tests
+        run: node tests/smoke.mjs && node tests/onboarding.mjs
+
+  # Manual-deploy gate: only fired from the Actions tab ("Run workflow"),
+  # so a push to main never auto-deploys to the live site.
+  deploy:
+    needs: test
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install
 
       - name: Bump cache version
         run: node scripts/bump-version.js
 
+      - name: Commit version bump back to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No version change to commit"
+          else
+            git commit -m "chore: bump cache version"
+            git push
+          fi
+
       - name: Deploy to Firebase
-        run: npx firebase-tools deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}"
+        run: npx firebase-tools deploy --only hosting,firestore:rules --token "${{ secrets.FIREBASE_TOKEN }}"

@@ -661,169 +661,15 @@ const syllabusData = [
       }
     ]
   },
-  {
+    {
     "id": "biochemistry",
     "subject": "Biochemistry",
     "chapters": [
       {
-        "name": "GENERAL",
-        "modules": 53,
-        "hours": 42,
+        "name": "GENERAL BIOCHEMISTRY",
+        "modules": 3,
+        "hours": 1.6,
         "videos": [
-          {
-            "id": "biochemistry__v1",
-            "videoNumber": "#01",
-            "title": "Lipid Metabolism in Fasting State",
-            "durationMins": 73,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v2",
-            "videoNumber": "#02",
-            "title": "Lipid Metabolism in Fed State",
-            "durationMins": 56,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v3",
-            "videoNumber": "#03",
-            "title": "Ketone Body Synthesis",
-            "durationMins": 26,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v4",
-            "videoNumber": "#04",
-            "title": "Lipoproteins and its Metabolism",
-            "durationMins": 48,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v5",
-            "videoNumber": "#05",
-            "title": "Dyslipidemia",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v6",
-            "videoNumber": "#06",
-            "title": "Chemistry of Amino Acids",
-            "durationMins": 70,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v7",
-            "videoNumber": "#07",
-            "title": "Fibrous Proteins",
-            "durationMins": 29,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v8",
-            "videoNumber": "#08",
-            "title": "General Amino Acid Metabolism",
-            "durationMins": 40,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v9",
-            "videoNumber": "#09",
-            "title": "Urea Cycle and Its Disorders",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v10",
-            "videoNumber": "#10",
-            "title": "Aromatic Amino Acids",
-            "durationMins": 67,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v11",
-            "videoNumber": "#11",
-            "title": "Sulphur Containing Amino Acids",
-            "durationMins": 44,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v12",
-            "videoNumber": "#12",
-            "title": "Tryptophan",
-            "durationMins": 34,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v13",
-            "videoNumber": "#13",
-            "title": "Miscellaneous Amino Acids",
-            "durationMins": 62,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v14",
-            "videoNumber": "#14",
-            "title": "Krebs Cycle",
-            "durationMins": 36,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v15",
-            "videoNumber": "#15",
-            "title": "Electron Transport Chain",
-            "durationMins": 49,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v16",
-            "videoNumber": "#16",
-            "title": "Chemistry of Nucleotides",
-            "durationMins": 25,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v17",
-            "videoNumber": "#17",
-            "title": "Metabolism of Nucleotides",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v18",
-            "videoNumber": "#18",
-            "title": "Structure and Organisation of DNA",
-            "durationMins": 47,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v19",
-            "videoNumber": "#19",
-            "title": "DNA Replication",
-            "durationMins": 76,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v20",
-            "videoNumber": "#20",
-            "title": "Transcription",
-            "durationMins": 73,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v21",
-            "videoNumber": "#21",
-            "title": "Translation",
-            "durationMins": 49,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v22",
-            "videoNumber": "#22",
-            "title": "Regulation of Gene Expression",
-            "durationMins": 63,
-            "durationSecs": 0
-          },
           {
             "id": "biochemistry__v23",
             "videoNumber": "#23",
@@ -844,7 +690,14 @@ const syllabusData = [
             "title": "Concept of Enzyme Regulation [4",
             "durationMins": 24,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "ENZYMOLOGY",
+        "modules": 7,
+        "hours": 5.1,
+        "videos": [
           {
             "id": "biochemistry__v26",
             "videoNumber": "#26",
@@ -893,75 +746,19 @@ const syllabusData = [
             "title": "Clinical Enzymology",
             "durationMins": 52,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "CARBOHYDRATE METABOLISM",
+        "modules": 10,
+        "hours": 7.6,
+        "videos": [
           {
             "id": "biochemistry__v33",
             "videoNumber": "#33",
             "title": "Chemistry of Carbohydrates",
             "durationMins": 61,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v34",
-            "videoNumber": "#34",
-            "title": "Hybridization Techniques",
-            "durationMins": 45,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v35",
-            "videoNumber": "#35",
-            "title": "Recombinant DNA Technology",
-            "durationMins": 55,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v36",
-            "videoNumber": "#36",
-            "title": "Amplification and Sequencing Techniques",
-            "durationMins": 84,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v37",
-            "videoNumber": "#37",
-            "title": "Mutation",
-            "durationMins": 33,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v38",
-            "videoNumber": "#38",
-            "title": "Fat Soluble Vitamins",
-            "durationMins": 78,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v39",
-            "videoNumber": "#39",
-            "title": "Hematopoietic Vitamins",
-            "durationMins": 43,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v40",
-            "videoNumber": "#40",
-            "title": "Energy Releasing Vitamins",
-            "durationMins": 37,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v41",
-            "videoNumber": "#41",
-            "title": "Vitamin B6 and C",
-            "durationMins": 23,
-            "durationSecs": 0
-          },
-          {
-            "id": "biochemistry__v42",
-            "videoNumber": "#42",
-            "title": "Heme Metabolism",
-            "durationMins": 60,
             "durationSecs": 0
           },
           {
@@ -1026,6 +823,48 @@ const syllabusData = [
             "title": "Minor Metabolic Pathways",
             "durationMins": 70,
             "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "LIPID METABOLISM",
+        "modules": 7,
+        "hours": 5.9,
+        "videos": [
+          {
+            "id": "biochemistry__v1",
+            "videoNumber": "#01",
+            "title": "Lipid Metabolism in Fasting State",
+            "durationMins": 73,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v2",
+            "videoNumber": "#02",
+            "title": "Lipid Metabolism in Fed State",
+            "durationMins": 56,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v3",
+            "videoNumber": "#03",
+            "title": "Ketone Body Synthesis",
+            "durationMins": 26,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v4",
+            "videoNumber": "#04",
+            "title": "Lipoproteins and its Metabolism",
+            "durationMins": 48,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v5",
+            "videoNumber": "#05",
+            "title": "Dyslipidemia",
+            "durationMins": 43,
+            "durationSecs": 0
           },
           {
             "id": "biochemistry__v52",
@@ -1038,6 +877,216 @@ const syllabusData = [
             "id": "biochemistry__v53",
             "videoNumber": "#53",
             "title": "Phospholipids",
+            "durationMins": 60,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "PROTEINS & AMINO ACIDS",
+        "modules": 8,
+        "hours": 6.5,
+        "videos": [
+          {
+            "id": "biochemistry__v6",
+            "videoNumber": "#06",
+            "title": "Chemistry of Amino Acids",
+            "durationMins": 70,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v7",
+            "videoNumber": "#07",
+            "title": "Fibrous Proteins",
+            "durationMins": 29,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v8",
+            "videoNumber": "#08",
+            "title": "General Amino Acid Metabolism",
+            "durationMins": 40,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v9",
+            "videoNumber": "#09",
+            "title": "Urea Cycle and Its Disorders",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v10",
+            "videoNumber": "#10",
+            "title": "Aromatic Amino Acids",
+            "durationMins": 67,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v11",
+            "videoNumber": "#11",
+            "title": "Sulphur Containing Amino Acids",
+            "durationMins": 44,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v12",
+            "videoNumber": "#12",
+            "title": "Tryptophan",
+            "durationMins": 34,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v13",
+            "videoNumber": "#13",
+            "title": "Miscellaneous Amino Acids",
+            "durationMins": 62,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "BIOENERGETICS",
+        "modules": 2,
+        "hours": 1.4,
+        "videos": [
+          {
+            "id": "biochemistry__v14",
+            "videoNumber": "#14",
+            "title": "Krebs Cycle",
+            "durationMins": 36,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v15",
+            "videoNumber": "#15",
+            "title": "Electron Transport Chain",
+            "durationMins": 49,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "MOLECULAR BIOLOGY",
+        "modules": 11,
+        "hours": 9.9,
+        "videos": [
+          {
+            "id": "biochemistry__v16",
+            "videoNumber": "#16",
+            "title": "Chemistry of Nucleotides",
+            "durationMins": 25,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v17",
+            "videoNumber": "#17",
+            "title": "Metabolism of Nucleotides",
+            "durationMins": 47,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v18",
+            "videoNumber": "#18",
+            "title": "Structure and Organisation of DNA",
+            "durationMins": 47,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v19",
+            "videoNumber": "#19",
+            "title": "DNA Replication",
+            "durationMins": 76,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v20",
+            "videoNumber": "#20",
+            "title": "Transcription",
+            "durationMins": 73,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v21",
+            "videoNumber": "#21",
+            "title": "Translation",
+            "durationMins": 49,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v22",
+            "videoNumber": "#22",
+            "title": "Regulation of Gene Expression",
+            "durationMins": 63,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v34",
+            "videoNumber": "#34",
+            "title": "Hybridization Techniques",
+            "durationMins": 45,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v35",
+            "videoNumber": "#35",
+            "title": "Recombinant DNA Technology",
+            "durationMins": 55,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v36",
+            "videoNumber": "#36",
+            "title": "Amplification and Sequencing Techniques",
+            "durationMins": 84,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v37",
+            "videoNumber": "#37",
+            "title": "Mutation",
+            "durationMins": 33,
+            "durationSecs": 0
+          }
+        ]
+      },
+      {
+        "name": "VITAMINS & MINERALS",
+        "modules": 5,
+        "hours": 4,
+        "videos": [
+          {
+            "id": "biochemistry__v38",
+            "videoNumber": "#38",
+            "title": "Fat Soluble Vitamins",
+            "durationMins": 78,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v39",
+            "videoNumber": "#39",
+            "title": "Hematopoietic Vitamins",
+            "durationMins": 43,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v40",
+            "videoNumber": "#40",
+            "title": "Energy Releasing Vitamins",
+            "durationMins": 37,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v41",
+            "videoNumber": "#41",
+            "title": "Vitamin B6 and C",
+            "durationMins": 23,
+            "durationSecs": 0
+          },
+          {
+            "id": "biochemistry__v42",
+            "videoNumber": "#42",
+            "title": "Heme Metabolism",
             "durationMins": 60,
             "durationSecs": 0
           }

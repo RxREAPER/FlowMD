@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
   <title>FlowMD — Plan. Study. Track. Succeed.</title>
   
   <!-- PWA & Mobile Web App Meta -->
@@ -21,7 +22,7 @@
   <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   
   <!-- Unified Mobile-First Stylesheet -->
@@ -94,37 +95,45 @@
       <!-- Dynamic Views rendered by app.js: dashboard, curriculum, subject_detail, analytics, goals, profile -->
     </main>
 
-    <!-- Sticky Android Bottom Navigation Bar -->
-    <!-- Sticky Android Bottom Navigation Bar (PxlKit Floating Arcade Dock) -->
+    <!-- Sticky Android Bottom Navigation Bar (Modern Floating Dock) -->
     <nav class="android-bottom-nav">
       <button class="android-nav-item active" data-view="dashboard">
-        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
-          <path fill="currentColor" d="M3 3h4v2H3zM9 3h4v2H9zM1 5h8v2H1zM9 5h6v2H9zM1 7h14v2H1zM3 9h10v2H3zM5 11h6v2H5zM7 13h2v2H7z"/>
+        <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
         </svg>
         <span class="nav-bar-label">Dashboard</span>
+        <span class="nav-ripple"></span>
       </button>
       <button class="android-nav-item" data-view="curriculum">
-        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
-          <rect x="2" y="2" width="12" height="12" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
-          <rect x="4" y="3" width="8" height="10" fill="currentColor"/>
-          <rect x="6" y="5" width="4" height="2" fill="#eab308"/>
-          <rect x="7" y="7" width="2" height="2" fill="#eab308"/>
+        <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="9" y1="7" x2="15" y2="7"/>
+          <line x1="9" y1="11" x2="13" y2="11"/>
         </svg>
         <span class="nav-bar-label">Curriculum</span>
+        <span class="nav-ripple"></span>
       </button>
       <button class="android-nav-item" data-view="analytics">
-        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
-          <rect x="2" y="3" width="4" height="2" fill="#eab308"/>
-          <rect x="2" y="5" width="12" height="8" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
-          <rect x="3" y="6" width="6" height="6" fill="currentColor"/>
+        <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+          <line x1="3" y1="20" x2="21" y2="20"/>
         </svg>
         <span class="nav-bar-label">Analytics</span>
+        <span class="nav-ripple"></span>
       </button>
       <button class="android-nav-item" data-view="profile">
-        <svg class="pxl-icon" viewBox="0 0 16 16" width="22" height="22" fill="none">
-          <path fill="currentColor" d="M6 3h4v4H6zM4 8h8v2H4zM3 10h10v4H3z"/>
+        <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
         </svg>
         <span class="nav-bar-label">Profile</span>
+        <span class="nav-ripple"></span>
       </button>
     </nav>
 
@@ -148,7 +157,7 @@
     <div class="modal-card gcm-card">
       <div class="gcm-hero">
         <div class="gcm-hero-top">
-          <button class="gcm-icon-btn" title="Close" onclick="closeModal('source-settings-modal')"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+          <button class="gcm-icon-btn" title="Close" id="source-settings-close"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
         </div>
         <div class="gcm-hero-icon"><span class="material-symbols-outlined">auto_stories</span></div>
         <div class="gcm-hero-kicker">Study Source</div>
@@ -212,332 +221,8 @@
     </div>
   </div>
 
-  <!-- Goal Editing Modal (Dual-Plan Fully Functional) -->
-  <div class="modal-overlay" id="goal-modal" style="display:none; z-index:9995;">
-    <div class="modal-card gcm-card">
-      <!-- Hero Header -->
-      <div class="gcm-hero">
-        <div class="gcm-hero-top">
-          <button class="gcm-icon-btn" id="modal-close-btn" title="Close"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
-        </div>
-        <div class="gcm-hero-icon"><span class="material-symbols-outlined">track_changes</span></div>
-        <div class="gcm-hero-kicker">FlowMD Goal Engine</div>
-        <h2 class="gcm-hero-title">Study Plan Configuration</h2>
-        <p class="gcm-hero-sub">Set your daily pace, target deadline & dual-track goals. Everything auto-synchronizes.</p>
-        <div class="gcm-hero-chips">
-          <span class="gcm-chip"><span class="material-symbols-outlined">bolt</span> Auto-Sync <b>On</b></span>
-          <span class="gcm-chip"><span class="material-symbols-outlined">rocket_launch</span> Dual-Track <b>Ready</b></span>
-          <span class="gcm-chip"><span class="material-symbols-outlined">schedule</span> Live ETA</span>
-        </div>
-      </div>
-
-      <div class="gcm-body">
-        <!-- Plan Tabs + Dual-Track Switch -->
-        <div class="gcm-tabbar">
-          <button type="button" id="goal-tab-plan-a" class="goal-plan-tab gcm-tab active" data-plan-id="plan_a">
-            <span class="gcm-tab-dot" style="--tc:#3b82f6"></span>
-            <span class="gcm-tab-name">Plan A</span>
-            <span class="gcm-tab-sub">Primary</span>
-          </button>
-          <div class="gcm-sep"></div>
-          <label class="gcm-dual">
-            <input type="checkbox" id="toggle-plan-b">
-            <span class="gcm-switch"><i></i></span>
-            <span class="gcm-dual-label">Dual-Track</span>
-          </label>
-          <div class="gcm-sep"></div>
-          <button type="button" id="goal-tab-plan-b" class="goal-plan-tab gcm-tab" data-plan-id="plan_b">
-            <span class="gcm-tab-dot" style="--tc:#f43f5e"></span>
-            <span class="gcm-tab-name">Plan B</span>
-            <span class="gcm-tab-sub">Secondary</span>
-          </button>
-        </div>
-
-        <!-- PLAN A FORM -->
-        <div id="goal-plan-a-form">
-          <div class="gcm-plan-head">
-            <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan A — Primary Target</span>
-            <span class="gcm-plan-role">Main <b>Subject Goal</b></span>
-          </div>
-
-          <form id="goal-form-a" onsubmit="return false;" class="gcm-form">
-            <!-- Goal Mode -->
-            <div class="gcm-field">
-              <label class="gcm-label">Goal Mode</label>
-              <div class="gcm-seg">
-                <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video"><span class="material-symbols-outlined">smart_display</span> Videos</button>
-                <button type="button" class="segment-btn gcm-seg-btn" id="tab-btn-hours"><span class="material-symbols-outlined">schedule</span> Hours</button>
-              </div>
-            </div>
-
-            <!-- Smart Math Banner -->
-            <div class="gcm-hint">
-              <span class="material-symbols-outlined">calculate</span>
-              <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
-            </div>
-
-            <!-- Subject -->
-            <div class="gcm-field">
-              <label class="gcm-label" for="select-target-subject">Priority Target Subject</label>
-              <div class="gcm-select-wrap">
-                <select id="select-target-subject" class="gcm-input"></select>
-                <span class="material-symbols-outlined">expand_more</span>
-              </div>
-            </div>
-
-            <!-- Focus Chapter -->
-            <div class="gcm-field">
-              <div class="gcm-field-head">
-                <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="gcm-chips-count"></span></label>
-              </div>
-              <div class="gcm-hint" style="margin:4px 0 8px 0;">
-                <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
-                <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
-              </div>
-              <div class="gcm-chips" id="chapter-chips-a"></div>
-            </div>
-
-            <!-- Study Source (read-only — change via Settings) -->
-            <div class="gcm-field">
-              <div class="gcm-hint" style="margin:0;">
-                <span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span>
-                <span>Syllabus source: <b id="goal-source-label">Marrow Edition 8</b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
-              </div>
-            </div>
-
-            <!-- Target Date -->
-            <div class="gcm-field">
-              <div class="gcm-field-head">
-                <label class="gcm-label" for="input-target-date" style="margin:0;">Target Deadline</label>
-                <span id="days-remaining-badge" class="gcm-badge">26 Days Left</span>
-              </div>
-              <input type="date" id="input-target-date" value="2026-08-15" class="gcm-input">
-            </div>
-
-            <!-- Video Pace -->
-            <div id="fields-video-mode" class="gcm-pace-grid" style="display:grid;">
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                  <input type="number" min="1" id="input-videos-per-day" value="8" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                  <input type="number" min="1" id="input-videos-per-week" value="56" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                  <input type="number" min="1" id="input-videos-per-month" value="240" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-            </div>
-
-            <!-- Hours Pace -->
-            <div id="fields-hours-mode" class="gcm-pace-grid" style="display:none;">
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">hrs</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-field="input-daily-target">&#8722;</button>
-                  <input type="number" step="0.5" min="0.5" max="24" id="input-daily-target" value="3.5" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-field="input-daily-target">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily-h" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">hrs</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-field="input-weekly-target">&#8722;</button>
-                  <input type="number" step="1" min="1" max="168" id="input-weekly-target" value="24.5" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-field="input-weekly-target">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly-h" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">hrs</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-field="input-monthly-target">&#8722;</button>
-                  <input type="number" step="5" min="5" max="720" id="input-monthly-target" value="105" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-field="input-monthly-target">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly-h" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-            </div>
-
-            <!-- Math Guide -->
-            <div class="gcm-guide math-guide-card">
-              <div class="gcm-guide-header math-guide-header">
-                <span class="material-symbols-outlined">info</span>
-                <span>How Plan A Date &amp; Pace Auto-Synchronize</span>
-                <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
-              </div>
-              <div class="gcm-guide-body math-guide-body">
-                <strong>Auto-Synchronization:</strong><br>
-                &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan A <strong>Daily Pace</strong>.<br>
-                &bull; Changing <strong>Daily Pace</strong> auto-updates Plan A <strong>Target Date</strong>.
-              </div>
-            </div>
-
-            <div class="gcm-actions">
-              <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals">
-                <span class="material-symbols-outlined">check_circle</span>
-                <span>Save &amp; Apply Plan A Target</span>
-              </button>
-              <button type="button" class="gcm-btn gcm-btn-ghost" id="btn-cancel-goals">Cancel</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- PLAN B FORM -->
-        <div id="goal-plan-b-form" style="display:none;">
-          <div class="gcm-plan-head">
-            <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan B — Secondary Target</span>
-            <span class="gcm-plan-role">Parallel <b>Subject Goal</b></span>
-          </div>
-
-          <form id="goal-form-b" onsubmit="return false;" class="gcm-form">
-            <div class="gcm-field">
-              <label class="gcm-label">Goal Mode</label>
-              <div class="gcm-seg">
-                <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video-b"><span class="material-symbols-outlined">smart_display</span> Videos</button>
-                <button type="button" class="segment-btn gcm-seg-btn" id="tab-btn-hours-b"><span class="material-symbols-outlined">schedule</span> Hours</button>
-              </div>
-            </div>
-
-            <div class="gcm-hint">
-              <span class="material-symbols-outlined">calculate</span>
-              <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
-            </div>
-
-            <div class="gcm-field">
-              <label class="gcm-label" for="select-target-subject-b">Priority Target Subject</label>
-              <div class="gcm-select-wrap">
-                <select id="select-target-subject-b" class="gcm-input"></select>
-                <span class="material-symbols-outlined">expand_more</span>
-              </div>
-            </div>
-
-            <!-- Focus Chapter -->
-            <div class="gcm-field">
-              <div class="gcm-field-head">
-                <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="gcm-chips-count"></span></label>
-              </div>
-              <div class="gcm-hint" style="margin:4px 0 8px 0;">
-                <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
-                <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
-              </div>
-              <div class="gcm-chips" id="chapter-chips-b"></div>
-            </div>
-
-            <div class="gcm-field">
-              <div class="gcm-field-head">
-                <label class="gcm-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
-                <span id="days-remaining-badge-b" class="gcm-badge">26 Days Left</span>
-              </div>
-              <input type="date" id="input-target-date-b" value="2026-08-15" class="gcm-input">
-            </div>
-
-            <div id="fields-video-mode-b" class="gcm-pace-grid" style="display:grid;">
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                  <input type="number" min="1" id="input-videos-per-day-b" value="8" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                  <input type="number" min="1" id="input-videos-per-week-b" value="56" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                  <input type="number" min="1" id="input-videos-per-month-b" value="240" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-            </div>
-
-            <div id="fields-hours-mode-b" class="gcm-pace-grid" style="display:none;">
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">hrs</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-field="input-daily-target-b">&#8722;</button>
-                  <input type="number" step="0.5" min="0.5" max="24" id="input-daily-target-b" value="3.5" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-field="input-daily-target-b">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily-h-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">hrs</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-field="input-weekly-target-b">&#8722;</button>
-                  <input type="number" step="1" min="1" max="168" id="input-weekly-target-b" value="24.5" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-field="input-weekly-target-b">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly-h-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-              <div class="gcm-pace">
-                <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">hrs</span></div>
-                <div class="gcm-pace-input-wrap">
-                  <button type="button" class="gcm-step" data-step-field="input-monthly-target-b">&#8722;</button>
-                  <input type="number" step="5" min="5" max="720" id="input-monthly-target-b" value="105" class="gcm-pace-input">
-                  <button type="button" class="gcm-step" data-step-field="input-monthly-target-b">+</button>
-                </div>
-                <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly-h-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
-              </div>
-            </div>
-
-            <div class="gcm-guide math-guide-card">
-              <div class="gcm-guide-header math-guide-header">
-                <span class="material-symbols-outlined">info</span>
-                <span>How Plan B Date &amp; Pace Auto-Synchronize</span>
-                <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
-              </div>
-              <div class="gcm-guide-body math-guide-body">
-                <strong>Auto-Synchronization:</strong><br>
-                &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan B <strong>Daily Pace</strong>.<br>
-                &bull; Changing <strong>Daily Pace</strong> auto-updates Plan B <strong>Target Date</strong>.
-              </div>
-            </div>
-
-            <div class="gcm-actions">
-              <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals-b">
-                <span class="material-symbols-outlined">check_circle</span>
-                <span>Save &amp; Apply Plan B Target</span>
-              </button>
-              <button type="button" class="gcm-btn gcm-btn-danger" id="btn-remove-plan-b">
-                <span class="material-symbols-outlined">disabled_by_default</span>
-                <span>Disable / Remove Plan B</span>
-              </button>
-              <button type="button" class="gcm-btn gcm-btn-ghost" id="btn-cancel-goals-b">Cancel</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Study Plan Configuration (inline dashboard section, no popup) -->
+  
   <!-- PxlKit Interactive Info & Explanation Popover Modal -->
   <div class="modal-overlay" id="info-popover-modal" style="display:none; z-index: 9999;">
     <div class="pxl-feature-card-wrapper" style="max-width: 460px; width: 92%;">
@@ -571,11 +256,11 @@
     <div class="modal-card v2-pixel-card spotlight-card" style="max-width: 580px; width: 95%; max-height: 82vh; padding: 0; overflow: hidden; border: 2px solid var(--v2-ink);">
       <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 2px solid var(--v2-ink); background: var(--bg-surface);">
         <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 22px;">search</span>
-        <input type="text" id="spotlight-search-input" placeholder="SEARCH 19 SUBJECTS, CHAPTERS, OR VIDEO TOPICS..." autocomplete="off" style="flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-family: var(--font-hud); font-size: 1.15rem; letter-spacing: 0.04em;">
+        <input type="text" id="spotlight-search-input" placeholder="SEARCH 19 SUBJECTS, CHAPTERS, OR VIDEO TOPICS..." autocomplete="off" style="flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-family: 'Poppins', sans-serif; font-size: 1.15rem; letter-spacing: 0.04em;">
         <button class="v2-arcade-btn" id="spotlight-close-btn" title="Close" style="width: 32px; height: 32px; padding: 0;"><span class="material-symbols-outlined" style="font-size: 18px;">close</span></button>
       </div>
       <div id="spotlight-results-container" style="padding: 16px 18px; max-height: calc(82vh - 65px); overflow-y: auto;">
-        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: var(--font-hud); font-size: 1.1rem;">
+        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Poppins', sans-serif; font-size: 1.1rem;">
           Type to search across 20 MBBS subjects, chapters, and 2,000+ video topics...
         </div>
       </div>

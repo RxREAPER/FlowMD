@@ -56,7 +56,7 @@ async function dismissOverlays(page) {
       if (el.style.position === 'fixed' && el.style.zIndex === '99999') el.remove();
     });
     // Hide static modals (keep in DOM — they are re-used later)
-    ['#source-settings-modal', '#goal-modal', '#bottom-sheet-overlay'].forEach(sel => {
+    ['#source-settings-modal', '#bottom-sheet-overlay'].forEach(sel => {
       const el = document.querySelector(sel);
       if (el) el.style.display = 'none';
     });
@@ -98,6 +98,12 @@ async function run() {
   // Dashboard view (default)
   const dashText = await page.locator('#app-main').innerText();
   check('Dashboard view renders content', dashText.length > 50);
+
+  // Study plan config is always-visible inline on the dashboard
+  const configVisible = await page.locator('#study-plan-config').isVisible();
+  check('Study plan config card is visible inline on dashboard', configVisible === true);
+  check('Study plan config shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
+  check('Study plan config has plan selector', await page.locator('#goal-plan-select').count() === 1);
 
   // Curriculum view
   await clickNav(page, 'curriculum');
@@ -152,21 +158,6 @@ async function run() {
       return Array.from(document.querySelectorAll('div')).some(el => el.style.zIndex === '99999' && el.style.position === 'fixed');
     });
     check('Source settings modal opens (dynamic)', dynModal === true);
-    await dismissOverlays(page);
-  }
-
-  // Goal modal (reliable trigger: Analytics view "Open Goals" button)
-  await dismissOverlays(page);
-  await clickNav(page, 'analytics');
-  await page.waitForTimeout(300);
-  const goalCta = await page.locator('#btn-analytics-open-goals').count();
-  check('Goal modal trigger present', goalCta > 0);
-  if (goalCta) {
-    await page.locator('#btn-analytics-open-goals').click().catch(() => {});
-    await page.waitForTimeout(300);
-    const goalVisible = await page.locator('#goal-modal').evaluate(el => el.style.display !== 'none');
-    check('Goal modal opens', goalVisible === true);
-    check('Goal modal shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
     await dismissOverlays(page);
   }
 
