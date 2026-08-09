@@ -61,7 +61,8 @@ const PXL_ICONS = {
     TUTORIAL_SEEN: 'flowmd_tutorial_seen',
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',
-    DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject'
+    DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject',
+    BULK_COMPLETED_CHAPTERS: 'flowmd_bulk_completed_chapters'
   };
 
   // --- Study Sources ---
@@ -86,7 +87,7 @@ const PXL_ICONS = {
     targetUnits: []
   });
 
-  const PLAN_A_ACCENT = '#3b82f6';   // cobalt blue
+  const PLAN_A_ACCENT = '#6c3baa';   // royal lavender
   const PLAN_B_ACCENT = '#f43f5e';   // rose pink
 
   const DEFAULT_PERSONAL = {
@@ -152,10 +153,10 @@ const PXL_ICONS = {
   const SUBJECT_COLORS = {
     anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
     community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
-    medicine: '#3b82f6', microbiology: '#22c55e', obstetrics___gynaecology: '#ef4444',
+    medicine: '#6c3baa', microbiology: '#22c55e', obstetrics___gynaecology: '#ef4444',
     ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology__ent_: '#14b8a6',
     paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
-    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444', revision_videos: '#8b5cf6'
+    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#6c3baa', surgery: '#ef4444', revision_videos: '#8b5cf6'
   };
 
   const SUBJECT_FACULTY = {

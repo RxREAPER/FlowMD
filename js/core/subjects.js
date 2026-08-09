@@ -40,13 +40,13 @@
   }
 
   function getSubjectAccentColor(subjectIdOrName) {
-    if (!subjectIdOrName) return '#3b82f6';
+    if (!subjectIdOrName) return '#6c3baa';
     const key = normalizeKey(subjectIdOrName);
     if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
     for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
       if (key.includes(id) || id.includes(key)) return c;
     }
-    return '#3b82f6';
+    return '#6c3baa';
   }
 
   function getSubjectFaculty(subjectIdOrName) {
@@ -60,13 +60,13 @@
   }
 
   function getSubjectColor(subjectIdOrName) {
-    if (!subjectIdOrName) return '#3b82f6';
+    if (!subjectIdOrName) return '#6c3baa';
     const key = normalizeKey(subjectIdOrName);
     if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
     for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
       if (key.includes(id) || id.includes(key)) return c;
     }
-    return '#3b82f6';
+    return '#6c3baa';
   }
 
   function getSubjectName(subjectIdOrName) {

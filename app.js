@@ -150,7 +150,9 @@
     // Dual-Subject Tracking v2
     plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)],
     activePlanId: 'plan_a',
-    dailyHistoryBySubject: {}
+    dailyHistoryBySubject: {},
+    // Bulk Chapter Completion (excluded from analytics)
+    bulkCompletedChapters: {}
   };
 
   const DOM = {};
@@ -256,6 +258,10 @@
       const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
       if (savedHistBySubject) state.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
 
+      // --- Bulk Chapter Completion ---
+      const savedBulkChapters = localStorage.getItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS);
+      if (savedBulkChapters) state.bulkCompletedChapters = safeParse(savedBulkChapters, {});
+
     } catch (e) {
       console.warn('Error loading state:', e);
     }
@@ -305,6 +311,7 @@
       // Dual-Subject Tracking v2
       localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
       localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
+      localStorage.setItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, JSON.stringify(state.bulkCompletedChapters || {}));
       localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
 
       if (window.FirebaseSync && window.FirebaseSync.currentUser) {
@@ -318,16 +325,30 @@
     }
   }
 
-  function markStudyActivity(isAdding = true) {
+  function markStudyActivity(isAdding = true, subjectId = null) {
     const todayStr = todayKey();
     if (!state.streakData) state.streakData = { lastStudyDate: null, currentStreak: 0 };
     if (!state.dailyHistory) state.dailyHistory = {};
+    if (!state.dailyHistoryBySubject) state.dailyHistoryBySubject = {};
 
     const curCount = state.dailyHistory[todayStr] || 0;
     if (isAdding) {
       state.dailyHistory[todayStr] = curCount + 1;
     } else {
       state.dailyHistory[todayStr] = Math.max(0, curCount - 1);
+    }
+
+    // Track per-subject daily history
+    if (subjectId) {
+      if (!state.dailyHistoryBySubject[subjectId]) {
+        state.dailyHistoryBySubject[subjectId] = {};
+      }
+      const subjCount = state.dailyHistoryBySubject[subjectId][todayStr] || 0;
+      if (isAdding) {
+        state.dailyHistoryBySubject[subjectId][todayStr] = subjCount + 1;
+      } else {
+        state.dailyHistoryBySubject[subjectId][todayStr] = Math.max(0, subjCount - 1);
+      }
     }
 
     if (isAdding) {
@@ -447,6 +468,55 @@
     };
   }
 
+  // --- Bulk Chapter Completion Helpers (excluded from analytics) ---
+  function getBulkChapterKey(subjectId, chapterName) {
+    return `${subjectId}::${chapterName}`;
+  }
+
+  function isChapterBulkCompleted(subjectId, chapterName) {
+    return !!state.bulkCompletedChapters[getBulkChapterKey(subjectId, chapterName)];
+  }
+
+  function getChapterVideoIds(subjectId, chapterName) {
+    const dataset = getDataset();
+    const subjectObj = dataset.find(s => s && (s.id === subjectId || s.subject === subjectId));
+    if (!subjectObj) return [];
+    const chapter = (subjectObj.chapters || []).find(c => c && c.name === chapterName);
+    if (!chapter || !chapter.videos) return [];
+    return chapter.videos.map(v => v.id);
+  }
+
+  function getDailyCountsExcludingBulk() {
+    // Build a map of videoId -> bulk chapter key for quick lookup
+    const videoToBulkKey = {};
+    Object.keys(state.bulkCompletedChapters).forEach(key => {
+      const [subjectId, chapterName] = key.split('::');
+      const videoIds = getChapterVideoIds(subjectId, chapterName);
+      videoIds.forEach(vidId => { videoToBulkKey[vidId] = key; });
+    });
+
+    // Calculate daily counts excluding videos in bulk completed chapters
+    const dailyCounts = {};
+    const todayStr = todayKey();
+    for (const [dateKey, count] of Object.entries(state.dailyHistory || {})) {
+      if (dateKey === todayStr) {
+        // For today, we can compute from completedVideos in real-time
+        let actualCount = 0;
+        for (const [vidId, isDone] of Object.entries(state.completedVideos || {})) {
+          if (isDone && !videoToBulkKey[vidId]) {
+            actualCount++;
+          }
+        }
+        dailyCounts[dateKey] = actualCount;
+      } else {
+        // For historical dates, we can't easily separate bulk vs individual
+        // So we use the stored count (this is a limitation - forward-only exclusion)
+        dailyCounts[dateKey] = count;
+      }
+    }
+    return dailyCounts;
+  }
+
   function getSubjectOrSyllabusMetricsForPlan(plan) {
     if (!plan || !plan.targetSubject) return getSubjectOrSyllabusMetrics('');
     return computeMetricsFromVideos(getPlanScopeVideos(plan));
@@ -510,12 +580,15 @@
 
     if (!Array.isArray(plan.queueBatchVideoIds)) plan.queueBatchVideoIds = [];
 
+    // If user has completed daily target and is doing extra videos, load 1 at a time
+    const isExtraMode = (plan.extraBatchesCompletedToday || 0) > 0;
+    const targetBatchSize = isExtraMode ? 1 : Math.min(baseTargetPace, allSubjectVideos.length || baseTargetPace);
+
     const existingBatchVideos = allSubjectVideos.filter(v => plan.queueBatchVideoIds.includes(v.id));
-    const targetBatchSize = Math.min(baseTargetPace, allSubjectVideos.length || baseTargetPace);
 
     if (existingBatchVideos.length === 0 || existingBatchVideos.length !== targetBatchSize) {
       const uncompletedCandidates = allSubjectVideos.filter(v => !state.completedVideos[v.id]);
-      const newBatch = uncompletedCandidates.slice(0, baseTargetPace);
+      const newBatch = uncompletedCandidates.slice(0, targetBatchSize);
       plan.queueBatchVideoIds = newBatch.map(v => v.id);
       saveState();
     }
@@ -524,7 +597,13 @@
     const queueCompletedInBatch = todaysQueueVideos.filter(v => !!state.completedVideos[v.id]).length;
     plan.queueCompletedInBatch = queueCompletedInBatch;
 
+    // Track total videos completed today for this plan's subject
+    const subjectId = subjectObj ? subjectObj.id : (allSubjectVideos[0] ? allSubjectVideos[0].subjectId : 'anatomy');
+    const totalCompletedToday = (state.dailyHistoryBySubject && state.dailyHistoryBySubject[subjectId] && state.dailyHistoryBySubject[subjectId][todayStr]) || 0;
+
     const isDailyTargetAchieved = todaysQueueVideos.length > 0 && todaysQueueVideos.every(v => !!state.completedVideos[v.id]);
+    // Daily target is considered met when total completed >= baseTargetPace
+    const isDailyTargetMet = totalCompletedToday >= baseTargetPace;
     const allDone = todaysQueueVideos.length === 0;
 
     return {
@@ -535,7 +614,9 @@
       subjectId: subjectObj ? subjectObj.id : (allSubjectVideos[0] ? allSubjectVideos[0].subjectId : 'anatomy'),
       baseTargetPace,
       queueCompletedInBatch,
+      totalCompletedToday,
       isDailyTargetAchieved,
+      isDailyTargetMet,
       allSubjectDone: allDone,
       videos: todaysQueueVideos
     };
@@ -569,6 +650,24 @@
     });
   }
 
+  // Merge plans arrays with local-wins: for each plan ID present locally, local
+  // data takes precedence. Cloud-only plans (new device added a plan) are appended.
+  function mergePlansLocalWins(cloudPlans, localPlans) {
+    if (!cloudPlans || !Array.isArray(cloudPlans) || cloudPlans.length === 0) return localPlans;
+    if (!localPlans || localPlans.length === 0) return [...cloudPlans];
+    const merged = localPlans.map(localPlan => {
+      const cloudPlan = cloudPlans.find(cp => cp.id === localPlan.id);
+      if (!cloudPlan) return localPlan;
+      return { ...cloudPlan, ...localPlan };
+    });
+    cloudPlans.forEach(cloudPlan => {
+      if (!merged.find(p => p.id === cloudPlan.id)) {
+        merged.push(cloudPlan);
+      }
+    });
+    return merged;
+  }
+
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;
     let cloudUnsub = null;
@@ -594,7 +693,7 @@
           state.personal = { ...(cloudState.personal || {}), ...state.personal };
           state.dailyHistory = { ...(cloudState.dailyHistory || {}), ...state.dailyHistory };
           state.dailyHistoryBySubject = { ...(cloudState.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-          state.plans = cloudState.plans ? [...cloudState.plans] : state.plans;
+          state.plans = mergePlansLocalWins(cloudState.plans, state.plans);
           state.activePlanId = cloudState.activePlanId || state.activePlanId;
           state.activeSource = cloudState.activeSource || state.activeSource;
           state.isConfigured = cloudState.isConfigured || state.isConfigured;
@@ -652,7 +751,7 @@
         state.personal = { ...(cloudData.personal || {}), ...state.personal };
         state.dailyHistory = { ...(cloudData.dailyHistory || {}), ...state.dailyHistory };
         state.dailyHistoryBySubject = { ...(cloudData.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-        state.plans = cloudData.plans ? [...cloudData.plans] : state.plans;
+        state.plans = mergePlansLocalWins(cloudData.plans, state.plans);
         state.activePlanId = cloudData.activePlanId || state.activePlanId;
         state.activeSource = cloudData.activeSource || state.activeSource;
         state.isConfigured = cloudData.isConfigured || state.isConfigured;
@@ -1137,15 +1236,15 @@
           );
         } else if (type === 'action-queue') {
           openInfoModal(
-            "Today's Action Queue",
-            `<p style="margin-bottom: 8px;"><strong>Daily Target Batch:</strong> Locks your daily quota of video lectures (e.g. 3 videos).</p>
-             <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Advance Batch Early</div>
-                 <div class="pxl-alert-message">Completing your daily batch unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Advance to Next Target Batch early to stay ahead of schedule.</div>
-               </div>
-             </div>`
+"Today's Action Queue",
+            `<p style="margin-bottom: 8px;"><strong>Daily Video:</strong> Shows your next video to watch.</p>
+              <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
+                <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
+                <div class="pxl-alert-content">
+                  <div class="pxl-alert-title">Load Next Video</div>
+                  <div class="pxl-alert-message">Completing a video unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Load Next Video to continue your progress.</div>
+                </div>
+              </div>`
           );
         }
       }
@@ -1416,7 +1515,7 @@ function updateTopbarSource() {
   function renderFacultyPill(faculty, subjectId) {
     const clean = (faculty || 'Marrow Faculty').replace(/^Dr\.?\s*/i, '').trim();
     const initials = clean.split(/\s+/).filter(Boolean).map(w => w.charAt(0)).slice(0, 2).join('').toUpperCase() || 'MC';
-    const subjectColor = getSubjectColor(subjectId) || '#3b82f6';
+    const subjectColor = getSubjectColor(subjectId);
     const subjectColorLight = subjectColor + '22';
     const subjectColorBorder = subjectColor + '66';
     
@@ -1432,7 +1531,7 @@ function updateTopbarSource() {
   function renderFacultyCard(faculty, subjectId) {
     const clean = (faculty || 'Marrow Faculty').replace(/^Dr\.?\s*/i, '').trim();
     const initials = clean.split(/\s+/).filter(Boolean).map(w => w.charAt(0)).slice(0, 2).join('').toUpperCase() || 'MC';
-    const subjectColor = getSubjectColor(subjectId) || '#3b82f6';
+    const subjectColor = getSubjectColor(subjectId);
     const subjectName = getSubjectName(subjectId);
     
     return `
@@ -1924,7 +2023,7 @@ function updateTopbarSource() {
     // Helper: render one plan's daily quest block
     function renderPlanQuestBlock(plan, queue) {
       const planColor = plan.accentColor || PLAN_A_ACCENT;
-      const todayDoneForPlan = queue.queueCompletedInBatch;
+      const todayDoneForPlan = queue.totalCompletedToday || 0;
       const dailyPctPlan = Math.min(100, Math.round((todayDoneForPlan / queue.baseTargetPace) * 100));
       const scopedNames = getScopedChapterNames(plan);
 
@@ -1941,13 +2040,13 @@ function updateTopbarSource() {
           ${scopedNames.length > 0 ? `
             <div class="plan-quest-scope">
               <span class="material-symbols-outlined" style="font-size:13px;">filter_alt</span>
-              FOCUS: ${scopedNames.length} chapter${scopedNames.length > 1 ? 's' : ''} · ${scopedNames.slice(0, 3).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ')}${scopedNames.length > 3 ? '…' : ''}
+              FOCUS: ${scopedNames.slice(0, 3).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ')}${scopedNames.length > 3 ? '…' : ''}
             </div>
           ` : ''}
 
           <div class="plan-quest-stats-row">
             <div class="plan-quest-target-text">
-              TARGET: <strong>${queue.baseTargetPace} VIDS/DAY</strong>
+              TARGET: <strong>1 VIDEO AT A TIME</strong>
             </div>
             <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height: 30px; padding: 0 10px; font-size: 0.82rem;">
               <span>Open ${queue.subjectName}</span>
@@ -1955,14 +2054,14 @@ function updateTopbarSource() {
             </button>
           </div>
 
-          ${queue.isDailyTargetAchieved ? `
+          ${queue.isDailyTargetMet ? `
             ${(plan.extraBatchesCompletedToday || 0) > 0 ? `
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);">
                 <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;"><span class="material-symbols-outlined" style="font-size:18px;">bolt</span></div>
                 <div class="v2-alert-content">
-                  <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA BATCH #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
+                  <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA VIDEO #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
                   <div class="v2-alert-title">🔥 Overachievement Bonus Unlocked!</div>
-                  <div class="v2-alert-body">You've exceeded today's daily target! Completed extra batch #${plan.extraBatchesCompletedToday} (+${queue.baseTargetPace} bonus videos) for ${queue.subjectName}.</div>
+                  <div class="v2-alert-body">You've completed an extra video! Total extra videos today: ${plan.extraBatchesCompletedToday} for ${queue.subjectName}.</div>
                 </div>
                 <div class="v2-alert-bottom-bar" style="width:100%; background:#a855f7;"></div>
               </div>
@@ -1970,7 +2069,7 @@ function updateTopbarSource() {
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px;">
                 <div class="v2-alert-icon-box" style="background: var(--accent-success, #10b981);">${PXL_ICONS.trophy}</div>
                 <div class="v2-alert-content">
-                  <div class="v2-alert-category" style="color: var(--accent-success, #10b981);">${plan.label} DAILY BATCH ▶ COMPLETED</div>
+                  <div class="v2-alert-category" style="color: var(--accent-success, #10b981);">${plan.label} DAILY TARGET ▶ COMPLETED</div>
                   <div class="v2-alert-title">Daily Target Achieved!</div>
                   <div class="v2-alert-body">All ${queue.baseTargetPace} videos done for ${queue.subjectName}.</div>
                 </div>
@@ -1979,7 +2078,7 @@ function updateTopbarSource() {
             `}
             <button class="v2-arcade-btn btn-advance-queue" data-plan-id="${plan.id}" style="width:100%; height:40px; font-weight:700; font-size:0.9rem; justify-content:center; gap:8px;">
               ${PXL_ICONS.rocket}
-              <span>🚀 Advance ${plan.label} — Next Target Batch</span>
+              <span>🚀 Load Next Video</span>
             </button>
           ` : (queue.allSubjectDone ? `
             <div class="congrats-card-pop" style="text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
@@ -2012,7 +2111,7 @@ function updateTopbarSource() {
       `;
     }
 
-    const allQuestsDone = allQueues.every(q => q.isDailyTargetAchieved);
+    const allQuestsDone = allQueues.every(q => q.isDailyTargetMet);
     const hasDualPlans = plans.length >= 2;
 
     DOM.appMain.innerHTML = `
@@ -2140,21 +2239,23 @@ function updateTopbarSource() {
       focusStudyPlanConfig();
     });
 
-    // Per-plan advance batch
+    // Per-plan advance batch (for extra videos beyond daily target)
     document.querySelectorAll('.btn-advance-queue').forEach(btn => {
       btn.addEventListener('click', () => {
         const planId = btn.getAttribute('data-plan-id');
         const plan = planId ? getPlanById(planId) : (state.plans && state.plans[0]);
         if (plan) {
+          // For extra videos: load only 1 at a time
+          plan.extraBatchesCompletedToday = (plan.extraBatchesCompletedToday || 0) + 1;
           plan.queueBatchVideoIds = [];
           plan.queueCompletedInBatch = 0;
           saveState();
-          showToast(`${plan.label} — Next Batch Unlocked!`, 'arrow_forward', `${plan.label} Advanced`);
+          showToast(`${plan.label} — Next Extra Video Loaded!`, 'arrow_forward', `${plan.label} Advanced`);
         } else {
           state.queueBatchVideoIds = [];
           state.queueCompletedInBatch = 0;
           saveState();
-          showToast('Unlocked Next Target Batch!', 'arrow_forward');
+          showToast('Next Video Loaded!', 'arrow_forward');
         }
         render();
       });
@@ -2168,12 +2269,17 @@ function updateTopbarSource() {
 
         if (e.target.checked) {
           state.completedVideos[vidId] = true;
-          markStudyActivity(true);
+          // Get subjectId from the video
+          const video = allSubjectVideos.find(v => v.id === vidId);
+          const subjectId = video ? video.subjectId : null;
+          markStudyActivity(true, subjectId);
           const planLabel = plan ? plan.label : '';
           showToast(`${planLabel ? planLabel + ' — ' : ''}Completed Action Queue Video!`, 'check_circle');
         } else {
           delete state.completedVideos[vidId];
-          markStudyActivity(false);
+          const video = allSubjectVideos.find(v => v.id === vidId);
+          const subjectId = video ? video.subjectId : null;
+          markStudyActivity(false, subjectId);
         }
         saveState();
         render();
@@ -2217,11 +2323,16 @@ function updateTopbarSource() {
       </div>
 
       <div class="section-title-row">
-        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum &amp; Subjects</h2>
+        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum & Subjects</h2>
         <div style="display: flex; align-items: center; gap: 8px;">
           ${renderEditionChip()}
           <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
         </div>
+      </div>
+
+      <div class="curriculum-notice" style="margin: 8px 0 16px 0; padding: 10px 12px; background: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-hud); font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px;">
+        <span class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary); flex-shrink: 0; margin-top: 1px;">info</span>
+        <span>Note: Individual video checkboxes → reflected in Analytics (7-day chart, weekly pace, daily counts). Chapter "Select All" checkbox → marks videos complete but excluded from Analytics, so you can mark previously completed chapters as a whole without distorting your analytics.</span>
       </div>
 
       ${filteredSubjects.map(sub => `
@@ -2311,9 +2422,19 @@ function updateTopbarSource() {
         ${subObj.raw.chapters ? subObj.raw.chapters.map(chap => {
           const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
           const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
+          const subjectId = subObj.id;
+          const chapterName = chap.name;
+          const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName);
+          const bulkKey = getBulkChapterKey(subjectId, chapterName);
           return `
             <div class="accordion-header ${state.expandedChapters[chap.name] === true ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;${dimStyle}">
-              <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
+              <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
+                <label class="bulk-chapter-checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;">
+                  <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                  <span class="material-symbols-outlined" style="font-size: 18px; color: ${isBulkCompleted ? 'var(--success)' : 'var(--text-muted)'};">${isBulkCompleted ? 'check_box' : 'check_box_outline_blank'}</span>
+                </label>
+                <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
+              </div>
               <span class="material-symbols-outlined accordion-icon">expand_more</span>
             </div>
 
@@ -2361,10 +2482,36 @@ function updateTopbarSource() {
     });
 
     document.querySelectorAll('.accordion-header').forEach(hdr => {
-      hdr.addEventListener('click', () => {
+      hdr.addEventListener('click', (e) => {
+        // Don't toggle accordion if clicking on the bulk chapter checkbox
+        if (e.target.closest('.bulk-chapter-checkbox-label')) return;
         const chapName = hdr.getAttribute('data-chap-name');
         state.expandedChapters[chapName] = !state.expandedChapters[chapName];
         renderSubjectDetailView(stats);
+      });
+    });
+
+    // Bulk Chapter Completion Checkboxes
+    document.querySelectorAll('.bulk-chapter-checkbox').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        e.stopPropagation(); // Prevent accordion toggle
+        const bulkKey = e.target.getAttribute('data-bulk-key');
+        const [subjectId, chapterName] = bulkKey.split('::');
+        const videoIds = getChapterVideoIds(subjectId, chapterName);
+
+        if (e.target.checked) {
+          // Bulk complete: mark all videos in chapter as completed
+          videoIds.forEach(vidId => { state.completedVideos[vidId] = true; });
+          state.bulkCompletedChapters[bulkKey] = true;
+          showToast(`Chapter "${chapterName}" marked complete (excluded from analytics)`, 'check_box');
+        } else {
+          // Bulk uncomplete: unmark all videos in chapter
+          videoIds.forEach(vidId => { delete state.completedVideos[vidId]; });
+          delete state.bulkCompletedChapters[bulkKey];
+          showToast(`Chapter "${chapterName}" unmarked`, 'check_box_outline_blank');
+        }
+        saveState();
+        renderSubjectDetailView(getSyllabusStats());
       });
     });
 
@@ -2388,6 +2535,9 @@ function updateTopbarSource() {
   // --- PxlKit PixelAreaChart SVG Generator ---
   // --- 7-Day Execution Chart (Analytics Redesign: theme-adaptive, matches anl-* suite) ---
   function renderExecutionChart(last7Days, vidsDay, maxChartVal) {
+    // Use filtered daily counts (excluding bulk completed chapters)
+    const dailyCounts = getDailyCountsExcludingBulk();
+    
     // Use container-relative dimensions; width will be 100% via CSS, height scales proportionally
     const chartWidth = 100;  // logical coordinate system (percentage-based)
     const chartHeight = 60;  // logical height units (more vertical space)
@@ -2401,7 +2551,7 @@ function updateTopbarSource() {
     const scale = Math.max(1, maxChartVal);
 
     const points = last7Days.map((d, i) => {
-      const count = (state.dailyHistory && state.dailyHistory[d.dateKey]) ? state.dailyHistory[d.dateKey] : 0;
+      const count = dailyCounts[d.dateKey] || 0;
       const x = padL + (plotW * i) / (last7Days.length - 1);
       const y = padT + plotH - Math.min(plotH, (count / scale) * plotH);
       return { x, y, count, label: d.label, isMet: count >= vidsDay };
@@ -2514,7 +2664,6 @@ function updateTopbarSource() {
 
     const now = new Date();
     const todayStr = todayKey();
-    const todayDone = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
     const daysLeft = Math.max(1, Math.ceil((new Date(state.goals.targetDate || '2026-08-15') - now) / 86400000));
 
     const last7Days = [];
@@ -2525,11 +2674,15 @@ function updateTopbarSource() {
       last7Days.push({ dateKey, label });
     }
 
-    let actual7DaysCount = last7Days.reduce((sum, d) => sum + ((state.dailyHistory && state.dailyHistory[d.dateKey]) || 0), 0);
+    // Get daily counts excluding bulk completed chapters
+    const dailyCounts = getDailyCountsExcludingBulk();
+
+    const todayDone = dailyCounts[todayStr] || 0;
+    let actual7DaysCount = last7Days.reduce((sum, d) => sum + (dailyCounts[d.dateKey] || 0), 0);
     let actual30DaysCount = 0;
     for (let i = 29; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      actual30DaysCount += (state.dailyHistory && state.dailyHistory[toLocalDateKey(d)]) || 0;
+      actual30DaysCount += dailyCounts[toLocalDateKey(d)] || 0;
     }
 
     // Aggregate total daily target across all plans
@@ -2543,7 +2696,7 @@ function updateTopbarSource() {
 
     const weeklyPct = Math.min(100, Math.round((actual7DaysCount / Math.max(1, ideal7DaysTarget)) * 100));
     const monthlyPct = Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100));
-    const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => (state.dailyHistory && state.dailyHistory[d.dateKey]) || 0), 1);
+    const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => dailyCounts[d.dateKey] || 0), 1);
 
     // Per-plan stats
     const planStats = plans.map((plan, idx) => {
@@ -2670,7 +2823,7 @@ function updateTopbarSource() {
           </button>
         </div>
         <div class="anl-hero-chips">
-          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#3b82f6"></span> Syllabus <b>${stats.percentage}%</b></span>
+          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--accent-primary)"></span> Syllabus <b>${stats.percentage}%</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#10b981"></span> Daily Target <b>${totalVidsDay}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#f59e0b"></span> 7-Day <b>${actual7DaysCount}/${ideal7DaysTarget}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#a855f7"></span> Days Left <b>${daysLeft}</b></span>
@@ -2897,9 +3050,9 @@ function updateTopbarSource() {
         `}
       </div>
 
-      <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary, #2563eb);">
+      <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary);">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb); font-size: 20px;">support_agent</span>
+          <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;">support_agent</span>
           <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin: 0;">Developer Support & Contact</h3>
         </div>
         <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
@@ -3596,13 +3749,13 @@ function updateTopbarSource() {
 
     modal.innerHTML = `
       <div class="modal-card" style="max-width: 480px; width: 92%;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px solid var(--retro-cyan, var(--accent-primary, #2563eb)); padding-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px solid var(--retro-cyan, var(--accent-primary)); padding-bottom: 12px;">
           <div>
-            <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, var(--accent-primary, #f59e0b)); letter-spacing: 0.08em; text-transform: uppercase;">
+            <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, var(--accent-primary)); letter-spacing: 0.08em; text-transform: uppercase;">
               <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">settings</span> SETTINGS
             </div>
             <h3 style="font-family: var(--font-display), monospace; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0; display: flex; align-items: center; gap: 8px;">
-              <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb);">auto_stories</span>
+              <span class="material-symbols-outlined" style="color: var(--accent-primary);">auto_stories</span>
               <span>Study Source</span>
             </h3>
           </div>
@@ -3629,7 +3782,7 @@ function updateTopbarSource() {
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
           <button id="scs-cancel" class="v2-arcade-btn" style="height: 40px; background: var(--bg-surface-raised); color: var(--text-primary);">Cancel</button>
-          <button id="scs-save" class="v2-arcade-btn" style="height: 40px; background: var(--accent-primary, #2563eb); color: #ffffff;">Save Source</button>
+          <button id="scs-save" class="v2-arcade-btn" style="height: 40px; background: var(--accent-primary); color: #ffffff;">Save Source</button>
         </div>
       </div>
     `;

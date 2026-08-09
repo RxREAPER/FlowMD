@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marrow-planner-pwa-v7';
+const CACHE_NAME = 'marrow-planner-pwa-v8';
 const ASSETS = [
   './',
   './index.html',
@@ -14,7 +14,9 @@ const ASSETS = [
   './js/features/toast.js',
   './icon.svg',
   './manifest.json',
-  './offline.html'
+  './offline.html',
+  './assets/icon-192.png',
+  './assets/icon-512.png'
 ];
 
 // Firebase SDKs (cross-origin) - cached on first load
