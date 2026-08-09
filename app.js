@@ -2388,25 +2388,26 @@ function updateTopbarSource() {
   // --- PxlKit PixelAreaChart SVG Generator ---
   // --- 7-Day Execution Chart (Analytics Redesign: theme-adaptive, matches anl-* suite) ---
   function renderExecutionChart(last7Days, vidsDay, maxChartVal) {
-    const width = 600;
-    const height = 200;
-    const padL = 14;
-    const padR = 14;
-    const padT = 32;
-    const padB = 26;
-    const chartW = width - padL - padR;
-    const chartH = height - padT - padB;
-    const baseY = padT + chartH;
+    // Use container-relative dimensions; width will be 100% via CSS, height scales proportionally
+    const chartWidth = 100;  // logical coordinate system (percentage-based)
+    const chartHeight = 60;  // logical height units (more vertical space)
+    const padL = 4;
+    const padR = 4;
+    const padT = 8;
+    const padB = 8;
+    const plotW = chartWidth - padL - padR;
+    const plotH = chartHeight - padT - padB;
+    const baseY = padT + plotH;
     const scale = Math.max(1, maxChartVal);
 
     const points = last7Days.map((d, i) => {
       const count = (state.dailyHistory && state.dailyHistory[d.dateKey]) ? state.dailyHistory[d.dateKey] : 0;
-      const x = padL + (chartW * i) / (last7Days.length - 1);
-      const y = padT + chartH - Math.min(chartH, (count / scale) * chartH);
+      const x = padL + (plotW * i) / (last7Days.length - 1);
+      const y = padT + plotH - Math.min(plotH, (count / scale) * plotH);
       return { x, y, count, label: d.label, isMet: count >= vidsDay };
     });
 
-    const targetY = padT + chartH - Math.min(chartH, (vidsDay / scale) * chartH);
+    const targetY = padT + plotH - Math.min(plotH, (vidsDay / scale) * plotH);
     const total7DayVids = points.reduce((sum, p) => sum + p.count, 0);
     const metDays = points.filter(p => p.isMet).length;
 
@@ -2432,7 +2433,7 @@ function updateTopbarSource() {
     const areaPath = linePath
       ? `${linePath} L ${points[points.length - 1].x} ${baseY} L ${points[0].x} ${baseY} Z`
       : '';
-    const gridY = [0.25, 0.5, 0.75].map(f => padT + chartH - chartH * f);
+    const gridY = [0.25, 0.5, 0.75].map(f => padT + plotH - plotH * f);
 
     return `
       <section class="ex-chart-card">
@@ -2455,7 +2456,7 @@ function updateTopbarSource() {
         </div>
 
         <div class="ex-chart-plot">
-          <svg viewBox="0 0 ${width} ${height}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart">
+          <svg viewBox="0 0 ${chartWidth} ${chartHeight}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart" preserveAspectRatio="none">
             <defs>
               <linearGradient id="exChartGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" style="stop-color:var(--accent-primary); stop-opacity:0.30" />
@@ -2463,10 +2464,10 @@ function updateTopbarSource() {
               </linearGradient>
             </defs>
 
-            ${gridY.map(y => `<line class="ex-chart-gridline" x1="${padL}" y1="${y.toFixed(1)}" x2="${width - padR}" y2="${y.toFixed(1)}" />`).join('')}
-            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY}" x2="${width - padR}" y2="${baseY}" />
-            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${width - padR}" y2="${targetY.toFixed(1)}" />
-            <text class="ex-chart-targetlabel" x="${width - padR}" y="${Math.max(12, targetY - 7)}">TARGET ${vidsDay}/DAY</text>
+            ${gridY.map(y => `<line class="ex-chart-gridline" x1="${padL}" y1="${y.toFixed(1)}" x2="${chartWidth - padR}" y2="${y.toFixed(1)}" />`).join('')}
+            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY}" x2="${chartWidth - padR}" y2="${baseY}" />
+            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${chartWidth - padR}" y2="${targetY.toFixed(1)}" />
+            <text class="ex-chart-targetlabel" x="${chartWidth - padR}" y="${Math.max(padT + 4, targetY - 4)}">TARGET ${vidsDay}/DAY</text>
 
             ${areaPath ? `<path d="${areaPath}" class="ex-chart-area" />` : ''}
             ${linePath ? `<path d="${linePath}" class="ex-chart-line" />` : ''}
@@ -2474,13 +2475,13 @@ function updateTopbarSource() {
             ${points.map(p => `
               <g class="ex-chart-point ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}">
                 <title>${p.label}: ${p.count} video${p.count !== 1 ? 's' : ''} ${p.isMet ? '✓ Target Met' : p.count > 0 ? 'Partial' : 'No study'}</title>
-                <text class="ex-chart-val" x="${p.x}" y="${Math.max(12, p.y - 11)}">${p.count}${p.isMet && p.count > 0 ? ' ★' : ''}</text>
-                <circle class="ex-chart-node ex-node-${p.count === 0 ? 'zero' : (p.isMet ? 'met' : 'part')}" cx="${p.x}" cy="${p.y}" r="5" />
+                <text class="ex-chart-val" x="${p.x}" y="${Math.max(padT + 4, p.y - 4)}">${p.count}${p.isMet && p.count > 0 ? ' ★' : ''}</text>
+                <circle class="ex-chart-node ex-node-${p.count === 0 ? 'zero' : (p.isMet ? 'met' : 'part')}" cx="${p.x}" cy="${p.y}" r="2.5" />
               </g>
             `).join('')}
 
             ${points.map(p => `
-              <text class="ex-chart-xlabel" x="${p.x}" y="${height - 5}">${p.label}</text>
+              <text class="ex-chart-xlabel" x="${p.x}" y="${chartHeight - 2}">${p.label}</text>
             `).join('')}
           </svg>
         </div>

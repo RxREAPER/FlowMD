@@ -6963,23 +6963,16 @@ body {
 }
 
 .ex-chart-plot {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  overflow: visible;
   border-radius: 10px;
   border: 1px solid var(--border-color);
   background: var(--bg-surface-raised);
-}
-
-.ex-chart-plot::-webkit-scrollbar {
-  display: none;
 }
 
 .ex-chart-svg {
   display: block;
   width: 100%;
   height: auto;
-  min-width: 460px;
 }
 
 .ex-chart-gridline {
