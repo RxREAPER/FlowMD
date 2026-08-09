@@ -115,6 +115,7 @@
     applyTheme(state.theme);
     bindEvents();
     initFirebaseSync();
+    initServiceWorker();
     render();
     resetPageScrollTop();
 
@@ -508,6 +509,13 @@
   }
 
 
+
+  function initServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
 
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;

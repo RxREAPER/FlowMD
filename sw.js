@@ -1,9 +1,12 @@
-const CACHE_NAME = 'marrow-planner-pwa-v5';
+const CACHE_NAME = 'marrow-planner-pwa-v6';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './firebase.js',
+  './data.js',
+  './data_marrow_6_5.js',
   './js/core/namespace.js',
   './js/core/constants.js',
   './js/core/subjects.js',
@@ -38,14 +41,15 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
+  const cacheKey = url.origin + url.pathname;
 
   if (url.pathname.includes('curriculum') || url.pathname.endsWith('/')) {
     event.respondWith(
       caches.open(CURRICULUM_CACHE).then((cache) => {
         return fetch(request).then((networkResponse) => {
-          cache.put(request, networkResponse.clone());
+          cache.put(cacheKey, networkResponse.clone());
           return networkResponse;
-        }).catch(() => cache.match(request));
+        }).catch(() => cache.match(cacheKey));
       })
     );
     return;
@@ -55,9 +59,9 @@ self.addEventListener('fetch', (event) => {
     fetch(request)
       .then((networkResponse) => {
         const copy = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        caches.open(CACHE_NAME).then((cache) => cache.put(cacheKey, copy));
         return networkResponse;
       })
-      .catch(() => caches.match(request))
+      .catch(() => caches.match(cacheKey))
   );
 });
