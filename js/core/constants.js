@@ -19,14 +19,34 @@
     return escapeHtml(value);
   }
 
+  // --- Local-Date Helpers (day boundary must follow the device's local
+  // timezone, not UTC: an IST user studying just after midnight must count
+  // it on the correct local day) ---
+  function toLocalDateKey(date) {
+    const d = date || new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function todayKey() {
+    return toLocalDateKey(new Date());
+  }
+
   // --- Shared SVG Icon Set (PxlKit) ---
   const PXL_ICONS = {
     trophy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M2 5h4v2H2zM18 5h4v2h-4zM5 3h14v3c0 4-3 6-7 6s-7-2-7-6V3zm7 7c2.5 0 4-1.6 4-4H8c0 2.4 1.5 4 4 4zm-1 4h2v3h2v2h-6v-2h2v-3z"/></svg>',
     rocket: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2c3.5 2 5 5.5 5 9l2 1v4l-3-1c-.5 1.5-1 3-2.5 4l-1.5-2h-2L8 19c-1.5-1-2-2.5-2.5-4l-3 1v-4l2-1c0-3.5 1.5-7 5-9zm0 3c-1.5 1.5-2.5 3.5-2.5 6v1h5v-1c0-2.5-1-4.5-2.5-6z"/></svg>'
   };
 
+  // --- LocalStorage Schema Version (bump when stored shapes change;
+  // loadState() runs migrations for older versions) ---
+  const SCHEMA_VERSION = 2;
+
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
+    SCHEMA_VERSION: 'flowmd_schema_version',
     COMPLETED_VIDEOS: 'marrow_planner_completed_videos',
     GOALS: 'marrow_planner_goals',
     THEME: 'marrow_planner_theme',
@@ -164,6 +184,9 @@
     PXL_ICONS,
     escapeHtml,
     escapeAttr,
+    toLocalDateKey,
+    todayKey,
+    SCHEMA_VERSION,
     STORAGE_KEYS,
     STUDY_SOURCES,
     DEFAULT_PLAN,

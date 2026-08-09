@@ -12,6 +12,9 @@
     PXL_ICONS,
     escapeHtml,
     escapeAttr,
+    toLocalDateKey,
+    todayKey,
+    SCHEMA_VERSION,
     STORAGE_KEYS,
     STUDY_SOURCES,
     DEFAULT_PLAN,
@@ -37,6 +40,50 @@
   const { getFlowMDLogoSVG } = window.FlowMD.logo;
 
   const { showToast, dismissToast } = window.FlowMD.toast;
+
+  // --- Safe JSON parsing: corrupt localStorage must never crash the app ---
+  function safeParse(raw, fallback) {
+    if (raw == null || raw === '') return fallback;
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      console.warn('Corrupt localStorage value discarded:', e);
+      return fallback;
+    }
+  }
+
+  // --- localStorage schema versioning + migrations ---
+  function migrateStateSchema() {
+    try {
+      const rawVersion = localStorage.getItem(STORAGE_KEYS.SCHEMA_VERSION);
+      const currentVersion = parseInt(rawVersion, 10) || 0;
+      if (currentVersion >= SCHEMA_VERSION) return;
+
+      // v1 → v2: legacy pre-namespaced video IDs get the marrow_8:: prefix.
+      // (Applied against the stored payload before state is assembled.)
+      if (currentVersion < 2) {
+        const savedVideos = localStorage.getItem(STORAGE_KEYS.COMPLETED_VIDEOS);
+        if (savedVideos) {
+          const parsed = safeParse(savedVideos, {});
+          const migrated = {};
+          let changed = false;
+          for (const key in parsed) {
+            if (key.indexOf('::') === -1) {
+              migrated['marrow_8::' + key] = parsed[key];
+              changed = true;
+            } else {
+              migrated[key] = parsed[key];
+            }
+          }
+          if (changed) localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(migrated));
+        }
+      }
+
+      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
+    } catch (e) {
+      console.warn('Schema migration failed:', e);
+    }
+  }
 
   // --- Multi-Source Data Layer ---
   const SOURCE_DATA = {};
@@ -131,8 +178,10 @@
   // --- State Persistence & Cloud Sync ---
   function loadState() {
     try {
+      migrateStateSchema();
+
       const savedVideos = localStorage.getItem(STORAGE_KEYS.COMPLETED_VIDEOS);
-      if (savedVideos) state.completedVideos = JSON.parse(savedVideos);
+      if (savedVideos) state.completedVideos = safeParse(savedVideos, {});
 
       // Migrate legacy (pre-namespaced) video IDs → marrow_8:: prefix
       let needsMigrate = false;
@@ -148,7 +197,7 @@
       if (needsMigrate) state.completedVideos = migrated;
 
       const savedGoals = localStorage.getItem(STORAGE_KEYS.GOALS);
-      if (savedGoals) state.goals = { ...DEFAULT_GOALS, ...JSON.parse(savedGoals) };
+      if (savedGoals) state.goals = { ...DEFAULT_GOALS, ...safeParse(savedGoals, {}) };
 
       const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
       if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
@@ -166,19 +215,19 @@
       }
 
       const savedStreak = localStorage.getItem(STORAGE_KEYS.STREAK);
-      if (savedStreak) state.streakData = JSON.parse(savedStreak);
+      if (savedStreak) state.streakData = safeParse(savedStreak, { lastStudyDate: null, currentStreak: 0 });
 
       const savedPersonal = localStorage.getItem(STORAGE_KEYS.PERSONAL);
-      if (savedPersonal) state.personal = { ...DEFAULT_PERSONAL, ...JSON.parse(savedPersonal) };
+      if (savedPersonal) state.personal = { ...DEFAULT_PERSONAL, ...safeParse(savedPersonal, {}) };
 
       const savedHistory = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY);
-      if (savedHistory) state.dailyHistory = JSON.parse(savedHistory);
+      if (savedHistory) state.dailyHistory = safeParse(savedHistory, {});
 
       const savedQueueBatch = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH);
       if (savedQueueBatch !== null) state.queueCompletedInBatch = parseInt(savedQueueBatch) || 0;
 
       const savedBatchVids = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS);
-      if (savedBatchVids) state.queueBatchVideoIds = JSON.parse(savedBatchVids);
+      if (savedBatchVids) state.queueBatchVideoIds = safeParse(savedBatchVids, []);
 
       const savedTutorial = localStorage.getItem(STORAGE_KEYS.TUTORIAL_SEEN);
       if (savedTutorial === 'true') state.isConfigured = true;
@@ -194,7 +243,7 @@
       // --- Dual-Subject Tracking v2: load plans ---
       const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
       if (savedPlans) {
-        const parsed = JSON.parse(savedPlans);
+        const parsed = safeParse(savedPlans, []);
         if (Array.isArray(parsed) && parsed.length > 0) {
           state.plans = parsed;
         }
@@ -204,7 +253,7 @@
       }
 
       const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
-      if (savedHistBySubject) state.dailyHistoryBySubject = JSON.parse(savedHistBySubject);
+      if (savedHistBySubject) state.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
 
     } catch (e) {
       console.warn('Error loading state:', e);
@@ -254,6 +303,7 @@
       // Dual-Subject Tracking v2
       localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
       localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
+      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
 
       if (window.FirebaseSync && window.FirebaseSync.currentUser) {
         if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
@@ -267,7 +317,7 @@
   }
 
   function markStudyActivity(isAdding = true) {
-    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayStr = todayKey();
     if (!state.streakData) state.streakData = { lastStudyDate: null, currentStreak: 0 };
     if (!state.dailyHistory) state.dailyHistory = {};
 
@@ -280,7 +330,7 @@
 
     if (isAdding) {
       if (state.streakData.lastStudyDate !== todayStr) {
-        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+        const yesterday = toLocalDateKey(new Date(Date.now() - 86400000));
         if (state.streakData.lastStudyDate === yesterday) {
           state.streakData.currentStreak = (state.streakData.currentStreak || 0) + 1;
         } else {
@@ -450,7 +500,7 @@
       if (subjectObj) subjectName = subjectObj.subject;
     }
 
-    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayStr = todayKey();
     if (plan.lastBatchDate !== todayStr) {
       plan.lastBatchDate = todayStr;
       plan.extraBatchesCompletedToday = 0;
@@ -1691,8 +1741,7 @@
     const allQueues = getAllPlanQueues();
     const streakCount = getStudyStreak();
 
-    const now = new Date();
-    const todayStr = now.toISOString().slice(0, 10);
+    const todayStr = todayKey();
     const todayCompletedCount = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
 
     let totalVidsDay = 0;
@@ -2291,14 +2340,14 @@
     const hasDualPlans = plans.length >= 2;
 
     const now = new Date();
-    const todayStr = now.toISOString().slice(0, 10);
+    const todayStr = todayKey();
     const todayDone = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
     const daysLeft = Math.max(1, Math.ceil((new Date(state.goals.targetDate || '2026-08-15') - now) / 86400000));
 
     const last7Days = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const dateKey = d.toISOString().slice(0, 10);
+      const dateKey = toLocalDateKey(d);
       const label = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
       last7Days.push({ dateKey, label });
     }
@@ -2307,7 +2356,7 @@
     let actual30DaysCount = 0;
     for (let i = 29; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      actual30DaysCount += (state.dailyHistory && state.dailyHistory[d.toISOString().slice(0, 10)]) || 0;
+      actual30DaysCount += (state.dailyHistory && state.dailyHistory[toLocalDateKey(d)]) || 0;
     }
 
     // Aggregate total daily target across all plans
@@ -3292,7 +3341,7 @@
       const defaultPace = planObj.videosPerDay || 8;
       const daysNeeded = Math.ceil(metrics.remainingVideos / defaultPace);
       const targetDate = new Date(now.getTime() + daysNeeded * 24 * 60 * 60 * 1000);
-      if (dateInput) dateInput.value = targetDate.toISOString().slice(0, 10);
+      if (dateInput) dateInput.value = toLocalDateKey(targetDate);
     }
 
     let targetDate = new Date(dateInput ? dateInput.value : '2026-12-31');
@@ -3307,7 +3356,7 @@
       const userVids = Math.max(1, parseInt(vidsInput ? vidsInput.value : 1) || 1);
       days = Math.ceil(metrics.remainingVideos / userVids);
       targetDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
-      if (dateInput) dateInput.value = targetDate.toISOString().slice(0, 10);
+      if (dateInput) dateInput.value = toLocalDateKey(targetDate);
     }
 
     if (badge) badge.textContent = `${days} Days Left`;
