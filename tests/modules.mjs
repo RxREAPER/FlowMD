@@ -47,7 +47,11 @@ function check(name, ok, detail = '') {
 // Module -> required exports. Tasks append their module before extraction.
 const EXPECTED = {
   store: ['getState', 'safeParse', 'migrateStateSchema', 'loadState', 'saveState',
-          'markStudyActivity', 'getStudyStreak', 'mergePlansLocalWins']
+          'markStudyActivity', 'getStudyStreak', 'mergePlansLocalWins'],
+  sourceData: ['SOURCE_DATA', 'qualifySourceData', 'initSourceData', 'getDataset',
+               'getSubjectChapters', 'getScopedChapterNames', 'getPlanScopeVideos',
+               'getBulkChapterKey', 'isChapterBulkCompleted', 'getChapterVideoIds',
+               'getDailyCountsExcludingBulk', 'getSourceLabel', 'getEditionShort']
 };
 
 async function run() {

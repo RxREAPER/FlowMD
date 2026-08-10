@@ -17,6 +17,7 @@ const ASSETS = [
   './js/core/namespace.js',
   './js/core/constants.js',
   './js/core/state-store.js',
+  './js/core/source-data.js',
   './js/core/subjects.js',
   './js/core/logo.js',
   './js/features/toast.js',
