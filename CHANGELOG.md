@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-11] PWA install helper — first-visit install UI + Profile guide (v191)
+
+- **New module** `js/features/pwa-install.js` (`window.FlowMD.pwaInstall`): single source of truth for the install lifecycle — captures `beforeinstallprompt`, tracks installed/installable state (`display-mode: standalone` + `appinstalled` + persisted `flowmd_pwa_installed`), and exposes `requestInstall()`.
+- **First-visit install banner** on the dashboard: adaptive — browsers with a native prompt (Android Chrome / desktop) get an **Install** CTA; browsers without one (iOS Safari) get brief **Add to Home Screen** steps (Android ⋮ menu / iPhone Share). Dismissal persists (`flowmd_install_helper_dismissed`) so it never nags again.
+- **Install App card in Profile**: short intro + the same brief steps, or an Install button when the native prompt is available, or an “installed ✓” state once installed.
+- **Fixed latent bug**: the old dashboard banner referenced `deferredInstallPrompt` (scoped inside `app.js`'s IIFE → `ReferenceError` on click) and was hidden by a stale duplicate `.pwa-install-banner` CSS block (`position: fixed; display: none`) — both removed, wiring moved into the new module.
+- `tests/modules.mjs` registry contract +10 checks (91 total); smoke test now asserts the first-visit banner and the Profile install card (27 checks).
+
 ## [2026-08-10] Phase C — legacy retro-era naming cleanup + storage-key migration (v184)
 
 - **Design tokens renamed** (v179): `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS` across all views, toast, theme, search, charts, constants, the app shell, `index.html`, and `style.css` (347 occurrences); stale `PXLKIT`/`PxlKit`/`16-BIT RETRO RPG` comments → FlowMD.

@@ -129,6 +129,11 @@ async function run() {
   check('Study plan config shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
   check('Study plan config has plan selector', await page.locator('#goal-plan-select').count() === 1);
 
+  // First-visit PWA install helper (fresh profile → not installed, not dismissed)
+  const installBanner = await page.locator('#pwa-install-banner-card').count();
+  check('First-visit install helper banner shows on dashboard', installBanner === 1,
+    installBanner ? 'banner present' : 'MISSING');
+
   // Curriculum view
   await clickNav(page, 'curriculum');
   const curriculumSubjects = await page.locator('.curriculum-sub-row').count();
@@ -150,7 +155,12 @@ async function run() {
 
   // Profile view
   await clickNav(page, 'profile');
-  check('Profile view renders content', (await page.locator('#app-main').innerText()).length > 50);
+  const profileText = await page.locator('#app-main').innerText();
+  check('Profile view renders content', profileText.length > 50);
+  const profileHasInstallGuide = profileText.includes('Install App') &&
+    (profileText.includes('Install FlowMD App') || profileText.includes('Add to Home Screen'));
+  check('Profile shows brief Install App guide', profileHasInstallGuide,
+    profileHasInstallGuide ? 'install card present' : 'install card MISSING');
 
   // Search modal
   const searchBtn = await page.locator('#btn-toggle-search').count();

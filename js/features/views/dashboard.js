@@ -17,6 +17,7 @@
   const { renderEditionChip } = window.FlowMD.theme;
   const { renderStudyPlanConfigCard, initStudyPlanConfig, focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { renderOnboardingWizard } = window.FlowMD.onboarding;
+  const pwaInstall = window.FlowMD.pwaInstall;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -170,29 +171,8 @@
         </div>
       </div>
 
-      <!-- Android PWA Install Banner -->
-      ${state.canInstallPWA ? `
-        <div id="pwa-install-banner-card" class="v2-pixel-card pwa-install-banner">
-          <div class="pwa-install-banner-content">
-            <div class="pwa-install-text">
-              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="v2-hud-badge"><span class="material-symbols-outlined" style="font-size:16px;">smartphone</span> MOBILE PWA</span>
-              </div>
-              <h3 class="pwa-install-title">Install FlowMD Android App</h3>
-              <p class="pwa-install-desc">Get offline access & hardware back-button integration!</p>
-            </div>
-            <div class="pwa-install-buttons">
-              <button type="button" class="v2-arcade-btn" id="btn-pwa-install-now" style="height: 38px; font-size: 0.88rem;">
-                <span class="material-symbols-outlined" style="font-size: 18px;">get_app</span>
-                <span>Install</span>
-              </button>
-              <button type="button" class="v2-arcade-btn" id="btn-pwa-dismiss-banner" style="height: 38px; background: var(--bg-surface-raised); color: var(--text-secondary); font-size: 0.88rem;">
-                Dismiss
-              </button>
-            </div>
-          </div>
-        </div>
-      ` : ''}
+      <!-- PWA Install Helper (first visits: install CTA or add-to-home-screen help) -->
+      ${pwaInstall && pwaInstall.shouldShowFirstVisitBanner() ? pwaInstall.renderFirstVisitBanner() : ''}
 
       <!-- All-Quests-Done Banner -->
       ${allQuestsDone ? `
@@ -229,26 +209,19 @@
       ${renderStudyPlanConfigCard()}
     `;
 
-    document.getElementById('btn-pwa-install-now')?.addEventListener('click', () => {
-      if (deferredInstallPrompt) {
-        deferredInstallPrompt.prompt();
-        deferredInstallPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            showToast('Installing FlowMD PWA...', 'rocket_launch');
-            if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('install');
-          }
-          deferredInstallPrompt = null;
-          state.canInstallPWA = false;
-          render();
-        });
-      } else {
-        showToast('To install: tap Browser Menu (⋮) → "Add to Home screen"', 'info');
+    document.getElementById('btn-pwa-install-now')?.addEventListener('click', async () => {
+      const outcome = await pwaInstall.requestInstall();
+      if (outcome === 'accepted') {
+        showToast('Installing FlowMD PWA...', 'rocket_launch');
+        if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('install');
+      } else if (outcome === 'unavailable') {
+        showToast('Tap Browser Menu (⋮) → "Install app"', 'info');
       }
     });
 
     document.getElementById('btn-pwa-dismiss-banner')?.addEventListener('click', () => {
-      state.canInstallPWA = false;
-      showToast('Install banner dismissed.', 'info');
+      pwaInstall.dismissFirstVisitBanner();
+      showToast('Install helper dismissed.', 'info');
       renderDashboardView(DOM, stats);
     });
 

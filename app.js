@@ -78,19 +78,11 @@
     bindEvents();
     initFirebaseSync();
     initServiceWorker();
+    if (window.FlowMD.pwaInstall) window.FlowMD.pwaInstall.init();
     render();
     resetPageScrollTop();
-
-    // Capture PWA install prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredInstallPrompt = e;
-      state.canInstallPWA = true;
-      if (typeof render === 'function' && DOM.appMain) render();
-    });
   }
 
-  let deferredInstallPrompt = null;
   function initServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
     window.addEventListener('load', () => {

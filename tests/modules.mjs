@@ -65,6 +65,9 @@ const EXPECTED = {
   planConfig: ['renderStudyPlanConfigCard', 'initStudyPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
   sourceSettings: ['openSourceSettingsModal'],
   charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap'],
+  pwaInstall: ['init', 'isInstalled', 'isInstallable', 'getPrompt', 'requestInstall',
+               'shouldShowFirstVisitBanner', 'dismissFirstVisitBanner',
+               'renderFirstVisitBanner', 'renderProfileInstallCard'],
   views: ['renderDashboardView', 'renderCurriculumView', 'renderSubjectDetailView', 'renderAnalyticsView', 'renderProfileView', 'openProfileBottomSheet', 'closeBottomSheet']
 };
 

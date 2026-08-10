@@ -19,6 +19,7 @@
   const { showToast } = window.FlowMD.toast;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { openSourceSettingsModal } = window.FlowMD.sourceSettings;
+  const pwaInstall = window.FlowMD.pwaInstall;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -105,6 +106,17 @@
         `}
       </div>
 
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;">install_mobile</span>
+          Install App
+        </h3>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
+          Use FlowMD like a native app — installs to your home screen, runs full-screen and works offline.
+        </p>
+        ${pwaInstall ? pwaInstall.renderProfileInstallCard() : ''}
+      </div>
+
       <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary);">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
           <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;">support_agent</span>
@@ -173,6 +185,16 @@
       const reveal = document.getElementById('hidden-support-email');
       if (reveal) {
         reveal.style.display = 'block';
+      }
+    });
+
+    document.getElementById('btn-pwa-install-now')?.addEventListener('click', async () => {
+      const outcome = await pwaInstall.requestInstall();
+      if (outcome === 'accepted') {
+        showToast('Installing FlowMD PWA...', 'rocket_launch');
+        if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('install');
+      } else if (outcome === 'unavailable') {
+        showToast('Tap Browser Menu (⋮) → "Install app"', 'info');
       }
     });
 

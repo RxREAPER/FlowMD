@@ -3627,6 +3627,72 @@ body {
   font-size: 0.92rem;
 }
 
+/* PWA install helper — step-by-step guide + profile status */
+.pwa-install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.pwa-install-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-hud), "VT323", monospace;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.pwa-install-step .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--accent-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pwa-install-kbd {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-surface-raised);
+  font-family: var(--font-hud), "VT323", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.profile-install-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+}
+
+.profile-install-status.installed {
+  color: var(--success);
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+[data-theme-style="retro"] .pwa-install-step {
+  font-family: var(--font-hud), "VT323", monospace;
+  font-size: 0.95rem;
+}
+
+[data-theme-style="retro"] .pwa-install-kbd {
+  border: 2px solid var(--v2-ink);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 0 #000000;
+  background: var(--retro-surface, #0d1017);
+}
+
 [data-theme-style="retro"] .support-email-inner {
   border: 2px solid var(--v2-ink);
   border-radius: 0;
@@ -4806,49 +4872,6 @@ body {
   .pwa-orientation-lock {
     display: flex;
   }
-}
-
-/* PWA install prompt banner */
-.pwa-install-banner {
-  position: fixed;
-  bottom: 70px;
-  left: 12px;
-  right: 12px;
-  z-index: 9998;
-  display: none;
-  padding: 12px 16px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15));
-  border: 1px solid rgba(59,130,246,0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  font-family: var(--font-hud);
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  text-align: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-}
-
-.pwa-install-banner.visible {
-  display: block;
-}
-
-.pwa-install-banner .pwa-install-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  background: var(--accent-primary);
-  color: #fff;
-  border: none;
-  font-family: var(--font-hud);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
 }
 
 /* Mobile curriculum progress bar */
