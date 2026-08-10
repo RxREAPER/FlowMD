@@ -9,6 +9,7 @@
   'use strict';
 
   const { PXL_ICONS, SUBJECT_ICONS, SUBJECT_SVG_ICONS, SUBJECT_COLORS, escapeHtml } = window.FlowMD.constants;
+  const { getDailyCountsExcludingBulk } = window.FlowMD.sourceData;
   const { getSubjectColor } = window.FlowMD.subjects;
 
   function renderPixelSubjectHeatmap(stats) {
