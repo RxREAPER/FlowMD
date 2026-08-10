@@ -28,8 +28,10 @@
   }
 
   // Google Analytics (measurementId lives in firebaseConfig once initialized).
+  // Skipped while offline: the beacon fetch would fail and log a console error
+  // on every offline visit (the SDKs are precached now, so they load offline).
   let analytics = null;
-  if (typeof firebase !== 'undefined' && firebase.analytics) {
+  if (typeof firebase !== 'undefined' && firebase.analytics && navigator.onLine) {
     try { analytics = firebase.analytics(); } catch (e) { /* non-browser env */ }
   }
 

@@ -89,15 +89,22 @@ async function run() {
     `w=${onlineIcon.width} h=${onlineIcon.height} text="${onlineIcon.text}"`);
   check('Online: no page errors', errors.length === 0, errors.slice(0, 3).join(' | ').slice(0, 200));
 
-  // 2. Wait for SW control, then reload ONLINE so the SW caches the Google
-  //    Font CSS + woff2 files (matches a returning user's second visit).
+  // 2. Wait for the SW to finish installing (this precaches the shell, data,
+  //    Firebase SDKs, AND Google Fonts), then go offline and reload. This is
+  //    the "first-ever visit is already offline-capable" guarantee: no second
+  //    online load is needed to warm the font/SDK caches.
   await page.evaluate(() => navigator.serviceWorker.ready);
-  await page.waitForTimeout(1500);
-  await page.reload({ waitUntil: 'domcontentloaded' }).catch(() => {});
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(2500);
   errors.length = 0;
 
-  // 3. Offline reload: full app from cache, icons still glyphs.
+  // 3. Offline reload: full app from the install-time precache.
+  //    Playwright's setOffline blocks the network layer but does NOT flip
+  //    navigator.onLine (browsers only flip it via real network events), so
+  //    also emulate the offline event — that's what the app's analytics
+  //    guard (firebase.js: skip analytics init when offline) depends on.
+  await context.addInitScript(() => {
+    Object.defineProperty(Navigator.prototype, 'onLine', { get: () => false, configurable: true });
+  });
   await context.setOffline(true);
   await page.reload({ waitUntil: 'domcontentloaded' }).catch(() => {});
   await page.waitForTimeout(3500);
@@ -113,11 +120,19 @@ async function run() {
     `title="${offline.title}" main=${offline.mainChars} nav=${offline.hasNav}`);
 
   const offlineIcon = await iconState(page);
-  check('Offline: Material Symbols still render as glyphs (font cached)',
+  check('Offline: Material Symbols still render as glyphs (precached at install)',
     offlineIcon.found && offlineIcon.width <= 32 && offlineIcon.height <= 32 &&
     offlineIcon.fontLoaded === true,
     `w=${offlineIcon.width} h=${offlineIcon.height} fontLoaded=${offlineIcon.fontLoaded}`);
   check('Offline: no page errors', errors.length === 0, errors.slice(0, 3).join(' | ').slice(0, 200));
+
+  // 4. Confirm the Firebase SDKs made it into the install-time precache
+  //    (first-visit offline auth/firestore).
+  check('Offline: Firebase SDK precache present', await page.evaluate(async () => {
+    const keys = await caches.keys();
+    const cache = await caches.open(keys.find((k) => k.startsWith('marrow-planner-pwa')) || keys[0]);
+    return !!(await cache.match('https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js'));
+  }), 'firebase-app-compat.js in precache');
 
   await browser.close();
 
