@@ -190,6 +190,74 @@ async function run() {
   check('No page errors during migration', pageErrors.length === 0,
     pageErrors.slice(0, 3).join(' | ').slice(0, 200));
 
+  // --- Run C: v1-era profile → v3 in one pass (no schema version key,
+  // unprefixed video IDs). Proves the v2→v3 block runs BEFORE v1→v2, so the
+  // video-ID prefixing still finds the renamed key. ---
+  await page.goto(`${BASE}/`);
+  await page.evaluate(([common]) => {
+    localStorage.clear();
+    for (const [k, v] of Object.entries(common)) localStorage.setItem(k, v);
+    localStorage.setItem('marrow_planner_completed_videos', JSON.stringify({ 'anatomy__v1': true }));
+    localStorage.setItem('marrow_planner_personal', JSON.stringify({ doctorName: 'Dr. V1 User', isSynced: false, syncEmail: '' }));
+  }, [COMMON_KEYS]);
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(800);
+  const v1 = await snapshot(page);
+  const v1Videos = JSON.parse(v1.values['flowmd_completed_videos'] || '{}');
+  const v1LegacyLeft = v1.keys.filter((k) => k.startsWith('marrow_planner_'));
+  check('v1 profile: keys renamed to flowmd_*', v1LegacyLeft.length === 0, v1LegacyLeft.join(', ') || 'none left');
+  check('v1 profile: video IDs got the marrow_8:: prefix',
+    !!v1Videos['marrow_8::anatomy__v1'] && !('anatomy__v1' in v1Videos), JSON.stringify(v1Videos));
+  check('v1 profile: schema version = 3', v1.version === '3', String(v1.version));
+
+  // --- Run D: both old and new keys present → new wins, old removed; a
+  // second load is a no-op (idempotent). ---
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('flowmd_schema_version', '2');
+    localStorage.setItem('flowmd_is_configured', 'true');
+    localStorage.setItem('flowmd_tutorial_seen', 'true');
+    localStorage.setItem('marrow_planner_theme', 'dark');
+    localStorage.setItem('flowmd_theme', 'light');
+    localStorage.setItem('marrow_planner_personal', JSON.stringify({ doctorName: 'Old Name', isSynced: false, syncEmail: '' }));
+    localStorage.setItem('flowmd_personal', JSON.stringify({ doctorName: 'New Name', isSynced: false, syncEmail: '' }));
+  });
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(800);
+  const both = await snapshot(page);
+  check('New-key-wins: existing flowmd_theme kept', both.values['flowmd_theme'] === 'light', String(both.values['flowmd_theme']));
+  check('New-key-wins: legacy key removed', !both.keys.includes('marrow_planner_theme'), 'marrow_planner_theme still present');
+  check('New-key-wins: newer personal kept', /New Name/.test(both.values['flowmd_personal'] || ''),
+    String(both.values['flowmd_personal']).slice(0, 40));
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(800);
+  const again = await snapshot(page);
+  check('Migration is idempotent on second load',
+    again.version === '3' && again.values['flowmd_theme'] === 'light' &&
+    !again.keys.some((k) => k.startsWith('marrow_planner_')),
+    `version=${again.version}`);
+
+  // --- Run E: corrupt JSON under legacy keys → app survives, migration completes. ---
+  await page.evaluate(() => {
+    localStorage.clear();
+    localStorage.setItem('flowmd_schema_version', '2');
+    localStorage.setItem('flowmd_is_configured', 'true');
+    localStorage.setItem('flowmd_tutorial_seen', 'true');
+    localStorage.setItem('marrow_planner_completed_videos', '{{{not json');
+    localStorage.setItem('marrow_planner_goals', 'definitely not json');
+    localStorage.setItem('marrow_planner_streak', '{broken');
+  });
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(800);
+  const corrupt = await snapshot(page);
+  check('Corrupt JSON: no page errors', pageErrors.length === 0, pageErrors.slice(0, 3).join(' | ').slice(0, 200));
+  check('Corrupt JSON: schema version = 3', corrupt.version === '3', String(corrupt.version));
+  check('Corrupt JSON: dashboard still renders', corrupt.main.length > 100, String(corrupt.main.length));
+
   await browser.close();
 
   const failed = results.filter((x) => !x.ok);
