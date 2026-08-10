@@ -65,12 +65,12 @@ function renderFacultyCard(faculty, subjectId) {
 
     DOM.appMain.innerHTML = `
       <div class="pwa-curriculum-scroll">
-        <div class="pxl-breadcrumb">
-          <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
-          <span class="pxl-breadcrumb-separator">&gt;</span>
-          <span class="pxl-breadcrumb-item nav-bc-curriculum" data-view="curriculum">Curriculum</span>
-          <span class="pxl-breadcrumb-separator">&gt;</span>
-          <span class="pxl-breadcrumb-item active">${subObj.name}</span>
+        <div class="fm-breadcrumb">
+          <span class="fm-breadcrumb-item nav-bc-home">Home</span>
+          <span class="fm-breadcrumb-separator">&gt;</span>
+          <span class="fm-breadcrumb-item nav-bc-curriculum" data-view="curriculum">Curriculum</span>
+          <span class="fm-breadcrumb-separator">&gt;</span>
+          <span class="fm-breadcrumb-item active">${subObj.name}</span>
         </div>
 
         <!-- Back Button - separate at top -->

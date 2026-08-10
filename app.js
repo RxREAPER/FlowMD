@@ -1,5 +1,5 @@
 /* ============================================================
-   FLOWMD V2 — 16-BIT RETRO RPG PRESENTATION LAYER
+   FLOWMD V2 — MODULAR PRESENTATION LAYER
    Cohesive Pixel-Art Design System, Arcade Controls, & HUD Meters
    Complete Redesign of Presentation Layer while preserving 100% logic parity
    ============================================================ */
@@ -11,7 +11,7 @@
   // Only what the shell itself consumes — feature modules pull their own
   // dependencies from window.FlowMD.* directly (decomposition, 2026-08).
   const {
-    PXL_ICONS,
+    FLOWMD_ICONS,
     escapeHtml
   } = window.FlowMD.constants;
 
@@ -227,11 +227,11 @@
           openInfoModal(
             'Projected Completion Date',
             `<p style="margin-bottom: 8px;"><strong>Formula:</strong> <code>(Total Syllabus Videos − Completed Videos) ÷ Daily Video Pace</code></p>
-             <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">check_circle</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Dynamic Real-Time Shifting</div>
-                 <div class="pxl-alert-message">This ETA dynamically adjusts as you complete videos or change daily pace target in Profile settings.</div>
+             <div class="fm-alert fm-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
+               <span class="material-symbols-outlined fm-alert-icon">check_circle</span>
+               <div class="fm-alert-content">
+                 <div class="fm-alert-title">Dynamic Real-Time Shifting</div>
+                 <div class="fm-alert-message">This ETA dynamically adjusts as you complete videos or change daily pace target in Profile settings.</div>
                </div>
              </div>`
           );
@@ -239,22 +239,22 @@
           openInfoModal(
             'Ideal vs Actual Schedule Delta',
             `<p style="margin-bottom: 8px;"><strong>Schedule Delta:</strong> Compares actual 7-day completed lectures against your target quota (Daily Target × 7).</p>
-             <div class="pxl-alert pxl-alert-warning" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">warning</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Automatic Schedule Recovery</div>
-                 <div class="pxl-alert-message">When behind pace, FlowMD calculates exact extra daily videos needed to recover without burn-out.</div>
+             <div class="fm-alert fm-alert-warning" style="margin: 10px 0 0 0; padding: 12px;">
+               <span class="material-symbols-outlined fm-alert-icon">warning</span>
+               <div class="fm-alert-content">
+                 <div class="fm-alert-title">Automatic Schedule Recovery</div>
+                 <div class="fm-alert-message">When behind pace, FlowMD calculates exact extra daily videos needed to recover without burn-out.</div>
                </div>
              </div>`
           );
         } else if (type === 'action-queue') {
           openInfoModal("Today's Action Queue",
             `<p style="margin-bottom: 8px;"><strong>Daily Video:</strong> Shows your next video to watch.</p>
-              <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
-                <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
-                <div class="pxl-alert-content">
-                  <div class="pxl-alert-title">Load Next Video</div>
-                  <div class="pxl-alert-message">Completing a video unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Load Next Video to continue your progress.</div>
+              <div class="fm-alert fm-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
+                <span class="material-symbols-outlined fm-alert-icon">rocket_launch</span>
+                <div class="fm-alert-content">
+                  <div class="fm-alert-title">Load Next Video</div>
+                  <div class="fm-alert-message">Completing a video unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Load Next Video to continue your progress.</div>
                 </div>
               </div>`
           );
@@ -301,11 +301,11 @@
     } catch (e) {
       console.error('Render error in ' + viewName + ':', e);
       if (DOM.appMain) {
-        DOM.appMain.innerHTML = '<div class="pxl-card" style="padding:24px;text-align:center;">' +
-          '<div class="pxl-icon" style="color:#ef4444;margin:0 auto 12px;">' + escapeHtml(PXL_ICONS.exclamation || '') + '</div>' +
+        DOM.appMain.innerHTML = '<div class="fm-card" style="padding:24px;text-align:center;">' +
+          '<div class="fm-icon" style="color:#ef4444;margin:0 auto 12px;">' + escapeHtml(FLOWMD_ICONS.exclamation || '') + '</div>' +
           '<h3>Something went wrong</h3>' +
-          '<p class="pxl-text-muted" style="margin-top:8px;">' + escapeHtml(e.message || 'Unknown error') + '</p>' +
-          '<button class="pxl-btn pxl-btn-primary" style="margin-top:16px;" onclick="location.reload()">Reload App</button>' +
+          '<p class="fm-text-muted" style="margin-top:8px;">' + escapeHtml(e.message || 'Unknown error') + '</p>' +
+          '<button class="fm-btn fm-btn-primary" style="margin-top:16px;" onclick="location.reload()">Reload App</button>' +
         '</div>';
       }
     }

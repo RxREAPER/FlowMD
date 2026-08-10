@@ -37,7 +37,7 @@
 
     const avatarBox = document.getElementById('topbar-user-profile');
     if (avatarBox) {
-      avatarBox.className = `pxl-avatar pxl-avatar-sm pxl-avatar-cyan`;
+      avatarBox.className = `fm-avatar fm-avatar-sm fm-avatar-cyan`;
     }
   }
 

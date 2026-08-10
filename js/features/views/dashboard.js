@@ -12,7 +12,7 @@
   const { getState, getStudyStreak, markStudyActivity, saveState } = window.FlowMD.store;
   const { getPlanScopeVideos } = window.FlowMD.sourceData;
   const { getAllPlanQueues } = window.FlowMD.metrics;
-  const { PXL_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey } = window.FlowMD.constants;
+  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { renderEditionChip } = window.FlowMD.theme;
   const { renderStudyPlanConfigCard, initStudyPlanConfig, focusStudyPlanConfig } = window.FlowMD.planConfig;
@@ -91,7 +91,7 @@
               </div>
             ` : `
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px;">
-                <div class="v2-alert-icon-box" style="background: var(--accent-success, #10b981);">${PXL_ICONS.trophy}</div>
+                <div class="v2-alert-icon-box" style="background: var(--accent-success, #10b981);">${FLOWMD_ICONS.trophy}</div>
                 <div class="v2-alert-content">
                   <div class="v2-alert-category" style="color: var(--accent-success, #10b981);">${plan.label} DAILY TARGET ▶ COMPLETED</div>
                   <div class="v2-alert-title">Daily Target Achieved!</div>
@@ -101,12 +101,12 @@
               </div>
             `}
             <button class="v2-arcade-btn btn-advance-queue" data-plan-id="${plan.id}" style="width:100%; height:40px; font-weight:700; font-size:0.9rem; justify-content:center; gap:8px;">
-              ${PXL_ICONS.rocket}
+              ${FLOWMD_ICONS.rocket}
               <span>🚀 Load Next Video</span>
             </button>
           ` : (queue.allSubjectDone ? `
             <div class="congrats-card-pop" style="text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
-              ${PXL_ICONS.trophy}
+              ${FLOWMD_ICONS.trophy}
               <span>All ${queue.subjectName} videos completed! <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">celebration</span></span>
             </div>
           ` : `
@@ -140,17 +140,17 @@
 
     DOM.appMain.innerHTML = `
       <!-- Hero Card -->
-      <div class="pxl-feature-card-wrapper">
-        <div class="pxl-feature-card hero-banner-card">
-          <div class="pxl-feature-card-header-badges">
+      <div class="fm-feature-card-wrapper">
+        <div class="fm-feature-card hero-banner-card">
+          <div class="fm-feature-card-header-badges">
             ${renderEditionChip()}
             ${hasDualPlans ? `
               <span class="v2-hud-badge" style="color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-color: #e11d48;"><span class="material-symbols-outlined" style="font-size:16px;">bolt</span> DUAL-TRACK MODE</span>
              ` : ''}
             <span class="v2-hud-badge" style="margin-left:auto;"><span class="material-symbols-outlined" style="font-size:16px;">local_fire_department</span> ${streakCount} day streak</span>
           </div>
-          <h1 class="pxl-feature-card-title">Welcome back, ${escapeHtml(docName)}!</h1>
-          <p class="pxl-feature-card-desc">
+          <h1 class="fm-feature-card-title">Welcome back, ${escapeHtml(docName)}!</h1>
+          <p class="fm-feature-card-desc">
             ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject || 'No subject set').join(' + ')}` : `${plans[0]?.targetSubject || 'No subject set'}`} — ${stats.percentage}% Mastered
           </p>
           <div class="hero-mastery-block">
@@ -197,7 +197,7 @@
       <!-- All-Quests-Done Banner -->
       ${allQuestsDone ? `
         <div class="v2-achievement-alert congrats-card-pop all-quests-banner">
-          <div class="v2-alert-icon-box" style="background: #ffd700;">${PXL_ICONS.trophy}</div>
+          <div class="v2-alert-icon-box" style="background: #ffd700;">${FLOWMD_ICONS.trophy}</div>
           <div class="v2-alert-content">
             <div class="v2-alert-category all-quests-category"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">emoji_events</span> ALL DAILY QUESTS COMPLETE!</div>
             <div class="v2-alert-title">Outstanding Performance!</div>
@@ -319,13 +319,13 @@
       });
     });
 
-    document.querySelectorAll('.pxl-heatmap-filter-btn').forEach(btn => {
+    document.querySelectorAll('.fm-heatmap-filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
         const filter = btn.getAttribute('data-filter');
-        document.querySelectorAll('.pxl-heatmap-filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.fm-heatmap-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelectorAll('.pxl-heatmap-tile').forEach(tile => {
+        document.querySelectorAll('.fm-heatmap-tile').forEach(tile => {
           tile.style.display = (filter === 'all' || tile.getAttribute('data-tier') === filter) ? 'flex' : 'none';
         });
       });

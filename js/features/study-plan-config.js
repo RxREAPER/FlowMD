@@ -11,7 +11,7 @@
   const { getState, saveState } = window.FlowMD.store;
   const { getDataset, getSourceLabel } = window.FlowMD.sourceData;
   const { getSyllabusStatsForSource, getSubjectOrSyllabusMetrics, getMetricsForModalScope } = window.FlowMD.metrics;
-  const { STUDY_SOURCES, DEFAULT_PLAN, PLAN_A_ACCENT, PLAN_B_ACCENT, toLocalDateKey, escapeHtml, escapeAttr, PXL_ICONS } = window.FlowMD.constants;
+  const { STUDY_SOURCES, DEFAULT_PLAN, PLAN_A_ACCENT, PLAN_B_ACCENT, toLocalDateKey, escapeHtml, escapeAttr, FLOWMD_ICONS } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
 
   // Same live object reference app.js uses — mutations are in-place.

@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  const { PXL_ICONS, SUBJECT_ICONS, SUBJECT_SVG_ICONS, SUBJECT_COLORS, escapeHtml } = window.FlowMD.constants;
+  const { FLOWMD_ICONS, SUBJECT_ICONS, SUBJECT_SVG_ICONS, SUBJECT_COLORS, escapeHtml } = window.FlowMD.constants;
   const { getDailyCountsExcludingBulk } = window.FlowMD.sourceData;
   const { getSubjectColor } = window.FlowMD.subjects;
 
@@ -29,12 +29,12 @@
     const overallPct = stats ? stats.percentage : 0;
 
     return `
-      <div class="pxl-feature-card pxl-subject-heatmap-card" style="margin-top: 24px; margin-bottom: 24px; padding: 20px;">
+      <div class="fm-feature-card fm-subject-heatmap-card" style="margin-top: 24px; margin-bottom: 24px; padding: 20px;">
         
         <!-- Header Bar -->
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <svg class="pxl-icon" viewBox="0 0 16 16" width="20" height="20" fill="none">
+            <svg class="fm-icon" viewBox="0 0 16 16" width="20" height="20" fill="none">
               <rect x="2" y="2" width="5" height="5" fill="#00f0ff" stroke="#000000" stroke-width="1"/>
               <rect x="9" y="2" width="5" height="5" fill="#00ff88" stroke="#000000" stroke-width="1"/>
               <rect x="2" y="9" width="5" height="5" fill="#ffaa00" stroke="#000000" stroke-width="1"/>
@@ -42,7 +42,7 @@
             </svg>
             <h3 class="heatmap-card-title">SUBJECT COMPLETION HEATMAP</h3>
             <span class="help-icon-btn" data-help-type="subject-heatmap" title="Subject Mastery Tier Rules">
-              <svg class="pxl-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
+              <svg class="fm-icon" viewBox="0 0 16 16" width="16" height="16" fill="none">
                 <circle cx="8" cy="8" r="7" fill="rgba(0, 240, 255, 0.2)" stroke="currentColor" stroke-width="2" />
                 <path d="M8 4.5V5.5M8 7.5V11.5" stroke="#ffffff" stroke-width="2" stroke-linecap="square" />
               </svg>
@@ -54,43 +54,43 @@
         </div>
 
         <!-- Telemetry Overview Bar -->
-        <div class="pxl-heatmap-telemetry-bar">
-          <div class="pxl-heatmap-stat">
-            <span class="pxl-stat-dot" style="background: #ff5555;"></span>
-            <span class="pxl-stat-lbl">CRITICAL (&lt;25%):</span>
-            <span class="pxl-stat-val" style="color: #ff5555;">${countCritical}</span>
+        <div class="fm-heatmap-telemetry-bar">
+          <div class="fm-heatmap-stat">
+            <span class="fm-stat-dot" style="background: #ff5555;"></span>
+            <span class="fm-stat-lbl">CRITICAL (&lt;25%):</span>
+            <span class="fm-stat-val" style="color: #ff5555;">${countCritical}</span>
           </div>
-          <div class="pxl-heatmap-stat">
-            <span class="pxl-stat-dot" style="background: #ffaa00;"></span>
-            <span class="pxl-stat-lbl">IN PROGRESS (25-50%):</span>
-            <span class="pxl-stat-val" style="color: #ffaa00;">${countPace}</span>
+          <div class="fm-heatmap-stat">
+            <span class="fm-stat-dot" style="background: #ffaa00;"></span>
+            <span class="fm-stat-lbl">IN PROGRESS (25-50%):</span>
+            <span class="fm-stat-val" style="color: #ffaa00;">${countPace}</span>
           </div>
-          <div class="pxl-heatmap-stat">
-            <span class="pxl-stat-dot" style="background: #00f0ff;"></span>
-            <span class="pxl-stat-lbl">ADVANCED (50-75%):</span>
-            <span class="pxl-stat-val" style="color: #00f0ff;">${countAdvanced}</span>
+          <div class="fm-heatmap-stat">
+            <span class="fm-stat-dot" style="background: #00f0ff;"></span>
+            <span class="fm-stat-lbl">ADVANCED (50-75%):</span>
+            <span class="fm-stat-val" style="color: #00f0ff;">${countAdvanced}</span>
           </div>
-          <div class="pxl-heatmap-stat">
-            <span class="pxl-stat-dot" style="background: #00ff88;"></span>
-            <span class="pxl-stat-lbl">MASTERED (75%+):</span>
-            <span class="pxl-stat-val" style="color: #00ff88;">${countMastered}</span>
+          <div class="fm-heatmap-stat">
+            <span class="fm-stat-dot" style="background: #00ff88;"></span>
+            <span class="fm-stat-lbl">MASTERED (75%+):</span>
+            <span class="fm-stat-val" style="color: #00ff88;">${countMastered}</span>
           </div>
         </div>
 
         <!-- Interactive Tier Filter Bar -->
-        <div class="pxl-heatmap-filter-bar">
+        <div class="fm-heatmap-filter-bar">
           <span class="heatmap-filter-label">FILTER TIERS:</span>
           <div class="heatmap-filter-group">
-            <button type="button" class="pxl-heatmap-filter-btn active" data-filter="all">ALL (${subjects.length})</button>
-            <button type="button" class="pxl-heatmap-filter-btn tier-critical" data-filter="critical">&lt;25% (${countCritical})</button>
-            <button type="button" class="pxl-heatmap-filter-btn tier-pace" data-filter="pace">25%–50% (${countPace})</button>
-            <button type="button" class="pxl-heatmap-filter-btn tier-advanced" data-filter="advanced">50%–75% (${countAdvanced})</button>
-            <button type="button" class="pxl-heatmap-filter-btn tier-mastered" data-filter="mastered">75%+ (${countMastered})</button>
+            <button type="button" class="fm-heatmap-filter-btn active" data-filter="all">ALL (${subjects.length})</button>
+            <button type="button" class="fm-heatmap-filter-btn tier-critical" data-filter="critical">&lt;25% (${countCritical})</button>
+            <button type="button" class="fm-heatmap-filter-btn tier-pace" data-filter="pace">25%–50% (${countPace})</button>
+            <button type="button" class="fm-heatmap-filter-btn tier-advanced" data-filter="advanced">50%–75% (${countAdvanced})</button>
+            <button type="button" class="fm-heatmap-filter-btn tier-mastered" data-filter="mastered">75%+ (${countMastered})</button>
           </div>
         </div>
 
         <!-- Heatmap Grid -->
-        <div class="pxl-heatmap-grid">
+        <div class="fm-heatmap-grid">
           ${subjects.map(sub => {
             let tierClass = 'critical';
             let tierColor = '#ff5555';
@@ -111,23 +111,23 @@
             }
 
             return `
-              <div class="pxl-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="--subject-accent: ${sub.accentColor};">
+              <div class="fm-heatmap-tile subject-card" data-subject-id="${sub.id}" data-tier="${tierClass}" title="Click to open ${sub.name}: ${sub.percentage.toFixed(1)}% (${sub.completedVideos}/${sub.totalVideos} videos)" style="--subject-accent: ${sub.accentColor};">
                 
                 <!-- Subject Icon -->
-                <div class="pxl-tile-icon-area" style="color: ${sub.accentColor};">
+                <div class="fm-tile-icon-area" style="color: ${sub.accentColor};">
                   ${sub.svgIcon}
                 </div>
 
                 <!-- Subject Name -->
-                <div class="pxl-tile-name" title="${sub.name}">${sub.name}</div>
+                <div class="fm-tile-name" title="${sub.name}">${sub.name}</div>
 
                 <!-- Hours -->
-                <div class="pxl-tile-hours" style="font-family: var(--font-hud); font-size: 0.68rem; color: var(--text-muted); margin: 2px 0;">${sub.completedHours} / ${sub.totalHours}h</div>
+                <div class="fm-tile-hours" style="font-family: var(--font-hud); font-size: 0.68rem; color: var(--text-muted); margin: 2px 0;">${sub.completedHours} / ${sub.totalHours}h</div>
 
                 <!-- Tier Badge -->
-                <div class="pxl-tile-bottom">
-                  <span class="pxl-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(0)}%</span>
-                  <span class="pxl-tile-telemetry">${sub.completedVideos}/${sub.totalVideos}</span>
+                <div class="fm-tile-bottom">
+                  <span class="fm-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(0)}%</span>
+                  <span class="fm-tile-telemetry">${sub.completedVideos}/${sub.totalVideos}</span>
                 </div>
               </div>
             `;

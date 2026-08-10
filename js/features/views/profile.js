@@ -34,10 +34,10 @@
     const syncEmail = state.personal.syncEmail || '';
 
     DOM.appMain.innerHTML = `
-      <div class="pxl-breadcrumb">
-        <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
-        <span class="pxl-breadcrumb-separator">&gt;</span>
-        <span class="pxl-breadcrumb-item active">Account & Profile</span>
+      <div class="fm-breadcrumb">
+        <span class="fm-breadcrumb-item nav-bc-home">Home</span>
+        <span class="fm-breadcrumb-separator">&gt;</span>
+        <span class="fm-breadcrumb-item active">Account & Profile</span>
       </div>
 
       <div class="section-title-row">
@@ -46,7 +46,7 @@
 
       <div class="v2-pixel-card" style="padding: 20px; margin-bottom: 16px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
-          <div class="pxl-avatar pxl-avatar-lg pxl-avatar-cyan">
+          <div class="fm-avatar fm-avatar-lg fm-avatar-cyan">
             ${escapeHtml((docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase())}
           </div>
           <div>
@@ -193,7 +193,7 @@
 
     DOM.bottomSheetContent.innerHTML = `
       <div style="text-align: center; margin-bottom: 16px;">
-        <div class="pxl-avatar pxl-avatar-lg pxl-avatar-cyan" style="margin: 0 auto 8px auto;">
+        <div class="fm-avatar fm-avatar-lg fm-avatar-cyan" style="margin: 0 auto 8px auto;">
           ${escapeHtml(initials)}
         </div>
         <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;">${escapeHtml(docName)}</div>

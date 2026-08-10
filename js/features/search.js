@@ -118,7 +118,7 @@
     if (!q) {
       // Search Guide — helps users understand the search functionality
       container.innerHTML = `
-        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">search</span> What Can You Search?</div>
+        <div class="fm-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">search</span> What Can You Search?</div>
         <div style="font-family: 'Poppins', sans-serif; font-size: 0.88rem; color: var(--text-muted); padding: 8px 0 4px 4px; line-height: 1.8;">
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Subjects</strong> — e.g. "anatomy", "pharmacology", "medicine"</div>
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Chapters</strong> — e.g. "cardiovascular", "neurology", "head and neck"</div>
@@ -144,7 +144,7 @@
     container.innerHTML = `
 
       ${searchData.subjects.length > 0 ? `
-        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">menu_book</span> Subjects (${searchData.subjects.length})</div>
+        <div class="fm-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">menu_book</span> Subjects (${searchData.subjects.length})</div>
         ${searchData.subjects.map(s => `
           <div class="v2-pixel-card spotlight-item" data-type="subject" data-id="${s.id}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -157,7 +157,7 @@
       ` : ''}
 
       ${searchData.chapters.length > 0 ? `
-        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span> Chapters (${searchData.chapters.length})</div>
+        <div class="fm-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span> Chapters (${searchData.chapters.length})</div>
         ${searchData.chapters.map(c => `
           <div class="v2-pixel-card spotlight-item" data-type="chapter" data-id="${c.subjectId}" data-chap="${c.chapterName}" style="cursor: pointer; padding: 10px 14px; margin-bottom: 8px;">
             <div style="font-weight: 700; font-size: 0.92rem; font-family: var(--font-display);">${c.chapterName}</div>
@@ -167,7 +167,7 @@
       ` : ''}
 
       ${searchData.videos.length > 0 ? `
-        <div class="pxl-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">play_circle</span> Video Topics (${searchData.videos.length})</div>
+        <div class="fm-command-group-header"><span class="material-symbols-outlined" style="font-size:18px;">play_circle</span> Video Topics (${searchData.videos.length})</div>
         <div class="v2-quest-card" style="padding-top: 14px; margin-top: 6px;">
           ${searchData.videos.map(v => {
             const isDone = v.isCompleted;
