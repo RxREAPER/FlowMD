@@ -67,6 +67,14 @@ jobs:
 
       - name: Commit version bump back to main
         run: |
+          echo "::notice::Workflow file from commit $(git rev-parse HEAD) (run on ${{ github.ref_name }})"
+          # Self-diagnose: confirm the GITHUB_TOKEN can actually push before
+          # committing. If push is false here, the run is using a stale
+          # workflow file or the repo default is overriding job permissions.
+          PERMS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}" | \
+            grep -oE '"push": ?(true|false)' || echo '"push": "unknown"')
+          echo "::notice::GITHUB_TOKEN $PERMS"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html sw.js js/core/constants.js
