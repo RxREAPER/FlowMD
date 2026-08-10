@@ -24,6 +24,7 @@ const ASSETS = [
   './js/features/toast.js',
   './js/features/theme.js',
   './js/features/search.js',
+  './js/features/sync.js',
   './icon.svg',
   './manifest.json',
   './offline.html',

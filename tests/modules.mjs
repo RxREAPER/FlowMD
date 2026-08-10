@@ -58,7 +58,8 @@ const EXPECTED = {
             'getTodaysActionQueue', 'getPlanById', 'getSyllabusStats',
             'getSubjectOrSyllabusMetrics'],
   theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip'],
-  search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults']
+  search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults'],
+  sync: ['initFirebaseSync', 'mergeCloudState', 'manualSync']
 };
 
 async function run() {
