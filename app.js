@@ -487,34 +487,12 @@
   }
 
   function getDailyCountsExcludingBulk() {
-    // Build a map of videoId -> bulk chapter key for quick lookup
-    const videoToBulkKey = {};
-    Object.keys(state.bulkCompletedChapters).forEach(key => {
-      const [subjectId, chapterName] = key.split('::');
-      const videoIds = getChapterVideoIds(subjectId, chapterName);
-      videoIds.forEach(vidId => { videoToBulkKey[vidId] = key; });
-    });
-
-    // Calculate daily counts excluding videos in bulk completed chapters
-    const dailyCounts = {};
-    const todayStr = todayKey();
-    for (const [dateKey, count] of Object.entries(state.dailyHistory || {})) {
-      if (dateKey === todayStr) {
-        // For today, we can compute from completedVideos in real-time
-        let actualCount = 0;
-        for (const [vidId, isDone] of Object.entries(state.completedVideos || {})) {
-          if (isDone && !videoToBulkKey[vidId]) {
-            actualCount++;
-          }
-        }
-        dailyCounts[dateKey] = actualCount;
-      } else {
-        // For historical dates, we can't easily separate bulk vs individual
-        // So we use the stored count (this is a limitation - forward-only exclusion)
-        dailyCounts[dateKey] = count;
-      }
-    }
-    return dailyCounts;
+    // dailyHistory is already bulk-exclusion-safe: bulk chapter completion
+    // marks videos completed but never calls markStudyActivity(), so bulk
+    // videos never enter dailyHistory. Stored per-day counts are accurate
+    // as-is for every date (including today, which is updated in real-time
+    // by markStudyActivity on each checkbox toggle).
+    return { ...(state.dailyHistory || {}) };
   }
 
   function getSubjectOrSyllabusMetricsForPlan(plan) {
@@ -1584,7 +1562,7 @@ function updateTopbarSource() {
         <div class="obw-sub">Pick where your syllabus data comes from.</div>
         <div class="obw-options">
           ${STUDY_SOURCES.map(s => {
-            const upcoming = s.id === 'prepladder_x';
+            const upcoming = !s.available;
             return `
               <button type="button" class="obw-option ${obwSource === s.id ? 'checked' : ''} ${upcoming ? 'upcoming' : ''}" data-source="${s.id}">
                 <span class="obw-radio"></span>
@@ -1596,10 +1574,10 @@ function updateTopbarSource() {
               </button>`;
           }).join('')}
         </div>
-        ${obwSource === 'prepladder_x' ? `
+        ${!STUDY_SOURCES.find(s => s.id === obwSource)?.available ? `
           <div class="obw-alert">
             <span class="material-symbols-outlined" style="font-size:16px;">info</span>
-            Prepladder X is an upcoming feature. Its syllabus data will be available in a future update.
+            ${getSourceLabel(obwSource)} is an upcoming feature. Its syllabus data will be available in a future update.
           </div>` : ''}
         <div class="obw-hint-path">
           <span class="material-symbols-outlined" style="font-size:16px;">settings</span>
@@ -1670,8 +1648,9 @@ function updateTopbarSource() {
       btn.addEventListener('click', () => {
         const sid = btn.getAttribute('data-source');
         obwSource = sid;
-        if (sid === 'prepladder_x') {
-          showToast('Prepladder X is coming soon — data in a future update.', 'info');
+        const srcObj = STUDY_SOURCES.find(s => s.id === sid);
+        if (srcObj && !srcObj.available) {
+          showToast(srcObj.label + ' is coming soon — data in a future update.', 'info');
         }
         renderOnboardingWizard(obwStep);
       });
@@ -1702,7 +1681,7 @@ function updateTopbarSource() {
 
     const nextBtn = document.getElementById('obw-next');
     if (nextBtn) {
-      nextBtn.disabled = (obwStep === 0 && obwSource === 'prepladder_x');
+      nextBtn.disabled = (obwStep === 0 && !STUDY_SOURCES.find(s => s.id === obwSource)?.available);
       nextBtn.addEventListener('click', () => {
         if (obwStep === 1) {
           const nameInput = document.getElementById('obw-name');
@@ -1794,13 +1773,6 @@ function updateTopbarSource() {
             </div>
 
             <form id="goal-form-a" onsubmit="return false;" class="gcm-form">
-              <div class="gcm-field">
-                <label class="gcm-label">Goal Mode</label>
-                <div class="gcm-seg">
-                  <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video"><span class="material-symbols-outlined">smart_display</span> Videos</button>
-                </div>
-              </div>
-
               <div class="gcm-hint">
                 <span class="material-symbols-outlined">calculate</span>
                 <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
@@ -1901,13 +1873,6 @@ function updateTopbarSource() {
             </div>
 
             <form id="goal-form-b" onsubmit="return false;" class="gcm-form">
-              <div class="gcm-field">
-                <label class="gcm-label">Goal Mode</label>
-                <div class="gcm-seg">
-                  <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video-b"><span class="material-symbols-outlined">smart_display</span> Videos</button>
-                </div>
-              </div>
-
               <div class="gcm-hint">
                 <span class="material-symbols-outlined">calculate</span>
                 <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
@@ -2046,7 +2011,7 @@ function updateTopbarSource() {
 
           <div class="plan-quest-stats-row">
             <div class="plan-quest-target-text">
-              TARGET: <strong>1 VIDEO AT A TIME</strong>
+              TARGET: <strong>${(plan.extraBatchesCompletedToday || 0) > 0 ? '1 VIDEO AT A TIME' : queue.baseTargetPace + ' VIDS/DAY'}</strong>
             </div>
             <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height: 30px; padding: 0 10px; font-size: 0.82rem;">
               <span>Open ${queue.subjectName}</span>
@@ -2054,7 +2019,7 @@ function updateTopbarSource() {
             </button>
           </div>
 
-          ${queue.isDailyTargetMet ? `
+          ${queue.isDailyTargetAchieved ? `
             ${(plan.extraBatchesCompletedToday || 0) > 0 ? `
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);">
                 <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;"><span class="material-symbols-outlined" style="font-size:18px;">bolt</span></div>
@@ -2269,15 +2234,17 @@ function updateTopbarSource() {
 
         if (e.target.checked) {
           state.completedVideos[vidId] = true;
-          // Get subjectId from the video
-          const video = allSubjectVideos.find(v => v.id === vidId);
+          // Get subjectId from the video (scoped to the plan's dataset)
+          const planVideos = plan ? getPlanScopeVideos(plan) : [];
+          const video = planVideos.find(v => v.id === vidId);
           const subjectId = video ? video.subjectId : null;
           markStudyActivity(true, subjectId);
           const planLabel = plan ? plan.label : '';
           showToast(`${planLabel ? planLabel + ' — ' : ''}Completed Action Queue Video!`, 'check_circle');
         } else {
           delete state.completedVideos[vidId];
-          const video = allSubjectVideos.find(v => v.id === vidId);
+          const planVideos = plan ? getPlanScopeVideos(plan) : [];
+          const video = planVideos.find(v => v.id === vidId);
           const subjectId = video ? video.subjectId : null;
           markStudyActivity(false, subjectId);
         }
@@ -3515,13 +3482,27 @@ function updateTopbarSource() {
       btnApplyA.onclick = () => {
         state.isConfigured = true;
         if (!state.plans[0]) state.plans[0] = DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
-        state.plans[0].targetSubject = subSelectA ? subSelectA.value : '';
+        const prevSubject = state.plans[0].targetSubject;
+        const newSubject = subSelectA ? subSelectA.value : '';
+        state.plans[0].targetSubject = newSubject;
         state.plans[0].targetDate = dateInputA ? dateInputA.value : '2026-08-15';
         state.plans[0].videosPerDay = Math.max(1, parseInt(vidsInputA ? vidsInputA.value : 8) || 8);
         state.plans[0].videosPerWeek = state.plans[0].videosPerDay * 7;
         state.plans[0].videosPerMonth = state.plans[0].videosPerDay * 30;
-        state.plans[0].goalMode = state.goals.goalMode || 'video';
+        const prevUnits = state.plans[0].targetUnits;
         state.plans[0].targetUnits = getSelectedUnitsForPlanKey(false);
+        if (prevSubject !== newSubject) {
+          // Subject changed: reset queue state so the daily quest reloads a
+          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
+          state.plans[0].queueBatchVideoIds = [];
+          state.plans[0].queueCompletedInBatch = 0;
+          state.plans[0].extraBatchesCompletedToday = 0;
+          state.plans[0].lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (state.plans[0].targetUnits || []).join('|')) {
+          state.plans[0].queueBatchVideoIds = [];
+          state.plans[0].queueCompletedInBatch = 0;
+          state.plans[0].extraBatchesCompletedToday = 0;
+        }
 
         // Keep legacy state.goals updated
         state.goals.targetSubject = state.plans[0].targetSubject;
@@ -3541,13 +3522,27 @@ function updateTopbarSource() {
         if (state.plans.length < 2) {
           state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
         }
-        state.plans[1].targetSubject = subSelectB ? subSelectB.value : 'Pathology';
+        const prevSubject = state.plans[1].targetSubject;
+        const newSubject = subSelectB ? subSelectB.value : 'Pathology';
+        state.plans[1].targetSubject = newSubject;
         state.plans[1].targetDate = dateInputB ? dateInputB.value : '2026-08-15';
         state.plans[1].videosPerDay = Math.max(1, parseInt(vidsInputB ? vidsInputB.value : 8) || 8);
         state.plans[1].videosPerWeek = state.plans[1].videosPerDay * 7;
         state.plans[1].videosPerMonth = state.plans[1].videosPerDay * 30;
-        state.plans[1].goalMode = state.goals.goalModeB || 'video';
+        const prevUnits = state.plans[1].targetUnits;
         state.plans[1].targetUnits = getSelectedUnitsForPlanKey(true);
+        if (prevSubject !== newSubject) {
+          // Subject changed: reset queue state so the daily quest reloads a
+          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
+          state.plans[1].queueBatchVideoIds = [];
+          state.plans[1].queueCompletedInBatch = 0;
+          state.plans[1].extraBatchesCompletedToday = 0;
+          state.plans[1].lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (state.plans[1].targetUnits || []).join('|')) {
+          state.plans[1].queueBatchVideoIds = [];
+          state.plans[1].queueCompletedInBatch = 0;
+          state.plans[1].extraBatchesCompletedToday = 0;
+        }
 
         saveState();
         showToast('Plan B Target Configured & Saved!', 'check_circle', 'Plan B Updated');
@@ -3568,18 +3563,7 @@ function updateTopbarSource() {
       };
     }
 
-    // --- Mode Switchers for Plan A ---
-    const btnVideoA = document.getElementById('tab-btn-video');
-    const fieldsVideoA = document.getElementById('fields-video-mode');
-    state.goals.goalMode = 'video';
-
-    function setModalModeA(mode) {
-      state.goals.goalMode = mode;
-      synchronizeModalPace('init', 'plan_a');
-    }
-
-    if (btnVideoA) btnVideoA.onclick = () => setModalModeA('video');
-
+    // --- Subject & Pace Listeners for Plan A ---
     if (subSelectA) subSelectA.onchange = () => {
       renderUnitChips('plan_a', subSelectA.value);
       synchronizeModalPace('subjectChange', 'plan_a');
@@ -3587,18 +3571,7 @@ function updateTopbarSource() {
     if (dateInputA) dateInputA.oninput = () => synchronizeModalPace('date', 'plan_a');
     if (vidsInputA) vidsInputA.oninput = () => synchronizeModalPace('dailyVids', 'plan_a');
 
-    // --- Mode Switchers for Plan B ---
-    const btnVideoB = document.getElementById('tab-btn-video-b');
-    const fieldsVideoB = document.getElementById('fields-video-mode-b');
-    state.goals.goalModeB = 'video';
-
-    function setModalModeB(mode) {
-      state.goals.goalModeB = mode;
-      synchronizeModalPace('init', 'plan_b');
-    }
-
-    if (btnVideoB) btnVideoB.onclick = () => setModalModeB('video');
-
+    // --- Subject & Pace Listeners for Plan B ---
     if (subSelectB) subSelectB.onchange = () => {
       renderUnitChips('plan_b', subSelectB.value);
       synchronizeModalPace('subjectChange', 'plan_b');
@@ -3649,8 +3622,6 @@ function updateTopbarSource() {
     });
 
     switchGoalTab('plan_a');
-    setModalModeA(state.goals.goalMode || 'video');
-    setModalModeB(state.goals.goalModeB || 'video');
   }
 
   function synchronizeModalPace(source, planKey = 'plan_a') {
@@ -3735,8 +3706,8 @@ function updateTopbarSource() {
     const current = state.activeSource || 'marrow_8';
     const options = STUDY_SOURCES.map(s => {
       const checked = s.id === current ? 'checked' : '';
-      const upcoming = s.id === 'prepladder_x' ? 'upcoming' : '';
-      const sub = s.id === 'prepladder_x' ? 'Coming soon — syllabus data arrives in a future update.' : `Switch to the ${s.short} syllabus for all subjects, chapters & targets.`;
+      const upcoming = !s.available ? 'upcoming' : '';
+      const sub = !s.available ? 'Coming soon — syllabus data arrives in a future update.' : `Switch to the ${s.short} syllabus for all subjects, chapters & targets.`;
       return `
         <button type="button" class="obw-option ${checked} ${upcoming}" data-src="${s.id}" role="radio" aria-checked="${checked ? 'true' : 'false'}">
           <span class="obw-radio"></span>
@@ -3770,9 +3741,9 @@ function updateTopbarSource() {
           ${options}
         </div>
 
-        <div id="scs-upcoming-alert" class="obw-alert" style="display:${current === 'prepladder_x' ? 'flex' : 'none'};">
+        <div id="scs-upcoming-alert" class="obw-alert" style="display:${!STUDY_SOURCES.find(s => s.id === current)?.available ? 'flex' : 'none'};">
           <span class="material-symbols-outlined" style="font-size:16px;">info</span>
-          Prepladder X is an upcoming feature. Its syllabus data will be available in a future update.
+          ${getSourceLabel(current)} is an upcoming feature. Its syllabus data will be available in a future update.
         </div>
 
         <div class="obw-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
@@ -3804,7 +3775,7 @@ function updateTopbarSource() {
           o.classList.toggle('checked', o === opt);
           o.setAttribute('aria-checked', o === opt ? 'true' : 'false');
         });
-        if (upcomingAlert) upcomingAlert.style.display = selected === 'prepladder_x' ? 'flex' : 'none';
+        if (upcomingAlert) upcomingAlert.style.display = !STUDY_SOURCES.find(s => s.id === selected)?.available ? 'flex' : 'none';
       });
     });
 
@@ -3812,12 +3783,12 @@ function updateTopbarSource() {
       if (selected === current) { close(); return; }
       const prevSource = current;
       state.activeSource = selected;
-      if (state.activeSource === 'prepladder_x') {
+      if (!STUDY_SOURCES.find(s => s.id === state.activeSource)?.available) {
         // Only allow if dataset exists; otherwise reject with toast.
         const hasData = SOURCE_DATA && SOURCE_DATA[selected] && SOURCE_DATA[selected].length > 0;
         if (!hasData) {
           state.activeSource = prevSource;
-          showToast('Prepladder X syllabus is not available yet.', 'error', 'Source Unavailable');
+          showToast(getSourceLabel(selected) + ' syllabus is not available yet.', 'error', 'Source Unavailable');
           return;
         }
       }

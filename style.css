@@ -459,7 +459,11 @@ body {
 }
 
 .v2-pixel-checkbox-label input[type="checkbox"] {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 
 .v2-pixel-checkbox-box {
@@ -1013,7 +1017,11 @@ body {
 }
 
 .modern-checkbox-label input[type="checkbox"] {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 
 .modern-checkbox-box {

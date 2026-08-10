@@ -66,10 +66,35 @@ const PXL_ICONS = {
   };
 
   // --- Study Sources ---
+  // available: false  → "coming soon" — UI shows it but disables selection
+  // globalVar: string → window[globalVar] is where the data file exposes its array
+  // dataFile: string  → path for the <script> tag and SW cache (relative to root)
+  // To add a new source: add one entry here, drop the data file, add the <script> tag.
   const STUDY_SOURCES = [
-    { id: 'marrow_8', label: 'Marrow Edition 8', short: 'Marrow 8' },
-    { id: 'marrow_6_5', label: 'Marrow Edition 6.5', short: 'Marrow 6.5' },
-    { id: 'prepladder_x', label: 'Prepladder X', short: 'Prepladder X' }
+    {
+      id: 'marrow_8',
+      label: 'Marrow Edition 8',
+      short: 'Marrow 8',
+      available: true,
+      globalVar: 'syllabusData',
+      dataFile: './data.js'
+    },
+    {
+      id: 'marrow_6_5',
+      label: 'Marrow Edition 6.5',
+      short: 'Marrow 6.5',
+      available: true,
+      globalVar: 'syllabusData65',
+      dataFile: './data_marrow_6_5.js'
+    },
+    {
+      id: 'prepladder_x',
+      label: 'Prepladder X',
+      short: 'Prepladder X',
+      available: false,
+      globalVar: 'syllabusDataPPL',
+      dataFile: './data_prepladder_x.js'
+    }
   ];
 
   // --- Dual-Subject Plan Defaults ---
@@ -95,7 +120,6 @@ const PXL_ICONS = {
   };
 
   const DEFAULT_GOALS = {
-    goalMode: 'video',
     targetDate: '2026-08-15',
     videosPerDay: 8,
     videosPerWeek: 56,

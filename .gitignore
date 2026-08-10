@@ -27,3 +27,7 @@ flowmd_clean_extracted.png
 flowmd_extracted_clean_logo.png
 flowmd_extracted_clean_logo.svg
 flowmd_mark.png
+
+# One-off debug scripts (never committed)
+check_char.js
+fix_breadcrumb*.js
