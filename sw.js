@@ -30,6 +30,7 @@ const ASSETS = [
   './js/features/source-settings.js',
   './js/features/charts.js',
   './js/features/views/dashboard.js',
+  './js/features/views/curriculum.js',
   './icon.svg',
   './manifest.json',
   './offline.html',

@@ -108,7 +108,7 @@
 
   const { renderExecutionChart, renderPixelSubjectHeatmap } = window.FlowMD.charts;
 
-  const { renderDashboardView } = window.FlowMD.views;
+  const { renderDashboardView, renderCurriculumView } = window.FlowMD.views;
 
   // --- App State ---
   // Shared state object — owned by js/core/state-store.js
@@ -388,63 +388,12 @@
     const stats = getSyllabusStats();
 
     if (state.currentView === 'dashboard') safeRender(() => renderDashboardView(DOM, stats), 'dashboard', stats);
-    else if (state.currentView === 'curriculum') safeRender(renderCurriculumView, 'curriculum', stats);
+    else if (state.currentView === 'curriculum') safeRender(() => renderCurriculumView(DOM, stats), 'curriculum', stats);
     else if (state.currentView === 'subject_detail') safeRender(renderSubjectDetailView, 'subject_detail', stats);
     else if (state.currentView === 'analytics') safeRender(renderAnalyticsView, 'analytics', stats);
     else safeRender(renderProfileView, 'profile', stats);
   }
 
-  function renderCurriculumView(stats) {
-    let filteredSubjects = stats.subjectsStats;
-
-    DOM.appMain.innerHTML = `
-      <div class="pxl-breadcrumb">
-        <span class="pxl-breadcrumb-item nav-bc-home">Home</span>
-        <span class="pxl-breadcrumb-separator">&gt;</span>
-        <span class="pxl-breadcrumb-item active">Curriculum</span>
-      </div>
-
-      <div class="section-title-row">
-        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum & Subjects</h2>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          ${renderEditionChip()}
-          <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
-        </div>
-      </div>
-
-      <div class="curriculum-notice" style="margin: 8px 0 16px 0; padding: 10px 12px; background: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-hud); font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px;">
-        <span class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary); flex-shrink: 0; margin-top: 1px;">info</span>
-        <span>Note: Individual video checkboxes → reflected in Analytics (7-day chart, weekly pace, daily counts). Chapter "Select All" checkbox → marks videos complete but excluded from Analytics, so you can mark previously completed chapters as a whole without distorting your analytics.</span>
-      </div>
-
-      ${filteredSubjects.map(sub => `
-        <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
-            <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-              <span class="subject-icon-medium" style="display:inline-flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</span>
-              <div style="min-width: 0;">
-                <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
-                <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="v2-hud-badge" style="${sub.percentage === 100 ? 'color: var(--success); border-color: var(--success);' : ''}">${sub.percentage}%</span>
-              <span class="material-symbols-outlined" style="color: var(--text-muted);">chevron_right</span>
-            </div>
-          </div>
-        </div>
-      `).join('')}
-    `;
-
-    document.querySelectorAll('.curriculum-sub-row').forEach(row => {
-      row.addEventListener('click', () => {
-        state.activeSubjectId = row.getAttribute('data-subject-id');
-        switchView('subject_detail');
-      });
-    });
-  }
-
-// --- View 3: Subject Detail View — Chapter Accordions ---
   function renderSubjectDetailView(stats) {
     const subObj = stats.subjectsStats.find(s => s.id === state.activeSubjectId) || stats.subjectsStats[0];
     if (!subObj) {
