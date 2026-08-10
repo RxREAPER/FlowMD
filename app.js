@@ -8,84 +8,27 @@
   'use strict';
 
   // --- Imported leaf modules (js/core/*, js/features/*) ---
+  // Only what the shell itself consumes — feature modules pull their own
+  // dependencies from window.FlowMD.* directly (decomposition, 2026-08).
   const {
     PXL_ICONS,
-    escapeHtml,
-    escapeAttr,
-    toLocalDateKey,
-    todayKey,
-    SCHEMA_VERSION,
-    STORAGE_KEYS,
-    STUDY_SOURCES,
-    DEFAULT_PLAN,
-    PLAN_A_ACCENT,
-    PLAN_B_ACCENT,
-    DEFAULT_PERSONAL,
-    DEFAULT_GOALS,
-    SUBJECT_ICONS,
-    SUBJECT_SVG_ICONS,
-    SUBJECT_COLORS,
-    SUBJECT_FACULTY
+    escapeHtml
   } = window.FlowMD.constants;
-
-  const {
-    getSubjectIconSrc,
-    getSubjectSvgIcon,
-    getSubjectAccentColor,
-    getSubjectFaculty,
-    getSubjectColor,
-    getSubjectName
-  } = window.FlowMD.subjects;
-
-  const { getFlowMDLogoSVG } = window.FlowMD.logo;
-
-  const { showToast, dismissToast } = window.FlowMD.toast;
 
   const {
     getState,
     loadState,
-    saveState,
-    markStudyActivity,
-    getStudyStreak,
-    mergePlansLocalWins
+    saveState
   } = window.FlowMD.store;
 
-  const {
-    SOURCE_DATA,
-    initSourceData,
-    getDataset,
-    getSubjectChapters,
-    getScopedChapterNames,
-    getPlanScopeVideos,
-    getBulkChapterKey,
-    isChapterBulkCompleted,
-    getChapterVideoIds,
-    getDailyCountsExcludingBulk,
-    getSourceLabel,
-    getEditionShort
-  } = window.FlowMD.sourceData;
+  const { initSourceData } = window.FlowMD.sourceData;
 
-  const {
-    getSyllabusStats,
-    getSyllabusStatsForSource,
-    getDeadlineCountdown,
-    calculateFinishETA,
-    computeMetricsFromVideos,
-    getSubjectOrSyllabusMetricsForPlan,
-    getMetricsForModalScope,
-    getTodayQueueForPlan,
-    getAllPlanQueues,
-    getTodaysActionQueue,
-    getPlanById,
-    getSubjectOrSyllabusMetrics
-  } = window.FlowMD.metrics;
+  const { getSyllabusStats } = window.FlowMD.metrics;
 
   const {
     applyTheme,
     updateTopbarInitials,
-    updateTopbarSource,
-    updateOfflineIndicator,
-    renderEditionChip
+    updateTopbarSource
   } = window.FlowMD.theme;
 
   const {
@@ -96,17 +39,7 @@
 
   const { initFirebaseSync, manualSync } = window.FlowMD.sync;
 
-  const { renderOnboardingWizard } = window.FlowMD.onboarding;
-
-  const {
-    renderStudyPlanConfigCard,
-    initStudyPlanConfig,
-    focusStudyPlanConfig
-  } = window.FlowMD.planConfig;
-
   const { openSourceSettingsModal } = window.FlowMD.sourceSettings;
-
-  const { renderExecutionChart, renderPixelSubjectHeatmap } = window.FlowMD.charts;
 
   const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
 
@@ -315,8 +248,7 @@
              </div>`
           );
         } else if (type === 'action-queue') {
-          openInfoModal(
-"Today's Action Queue",
+          openInfoModal("Today's Action Queue",
             `<p style="margin-bottom: 8px;"><strong>Daily Video:</strong> Shows your next video to watch.</p>
               <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
                 <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
@@ -405,12 +337,6 @@
       } catch (e) {}
     }
   }
-
-
-
-
-  // Read the currently selected chapter for a plan tab in the goal modal.
-  // Returns [] when "All Chapters" (full subject) is active, or [singleName] when one chapter is focused.
 
   window.FlowMD.shell = {
     render,
