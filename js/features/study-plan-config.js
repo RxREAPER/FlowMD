@@ -31,111 +31,111 @@
           <div class="spc-toolbar">
             <div class="spc-plan-select-wrap">
               <span class="material-symbols-outlined spc-flag-icon">flag</span>
-              <select id="goal-plan-select" class="gcm-input spc-plan-select" aria-label="Select plan to configure">
+              <select id="goal-plan-select" class="plan-config-input spc-plan-select" aria-label="Select plan to configure">
                 <option value="plan_a">Plan A — Primary Target</option>
               </select>
               <span class="material-symbols-outlined spc-select-arrow">expand_more</span>
             </div>
-            <label class="gcm-dual spc-dual-toggle">
+            <label class="plan-config-dual spc-dual-toggle">
               <input type="checkbox" id="toggle-plan-b">
-              <span class="gcm-switch"><i></i></span>
-              <span class="gcm-dual-label">Dual-Track</span>
+              <span class="plan-config-switch"><i></i></span>
+              <span class="plan-config-dual-label">Dual-Track</span>
             </label>
           </div>
 
           <!-- PLAN A FORM -->
           <div id="goal-plan-a-form">
-            <div class="gcm-plan-head">
-              <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan A — Primary Target</span>
-              <span class="gcm-plan-role">Main <b>Subject Goal</b></span>
+            <div class="plan-config-plan-head">
+              <span class="plan-config-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan A — Primary Target</span>
+              <span class="plan-config-plan-role">Main <b>Subject Goal</b></span>
             </div>
 
-            <form id="goal-form-a" onsubmit="return false;" class="gcm-form">
-              <div class="gcm-hint">
+            <form id="goal-form-a" onsubmit="return false;" class="plan-config-form">
+              <div class="plan-config-hint">
                 <span class="material-symbols-outlined">calculate</span>
                 <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
               </div>
 
-              <div class="gcm-field">
-                <label class="gcm-label" for="select-target-subject">Priority Target Subject</label>
-                <div class="gcm-select-wrap">
-                  <select id="select-target-subject" class="gcm-input"></select>
+              <div class="plan-config-field">
+                <label class="plan-config-label" for="select-target-subject">Priority Target Subject</label>
+                <div class="plan-config-select-wrap">
+                  <select id="select-target-subject" class="plan-config-input"></select>
                   <span class="material-symbols-outlined">expand_more</span>
                 </div>
               </div>
 
-              <div class="gcm-field">
-                <div class="gcm-field-head">
-                  <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="gcm-chips-count"></span></label>
+              <div class="plan-config-field">
+                <div class="plan-config-field-head">
+                  <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="plan-config-chips-count"></span></label>
                 </div>
-                <div class="gcm-hint" style="margin:4px 0 8px 0;">
+                <div class="plan-config-hint" style="margin:4px 0 8px 0;">
                   <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
                   <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
                 </div>
-                <div class="gcm-chips" id="chapter-chips-a"></div>
+                <div class="plan-config-chips" id="chapter-chips-a"></div>
               </div>
 
-              <div class="gcm-field">
-                <div class="gcm-hint" style="margin:0;">
+              <div class="plan-config-field">
+                <div class="plan-config-hint" style="margin:0;">
                   <span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span>
                   <span>Syllabus source: <b id="goal-source-label">Marrow Edition 8</b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
                 </div>
               </div>
 
-              <div class="gcm-field">
-                <div class="gcm-field-head">
-                  <label class="gcm-label" for="input-target-date" style="margin:0;">Target Deadline</label>
-                  <span id="days-remaining-badge" class="gcm-badge">26 Days Left</span>
+              <div class="plan-config-field">
+                <div class="plan-config-field-head">
+                  <label class="plan-config-label" for="input-target-date" style="margin:0;">Target Deadline</label>
+                  <span id="days-remaining-badge" class="plan-config-badge">26 Days Left</span>
                 </div>
-                <input type="date" id="input-target-date" value="2026-08-15" class="gcm-input">
+                <input type="date" id="input-target-date" value="2026-08-15" class="plan-config-input">
               </div>
 
-              <div id="fields-video-mode" class="gcm-pace-grid" style="display:grid;">
-                <div class="gcm-pace">
-                  <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
-                  <div class="gcm-pace-input-wrap">
-                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-day" value="8" class="gcm-pace-input">
-                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+              <div id="fields-video-mode" class="plan-config-pace-grid" style="display:grid;">
+                <div class="plan-config-pace">
+                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
+                  <div class="plan-config-pace-input-wrap">
+                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-day" value="8" class="plan-config-pace-input">
+                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
-                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
                 </div>
-                <div class="gcm-pace">
-                  <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
-                  <div class="gcm-pace-input-wrap">
-                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-week" value="56" class="gcm-pace-input">
-                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                <div class="plan-config-pace">
+                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
+                  <div class="plan-config-pace-input-wrap">
+                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-week" value="56" class="plan-config-pace-input">
+                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
-                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
                 </div>
-                <div class="gcm-pace">
-                  <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
-                  <div class="gcm-pace-input-wrap">
-                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-month" value="240" class="gcm-pace-input">
-                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                <div class="plan-config-pace">
+                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
+                  <div class="plan-config-pace-input-wrap">
+                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-month" value="240" class="plan-config-pace-input">
+                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
-                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
                 </div>
               </div>
 
               
-              <div class="gcm-guide math-guide-card">
-                <div class="gcm-guide-header math-guide-header">
+              <div class="plan-config-guide math-guide-card">
+                <div class="plan-config-guide-header math-guide-header">
                   <span class="material-symbols-outlined">info</span>
                   <span>How Plan A Date &amp; Pace Auto-Synchronize</span>
-                  <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
+                  <span class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon">expand_more</span>
                 </div>
-                <div class="gcm-guide-body math-guide-body">
+                <div class="plan-config-guide-body math-guide-body">
                   <strong>Auto-Synchronization:</strong><br>
                   &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan A <strong>Daily Pace</strong>.<br>
                   &bull; Changing <strong>Daily Pace</strong> auto-updates Plan A <strong>Target Date</strong>.
                 </div>
               </div>
 
-              <div class="gcm-actions">
-                <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals">
+              <div class="plan-config-actions">
+                <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals">
                   <span class="material-symbols-outlined">check_circle</span>
                   <span>Save &amp; Apply Plan A Target</span>
                 </button>
@@ -145,94 +145,94 @@
 
           <!-- PLAN B FORM -->
           <div id="goal-plan-b-form" style="display:none;">
-            <div class="gcm-plan-head">
-              <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan B — Secondary Target</span>
-              <span class="gcm-plan-role">Parallel <b>Subject Goal</b></span>
+            <div class="plan-config-plan-head">
+              <span class="plan-config-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan B — Secondary Target</span>
+              <span class="plan-config-plan-role">Parallel <b>Subject Goal</b></span>
             </div>
 
-            <form id="goal-form-b" onsubmit="return false;" class="gcm-form">
-              <div class="gcm-hint">
+            <form id="goal-form-b" onsubmit="return false;" class="plan-config-form">
+              <div class="plan-config-hint">
                 <span class="material-symbols-outlined">calculate</span>
                 <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
               </div>
 
-              <div class="gcm-field">
-                <label class="gcm-label" for="select-target-subject-b">Priority Target Subject</label>
-                <div class="gcm-select-wrap">
-                  <select id="select-target-subject-b" class="gcm-input"></select>
+              <div class="plan-config-field">
+                <label class="plan-config-label" for="select-target-subject-b">Priority Target Subject</label>
+                <div class="plan-config-select-wrap">
+                  <select id="select-target-subject-b" class="plan-config-input"></select>
                   <span class="material-symbols-outlined">expand_more</span>
                 </div>
               </div>
 
-              <div class="gcm-field">
-                <div class="gcm-field-head">
-                  <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="gcm-chips-count"></span></label>
+              <div class="plan-config-field">
+                <div class="plan-config-field-head">
+                  <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="plan-config-chips-count"></span></label>
                 </div>
-                <div class="gcm-hint" style="margin:4px 0 8px 0;">
+                <div class="plan-config-hint" style="margin:4px 0 8px 0;">
                   <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
                   <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
                 </div>
-                <div class="gcm-chips" id="chapter-chips-b"></div>
+                <div class="plan-config-chips" id="chapter-chips-b"></div>
               </div>
 
-              <div class="gcm-field">
-                <div class="gcm-field-head">
-                  <label class="gcm-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
-                  <span id="days-remaining-badge-b" class="gcm-badge">26 Days Left</span>
+              <div class="plan-config-field">
+                <div class="plan-config-field-head">
+                  <label class="plan-config-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
+                  <span id="days-remaining-badge-b" class="plan-config-badge">26 Days Left</span>
                 </div>
-                <input type="date" id="input-target-date-b" value="2026-08-15" class="gcm-input">
+                <input type="date" id="input-target-date-b" value="2026-08-15" class="plan-config-input">
               </div>
 
-              <div id="fields-video-mode-b" class="gcm-pace-grid" style="display:grid;">
-                <div class="gcm-pace">
-                  <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
-                  <div class="gcm-pace-input-wrap">
-                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-day-b" value="8" class="gcm-pace-input">
-                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+              <div id="fields-video-mode-b" class="plan-config-pace-grid" style="display:grid;">
+                <div class="plan-config-pace">
+                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
+                  <div class="plan-config-pace-input-wrap">
+                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-day-b" value="8" class="plan-config-pace-input">
+                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
-                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
                 </div>
-                <div class="gcm-pace">
-                  <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
-                  <div class="gcm-pace-input-wrap">
-                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-week-b" value="56" class="gcm-pace-input">
-                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                <div class="plan-config-pace">
+                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
+                  <div class="plan-config-pace-input-wrap">
+                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-week-b" value="56" class="plan-config-pace-input">
+                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
-                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
                 </div>
-                <div class="gcm-pace">
-                  <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
-                  <div class="gcm-pace-input-wrap">
-                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-month-b" value="240" class="gcm-pace-input">
-                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                <div class="plan-config-pace">
+                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
+                  <div class="plan-config-pace-input-wrap">
+                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-month-b" value="240" class="plan-config-pace-input">
+                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
-                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
                 </div>
               </div>
 
               
-              <div class="gcm-guide math-guide-card">
-                <div class="gcm-guide-header math-guide-header">
+              <div class="plan-config-guide math-guide-card">
+                <div class="plan-config-guide-header math-guide-header">
                   <span class="material-symbols-outlined">info</span>
                   <span>How Plan B Date &amp; Pace Auto-Synchronize</span>
-                  <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
+                  <span class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon">expand_more</span>
                 </div>
-                <div class="gcm-guide-body math-guide-body">
+                <div class="plan-config-guide-body math-guide-body">
                   <strong>Auto-Synchronization:</strong><br>
                   &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan B <strong>Daily Pace</strong>.<br>
                   &bull; Changing <strong>Daily Pace</strong> auto-updates Plan B <strong>Target Date</strong>.
                 </div>
               </div>
 
-              <div class="gcm-actions">
-                <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals-b">
+              <div class="plan-config-actions">
+                <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals-b">
                   <span class="material-symbols-outlined">check_circle</span>
                   <span>Save &amp; Apply Plan B Target</span>
                 </button>
-                <button type="button" class="gcm-btn gcm-btn-danger" id="btn-remove-plan-b">
+                <button type="button" class="plan-config-btn plan-config-btn-danger" id="btn-remove-plan-b">
                   <span class="material-symbols-outlined">disabled_by_default</span>
                   <span>Disable / Remove Plan B</span>
                 </button>
@@ -248,9 +248,9 @@
   function getSelectedUnitsForPlanKey(isPlanB) {
     const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
     if (!container) return [];
-    const allChip = container.querySelector('.gcm-chip[data-chap="__all__"]');
+    const allChip = container.querySelector('.plan-config-chip[data-chap="__all__"]');
     if (allChip && allChip.classList.contains('selected')) return [];
-    const selChip = container.querySelector('.gcm-chip.selected[data-chap]');
+    const selChip = container.querySelector('.plan-config-chip.selected[data-chap]');
     const name = selChip ? selChip.getAttribute('data-chap') : null;
     return (name && name !== '__all__') ? [name] : [];
   }
@@ -333,11 +333,11 @@
       const countEl = document.getElementById(isPlanB ? 'chapters-count-b' : 'chapters-count-a');
       if (!countEl) return;
       const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
-      const allChip = container ? container.querySelector('.gcm-chip[data-chap="__all__"]') : null;
+      const allChip = container ? container.querySelector('.plan-config-chip[data-chap="__all__"]') : null;
       if (allChip && allChip.classList.contains('selected')) {
         countEl.textContent = 'All chapters';
       } else {
-        const selChip = container ? container.querySelector('.gcm-chip.selected[data-chap]:not([data-chap="__all__"])') : null;
+        const selChip = container ? container.querySelector('.plan-config-chip.selected[data-chap]:not([data-chap="__all__"])') : null;
         countEl.textContent = selChip ? `1 of ${total || 0}` : 'All chapters';
       }
     }
@@ -359,7 +359,7 @@
       }
 
       if (chapters.length === 0) {
-        container.innerHTML = '<div class="gcm-chips-empty">No chapters found for this subject.</div>';
+        container.innerHTML = '<div class="plan-config-chips-empty">No chapters found for this subject.</div>';
         updateChapterCount(isPlanB, 0);
         return;
       }
@@ -374,29 +374,29 @@
         if (match) focusedName = String(match.name);
       }
 
-      const searchId = `gcm-chapter-search-${isPlanB ? 'b' : 'a'}`;
-      const allChip = `<button type="button" class="gcm-chip ${focusedName ? '' : 'selected'}" data-chap="__all__"><span class="material-symbols-outlined" style="font-size:15px;">select_all</span><span>All Chapters</span></button>`;
+      const searchId = `plan-config-chapter-search-${isPlanB ? 'b' : 'a'}`;
+      const allChip = `<button type="button" class="plan-config-chip ${focusedName ? '' : 'selected'}" data-chap="__all__"><span class="material-symbols-outlined" style="font-size:15px;">select_all</span><span>All Chapters</span></button>`;
 
       container.innerHTML = `
-        <div class="gcm-chips-search">
+        <div class="plan-config-chips-search">
           <span class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);">search</span>
           <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:'Poppins', sans-serif; font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
         </div>
-        <div class="gcm-chips-list" style="max-height:280px; overflow-y:auto;">${allChip + chapters.map(c => {
+        <div class="plan-config-chips-list" style="max-height:280px; overflow-y:auto;">${allChip + chapters.map(c => {
         const name = String(c.name);
         const on = (focusedName === name);
         const vcount = (c.videos && c.videos.length) || 0;
-        return `<button type="button" class="gcm-chip ${on ? 'selected' : ''}" data-chap="${name}"><span>${name}</span><span class="gcm-chip-vids">${vcount}</span></button>`;
+        return `<button type="button" class="plan-config-chip ${on ? 'selected' : ''}" data-chap="${name}"><span>${name}</span><span class="plan-config-chip-vids">${vcount}</span></button>`;
       }).join('')}</div>
       `;
 
       // Search filter
       const searchInput = document.getElementById(searchId);
-      const chipList = container.querySelector('.gcm-chips-list');
+      const chipList = container.querySelector('.plan-config-chips-list');
       if (searchInput && chipList) {
         searchInput.addEventListener('input', () => {
           const q = searchInput.value.toLowerCase().trim();
-          chipList.querySelectorAll('.gcm-chip').forEach(chip => {
+          chipList.querySelectorAll('.plan-config-chip').forEach(chip => {
             const name = chip.querySelector('span')?.textContent?.toLowerCase() || '';
             const match = q === '' || name.includes(q);
             chip.style.display = match ? 'inline-flex' : 'none';
@@ -404,16 +404,16 @@
         });
       }
 
-      chipList.querySelectorAll('.gcm-chip').forEach(chip => {
+      chipList.querySelectorAll('.plan-config-chip').forEach(chip => {
         chip.onclick = () => {
           if (chip.classList.contains('selected')) {
             if (chip.getAttribute('data-chap') !== '__all__') {
               // Deselect a focused chapter -> back to full subject
-              container.querySelectorAll('.gcm-chip').forEach(c => c.classList.remove('selected'));
-              container.querySelector('.gcm-chip[data-chap="__all__"]')?.classList.add('selected');
+              container.querySelectorAll('.plan-config-chip').forEach(c => c.classList.remove('selected'));
+              container.querySelector('.plan-config-chip[data-chap="__all__"]')?.classList.add('selected');
             }
           } else {
-            container.querySelectorAll('.gcm-chip').forEach(c => c.classList.remove('selected'));
+            container.querySelectorAll('.plan-config-chip').forEach(c => c.classList.remove('selected'));
             chip.classList.add('selected');
           }
           updateChapterCount(isPlanB, chapters.length);
@@ -604,11 +604,11 @@
     });
 
     // Stepper buttons (±) for the pace inputs
-    document.querySelectorAll('#study-plan-config .gcm-step').forEach(btn => {
+    document.querySelectorAll('#study-plan-config .plan-config-step').forEach(btn => {
       btn.onclick = (e) => {
         e.preventDefault();
-        const wrap = btn.closest('.gcm-pace-input-wrap');
-        const input = wrap ? wrap.querySelector('.gcm-pace-input') : null;
+        const wrap = btn.closest('.plan-config-pace-input-wrap');
+        const input = wrap ? wrap.querySelector('.plan-config-pace-input') : null;
         if (!input) return;
         const isPlus = btn.textContent.trim() === '+';
         const step = parseFloat(input.step) || 1;

@@ -70,11 +70,11 @@
         <div class="onboarding-title">👤 About you</div>
         <div class="onboarding-sub">Help us personalize your dashboard.</div>
         <div style="text-align:left; margin-top:16px;">
-          <label class="gcm-label" for="onboarding-name">What should we call you?</label>
+          <label class="plan-config-label" for="onboarding-name">What should we call you?</label>
           <input type="text" id="onboarding-name" class="onboarding-name-input" value="${escapeAttr(onboardingName)}" placeholder="Dr. Aspirant">
         </div>
         <div style="text-align:left; margin-top:16px;">
-          <label class="gcm-label">Theme</label>
+          <label class="plan-config-label">Theme</label>
           <div class="onboarding-theme-grid">
             <button type="button" class="onboarding-theme-opt ${onboardingTheme === 'dark' ? 'checked' : ''}" data-theme-val="dark">🌙 Dark Mode</button>
             <button type="button" class="onboarding-theme-opt ${onboardingTheme === 'light' ? 'checked' : ''}" data-theme-val="light">☀️ Light Mode</button>

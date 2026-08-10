@@ -5435,7 +5435,7 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.gcm-card {
+.plan-config-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -5448,20 +5448,20 @@ body {
   flex-direction: column;
 }
 
-.gcm-hero {
+.plan-config-hero {
   padding: 24px 20px 16px;
   background: linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(139,92,246,0.06) 100%);
   border-bottom: 1px solid var(--border-color);
   text-align: center;
 }
 
-.gcm-hero-top {
+.plan-config-hero-top {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 8px;
 }
 
-.gcm-icon-btn {
+.plan-config-icon-btn {
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -5475,18 +5475,18 @@ body {
   transition: all 0.15s ease;
 }
 
-.gcm-icon-btn:hover {
+.plan-config-icon-btn:hover {
   background: var(--bg-surface);
   color: var(--text-primary);
 }
 
-.gcm-hero-icon {
+.plan-config-hero-icon {
   font-size: 32px;
   color: var(--accent-primary);
   margin-bottom: 8px;
 }
 
-.gcm-hero-kicker {
+.plan-config-hero-kicker {
   font-family: var(--font-hud);
   font-size: 0.7rem;
   font-weight: 700;
@@ -5496,7 +5496,7 @@ body {
   margin-bottom: 4px;
 }
 
-.gcm-hero-title {
+.plan-config-hero-title {
   font-family: var(--font-display);
   font-size: 1.2rem;
   font-weight: 700;
@@ -5504,7 +5504,7 @@ body {
   margin: 0 0 4px 0;
 }
 
-.gcm-hero-sub {
+.plan-config-hero-sub {
   font-family: var(--font-hud);
   font-size: 0.82rem;
   color: var(--text-muted);
@@ -5512,14 +5512,14 @@ body {
   line-height: 1.4;
 }
 
-.gcm-hero-chips {
+.plan-config-hero-chips {
   display: flex;
   gap: 6px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-.gcm-chip {
+.plan-config-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -5533,18 +5533,18 @@ body {
   font-weight: 700;
 }
 
-.gcm-chip .material-symbols-outlined {
+.plan-config-chip .material-symbols-outlined {
   font-size: 14px;
   color: var(--accent-primary);
 }
 
-.gcm-body {
+.plan-config-body {
   padding: 16px 20px 24px;
   flex: 1;
   overflow-y: auto;
 }
 
-.gcm-tabbar {
+.plan-config-tabbar {
   display: flex;
   align-items: center;
   gap: 0;
@@ -5555,7 +5555,7 @@ body {
   border: 1px solid var(--border-color);
 }
 
-.gcm-sep {
+.plan-config-sep {
   width: 1px;
   height: 32px;
   background: var(--border-color);
@@ -5563,7 +5563,7 @@ body {
   flex-shrink: 0;
 }
 
-.gcm-dual {
+.plan-config-dual {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -5572,11 +5572,11 @@ body {
   flex-shrink: 0;
 }
 
-.gcm-dual input[type=checkbox] {
+.plan-config-dual input[type=checkbox] {
   display: none;
 }
 
-.gcm-switch {
+.plan-config-switch {
   width: 36px;
   height: 20px;
   border-radius: 10px;
@@ -5586,7 +5586,7 @@ body {
   flex-shrink: 0;
 }
 
-.gcm-switch i {
+.plan-config-switch i {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -5597,15 +5597,15 @@ body {
   transition: transform 0.2s ease;
 }
 
-.gcm-dual input:checked + .gcm-switch {
+.plan-config-dual input:checked + .plan-config-switch {
   background: var(--accent-primary);
 }
 
-.gcm-dual input:checked + .gcm-switch i {
+.plan-config-dual input:checked + .plan-config-switch i {
   transform: translateX(16px);
 }
 
-.gcm-dual-label {
+.plan-config-dual-label {
   font-family: 'Poppins', sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
@@ -5638,24 +5638,24 @@ body {
   box-shadow: 0 2px 8px rgba(59,130,246,0.3);
 }
 
-.gcm-tab-dot {
+.plan-config-tab-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.gcm-tab-name {
+.plan-config-tab-name {
   font-weight: 700;
 }
 
-.gcm-tab-sub {
+.plan-config-tab-sub {
   font-size: 0.65rem;
   opacity: 0.7;
   font-weight: 400;
 }
 
-.gcm-plan-head {
+.plan-config-plan-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -5664,7 +5664,7 @@ body {
   border-bottom: 1px solid var(--border-color);
 }
 
-.gcm-plan-badge {
+.plan-config-plan-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -5678,25 +5678,25 @@ body {
   color: var(--text-primary);
 }
 
-.gcm-plan-role {
+.plan-config-plan-role {
   font-family: 'Poppins', sans-serif;
   font-size: 0.7rem;
   color: var(--text-muted);
 }
 
-.gcm-form {
+.plan-config-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.gcm-field {
+.plan-config-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.gcm-label {
+.plan-config-label {
   font-family: 'Poppins', sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
@@ -5705,19 +5705,19 @@ body {
   letter-spacing: 0.04em;
 }
 
-.gcm-field-head {
+.plan-config-field-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.gcm-select-wrap {
+.plan-config-select-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.gcm-select-wrap .material-symbols-outlined {
+.plan-config-select-wrap .material-symbols-outlined {
   position: absolute;
   right: 8px;
   font-size: 18px;
@@ -5725,7 +5725,7 @@ body {
   pointer-events: none;
 }
 
-.gcm-input {
+.plan-config-input {
   width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
@@ -5738,18 +5738,18 @@ body {
   box-sizing: border-box;
 }
 
-.gcm-input:focus {
+.plan-config-input:focus {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
 }
 
-.gcm-input option {
+.plan-config-input option {
   background: var(--bg-surface);
   color: var(--text-primary);
 }
 
-.gcm-seg {
+.plan-config-seg {
   display: flex;
   gap: 4px;
   background: var(--bg-surface-raised);
@@ -5758,7 +5758,7 @@ body {
   border: 1px solid var(--border-color);
 }
 
-.gcm-seg-btn {
+.plan-config-seg-btn {
   flex: 1;
   display: flex;
   align-items: center;
@@ -5776,13 +5776,13 @@ body {
   transition: all 0.15s ease;
 }
 
-.gcm-seg-btn.active {
+.plan-config-seg-btn.active {
   background: var(--accent-primary);
   color: #fff;
   box-shadow: 0 2px 6px rgba(59,130,246,0.3);
 }
 
-.gcm-hint {
+.plan-config-hint {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -5796,33 +5796,33 @@ body {
   line-height: 1.4;
 }
 
-.gcm-hint .material-symbols-outlined {
+.plan-config-hint .material-symbols-outlined {
   color: var(--accent-primary);
   font-size: 18px;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
-.gcm-chips {
+.plan-config-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.gcm-chips-count {
+.plan-config-chips-count {
   font-family: 'Poppins', sans-serif;
   font-size: 0.7rem;
   color: var(--accent-primary);
   font-weight: 700;
 }
 
-.gcm-pace-grid {
+.plan-config-pace-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
-.gcm-pace {
+.plan-config-pace {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -5832,13 +5832,13 @@ body {
   border: 1px solid var(--border-color);
 }
 
-.gcm-pace-top {
+.plan-config-pace-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.gcm-pace-label {
+.plan-config-pace-label {
   font-family: 'Poppins', sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
@@ -5846,20 +5846,20 @@ body {
   text-transform: uppercase;
 }
 
-.gcm-pace-unit {
+.plan-config-pace-unit {
   font-family: 'Poppins', sans-serif;
   font-size: 0.65rem;
   color: var(--text-muted);
   opacity: 0.7;
 }
 
-.gcm-pace-input-wrap {
+.plan-config-pace-input-wrap {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.gcm-step {
+.plan-config-step {
   width: 28px;
   height: 28px;
   border-radius: 6px;
@@ -5876,13 +5876,13 @@ body {
   flex-shrink: 0;
 }
 
-.gcm-step:hover {
+.plan-config-step:hover {
   background: var(--accent-primary);
   color: #fff;
   border-color: var(--accent-primary);
 }
 
-.gcm-pace-input {
+.plan-config-pace-input {
   flex: 1;
   text-align: center;
   padding: 6px 4px;
@@ -5896,12 +5896,12 @@ body {
   min-width: 0;
 }
 
-.gcm-pace-input:focus {
+.plan-config-pace-input:focus {
   outline: none;
   border-color: var(--accent-primary);
 }
 
-.gcm-pace-tick {
+.plan-config-pace-tick {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -5911,18 +5911,18 @@ body {
   cursor: pointer;
 }
 
-.gcm-pace-tick .material-symbols-outlined {
+.plan-config-pace-tick .material-symbols-outlined {
   font-size: 14px;
   color: var(--success);
 }
 
-.gcm-actions {
+.plan-config-actions {
   display: flex;
   gap: 8px;
   margin-top: 8px;
 }
 
-.gcm-btn {
+.plan-config-btn {
   flex: 1;
   display: flex;
   align-items: center;
@@ -5939,35 +5939,35 @@ body {
   min-height: 44px;
 }
 
-.gcm-btn-prim {
+.plan-config-btn-prim {
   background: var(--accent-primary);
   color: #fff;
   box-shadow: 0 2px 8px rgba(59,130,246,0.3);
 }
 
-.gcm-btn-prim:hover {
+.plan-config-btn-prim:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);
 }
 
-.gcm-btn-ghost {
+.plan-config-btn-ghost {
   background: var(--bg-surface-raised);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
 }
 
-.gcm-btn-ghost:hover {
+.plan-config-btn-ghost:hover {
   background: var(--bg-surface);
 }
 
-.gcm-guide {
+.plan-config-guide {
   padding: 12px;
   border-radius: 10px;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
 }
 
-.gcm-guide-header {
+.plan-config-guide-header {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -5978,17 +5978,17 @@ body {
   color: var(--text-primary);
 }
 
-.gcm-guide-header .material-symbols-outlined {
+.plan-config-guide-header .material-symbols-outlined {
   font-size: 16px;
   color: var(--accent-primary);
 }
 
-.gcm-guide-arrow {
+.plan-config-guide-arrow {
   margin-left: auto;
   transition: transform 0.2s ease;
 }
 
-.gcm-guide-body {
+.plan-config-guide-body {
   display: none;
   margin-top: 8px;
   font-family: 'Poppins', sans-serif;
@@ -5997,30 +5997,30 @@ body {
   line-height: 1.5;
 }
 
-.gcm-guide-body strong {
+.plan-config-guide-body strong {
   color: var(--text-primary);
 }
 
 /* Retro theme overrides for goal modal */
-[data-theme-style="retro"] .gcm-card {
+[data-theme-style="retro"] .plan-config-card {
   border-radius: 0;
   border: 2px solid var(--v2-ink);
   box-shadow: 4px 4px 0 0 #000000;
 }
 
-[data-theme-style="retro"] .gcm-hero {
+[data-theme-style="retro"] .plan-config-hero {
   border-radius: 0;
 }
 
-[data-theme-style="retro"] .gcm-input,
-[data-theme-style="retro"] .gcm-seg-btn,
-[data-theme-style="retro"] .gcm-step,
-[data-theme-style="retro"] .gcm-pace-input {
+[data-theme-style="retro"] .plan-config-input,
+[data-theme-style="retro"] .plan-config-seg-btn,
+[data-theme-style="retro"] .plan-config-step,
+[data-theme-style="retro"] .plan-config-pace-input {
   border-radius: 0;
   border: 2px solid var(--v2-ink);
 }
 
-[data-theme-style="retro"] .gcm-btn {
+[data-theme-style="retro"] .plan-config-btn {
   border-radius: 0;
   border: 2px solid var(--v2-ink);
   box-shadow: 2px 2px 0 0 #000000;
@@ -6031,93 +6031,93 @@ body {
 }
 
 /* Light mode goal modal */
-[data-theme="light"] .gcm-card {
+[data-theme="light"] .plan-config-card {
   background: #ffffff;
   border-color: #e2e8f0;
   box-shadow: 0 24px 48px rgba(0,0,0,0.12);
 }
 
-[data-theme="light"] .gcm-hero {
+[data-theme="light"] .plan-config-hero {
   background: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(139,92,246,0.03) 100%);
 }
 
-[data-theme="light"] .gcm-input {
+[data-theme="light"] .plan-config-input {
   background: #f8fafc;
   border-color: #cbd5e1;
   color: #1e293b;
 }
 
-[data-theme="light"] .gcm-seg {
+[data-theme="light"] .plan-config-seg {
   background: #f1f5f9;
   border-color: #e2e8f0;
 }
 
-[data-theme="light"] .gcm-seg-btn.active {
+[data-theme="light"] .plan-config-seg-btn.active {
   background: var(--accent-primary);
   color: #fff;
 }
 
-[data-theme="light"] .gcm-pace {
+[data-theme="light"] .plan-config-pace {
   background: #f8fafc;
   border-color: #e2e8f0;
 }
 
-[data-theme="light"] .gcm-step {
+[data-theme="light"] .plan-config-step {
   background: #ffffff;
   border-color: #cbd5e1;
   color: #1e293b;
 }
 
-[data-theme="light"] .gcm-step:hover {
+[data-theme="light"] .plan-config-step:hover {
   background: var(--accent-primary);
   color: #fff;
   border-color: var(--accent-primary);
 }
 
-[data-theme="light"] .gcm-pace-input {
+[data-theme="light"] .plan-config-pace-input {
   background: #ffffff;
   border-color: #cbd5e1;
   color: #1e293b;
 }
 
-[data-theme="light"] .gcm-hint {
+[data-theme="light"] .plan-config-hint {
   background: rgba(59,130,246,0.04);
   border-color: rgba(59,130,246,0.1);
 }
 
-[data-theme="light"] .gcm-plan-badge {
+[data-theme="light"] .plan-config-plan-badge {
   background: #f8fafc;
   border-color: #e2e8f0;
 }
 
-[data-theme="light"] .gcm-plan-role {
+[data-theme="light"] .plan-config-plan-role {
   color: #64748b;
 }
 
-[data-theme="light"] .gcm-chip {
+[data-theme="light"] .plan-config-chip {
   background: #f8fafc;
   border-color: #e2e8f0;
   color: #475569;
 }
 
-[data-theme="light"] .gcm-chip .material-symbols-outlined {
+[data-theme="light"] .plan-config-chip .material-symbols-outlined {
   color: var(--accent-primary);
 }
 
-[data-theme="light"] .gcm-guide {
+[data-theme="light"] .plan-config-guide {
   background: #f8fafc;
   border-color: #e2e8f0;
 }
 
-[data-theme="light"] .gcm-guide-header {
+[data-theme="light"] .plan-config-guide-header {
   color: #1e293b;
 }
 
-[data-theme="light"] .gcm-guide-body {
+[data-theme="light"] .plan-config-guide-body {
   color: #475569;
 }
 
-[data-theme="light"] .gcm-actions .gcm-btn-ghost {
+[data-theme="light"] .plan-config-actions .plan-config-btn-ghost {
   background: #f8fafc;
   border-color: #e2e8f0;
   color: #1e293b;
@@ -6129,31 +6129,31 @@ body {
     padding: 8px;
     align-items: flex-end;
   }
-  .gcm-card {
+  .plan-config-card {
     max-width: 100%;
     border-radius: 16px 16px 0 0;
     max-height: 85vh;
   }
-  .gcm-pace-grid {
+  .plan-config-pace-grid {
     grid-template-columns: 1fr;
   }
-  .gcm-hero {
+  .plan-config-hero {
     padding: 16px 12px 12px;
   }
-  .gcm-hero-title {
+  .plan-config-hero-title {
     font-size: 1rem;
   }
-  .gcm-body {
+  .plan-config-body {
     padding: 12px;
   }
-  .gcm-tabbar {
+  .plan-config-tabbar {
     padding: 2px;
   }
   .goal-plan-tab {
     padding: 6px 8px;
     font-size: 0.72rem;
   }
-  .gcm-btn {
+  .plan-config-btn {
     padding: 8px 12px;
     font-size: 0.78rem;
   }
@@ -7726,8 +7726,8 @@ body {
   flex-shrink: 0;
 }
 
-/* Missing gcm helpers referenced by the section */
-.gcm-badge {
+/* Missing plan-config helpers referenced by the section */
+.plan-config-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -7741,43 +7741,43 @@ body {
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
-.gcm-btn-danger {
+.plan-config-btn-danger {
   background: rgba(220, 38, 38, 0.12);
   color: var(--danger, #ef4444);
   border: 1px solid rgba(220, 38, 38, 0.35);
 }
-.gcm-btn-danger:hover {
+.plan-config-btn-danger:hover {
   background: rgba(220, 38, 38, 0.2);
   border-color: rgba(220, 38, 38, 0.55);
 }
-.gcm-chip.selected {
+.plan-config-chip.selected {
   background: var(--accent-primary);
   color: #fff;
   border-color: var(--accent-primary);
 }
-.gcm-chip.selected .gcm-chip-vids {
+.plan-config-chip.selected .plan-config-chip-vids {
   background: #fff;
   color: var(--accent-primary);
   opacity: 1;
 }
-.gcm-chips-search {
+.plan-config-chips-search {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 8px;
 }
-.gcm-chips-list {
+.plan-config-chips-list {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.gcm-chips-empty {
+.plan-config-chips-empty {
   font-family: var(--font-hud);
   font-size: 0.78rem;
   color: var(--text-muted);
   padding: 8px 4px;
 }
-.gcm-chip-vids {
+.plan-config-chip-vids {
   font-family: var(--font-hud);
   font-size: 0.7rem;
   font-weight: 800;
@@ -7803,11 +7803,11 @@ body {
   border-radius: 0;
   border: 2px solid var(--v2-ink);
 }
-[data-theme-style="retro"] .gcm-badge {
+[data-theme-style="retro"] .plan-config-badge {
   border-radius: 0;
   box-shadow: 2px 2px 0 0 var(--v2-ink);
 }
-[data-theme-style="retro"] .gcm-chip.selected {
+[data-theme-style="retro"] .plan-config-chip.selected {
   box-shadow: 2px 2px 0 0 var(--v2-ink);
 }
 
@@ -7820,7 +7820,7 @@ body {
 [data-theme="light"] .spc-header-icon {
   box-shadow: 0 2px 8px var(--accent-glow);
 }
-[data-theme="light"] .gcm-badge {
+[data-theme="light"] .plan-config-badge {
   background: var(--accent-primary);
   box-shadow: 0 2px 8px var(--accent-glow);
 }
