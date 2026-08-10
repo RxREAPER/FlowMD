@@ -32,6 +32,14 @@ const mime = {
   '.woff2': 'font/woff2'
 };
 
+// Mirrors the PRODUCTION CSP headers (firebase.json). This is critical: the
+// service worker script inherits the site CSP, so its cross-origin fetch()
+// calls to *.gstatic.com are blocked unless connect-src allows them — the
+// exact bug that made Material Symbols degrade to ligature text on every
+// reload after the first load. Without these headers the test env would never
+// exercise that restriction.
+const CSP_HEADER = "default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://fonts.gstatic.com https://www.gstatic.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com https://flowmd-04.firebaseapp.com; object-src 'none'; base-uri 'self'; worker-src 'self';";
+
 const server = createServer(async (req, res) => {
   try {
     let urlPath = decodeURIComponent(new URL(req.url, `http://${req.headers.host}`).pathname);
@@ -39,7 +47,10 @@ const server = createServer(async (req, res) => {
     const filePath = normalize(join(root, urlPath));
     if (!filePath.startsWith(normalize(root))) { res.writeHead(403); res.end('Forbidden'); return; }
     const data = await readFile(filePath);
-    res.writeHead(200, { 'Content-Type': mime[extname(filePath)] || 'application/octet-stream' });
+    res.writeHead(200, {
+      'Content-Type': mime[extname(filePath)] || 'application/octet-stream',
+      'Content-Security-Policy': CSP_HEADER
+    });
     res.end(data);
   } catch (e) {
     res.writeHead(404); res.end('Not found');

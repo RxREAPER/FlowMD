@@ -1,5 +1,11 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Fix icons degrading to ligature text on every reload after the first load (v197)
+
+- **Bug**: Material Symbols icons rendered fine on the first load, then showed as raw ligature text (`local_fire_department`, `auto_stories`, …) on every subsequent reload. The service worker script is served with the site's CSP header, so its own cross-origin `fetch()` calls are subject to `connect-src` — which allowed `*.googleapis.com` but **not** `fonts.gstatic.com` / `www.gstatic.com`. Once the SW controlled the page, its font/SDK fetches were blocked (`net::ERR_FAILED`), the cache misses returned nothing, and the fonts never loaded.
+- **Fix**: added `https://fonts.gstatic.com` and `https://www.gstatic.com` to `connect-src` in both the `index.html` meta CSP and the deployed `firebase.json` header CSP.
+- **Test hardening**: `tests/offline.mjs`'s static server now sends the same production CSP headers, so the SW's CSP-restricted fetches are exercised in tests (this is why the bug slipped through — the test env had no CSP).
+
 ## [2026-08-11] No assumed goals for new users; source switch resets to unset (v195)
 
 - **Bug**: fresh profiles (and users after switching study source) were silently given assumed targets — subject auto-selected, `8 vids/day`, `56/week`, `240/month`, and a hardcoded `2026-08-15` deadline — so the Goal Pulse / 7-day chart never visibly changed after a source switch.
