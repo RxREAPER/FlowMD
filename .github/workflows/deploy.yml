@@ -3,16 +3,15 @@ name: FlowMD CI / Deploy
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  # Runs on every push to main (and manually). Never deploys.
+  # Runs on every push to main and on every pull request. Never deploys.
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -21,24 +20,22 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm ci
 
       - name: Install Playwright browser
         run: npx playwright install chromium
 
       - name: Run tests
-        run: node tests/smoke.mjs && node tests/onboarding.mjs
+        run: node tests/smoke.mjs && node tests/onboarding.mjs && node --test tests/unit/sync.test.mjs tests/unit/store.test.mjs
 
   # Manual-deploy gate: only fired from the Actions tab ("Run workflow"),
-  # so a push to main never auto-deploys to the live site.
+  # so a push to main or a pull request never auto-deploys to the live site.
   deploy:
     needs: test
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -47,8 +44,14 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm ci
 
+      # NOTE: Workload Identity Federation (Task B4) was deferred by the user —
+      # it requires one-time Google Cloud console setup (service account, WIF
+      # pool/provider, PROJECT_NUMBER). Until then, deploy auth stays on the
+      # existing FIREBASE_TOKEN secret, which already works. To migrate later,
+      # replace the deploy step's token with the google-github-actions/auth@v2
+      # OIDC step (see the hardening branch history / CONCERNS.md #8).
       - name: Bump cache version
         run: node scripts/bump-version.js
 
@@ -56,7 +59,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html sw.js
           if git diff --cached --quiet; then
             echo "No version change to commit"
           else

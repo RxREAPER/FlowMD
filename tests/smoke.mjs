@@ -166,6 +166,37 @@ async function run() {
   await page.waitForTimeout(300);
   check('Toast renders', await page.locator('#toast-container > div').count() > 0);
 
+  // --- Returning marrow_6_5 user: the lazy data file is no longer eager (Task C5),
+  // so the boot path must auto-load it — otherwise the user lands on an empty
+  // dashboard/curriculum. Fresh context with a pre-seeded 6.5 source.
+  {
+    const ctx65 = await browser.newContext();
+    const page65 = await ctx65.newPage();
+    const errs65 = [];
+    page65.on('console', (msg) => { if (msg.type() === 'error') errs65.push(msg.text()); });
+    page65.on('pageerror', (err) => errs65.push(String(err)));
+    await page65.goto(`${BASE}/`);
+    await page65.evaluate(() => {
+      localStorage.setItem('flowmd_is_configured', 'true');
+      localStorage.setItem('flowmd_active_source', 'marrow_6_5');
+      localStorage.setItem('marrow_planner_theme', 'dark');
+      localStorage.setItem('marrow_planner_schema_version', '2');
+      localStorage.setItem('marrow_planner_personal', JSON.stringify({ doctorName: 'Dr. Returnee' }));
+    });
+    await page65.reload();
+    await page65.waitForLoadState('networkidle');
+    await clickNav(page65, 'curriculum');
+    // Wait for the async data load + re-render (not a fixed timeout).
+    await page65.waitForFunction(
+      () => document.querySelectorAll('.curriculum-sub-row').length > 5,
+      { timeout: 10000 }
+    ).catch(() => {});
+    const subjects65 = await page65.locator('.curriculum-sub-row').count();
+    check('Returning marrow_6_5 user gets curriculum after lazy boot load', subjects65 > 5, `found ${subjects65}`);
+    check('Returning 6.5 user has no console errors on lazy boot', errs65.length === 0, errs65.join(' | ').slice(0, 200));
+    await ctx65.close();
+  }
+
   await browser.close();
 
   const failed = results.filter((r) => !r.ok);

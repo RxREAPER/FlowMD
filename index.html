@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
   <title>FlowMD — Plan. Study. Track. Succeed.</title>
   
   <!-- PWA & Mobile Web App Meta -->
@@ -281,14 +281,17 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
   
 
   <!-- Application Data & Logic -->
   <script src="firebase.js?v=160"></script>
   <script src="data.js?v=160"></script>
-  <script src="data_marrow_6_5.js?v=160"></script>
   <script src="js/core/namespace.js?v=160"></script>
   <script src="js/core/constants.js?v=160"></script>
+  <script src="js/core/sync.js?v=160"></script>
+  <script src="js/core/state-store.js?v=160"></script>
+  <script src="js/core/source-data.js?v=160"></script>
   <script src="js/core/subjects.js?v=160"></script>
   <script src="js/core/logo.js?v=160"></script>
   <script src="js/features/toast.js?v=160"></script>

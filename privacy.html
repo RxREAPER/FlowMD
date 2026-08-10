@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Privacy Policy — FlowMD</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #131a2b;
+      --text: #e5e9f0;
+      --muted: #8b95a9;
+      --accent: #8b5cf6;
+      --border: #232c42;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+    h1 { font-size: 1.7rem; margin: 0 0 6px; }
+    .updated { color: var(--muted); font-size: 0.85rem; margin-bottom: 28px; }
+    h2 { font-size: 1.15rem; margin: 30px 0 10px; color: var(--accent); }
+    p, li { color: #c3cad8; font-size: 0.95rem; }
+    a { color: var(--accent); }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 14px 0;
+    }
+    .back { display: inline-block; margin-top: 32px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>FlowMD Privacy Policy</h1>
+    <div class="updated">Last updated: August 2026</div>
+
+    <p>FlowMD is a personal study planner for NEET-PG preparation. This page explains what data the app stores, why, how long it is kept, and how you can export or delete it.</p>
+
+    <div class="card">
+      <h2>1. What data is stored</h2>
+      <p>When you sign in with Google and enable Cloud Sync, the app stores the following in Firebase (Google Cloud, US regions):</p>
+      <ul>
+        <li>Your Google email address, display name, and profile photo (used to identify you in the Profile view).</li>
+        <li>Your study progress: completed videos, daily study history, streaks, plans and targets, and app preferences (theme, study source).</li>
+        <li>Local-only data that never leaves your device: your offline queue and UI state stored in your browser's local storage.</li>
+      </ul>
+      <p>All data lives under a document scoped to your Firebase account UID. No other user can read or write it, and no third party has access.</p>
+    </div>
+
+    <div class="card">
+      <h2>2. Why it is stored</h2>
+      <p>The data exists only to sync your study progress across your devices and to show you accurate analytics and streaks. It is not sold, shared, or used for advertising.</p>
+    </div>
+
+    <div class="card">
+      <h2>3. How long it is kept</h2>
+      <p>Your data is kept for as long as your account exists and you keep using Cloud Sync. Local-only data persists in your browser until you clear it or reset app data.</p>
+    </div>
+
+    <div class="card">
+      <h2>4. Export your data</h2>
+      <p>You can download a JSON copy of everything stored for your account at any time: open the app, go to <strong>Profile → Danger Zone → Export My Data</strong>.</p>
+    </div>
+
+    <div class="card">
+      <h2>5. Delete your data &amp; account</h2>
+      <p>You can permanently erase your account and all synced data at any time: open the app, go to <strong>Profile → Danger Zone → Delete My Data &amp; Account</strong>. This deletes your Firestore document and your Firebase authentication account, and clears local data on that device. This action cannot be undone.</p>
+    </div>
+
+    <div class="card">
+      <h2>6. Contact</h2>
+      <p>Questions about this policy or your data? Contact the developer at <a href="mailto:ezioauditore9553@gmail.com">ezioauditore9553@gmail.com</a>.</p>
+    </div>
+
+    <a class="back" href="index.html">&larr; Back to FlowMD</a>
+  </div>
+</body>
+</html>

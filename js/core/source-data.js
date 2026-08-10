@@ -45,6 +45,22 @@
     return SOURCE_DATA[sid] || [];
   }
 
+  // Dynamically load a study-source data file on demand (CSP-safe: same-origin
+  // <script> injection, no eval). The service worker precaches DATA_FILES, so
+  // offline source switching still works. Resolves once the data is qualified.
+  function loadSourceScript(sourceId) {
+    const src = STUDY_SOURCES.find(s => s.id === sourceId);
+    if (!src || !src.dataFile) return Promise.resolve();
+    if (SOURCE_DATA[sourceId] && SOURCE_DATA[sourceId].length > 0) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src.dataFile + '?v=' + (window.FlowMD.constants.APP_VERSION || '160');
+      s.onload = () => { initSourceData(); resolve(); };
+      s.onerror = () => reject(new Error('Failed to load ' + src.dataFile));
+      document.head.appendChild(s);
+    });
+  }
+
   // --- Subject/Chapter Access Helpers ---
   function getSubjectChapters(subjectNameOrId) {
     const dataset = getDataset();
@@ -121,6 +137,7 @@
     SOURCE_DATA,
     qualifySourceData,
     initSourceData,
+    loadSourceScript,
     getDataset,
     getSubjectChapters,
     getScopedChapterNames,

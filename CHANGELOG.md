@@ -1,5 +1,11 @@
 # FlowMD — Change Log
 
+## [2026-08-10] Backend production hardening (branch: `hardening/backend-production`, pending review)
+
+- **Sync integrity (P0):** new `js/core/sync.js` (cloud-state sanitization, clock-skew-safe merge arbitration, field-level dirty tracking) with unit tests; `saveState()` now writes only changed fields via `FirebaseSync.updateCloudFields()`; the snapshot handler never pushes — kills the unbounded write loop for clock-skewed devices.
+- **Security:** hardened `firestore.rules` (auth ownership, size/type caps, no `list`, self-only delete) verified against the Firestore emulator; account deletion + data export (Profile → Danger Zone) + `privacy.html` + updated sync-consent copy; XSS: escaped cloud-derived email.
+- **Ops:** CI runs on PRs (incl. unit tests); scoped `npm run deploy` (no `git add -A`); nightly Firestore export function + restore runbook; Analytics init + global `app_error`/`screen_view` events; auto-bumped SW cache name + explicit `Cache-Control` headers; lazy data loading, memoized syllabus stats, selective localStorage writes; planning docs refreshed. *(OIDC deploy auth and App Check/API-key restriction were declined by the user — deploy still uses `FIREBASE_TOKEN`.)*
+
 ## [2026-08-10] 7-Day Execution Chart — pixel-terminal redesign
 
 - Redesigned the 7-day execution chart from a solid line chart (Catmull-Rom smooth curve + gradient area fill + solid circles) to a **pixel-terminal "scanline" bar chart**:

@@ -41,81 +41,19 @@
 
   const { showToast, dismissToast } = window.FlowMD.toast;
 
-  // --- Safe JSON parsing: corrupt localStorage must never crash the app ---
-  function safeParse(raw, fallback) {
-    if (raw == null || raw === '') return fallback;
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      console.warn('Corrupt localStorage value discarded:', e);
-      return fallback;
-    }
-  }
-
-  // --- localStorage schema versioning + migrations ---
-  function migrateStateSchema() {
-    try {
-      const rawVersion = localStorage.getItem(STORAGE_KEYS.SCHEMA_VERSION);
-      const currentVersion = parseInt(rawVersion, 10) || 0;
-      if (currentVersion >= SCHEMA_VERSION) return;
-
-      // v1 → v2: legacy pre-namespaced video IDs get the marrow_8:: prefix.
-      // (Applied against the stored payload before state is assembled.)
-      if (currentVersion < 2) {
-        const savedVideos = localStorage.getItem(STORAGE_KEYS.COMPLETED_VIDEOS);
-        if (savedVideos) {
-          const parsed = safeParse(savedVideos, {});
-          const migrated = {};
-          let changed = false;
-          for (const key in parsed) {
-            if (key.indexOf('::') === -1) {
-              migrated['marrow_8::' + key] = parsed[key];
-              changed = true;
-            } else {
-              migrated[key] = parsed[key];
-            }
-          }
-          if (changed) localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(migrated));
-        }
-      }
-
-      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
-    } catch (e) {
-      console.warn('Schema migration failed:', e);
-    }
-  }
-
-  // --- Multi-Source Data Layer ---
-  const SOURCE_DATA = {};
-
-  function qualifySourceData(sourceId, data) {
-    return data.map(subject => ({
-      ...subject,
-      chapters: (subject.chapters || []).map(chap => ({
-        ...chap,
-        videos: (chap.videos || []).map(v => ({
-          ...v,
-          id: sourceId + '::' + v.id
-        }))
-      }))
-    }));
-  }
-
-  function initSourceData() {
-    const srcData = {
-      marrow_8: (typeof syllabusData !== 'undefined' && Array.isArray(syllabusData)) ? syllabusData : null,
-      marrow_6_5: (typeof syllabusData65 !== 'undefined' && Array.isArray(syllabusData65)) ? syllabusData65 : null,
-      prepladder_x: null
-    };
-    Object.entries(srcData).forEach(([src, data]) => {
-      SOURCE_DATA[src] = (data && Array.isArray(data)) ? qualifySourceData(src, data) : [];
-    });
-  }
-
-  function getDataset(sourceId) {
-    const sid = sourceId || state.activeSource || 'marrow_8';
-    return SOURCE_DATA[sid] || [];
-  }
+  // --- Shared modules (js/core/*): state store + source data layer ---
+  const state = window.FlowMD.store.getState();
+  const {
+    safeParse, migrateStateSchema, loadState, saveState,
+    markStudyActivity, getStudyStreak, mergePlansLocalWins,
+    snapshotCloudState
+  } = window.FlowMD.store;
+  const {
+    SOURCE_DATA, qualifySourceData, initSourceData, getDataset,
+    getSubjectChapters, getScopedChapterNames, getPlanScopeVideos,
+    getBulkChapterKey, isChapterBulkCompleted, getChapterVideoIds,
+    getDailyCountsExcludingBulk
+  } = window.FlowMD.sourceData;
 
   function getSyllabusStatsForSource(sourceId) {
     const sid = sourceId || state.activeSource || 'marrow_8';
@@ -129,38 +67,29 @@
     }
   }
 
-  // --- App State ---
-  let state = {
-    currentView: 'dashboard',
-    activeSubjectId: 'anatomy',
-    completedVideos: {},
-    expandedChapters: {},
-    goals: { ...DEFAULT_GOALS },
-    personal: { ...DEFAULT_PERSONAL },
-    theme: 'dark',
-    themeStyle: 'modern',
-    searchQuery: '',
-    streakData: { lastStudyDate: null, currentStreak: 0 },
-    dailyHistory: {},
-    queueCompletedInBatch: 0,
-    queueBatchVideoIds: [],
-    isConfigured: false,
-    activeSource: 'marrow_8',
-    isOffline: false,
-    // Dual-Subject Tracking v2
-    plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)],
-    activePlanId: 'plan_a',
-    dailyHistoryBySubject: {},
-    // Bulk Chapter Completion (excluded from analytics)
-    bulkCompletedChapters: {}
-  };
-
   const DOM = {};
 
   // --- Initialization ---
   function init() {
     initSourceData();
     loadState();
+    // Baseline for field-level cloud writes: only changes made after load are
+    // ever pushed, so a fresh sign-in doesn't re-upload the whole state.
+    state._prevSyncedState = snapshotCloudState(state);
+    state._dirtyFields = [];
+    if (window.FirebaseSync) {
+      window.FirebaseSync.stateProvider = () => state;
+    }
+    // Lazy-load the active syllabus if it isn't part of the initial page load
+    // (e.g., a returning marrow_6_5 user whose data file is no longer eager).
+    if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
+      window.FlowMD.sourceData.loadSourceScript(state.activeSource)
+        .then(() => { if (typeof render === 'function') render(); })
+        .catch(() => {
+          // Never leave the user on a silent empty dashboard.
+          showToast('Could not load syllabus data. Check your connection and reload.', 'error', 'Data Sync');
+        });
+    }
     cacheDOM();
     applyTheme(state.theme);
     bindEvents();
@@ -178,197 +107,7 @@
     });
   }
 
-  // --- State Persistence & Cloud Sync ---
-  function loadState() {
-    try {
-      migrateStateSchema();
-
-      const savedVideos = localStorage.getItem(STORAGE_KEYS.COMPLETED_VIDEOS);
-      if (savedVideos) state.completedVideos = safeParse(savedVideos, {});
-
-      // Migrate legacy (pre-namespaced) video IDs → marrow_8:: prefix
-      let needsMigrate = false;
-      const migrated = {};
-      for (const key in state.completedVideos) {
-        if (key.indexOf('::') === -1) {
-          migrated['marrow_8::' + key] = state.completedVideos[key];
-          needsMigrate = true;
-        } else {
-          migrated[key] = state.completedVideos[key];
-        }
-      }
-      if (needsMigrate) state.completedVideos = migrated;
-
-      const savedGoals = localStorage.getItem(STORAGE_KEYS.GOALS);
-      if (savedGoals) state.goals = { ...DEFAULT_GOALS, ...safeParse(savedGoals, {}) };
-
-      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
-      if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
-        state.theme = savedTheme;
-      } else {
-        state.theme = 'dark';
-        localStorage.setItem(STORAGE_KEYS.THEME, 'dark');
-      }
-
-      const savedThemeStyle = localStorage.getItem('marrow_planner_theme_style');
-      if (savedThemeStyle === 'modern' || savedThemeStyle === 'retro') {
-        state.themeStyle = savedThemeStyle;
-      } else {
-        state.themeStyle = 'modern';
-      }
-
-      const savedStreak = localStorage.getItem(STORAGE_KEYS.STREAK);
-      if (savedStreak) state.streakData = safeParse(savedStreak, { lastStudyDate: null, currentStreak: 0 });
-
-      const savedPersonal = localStorage.getItem(STORAGE_KEYS.PERSONAL);
-      if (savedPersonal) state.personal = { ...DEFAULT_PERSONAL, ...safeParse(savedPersonal, {}) };
-
-      const savedHistory = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY);
-      if (savedHistory) state.dailyHistory = safeParse(savedHistory, {});
-
-      const savedQueueBatch = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH);
-      if (savedQueueBatch !== null) state.queueCompletedInBatch = parseInt(savedQueueBatch) || 0;
-
-      const savedBatchVids = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS);
-      if (savedBatchVids) state.queueBatchVideoIds = safeParse(savedBatchVids, []);
-
-      const savedTutorial = localStorage.getItem(STORAGE_KEYS.TUTORIAL_SEEN);
-      if (savedTutorial === 'true') state.isConfigured = true;
-
-      const savedSource = localStorage.getItem('flowmd_active_source');
-      if (savedSource && STUDY_SOURCES.some(s => s.id === savedSource)) {
-        state.activeSource = savedSource;
-      }
-
-      const savedConfigured = localStorage.getItem('flowmd_is_configured');
-      if (savedConfigured === 'true') state.isConfigured = true;
-
-      // --- Dual-Subject Tracking v2: load plans ---
-      const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
-      if (savedPlans) {
-        const parsed = safeParse(savedPlans, []);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          state.plans = parsed;
-        }
-      } else {
-        // Migrate legacy single-subject state to Plan A
-        migrateStateToPlans();
-      }
-
-      const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
-      if (savedHistBySubject) state.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
-
-      // --- Bulk Chapter Completion ---
-      const savedBulkChapters = localStorage.getItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS);
-      if (savedBulkChapters) state.bulkCompletedChapters = safeParse(savedBulkChapters, {});
-
-    } catch (e) {
-      console.warn('Error loading state:', e);
-    }
-  }
-
-  // --- Migrate legacy single-plan state → plans[] ---
-  function migrateStateToPlans() {
-    const legacySub = (state.goals && state.goals.targetSubject) || '';
-    const legacyDate = (state.goals && state.goals.targetDate) || '2026-08-15';
-    const legacyVids = (state.goals && state.goals.videosPerDay) || 8;
-    const legacyHours = (state.goals && state.goals.dailyTargetHours) || 3.5;
-    const legacyBatch = Array.isArray(state.queueBatchVideoIds) ? state.queueBatchVideoIds : [];
-    const legacyDone = state.queueCompletedInBatch || 0;
-
-    state.plans = [{
-      id: 'plan_a',
-      label: 'Plan A',
-      accentColor: PLAN_A_ACCENT,
-      targetSubject: legacySub,
-      targetDate: legacyDate,
-      videosPerDay: legacyVids,
-      videosPerWeek: legacyVids * 7,
-      videosPerMonth: legacyVids * 30,
-      dailyTargetHours: legacyHours,
-      queueBatchVideoIds: legacyBatch,
-      queueCompletedInBatch: legacyDone,
-      targetUnits: []
-    }];
-  }
-
-  let cloudSyncTimeout = null;
   let deferredInstallPrompt = null;
-  function saveState() {
-    try {
-      state.lastLocalUpdate = Date.now();
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
-      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
-      localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
-      localStorage.setItem('marrow_planner_theme_style', state.themeStyle || 'modern');
-      localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
-      localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
-      localStorage.setItem('flowmd_active_source', state.activeSource || 'marrow_8');
-      localStorage.setItem('flowmd_is_configured', state.isConfigured ? 'true' : 'false');
-      // Dual-Subject Tracking v2
-      localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
-      localStorage.setItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, JSON.stringify(state.bulkCompletedChapters || {}));
-      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
-
-      if (window.FirebaseSync && window.FirebaseSync.currentUser) {
-        if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
-        cloudSyncTimeout = setTimeout(() => {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
-        }, 800);
-      }
-    } catch (e) {
-      console.warn('Error saving state:', e);
-    }
-  }
-
-  function markStudyActivity(isAdding = true, subjectId = null) {
-    const todayStr = todayKey();
-    if (!state.streakData) state.streakData = { lastStudyDate: null, currentStreak: 0 };
-    if (!state.dailyHistory) state.dailyHistory = {};
-    if (!state.dailyHistoryBySubject) state.dailyHistoryBySubject = {};
-
-    const curCount = state.dailyHistory[todayStr] || 0;
-    if (isAdding) {
-      state.dailyHistory[todayStr] = curCount + 1;
-    } else {
-      state.dailyHistory[todayStr] = Math.max(0, curCount - 1);
-    }
-
-    // Track per-subject daily history
-    if (subjectId) {
-      if (!state.dailyHistoryBySubject[subjectId]) {
-        state.dailyHistoryBySubject[subjectId] = {};
-      }
-      const subjCount = state.dailyHistoryBySubject[subjectId][todayStr] || 0;
-      if (isAdding) {
-        state.dailyHistoryBySubject[subjectId][todayStr] = subjCount + 1;
-      } else {
-        state.dailyHistoryBySubject[subjectId][todayStr] = Math.max(0, subjCount - 1);
-      }
-    }
-
-    if (isAdding) {
-      if (state.streakData.lastStudyDate !== todayStr) {
-        const yesterday = toLocalDateKey(new Date(Date.now() - 86400000));
-        if (state.streakData.lastStudyDate === yesterday) {
-          state.streakData.currentStreak = (state.streakData.currentStreak || 0) + 1;
-        } else {
-          state.streakData.currentStreak = 1;
-        }
-        state.streakData.lastStudyDate = todayStr;
-      }
-    }
-    saveState();
-  }
-
-  function getStudyStreak() {
-    const streak = state.streakData || { lastStudyDate: null, currentStreak: 0 };
-    return streak.currentStreak || 0;
-  }
 
   function getDeadlineCountdown(targetDateStr) {
     const now = new Date();
@@ -401,47 +140,7 @@
     };
   }
 
-  // --- Chapter-Scope Helpers (Focus Chapters per Plan) ---
-  function getSubjectChapters(subjectNameOrId) {
-    const dataset = getDataset();
-    if (!dataset || dataset.length === 0) return [];
-    const sub = dataset.find(s => s && (s.subject === subjectNameOrId || s.id === subjectNameOrId));
-    return (sub && sub.chapters) ? sub.chapters : [];
-  }
 
-  function getScopedChapterNames(plan) {
-    if (!plan || !plan.targetSubject || !Array.isArray(plan.targetUnits) || plan.targetUnits.length === 0) return [];
-    const names = plan.targetUnits.map(u => String(u));
-    return getSubjectChapters(plan.targetSubject)
-      .filter(c => c && names.indexOf(String(c.name)) !== -1)
-      .map(c => c.name);
-  }
-
-  // Flatten videos of only the plan's focused chapters (all chapters when unscoped)
-  function getPlanScopeVideos(plan) {
-    const dataset = getDataset();
-    const targetSub = (plan && plan.targetSubject) || '';
-    if (!targetSub || dataset.length === 0) return [];
-    const subjectObj = dataset.find(s => s && (s.subject === targetSub || s.id === targetSub));
-    if (!subjectObj || !subjectObj.chapters) return [];
-
-    let chapters = subjectObj.chapters;
-    if (Array.isArray(plan.targetUnits) && plan.targetUnits.length > 0) {
-      const names = plan.targetUnits.map(u => String(u));
-      const matching = subjectObj.chapters.filter(c => c && names.indexOf(String(c.name)) !== -1);
-      if (matching.length > 0) chapters = matching;
-    }
-
-    const videos = [];
-    chapters.forEach(chap => {
-      if (chap && chap.videos) {
-        chap.videos.forEach(v => {
-          videos.push({ ...v, subjectName: subjectObj.subject, chapterName: chap.name, subjectId: subjectObj.id });
-        });
-      }
-    });
-    return videos;
-  }
 
   function computeMetricsFromVideos(videos) {
     let totalVideos = 0;
@@ -468,32 +167,7 @@
     };
   }
 
-  // --- Bulk Chapter Completion Helpers (excluded from analytics) ---
-  function getBulkChapterKey(subjectId, chapterName) {
-    return `${subjectId}::${chapterName}`;
-  }
 
-  function isChapterBulkCompleted(subjectId, chapterName) {
-    return !!state.bulkCompletedChapters[getBulkChapterKey(subjectId, chapterName)];
-  }
-
-  function getChapterVideoIds(subjectId, chapterName) {
-    const dataset = getDataset();
-    const subjectObj = dataset.find(s => s && (s.id === subjectId || s.subject === subjectId));
-    if (!subjectObj) return [];
-    const chapter = (subjectObj.chapters || []).find(c => c && c.name === chapterName);
-    if (!chapter || !chapter.videos) return [];
-    return chapter.videos.map(v => v.id);
-  }
-
-  function getDailyCountsExcludingBulk() {
-    // dailyHistory is already bulk-exclusion-safe: bulk chapter completion
-    // marks videos completed but never calls markStudyActivity(), so bulk
-    // videos never enter dailyHistory. Stored per-day counts are accurate
-    // as-is for every date (including today, which is updated in real-time
-    // by markStudyActivity on each checkbox toggle).
-    return { ...(state.dailyHistory || {}) };
-  }
 
   function getSubjectOrSyllabusMetricsForPlan(plan) {
     if (!plan || !plan.targetSubject) return getSubjectOrSyllabusMetrics('');
@@ -628,23 +302,7 @@
     });
   }
 
-  // Merge plans arrays with local-wins: for each plan ID present locally, local
-  // data takes precedence. Cloud-only plans (new device added a plan) are appended.
-  function mergePlansLocalWins(cloudPlans, localPlans) {
-    if (!cloudPlans || !Array.isArray(cloudPlans) || cloudPlans.length === 0) return localPlans;
-    if (!localPlans || localPlans.length === 0) return [...cloudPlans];
-    const merged = localPlans.map(localPlan => {
-      const cloudPlan = cloudPlans.find(cp => cp.id === localPlan.id);
-      if (!cloudPlan) return localPlan;
-      return { ...cloudPlan, ...localPlan };
-    });
-    cloudPlans.forEach(cloudPlan => {
-      if (!merged.find(p => p.id === cloudPlan.id)) {
-        merged.push(cloudPlan);
-      }
-    });
-    return merged;
-  }
+
 
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;
@@ -666,22 +324,26 @@
           // Merge cloud → local with LOCAL winning on conflicts: the device's
           // offline completions must never be clobbered by a stale cloud snapshot.
           // Cloud still fills gaps (keys absent locally). See .planning/codebase/CONCERNS.md #3.
-          state.completedVideos = { ...(cloudState.completedVideos || {}), ...state.completedVideos };
-          state.goals = { ...(cloudState.goals || {}), ...state.goals };
-          state.personal = { ...(cloudState.personal || {}), ...state.personal };
-          state.dailyHistory = { ...(cloudState.dailyHistory || {}), ...state.dailyHistory };
-          state.dailyHistoryBySubject = { ...(cloudState.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-          state.plans = mergePlansLocalWins(cloudState.plans, state.plans);
-          state.activePlanId = cloudState.activePlanId || state.activePlanId;
-          state.activeSource = cloudState.activeSource || state.activeSource;
-          state.isConfigured = cloudState.isConfigured || state.isConfigured;
-          state.themeStyle = cloudState.themeStyle || state.themeStyle;
-          state.queueCompletedInBatch = cloudState.queueCompletedInBatch || state.queueCompletedInBatch;
-          state.queueBatchVideoIds = cloudState.queueBatchVideoIds ? [...cloudState.queueBatchVideoIds] : state.queueBatchVideoIds;
-          if (cloudState.streakData) state.streakData = { ...cloudState.streakData, ...(state.streakData || {}) };
+          const clean = window.FlowMD.sync.sanitizeCloudState(cloudState);
+          const merged = window.FlowMD.sync.mergeLocalWins(state, clean);
+          state.completedVideos = merged.completedVideos;
+          state.plans = merged.plans;
+          if (clean.goals) state.goals = Object.assign({}, clean.goals, state.goals);
+          if (clean.personal) state.personal = Object.assign({}, clean.personal, state.personal);
+          if (clean.dailyHistory) state.dailyHistory = Object.assign({}, clean.dailyHistory, state.dailyHistory);
+          if (clean.dailyHistoryBySubject) state.dailyHistoryBySubject = Object.assign({}, clean.dailyHistoryBySubject, state.dailyHistoryBySubject);
+          if (clean.streakData) state.streakData = Object.assign({}, clean.streakData, state.streakData || {});
+          if (clean.activePlanId) state.activePlanId = clean.activePlanId;
+          if (clean.activeSource) state.activeSource = clean.activeSource;
+          if (typeof clean.isConfigured === 'boolean') state.isConfigured = clean.isConfigured;
+          if (clean.themeStyle) state.themeStyle = clean.themeStyle;
+          if (clean.queueBatchVideoIds) state.queueBatchVideoIds = clean.queueBatchVideoIds;
+          if (typeof clean.queueCompletedInBatch === 'number') state.queueCompletedInBatch = clean.queueCompletedInBatch;
           saveState();
         } else {
-          window.FirebaseSync.syncToCloud(user.uid, state, user);
+          await window.FirebaseSync.syncToCloud(user.uid, state, user);
+          state._prevSyncedState = snapshotCloudState(state);
+          state._dirtyFields = [];
         }
         state.personal.isSynced = true;
         state.personal.syncEmail = user.email;
@@ -702,7 +364,11 @@
     window.addEventListener('online', () => {
       state.isOffline = false;
       if (window.FirebaseSync.currentUser) {
-        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
+        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser)
+          .then(() => {
+            state._prevSyncedState = snapshotCloudState(state);
+            state._dirtyFields = [];
+          });
       }
       updateOfflineIndicator();
     });
@@ -712,36 +378,40 @@
     });
   }
 
-  // Merge cloud state with local (timestamp-based conflict resolution)
+  // Merge cloud state with local (clock-skew-safe, write-loop-free).
+  // The snapshot handler NEVER pushes to the cloud: it only applies cloud data
+  // into local state, then saveState()'s dirty-field tracking decides whether a
+  // write is warranted. This kills the old write loop where any device whose
+  // clock was behind the server re-merged-and-pushed a full document on every
+  // snapshot (unbounded Firestore write cost).
   function mergeCloudState(cloudData) {
     try {
-      // If cloud has newer updatedAt, use cloud for non-completion fields
-      // For completedVideos, always merge with local winning
-      const cloudUpdated = cloudData.updatedAt?.toMillis?.() || 0;
-      const localUpdated = state.lastLocalUpdate || 0;
+      const clean = window.FlowMD.sync.sanitizeCloudState(cloudData);
+      const cloudTs = (clean.updatedAt && clean.updatedAt.toMillis) ? clean.updatedAt.toMillis() : 0;
+      const hasLocalDirty = state._dirtyFields && state._dirtyFields.length > 0;
 
-      // Local completions always win (they're the source of truth for offline work)
-      state.completedVideos = { ...(cloudData.completedVideos || {}), ...state.completedVideos };
-
-      // For other fields, use timestamp to decide
-      if (cloudUpdated > localUpdated) {
-        state.goals = { ...(cloudData.goals || {}), ...state.goals };
-        state.personal = { ...(cloudData.personal || {}), ...state.personal };
-        state.dailyHistory = { ...(cloudData.dailyHistory || {}), ...state.dailyHistory };
-        state.dailyHistoryBySubject = { ...(cloudData.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-        state.plans = mergePlansLocalWins(cloudData.plans, state.plans);
-        state.activePlanId = cloudData.activePlanId || state.activePlanId;
-        state.activeSource = cloudData.activeSource || state.activeSource;
-        state.isConfigured = cloudData.isConfigured || state.isConfigured;
-        state.themeStyle = cloudData.themeStyle || state.themeStyle;
-        state.queueCompletedInBatch = cloudData.queueCompletedInBatch || state.queueCompletedInBatch;
-        state.queueBatchVideoIds = cloudData.queueBatchVideoIds ? [...cloudData.queueBatchVideoIds] : state.queueBatchVideoIds;
-        if (cloudData.streakData) state.streakData = { ...cloudData.streakData, ...(state.streakData || {}) };
+      if (!window.FlowMD.sync.shouldApplyCloud(cloudTs, state.lastLocalUpdate, hasLocalDirty)) {
+        return; // stale cloud snapshot; skip (no write-back loop)
+      }
+      if (hasLocalDirty) {
+        // We have unsynced local changes: union completedVideos (local wins),
+        // keep the dirty set, and let the saveState debounce push them.
+        state.completedVideos = window.FlowMD.sync.mergeLocalWins(
+          { completedVideos: state.completedVideos }, { completedVideos: clean.completedVideos }
+        ).completedVideos;
       } else {
-        // Local is newer - push to cloud
-        if (window.FirebaseSync.currentUser) {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
-        }
+        const merged = window.FlowMD.sync.mergeLocalWins(state, clean);
+        state.completedVideos = merged.completedVideos;
+        state.plans = merged.plans;
+        if (clean.goals) state.goals = Object.assign({}, merged.goals, state.goals);
+        if (clean.personal) state.personal = Object.assign({}, merged.personal, state.personal);
+        if (clean.dailyHistory) state.dailyHistory = merged.dailyHistory;
+        if (clean.dailyHistoryBySubject) state.dailyHistoryBySubject = merged.dailyHistoryBySubject;
+        if (clean.streakData) state.streakData = Object.assign({}, clean.streakData, state.streakData || {});
+        if (clean.activePlanId) state.activePlanId = clean.activePlanId;
+        if (clean.activeSource) state.activeSource = clean.activeSource;
+        if (typeof clean.isConfigured === 'boolean') state.isConfigured = clean.isConfigured;
+        if (clean.themeStyle) state.themeStyle = clean.themeStyle;
       }
       saveState();
       render();
@@ -759,9 +429,17 @@
     state.lastLocalUpdate = Date.now();
     try {
       showToast('Syncing...', 'sync');
-      window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
-      showToast('Synced successfully', 'check_circle');
-      return Promise.resolve(true);
+      return window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser)
+        .then(() => {
+          state._prevSyncedState = snapshotCloudState(state);
+          state._dirtyFields = [];
+          showToast('Synced successfully', 'check_circle');
+          return true;
+        })
+        .catch((e) => {
+          showToast('Sync failed: ' + (e && e.message), 'error');
+          return false;
+        });
     } catch (e) {
       showToast('Sync failed: ' + e.message, 'error');
       return Promise.resolve(false);
@@ -769,7 +447,13 @@
   }
 
   // --- Syllabus Math Engine ---
+  let statsCache = { key: '', value: null };
   function getSyllabusStats() {
+    // Memoized: recompute only when the active source or completedVideos changed
+    // (state-store.saveState bumps completedVideosRevision on completion writes).
+    const cacheKey = state.activeSource + ':' + (state.completedVideosRevision || 0);
+    if (statsCache.key === cacheKey && statsCache.value) return statsCache.value;
+
     const dataset = getDataset();
     if (!dataset || dataset.length === 0) return { totalVideos: 0, completedVideos: 0, percentage: 0, subjectsStats: [] };
 
@@ -824,7 +508,7 @@
 
     const percentage = totalVideos > 0 ? Math.round((completedVideosCount / totalVideos) * 100) : 0;
 
-    return {
+    const result = {
       totalVideos,
       completedVideos: completedVideosCount,
       totalHours: (totalDurationMins / 60).toFixed(1),
@@ -832,6 +516,8 @@
       percentage,
       subjectsStats
     };
+    statsCache = { key: cacheKey, value: result };
+    return result;
   }
 
   // --- Deep Global Search Engine ---
@@ -1265,6 +951,9 @@
     DOM.navItems.forEach(item => {
       item.classList.toggle('active', item.getAttribute('data-view') === viewName);
     });
+    if (window.FirebaseSync && window.FirebaseSync.trackEvent) {
+      window.FirebaseSync.trackEvent('screen_view', { screen_name: viewName });
+    }
     render();
     resetPageScrollTop();
   }
@@ -1728,7 +1417,16 @@ function updateTopbarSource() {
     }
   }
 
-  function finishOnboarding() {
+  async function finishOnboarding() {
+    // Lazy-load the chosen syllabus if it isn't loaded yet (Task C5).
+    try {
+      if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
+        await window.FlowMD.sourceData.loadSourceScript(obwSource);
+      }
+    } catch (e) {
+      showToast('Failed to load syllabus data. Check your connection.', 'error');
+      return;
+    }
     state.isConfigured = true;
     state.activeSource = obwSource;
     state.personal.doctorName = obwName || state.personal.doctorName || 'Dr. Aspirant';
@@ -3033,21 +2731,22 @@ function updateTopbarSource() {
         ${isSynced ? `
           <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: 'Poppins', sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
             <span class="material-symbols-outlined">cloud_done</span>
-            Synced as ${syncEmail}
+            Synced as ${escapeHtml(syncEmail)}
           </div>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online.
+            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online. FlowMD stores your email, display name, photo, and study progress in Firebase (Google Cloud, US regions). You can export or delete all of it anytime from Profile.
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline.
+            Syncs completions, streaks, plans &amp; preferences across devices in real-time (~1s). Works offline. FlowMD stores your email, display name, photo, and study progress in Firebase (Google Cloud, US regions) — export or delete anytime from Profile.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
           </button>
         `}
+        <a href="privacy.html" style="display: inline-block; margin-top: 10px; font-size: 0.78rem; color: var(--accent-primary); text-decoration: underline;">Privacy Policy</a>
       </div>
 
       <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary);">
@@ -3077,6 +2776,22 @@ function updateTopbarSource() {
           <span class="material-symbols-outlined">delete_forever</span> Reset All App Data
         </button>
       </div>
+
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px; border: 1px solid rgba(239, 68, 68, 0.4);">
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-outlined" style="color: var(--danger); font-size: 20px;">warning</span>
+          Danger Zone
+        </h3>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          Export a copy of your synced data, or permanently delete your account and all stored data.
+        </p>
+        <button class="v2-arcade-btn" id="btn-export-data" style="width: 100%; margin-bottom: 10px;">
+          <span class="material-symbols-outlined">download</span> Export My Data
+        </button>
+        <button class="v2-arcade-btn" id="btn-delete-account" style="width: 100%; background: var(--danger);">
+          <span class="material-symbols-outlined">delete_forever</span> Delete My Data &amp; Account
+        </button>
+      </div>
     `;
 
     document.getElementById('profile-edit-form')?.addEventListener('submit', (e) => {
@@ -3091,6 +2806,56 @@ function updateTopbarSource() {
       if (confirm('Are you sure you want to reset all app progress and targets? This cannot be undone.')) {
         localStorage.clear();
         location.reload();
+      }
+    });
+
+    document.getElementById('btn-export-data')?.addEventListener('click', async () => {
+      if (!window.FirebaseSync || !window.FirebaseSync.currentUser) {
+        showToast('Sign in to export your data', 'error');
+        return;
+      }
+      try {
+        const data = await window.FirebaseSync.exportState(window.FirebaseSync.currentUser.uid);
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flowmd-data-export.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Data exported', 'check_circle');
+      } catch (err) {
+        showToast('Export failed: ' + ((err && err.message) || 'error'), 'error');
+      }
+    });
+
+    document.getElementById('btn-delete-account')?.addEventListener('click', async () => {
+      if (!window.FirebaseSync || !window.FirebaseSync.currentUser) {
+        showToast('Sign in to delete your account', 'error');
+        return;
+      }
+      if (!confirm('Delete your FlowMD account and ALL synced data? This cannot be undone.')) return;
+      if (!confirm('Are you absolutely sure? Your study progress will be permanently erased.')) return;
+      const doDelete = async () => {
+        await window.FirebaseSync.deleteAccount(window.FirebaseSync.currentUser.uid);
+        localStorage.clear();
+        location.reload();
+      };
+      try {
+        await doDelete();
+      } catch (err) {
+        if (err && err.code === 'auth/requires-recent-login') {
+          try {
+            await window.FirebaseSync.signInWithGoogle();
+            await doDelete();
+          } catch (err2) {
+            showToast('Delete failed: ' + ((err2 && err2.message) || 'error'), 'error');
+          }
+        } else {
+          showToast('Delete failed: ' + ((err && err.message) || 'error'), 'error');
+        }
       }
     });
 
@@ -3812,9 +3577,19 @@ function updateTopbarSource() {
       });
     });
 
-    modal.querySelector('#scs-save').addEventListener('click', () => {
+    modal.querySelector('#scs-save').addEventListener('click', async () => {
       if (selected === current) { close(); return; }
       const prevSource = current;
+      // Lazy-load the target syllabus if it isn't loaded yet (the inactive
+      // data file is no longer in index.html — see Task C5).
+      if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
+        try {
+          await window.FlowMD.sourceData.loadSourceScript(selected);
+        } catch (e) {
+          showToast('Failed to load ' + getSourceLabel(selected) + ' data. Check your connection.', 'error', 'Source Unavailable');
+          return;
+        }
+      }
       state.activeSource = selected;
       if (!STUDY_SOURCES.find(s => s.id === state.activeSource)?.available) {
         // Only allow if dataset exists; otherwise reject with toast.

@@ -210,31 +210,98 @@
     }
   }
 
+  // Top-level state fields that are written to Firestore (mirrors the
+  // syncToCloud payload). Local-only bookkeeping (theme, isOffline, search,
+  // expandedChapters, lastLocalUpdate, _dirtyFields, _prevSyncedState) is
+  // never cloud-written — excluding it here prevents junk fields from ever
+  // being pushed by field-level updates.
+  const CLOUD_STATE_FIELDS = [
+    'completedVideos', 'speed', 'goals', 'streakData', 'personal', 'subjectUrgency',
+    'dailyBatch', 'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
+    'activeSource', 'isConfigured', 'themeStyle', 'queueCompletedInBatch',
+    'queueBatchVideoIds'
+  ];
+
+  // Shallow copy of just the cloud-writable fields — used as the baseline for
+  // dirty-field comparison so a no-op save never schedules a cloud write.
+  function snapshotCloudState(st) {
+    const snap = {};
+    CLOUD_STATE_FIELDS.forEach(f => { if (st[f] !== undefined) snap[f] = st[f]; });
+    return snap;
+  }
+
+  // localStorage keys written by saveState, with value getters. Used both for
+  // selective writes (unchanged keys are skipped) and to detect completedVideos
+  // changes, which drive the memoized syllabus-stats revision counter.
+  const LOCAL_KEYS = [
+    [STORAGE_KEYS.COMPLETED_VIDEOS, () => JSON.stringify(state.completedVideos)],
+    [STORAGE_KEYS.GOALS, () => JSON.stringify(state.goals)],
+    [STORAGE_KEYS.THEME, () => state.theme],
+    ['marrow_planner_theme_style', () => state.themeStyle || 'modern'],
+    [STORAGE_KEYS.STREAK, () => JSON.stringify(state.streakData)],
+    [STORAGE_KEYS.PERSONAL, () => JSON.stringify(state.personal)],
+    [STORAGE_KEYS.DAILY_HISTORY, () => JSON.stringify(state.dailyHistory || {})],
+    [STORAGE_KEYS.QUEUE_BATCH, () => (state.queueCompletedInBatch || 0).toString()],
+    [STORAGE_KEYS.QUEUE_BATCH_VIDEOS, () => JSON.stringify(state.queueBatchVideoIds || [])],
+    ['flowmd_active_source', () => state.activeSource || 'marrow_8'],
+    ['flowmd_is_configured', () => state.isConfigured ? 'true' : 'false'],
+    [STORAGE_KEYS.PLANS, () => JSON.stringify(state.plans || [])],
+    [STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, () => JSON.stringify(state.dailyHistoryBySubject || {})],
+    [STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, () => JSON.stringify(state.bulkCompletedChapters || {})],
+    [STORAGE_KEYS.SCHEMA_VERSION, () => String(SCHEMA_VERSION)]
+  ];
+
+  // Last-written localStorage values; null until the first save (writes all).
+  let localSnapshot = null;
+
   let cloudSyncTimeout = null;
   function saveState() {
     try {
       state.lastLocalUpdate = Date.now();
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
-      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
-      localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
-      localStorage.setItem('marrow_planner_theme_style', state.themeStyle || 'modern');
-      localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
-      localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
-      localStorage.setItem('flowmd_active_source', state.activeSource || 'marrow_8');
-      localStorage.setItem('flowmd_is_configured', state.isConfigured ? 'true' : 'false');
-      // Dual-Subject Tracking v2
-      localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
-      localStorage.setItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, JSON.stringify(state.bulkCompletedChapters || {}));
-      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
+      LOCAL_KEYS.forEach((pair) => {
+        const key = pair[0];
+        const value = pair[1]();
+        if (localSnapshot === null || localSnapshot[key] !== value) {
+          localStorage.setItem(key, value);
+          if (localSnapshot !== null && key === STORAGE_KEYS.COMPLETED_VIDEOS) {
+            // completedVideos changed → the memoized syllabus stats are stale.
+            state.completedVideosRevision = (state.completedVideosRevision || 0) + 1;
+          }
+          if (localSnapshot !== null) localSnapshot[key] = value;
+        }
+      });
+      if (localSnapshot === null) {
+        localSnapshot = {};
+        LOCAL_KEYS.forEach(pair => { localSnapshot[pair[0]] = pair[1](); });
+      }
 
       if (window.FirebaseSync && window.FirebaseSync.currentUser) {
+        // Track what has changed since the last successful cloud push. The
+        // baseline snapshot only advances after a push succeeds, so rapid
+        // consecutive saveState() calls accumulate — no change is dropped.
+        state._dirtyFields = window.FlowMD.sync.computeDirtyFields(state._prevSyncedState, snapshotCloudState(state));
         if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
         cloudSyncTimeout = setTimeout(() => {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
+          if (!state._dirtyFields || state._dirtyFields.length === 0) return;
+          // Pre-push baseline: advancing to it after the write succeeds keeps
+          // any change made DURING the push flagged dirty for the next cycle.
+          const snapshot = snapshotCloudState(state);
+          const fields = {};
+          state._dirtyFields.forEach(f => { fields[f] = state[f]; });
+          // Keep Google profile info fresh on every push (matches old behavior).
+          const u = window.FirebaseSync.currentUser;
+          if (u) {
+            fields.googleDisplayName = u.displayName || null;
+            fields.googlePhotoURL = u.photoURL || null;
+          }
+          window.FirebaseSync.updateCloudFields(window.FirebaseSync.currentUser.uid, fields)
+            .then(() => {
+              state._prevSyncedState = snapshot;
+              state._dirtyFields = [];
+            })
+            .catch((err) => {
+              console.warn('Cloud sync deferred, will retry on next change:', err);
+            });
         }, 800);
       }
     } catch (e) {
@@ -313,6 +380,7 @@
     saveState,
     markStudyActivity,
     getStudyStreak,
-    mergePlansLocalWins
+    mergePlansLocalWins,
+    snapshotCloudState
   };
 })();

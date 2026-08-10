@@ -40,6 +40,24 @@ html = html.replace(/(\?v=)([\d.]+)/g, (_, prefix) => `${prefix}${newVersion}`);
 fs.writeFileSync(indexPath, html, 'utf-8');
 console.log(`index.html: bumped to v${newVersion}`);
 
+// ── 3b. Bump the service-worker cache name (forces clients onto a fresh cache) ──
+swText = swText.replace(
+  /(const CACHE_NAME = 'marrow-planner-pwa-)v[\d.]+'/,
+  (_, prefix) => `${prefix}v${newVersion}'`
+);
+fs.writeFileSync(swPath, swText, 'utf-8');
+console.log(`sw.js: CACHE_NAME bumped to v${newVersion}`);
+
+// ── 3c. Bump APP_VERSION in constants.js (drives lazy-loaded script caching) ──
+const constantsPath = path.join(root, 'js', 'core', 'constants.js');
+let constantsVersionText = fs.readFileSync(constantsPath, 'utf-8');
+constantsVersionText = constantsVersionText.replace(
+  /(const APP_VERSION = ')[\d.]+'/,
+  `$1${newVersion}'`
+);
+fs.writeFileSync(constantsPath, constantsVersionText, 'utf-8');
+console.log(`constants.js: APP_VERSION bumped to v${newVersion}`);
+
 // ── 4. Bump ?v= in any data files that already have version tags ──────────────
 availableDataFiles.forEach(rel => {
   const abs = path.join(root, rel.replace(/^\.\//, ''));

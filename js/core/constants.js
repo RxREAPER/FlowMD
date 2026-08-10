@@ -45,6 +45,10 @@ const PXL_ICONS = {
   // loadState() runs migrations for older versions) ---
   const SCHEMA_VERSION = 2;
 
+  // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
+  // used for dynamic script injection so lazy-loaded data files bust the cache) ---
+  const APP_VERSION = '160';
+
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
     SCHEMA_VERSION: 'flowmd_schema_version',
@@ -213,6 +217,7 @@ const PXL_ICONS = {
     toLocalDateKey,
     todayKey,
     SCHEMA_VERSION,
+    APP_VERSION,
     STORAGE_KEYS,
     STUDY_SOURCES,
     DEFAULT_PLAN,

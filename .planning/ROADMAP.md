@@ -38,3 +38,17 @@
 - [x] STATE.md updated with final status
 - [x] Full Playwright suite: 58/58 checks green
 - [x] Ready for production deploy (manual CI gate)
+
+## Phase 6: Backend Production Hardening (implemented on branch `hardening/backend-production`; pending review/commit/deploy)
+- [x] A1: pure sync module (`js/core/sync.js`) — sanitize, clock-skew-safe merge, dirty tracking + unit tests
+- [x] A2: field-level Firestore writes, write-loop fix, sanitized merges in `app.js`/`firebase.js`
+- [x] B1: hardened `firestore.rules` (validation, size caps, self-only delete, no list) + emulator tests
+- [x] B3: account deletion + data export (Danger Zone) + `privacy.html` + consent copy
+- [x] B4 (code part): CI on PRs, `npm ci`, scoped `npm run deploy`; OIDC deploy auth deferred (user declined console setup) — deploy still uses `FIREBASE_TOKEN`
+- [x] B5: escape cloud-derived email in profile view + XSS guard
+- [x] C1: auto-bumped SW cache name + explicit Cache-Control headers
+- [x] C2: nightly Firestore export function + `backup/RESTORE.md` runbook
+- [x] C3: Firebase Analytics init + global error events (`app_error`, `screen_view`)
+- [x] C4: wire `js/core/state-store.js` + `js/core/source-data.js`; `app.js` consumes modules
+- [x] C5: lazy-load inactive syllabus, memoized stats, selective localStorage writes
+- [x] C6: CI on PRs, dev-artifact cleanup (main checkout), planning docs refresh
