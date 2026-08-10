@@ -84,7 +84,8 @@
     applyTheme,
     updateTopbarInitials,
     updateTopbarSource,
-    updateOfflineIndicator
+    updateOfflineIndicator,
+    renderEditionChip
   } = window.FlowMD.theme;
 
   // --- App State ---
