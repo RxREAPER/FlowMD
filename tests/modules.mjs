@@ -57,7 +57,8 @@ const EXPECTED = {
             'getMetricsForModalScope', 'getTodayQueueForPlan', 'getAllPlanQueues',
             'getTodaysActionQueue', 'getPlanById', 'getSyllabusStats',
             'getSubjectOrSyllabusMetrics'],
-  theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip']
+  theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip'],
+  search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults']
 };
 
 async function run() {
