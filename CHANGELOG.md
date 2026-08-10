@@ -1,22 +1,38 @@
 # FlowMD — Change Log
 
-## [2026-08-10] Backend production hardening (branch: `hardening/backend-production`, pending review)
+## [2026-08-10] Phase C — legacy retro-era naming cleanup + storage-key migration (v184)
 
-- **Sync integrity (P0):** new `js/core/sync.js` (cloud-state sanitization, clock-skew-safe merge arbitration, field-level dirty tracking) with unit tests; `saveState()` now writes only changed fields via `FirebaseSync.updateCloudFields()`; the snapshot handler never pushes — kills the unbounded write loop for clock-skewed devices.
-- **Security:** hardened `firestore.rules` (auth ownership, size/type caps, no `list`, self-only delete) verified against the Firestore emulator; account deletion + data export (Profile → Danger Zone) + `privacy.html` + updated sync-consent copy; XSS: escaped cloud-derived email.
-- **Ops:** CI runs on PRs (incl. unit tests); scoped `npm run deploy` (no `git add -A`); nightly Firestore export function + restore runbook; Analytics init + global `app_error`/`screen_view` events; auto-bumped SW cache name + explicit `Cache-Control` headers; lazy data loading, memoized syllabus stats, selective localStorage writes; planning docs refreshed. *(OIDC deploy auth and App Check/API-key restriction were declined by the user — deploy still uses `FIREBASE_TOKEN`.)*
+- **Design tokens renamed** (v179): `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS` across all views, toast, theme, search, charts, constants, the app shell, `index.html`, and `style.css` (347 occurrences); stale `PXLKIT`/`PxlKit`/`16-BIT RETRO RPG` comments → FlowMD.
+- **Onboarding wizard renamed** (v180): `obw-*` classes/IDs → `onboarding-*`; wizard state vars `obwStep/obwSource/obwTheme/obwName/obwSeeded` → `onboarding*`. Test selectors updated in sync.
+- **Plan-config modal renamed** (v181): `gcm-*` classes/IDs → `plan-config-*` in `study-plan-config.js`, `index.html`, and `style.css`.
+- **Execution chart renamed** (v182): `ex-chart-*` classes → `chart-*` (legend `ex-dot-*` markers untouched).
+- **Storage-key migration, schema v2 → v3** (v184): all `marrow_planner_*` keys → `flowmd_*` (incl. the raw `marrow_planner_theme_style` strings). `migrateStateSchema()` carries old values over once, removes legacy keys, and runs **before** the v1→v2 migration so v1-era profiles still get the video-ID prefixing.
+- **New test**: `tests/migration.mjs` (12 checks) — seeds a full v2 profile, asserts every `marrow_planner_*` key removed, values carried over, `flowmd_schema_version = 3`, and the dashboard renders identically to a fresh v3 profile.
+- **Latent bugs fixed** (v183): `dashboard.js` and `subject-detail.js` called `getScopedChapterNames(plan)` without importing it (missing since the extraction — only fired when a plan exists). The navigation audit now seeds a Plan A profile so those paths render on every run.
+- `npm test` now runs 6 suites: modules → metrics → smoke → onboarding → navigation → migration (230+ assertions).
 
-## [2026-08-10] 7-Day Execution Chart — pixel-terminal redesign
+## [2026-08-10] Monolith decomposition — `app.js` split into 20 modules (v178)
 
-- Redesigned the 7-day execution chart from a solid line chart (Catmull-Rom smooth curve + gradient area fill + solid circles) to a **pixel-terminal "scanline" bar chart**:
-  - **Bars**: now drawn as **outlined grid tracks** (1px stroke) filled with discrete **4×4px pixel cells** (1px gap) — like retro terminal progress blocks, not solid fills.
-  - **Trend line**: replaced the smooth curve + gradient area with a **stepped pixel-staircase** path (miter join, dotted stroke) plus circle markers at each data point.
-  - **Target reference line**: changed from long dashes to a **tight dotted** pattern (violet accent-secondary).
-  - **Grid lines**: changed from 4px dashes to **tight dots**.
-  - Added pixel-accurate re-render at measured container width (removes `preserveAspectRatio="none"`; viewBox matches rendered pixel width exactly).
-- Updated CSS: `.ex-chart-area`/`.ex-chart-line`/`.ex-chart-node` → `.ex-trend-line`/`.ex-trend-marker`/`.ex-bar-track`/`.ex-bar-cell`; `.ex-dot-trend` legend dot; dotted grid/target patterns.
-- Cache-busted to v160 (`?v=160` in index.html; sw.js cache `marrow-planner-pwa-v8`).
-- Verified: `node --check app.js` passes; Playwright smoke 20/20 + onboarding 40/40 (60/60 total), no console errors. DOM verified: 7 bar tracks + 577 pixel cells + 1 stepped trend line + 7 markers + 3 dotted grid lines + 1 dotted target line.
+- **`app.js` slimmed from 3,816 → 356 lines.** All logic moved into plain-IIFE modules registered on `window.FlowMD.*`, loaded as ordered `<script>` tags (no bundler — CSP forbids `unsafe-eval`).
+- **Module map**: `js/core/` — namespace, constants, state-store, source-data, subjects, metrics, logo; `js/features/` — toast, theme, search, sync, onboarding, study-plan-config, source-settings, charts, views/{dashboard, curriculum, subject-detail, analytics, profile}.
+- **Fixed dormant duplication**: `js/core/state-store.js` and `js/core/source-data.js` (extracted in v160 but never wired) are now loaded; their duplicate copies inside `app.js` were deleted. Two copies of the same state/data logic could previously drift silently.
+- **Dead code removed** (found during the sweep): `renderGoalsView` (unreachable since the initial commit), `renderFacultyPill`, `renderHoursMeter`.
+- **New tests**: `tests/modules.mjs` (81 registry-contract checks), `tests/metrics.mjs` (19 unit tests), `tests/navigation.mjs` (full view tour incl. bottom-sheet open/navigate/dismiss, zero console errors). `npm test` runs modules → metrics → smoke → onboarding → navigation (160+ assertions).
+- **Revert safety**: each extraction tagged `stage-0`…`stage-17`; backup branch `backup/pre-decompose-v161`.
+- Behavior unchanged — same DOM output, same localStorage schema. Verified: 20/20 smoke, 40/40 onboarding, 81/81 registry, 19/19 metrics, navigation tour clean.
+
+## [2026-08-10] 7-Day Execution Chart — reverted to line style (matching deployed site)
+
+- Reverted the pixel-terminal bar chart back to the **line-style chart** matching flowmd-04.web.app exactly:
+  - **Area fill**: gradient `linearGradient` (0.30→0.02 opacity) under the curve (`ex-chart-area` with `fill: url(#exChartGrad)`).
+  - **Trend line**: smooth **Catmull-Rom→cubic-bezier** curved path (`ex-chart-line`, stroke-width 2, round caps/joins).
+  - **Nodes**: solid circle markers at each data point (`ex-chart-node`, r=5) with `ex-node-met`/`ex-node-part`/`ex-node-zero` color states; value label + star badge above each node.
+  - Removed all bar/pixel-terminal classes: `ex-bar-track`, `ex-bar-cell`, `ex-chart-bar`, `ex-trend-line`, `ex-trend-marker`, `ex-dot-trend`, `ex-day-tile--pixel`.
+  - Removed the re-render-at-measured-width logic (not needed for smooth vector chart).
+  - Legend simplified back to: Target Met, Partial, No Study, Daily Target (removed "Track" item).
+  - Grid lines: `stroke-dasharray: 1 4` (dotted); Target line: `stroke-dasharray: 2 3` (dashed violet) — matching deployed.
+- Cache-busted to v161 (`?v=161` in index.html; sw.js cache `marrow-planner-pwa-v8`).
+- Verified: `node --check app.js` passes; Playwright smoke 20/20 + onboarding 40/40 (60/60 total), 0 console errors. DOM verified: 1 gradient area + 1 smooth line + 7 point groups + 7 nodes + 3 dotted grid lines + 1 dotted target line. Zero leftover bar/pixel elements.
 
 ## [2026-08-09] Anatomy icon upgraded → skeleton
 

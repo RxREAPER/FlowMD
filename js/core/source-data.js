@@ -132,6 +132,18 @@
     return { ...(state.dailyHistory || {}) };
   }
 
+  // --- Source Label / Edition Helpers (extracted from app.js 2026-08-10) ---
+  function getSourceLabel(sourceId) {
+    const s = STUDY_SOURCES.find(x => x.id === sourceId);
+    return s ? s.label : 'Marrow Edition 8';
+  }
+
+  function getEditionShort() {
+    const state = getState();
+    const s = STUDY_SOURCES.find(x => x.id === (state.activeSource || 'marrow_8'));
+    return s ? s.short : 'Marrow 8';
+  }
+
   // Expose
   window.FlowMD.sourceData = {
     SOURCE_DATA,
@@ -145,6 +157,8 @@
     getBulkChapterKey,
     isChapterBulkCompleted,
     getChapterVideoIds,
-    getDailyCountsExcludingBulk
+    getDailyCountsExcludingBulk,
+    getSourceLabel,
+    getEditionShort
   };
 })();

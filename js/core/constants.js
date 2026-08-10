@@ -34,8 +34,8 @@
     return toLocalDateKey(new Date());
   }
 
-  // --- Shared SVG Icon Set (PxlKit) ---
-const PXL_ICONS = {
+  // --- Shared SVG Icon Set (FlowMD) ---
+const FLOWMD_ICONS = {
     trophy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M2 5h4v2H2zM18 5h4v2h-4zM5 3h14v3c0 4-3 6-7 6s-7-2-7-6V3zm7 7c2.5 0 4-1.6 4-4H8c0 2.4 1.5 4 4 4zm-1 4h2v3h2v2h-6v-2h2v-3z"/></svg>',
     rocket: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2c3.5 2 5 5.5 5 9l2 1v4l-3-1c-.5 1.5-1 3-2.5 4l-1.5-2h-2L8 19c-1.5-1-2-2.5-2.5-4l-3 1v-4l2-1c0-3.5 1.5-7 5-9zm0 3c-1.5 1.5-2.5 3.5-2.5-6v1h5v-1c0-2.5-1-4.5-2.5-6z"/></svg>',
     exclamation: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>'
@@ -43,7 +43,7 @@ const PXL_ICONS = {
 
   // --- LocalStorage Schema Version (bump when stored shapes change;
   // loadState() runs migrations for older versions) ---
-  const SCHEMA_VERSION = 2;
+  const SCHEMA_VERSION = 3;
 
   // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
   // used for dynamic script injection so lazy-loaded data files bust the cache) ---
@@ -52,16 +52,17 @@ const PXL_ICONS = {
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
     SCHEMA_VERSION: 'flowmd_schema_version',
-    COMPLETED_VIDEOS: 'marrow_planner_completed_videos',
-    GOALS: 'marrow_planner_goals',
-    THEME: 'marrow_planner_theme',
-    STREAK: 'marrow_planner_streak',
-    DAILY_BATCH: 'marrow_planner_daily_batch',
-    PERSONAL: 'marrow_planner_personal',
-    URGENCY: 'marrow_planner_urgency',
-    DAILY_HISTORY: 'marrow_planner_daily_history',
-    QUEUE_BATCH: 'marrow_planner_queue_completed_in_batch',
-    QUEUE_BATCH_VIDEOS: 'marrow_planner_queue_batch_videos',
+    COMPLETED_VIDEOS: 'flowmd_completed_videos',
+    GOALS: 'flowmd_goals',
+    THEME: 'flowmd_theme',
+    STREAK: 'flowmd_streak',
+    DAILY_BATCH: 'flowmd_daily_batch',
+    PERSONAL: 'flowmd_personal',
+    URGENCY: 'flowmd_urgency',
+    DAILY_HISTORY: 'flowmd_daily_history',
+    QUEUE_BATCH: 'flowmd_queue_completed_in_batch',
+    QUEUE_BATCH_VIDEOS: 'flowmd_queue_batch_videos',
+    THEME_STYLE: 'flowmd_theme_style',
     TUTORIAL_SEEN: 'flowmd_tutorial_seen',
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',
@@ -211,7 +212,7 @@ const PXL_ICONS = {
   };
 
   window.FlowMD.constants = {
-    PXL_ICONS,
+    FLOWMD_ICONS,
     escapeHtml,
     escapeAttr,
     toLocalDateKey,

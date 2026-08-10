@@ -1,8 +1,24 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 5 (Docs + Final QA — COMPLETE)
-- **Status**: All 5 phases complete. 58/58 Playwright checks green. Ready for production deploy (manual CI gate).
+- **Phase**: 6 (Monolith Decomposition — COMPLETE on `refactor/decompose-monolith` branch, v184)
+- **Status**: Decomposition (v178) + Phase C retro-naming cleanup & storage-key migration (v184) complete. 6 test suites (230+ assertions): modules 81, metrics 19, smoke 20, onboarding 40, navigation audit (no errors), migration 12. Branch ready for review/merge/deploy.
+
+## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
+- [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
+- [x] `obw-*` classes/IDs → `onboarding-*` incl. wizard state vars (v180)
+- [x] `gcm-*` classes/IDs → `plan-config-*` (v181)
+- [x] `ex-chart-*` classes → `chart-*` (v182)
+- [x] Storage-key migration v2→v3 (`marrow_planner_*` → `flowmd_*`, one-time carry-over, legacy keys removed) + `tests/migration.mjs` (v184)
+- [x] Fixed latent `getScopedChapterNames` missing imports in dashboard + subject-detail, surfaced by plan-seeded navigation audit (v183)
+
+## Phase 6: Monolith Decomposition (2026-08-10 session)
+- [x] `app.js` (3,816 lines single IIFE) → thin shell (356 lines) + 20 module files under `js/core/` and `js/features/`
+- [x] Reactivated two dead modules extracted in v160 but never wired: `js/core/state-store.js`, `js/core/source-data.js` (duplicate copies deleted from `app.js`)
+- [x] New test suites: `tests/modules.mjs` (81 registry-contract checks), `tests/metrics.mjs` (19 unit tests), `tests/navigation.mjs` (full view tour + bottom-sheet interactions, no console errors)
+- [x] Deleted dead code found during extraction: `renderGoalsView` (unreachable since initial commit), `renderFacultyPill`/`renderHoursMeter` (already dead)
+- [x] `npm test` now runs: modules → metrics → smoke → onboarding → navigation (160+ assertions)
+- [x] Every extraction tagged `stage-0`…`stage-17` for instant revert; backup branch `backup/pre-decompose-v161`
 
 ## Completed
 - [x] Firebase Hosting deployment live at flowmd-04.web.app
@@ -40,13 +56,13 @@
 - None — all phases complete
 
 ## Completed This Session
-- [x] **7-Day Execution Chart pixel-terminal redesign** — replaced the solid-filled line chart (Catmull-Rom smooth curve + gradient area fill + solid circles) with a **pixel-terminal bar chart**: outlined grid tracks (1px stroke) filled with discrete **4×4px pixel cells** (1px gap, scanline/block aesthetic). Trend line becomes a **stepped pixel-staircase** with circle markers. Target line → tight dotted (violet). Grid lines → tight dots. Pixel-accurate re-render at measured container width. Cache-busted to v160. Playwright 60/60 green, 0 console errors.
+- [x] **7-Day Execution Chart reverted to line style** — reverted the pixel-terminal bar chart back to the deployed line style: smooth Catmull-Rom→cubic-bezier curve + gradient area fill (`ex-chart-area` via `linearGradient`) + solid circle nodes (r=5, `ex-chart-node`). Removed `ex-bar-track`, `ex-bar-cell`, `ex-trend-line`, `ex-trend-marker`, `ex-dot-trend`, and the re-render-at-measured-width logic. Matches deployed site (flowmd-04.web.app) exactly. Cache-busted to v161. Playwright 60/60 green, 0 console errors.
 
 ## Next
 - Deploy to production when explicitly approved (CI has manual gate: `workflow_dispatch`)
 
 ## Notes
-- Cache-busting version: v160 (index.html `?v=160`)
+- Cache-busting version: v161 (index.html `?v=161`)
 - Live: https://flowmd-04.web.app
 - Repo: https://github.com/mohammedsafi0414/FlowMD
 - Backup refs: `backup/pre-hardening`, `backup/pre-hardening-20260809-113936`, `backup/pre-modular-20260808-123655`

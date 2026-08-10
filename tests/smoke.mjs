@@ -99,6 +99,30 @@ async function run() {
   const dashText = await page.locator('#app-main').innerText();
   check('Dashboard view renders content', dashText.length > 50);
 
+  // Computed-style spot checks: guard against a silently broken CSS class
+  // rename (text-based checks can't see unstyled elements).
+  const styles = await page.evaluate(() => {
+    const g = (sel) => {
+      const el = document.querySelector(sel);
+      if (!el) return null;
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundColor, radius: s.borderRadius, color: s.color };
+    };
+    return {
+      topbar: g('.topbar'),
+      configCard: g('#study-plan-config'),
+      navItem: g('.android-nav-item:not(.active)'),
+      navActive: g('.android-nav-item.active')
+    };
+  });
+  const isPainted = (s) => s && s.bg && s.bg !== 'rgba(0, 0, 0, 0)' && s.bg !== 'transparent';
+  check('Topbar has a painted background (fm- CSS applied)', isPainted(styles.topbar), JSON.stringify(styles.topbar && styles.topbar.bg));
+  check('Plan config card is styled (bg + radius)', isPainted(styles.configCard) && parseFloat(styles.configCard.radius) > 0,
+    JSON.stringify(styles.configCard && { bg: styles.configCard.bg, radius: styles.configCard.radius }));
+  check('Active nav item is visually distinct (cyan vs grey)',
+    !!styles.navItem && !!styles.navActive && styles.navActive.color !== styles.navItem.color,
+    `active=${styles.navActive && styles.navActive.color} inactive=${styles.navItem && styles.navItem.color}`);
+
   // Study plan config is always-visible inline on the dashboard
   const configVisible = await page.locator('#study-plan-config').isVisible();
   check('Study plan config card is visible inline on dashboard', configVisible === true);

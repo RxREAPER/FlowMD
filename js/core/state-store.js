@@ -40,6 +40,33 @@
       const currentVersion = parseInt(rawVersion, 10) || 0;
       if (currentVersion >= SCHEMA_VERSION) return;
 
+      // v2 → v3: unify storage keys under the flowmd_ prefix (retro-era
+      // marrow_planner_* keys renamed; old values carried over once, then
+      // removed). Runs BEFORE the v1 → v2 block so a v1-era profile's keys
+      // are renamed first and the video-ID prefixing still finds its data.
+      if (currentVersion < 3) {
+        const KEY_RENAMES = {
+          'marrow_planner_completed_videos': 'flowmd_completed_videos',
+          'marrow_planner_goals': 'flowmd_goals',
+          'marrow_planner_theme': 'flowmd_theme',
+          'marrow_planner_streak': 'flowmd_streak',
+          'marrow_planner_daily_batch': 'flowmd_daily_batch',
+          'marrow_planner_personal': 'flowmd_personal',
+          'marrow_planner_urgency': 'flowmd_urgency',
+          'marrow_planner_daily_history': 'flowmd_daily_history',
+          'marrow_planner_queue_completed_in_batch': 'flowmd_queue_completed_in_batch',
+          'marrow_planner_queue_batch_videos': 'flowmd_queue_batch_videos',
+          'marrow_planner_theme_style': 'flowmd_theme_style'
+        };
+        for (const [oldKey, newKey] of Object.entries(KEY_RENAMES)) {
+          const raw = localStorage.getItem(oldKey);
+          if (raw !== null && localStorage.getItem(newKey) === null) {
+            localStorage.setItem(newKey, raw);
+          }
+          localStorage.removeItem(oldKey);
+        }
+      }
+
       // v1 → v2: legacy pre-namespaced video IDs get the marrow_8:: prefix.
       // (Applied against the stored payload before state is assembled.)
       if (currentVersion < 2) {
@@ -153,7 +180,7 @@
         localStorage.setItem(STORAGE_KEYS.THEME, 'dark');
       }
 
-      const savedThemeStyle = localStorage.getItem('marrow_planner_theme_style');
+      const savedThemeStyle = localStorage.getItem(STORAGE_KEYS.THEME_STYLE);
       if (savedThemeStyle === 'modern' || savedThemeStyle === 'retro') {
         state.themeStyle = savedThemeStyle;
       } else {
@@ -258,22 +285,22 @@
   function saveState() {
     try {
       state.lastLocalUpdate = Date.now();
-      LOCAL_KEYS.forEach((pair) => {
-        const key = pair[0];
-        const value = pair[1]();
-        if (localSnapshot === null || localSnapshot[key] !== value) {
-          localStorage.setItem(key, value);
-          if (localSnapshot !== null && key === STORAGE_KEYS.COMPLETED_VIDEOS) {
-            // completedVideos changed → the memoized syllabus stats are stale.
-            state.completedVideosRevision = (state.completedVideosRevision || 0) + 1;
-          }
-          if (localSnapshot !== null) localSnapshot[key] = value;
-        }
-      });
-      if (localSnapshot === null) {
-        localSnapshot = {};
-        LOCAL_KEYS.forEach(pair => { localSnapshot[pair[0]] = pair[1](); });
-      }
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
+      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
+      localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
+      localStorage.setItem(STORAGE_KEYS.THEME_STYLE, state.themeStyle || 'modern');
+      localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
+      localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
+      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
+      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
+      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
+      localStorage.setItem('flowmd_active_source', state.activeSource || 'marrow_8');
+      localStorage.setItem('flowmd_is_configured', state.isConfigured ? 'true' : 'false');
+      // Dual-Subject Tracking v2
+      localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
+      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
+      localStorage.setItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, JSON.stringify(state.bulkCompletedChapters || {}));
+      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
 
       if (window.FirebaseSync && window.FirebaseSync.currentUser) {
         // Track what has changed since the last successful cloud push. The
