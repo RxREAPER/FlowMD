@@ -80,6 +80,13 @@
     getSubjectOrSyllabusMetrics
   } = window.FlowMD.metrics;
 
+  const {
+    applyTheme,
+    updateTopbarInitials,
+    updateTopbarSource,
+    updateOfflineIndicator
+  } = window.FlowMD.theme;
+
   // --- App State ---
   // Shared state object — owned by js/core/state-store.js
   const state = getState();
@@ -641,16 +648,6 @@
     });
   }
 
-  // --- Theme Helper ---
-  function applyTheme(theme, themeStyle) {
-    const curTheme = theme || state.theme || 'dark';
-    const curStyle = themeStyle || state.themeStyle || 'modern';
-
-    document.documentElement.setAttribute('data-theme', curTheme);
-    document.documentElement.setAttribute('data-theme-accent', 'cobalt');
-    document.documentElement.setAttribute('data-theme-style', curStyle);
-  }
-
   function resetPageScrollTop() {
     try {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -705,23 +702,6 @@
     else safeRender(renderProfileView, 'profile', stats);
   }
 
-  function updateTopbarInitials() {
-    const docName = (state.personal && state.personal.doctorName) ? state.personal.doctorName : 'Dr. Aspirant';
-    const cleanName = docName.replace(/^Dr\.?\s*/i, '').trim();
-    const initials = cleanName.length >= 2 ? (cleanName.charAt(0) + cleanName.charAt(1)).toUpperCase() : (cleanName.charAt(0) || 'A').toUpperCase();
-    
-    const initialsElem = document.getElementById('topbar-avatar-initials');
-    if (initialsElem) {
-      initialsElem.textContent = initials;
-    }
-
-    const avatarBox = document.getElementById('topbar-user-profile');
-    if (avatarBox) {
-      avatarBox.className = `pxl-avatar pxl-avatar-sm pxl-avatar-cyan`;
-    }
-  }
-
-  // --- 16-Bit RPG Subject Completion Heatmap Generator ---
   function renderPixelSubjectHeatmap(stats) {
     const subjects = (stats && stats.subjectsStats) || [];
     let countCritical = 0;
@@ -853,34 +833,6 @@
   let obwTheme = 'dark';
   let obwName = '';
   let obwSeeded = false;
-
-  // --- Active Edition visibility helpers ---
-  function renderEditionChip() {
-    return `
-      <button type="button" class="edition-chip btn-open-source-settings" title="Current study edition — tap to change">
-        <span class="material-symbols-outlined" style="font-size:15px;">auto_stories</span>
-        <span>${getEditionShort()}</span>
-      </button>`;
-  }
-
-function updateTopbarSource() {
-    const badge = document.getElementById('topbar-source-badge');
-    if (!badge) return;
-    const textEl = badge.querySelector('.edition-badge-text');
-    if (textEl) textEl.textContent = getEditionShort();
-    badge.title = 'Study Source: ' + getSourceLabel(state.activeSource || 'marrow_8') + ' \u2014 tap to change';
-    updateOfflineIndicator();
-  }
-
-  function updateOfflineIndicator() {
-    const indicator = document.getElementById('topbar-offline-indicator');
-    if (!indicator) return;
-    if (state.isOffline) {
-      indicator.style.display = 'flex';
-    } else {
-      indicator.style.display = 'none';
-    }
-  }
 
   // --- Cool faculty + lecture-time presentation helpers ---
   function renderFacultyPill(faculty, subjectId) {

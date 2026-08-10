@@ -56,7 +56,8 @@ const EXPECTED = {
             'computeMetricsFromVideos', 'getSubjectOrSyllabusMetricsForPlan',
             'getMetricsForModalScope', 'getTodayQueueForPlan', 'getAllPlanQueues',
             'getTodaysActionQueue', 'getPlanById', 'getSyllabusStats',
-            'getSubjectOrSyllabusMetrics']
+            'getSubjectOrSyllabusMetrics'],
+  theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip']
 };
 
 async function run() {
