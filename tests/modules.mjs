@@ -65,7 +65,7 @@ const EXPECTED = {
   planConfig: ['renderStudyPlanConfigCard', 'initStudyPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
   sourceSettings: ['openSourceSettingsModal'],
   charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap'],
-  views: ['renderDashboardView', 'renderCurriculumView', 'renderSubjectDetailView', 'renderAnalyticsView']
+  views: ['renderDashboardView', 'renderCurriculumView', 'renderSubjectDetailView', 'renderAnalyticsView', 'renderProfileView', 'openProfileBottomSheet', 'closeBottomSheet']
 };
 
 async function run() {

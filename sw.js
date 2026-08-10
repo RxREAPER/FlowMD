@@ -33,6 +33,7 @@ const ASSETS = [
   './js/features/views/curriculum.js',
   './js/features/views/subject-detail.js',
   './js/features/views/analytics.js',
+  './js/features/views/profile.js',
   './icon.svg',
   './manifest.json',
   './offline.html',

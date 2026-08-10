@@ -57,6 +57,33 @@ async function run() {
   console.log('search results:', await page.locator('.spotlight-item').count());
   await page.keyboard.press('Escape');
 
+  // Profile bottom sheet — open from topbar avatar
+  await page.locator('#topbar-user-profile').click({ force: true }).catch(() => {});
+  await page.waitForTimeout(300);
+  const sheetActive = await page.evaluate(() => document.getElementById('bottom-sheet-overlay')?.classList.contains('active'));
+  console.log('bottom sheet opens:', sheetActive === true ? 'YES' : 'NO');
+  if (sheetActive !== true) errors.push('[assert] bottom sheet did not open on topbar avatar click');
+  const sheetHasProfileBtn = await page.locator('#bs-btn-view-profile').count();
+  console.log('bottom sheet profile btn:', sheetHasProfileBtn ? 'present' : 'MISSING');
+  if (!sheetHasProfileBtn) errors.push('[assert] bottom sheet missing #bs-btn-view-profile');
+  // View Full Profile from sheet → closes sheet and navigates to profile view
+  await page.locator('#bs-btn-view-profile').click({ force: true }).catch(() => {});
+  await page.waitForTimeout(400);
+  const sheetClosedAfterNav = await page.evaluate(() => !document.getElementById('bottom-sheet-overlay')?.classList.contains('active'));
+  console.log('bottom sheet closes on nav:', sheetClosedAfterNav ? 'YES' : 'NO');
+  if (!sheetClosedAfterNav) errors.push('[assert] bottom sheet stayed open after navigating to profile');
+  const profileBody = await page.locator('#app-main').innerText().catch(() => '');
+  console.log('profile view after sheet nav:', profileBody.includes('Account & Profile') ? 'rendered' : 'NOT RENDERED');
+  if (!profileBody.includes('Account & Profile')) errors.push('[assert] profile view did not render after bottom-sheet navigation');
+  // Re-open and dismiss via overlay click (top-left corner is outside the sheet)
+  await page.locator('#topbar-user-profile').click({ force: true }).catch(() => {});
+  await page.waitForTimeout(300);
+  await page.locator('#bottom-sheet-overlay').click({ position: { x: 5, y: 5 }, force: true }).catch(() => {});
+  await page.waitForTimeout(300);
+  const sheetClosedByOverlay = await page.evaluate(() => !document.getElementById('bottom-sheet-overlay')?.classList.contains('active'));
+  console.log('bottom sheet closes on overlay click:', sheetClosedByOverlay ? 'YES' : 'NO');
+  if (!sheetClosedByOverlay) errors.push('[assert] bottom sheet did not close on overlay click');
+
   // Source settings modal
   await page.locator('#topbar-source-badge').click({ force: true }).catch(() => {});
   await page.waitForTimeout(300);
