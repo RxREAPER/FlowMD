@@ -1,8 +1,16 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 5 (Docs + Final QA — COMPLETE)
-- **Status**: All 5 phases complete. 58/58 Playwright checks green. Ready for production deploy (manual CI gate).
+- **Phase**: 6 (Monolith Decomposition — COMPLETE on `refactor/decompose-monolith` branch, v178)
+- **Status**: All 5 phases complete. 58/58 Playwright checks green + module registry + metrics unit tests (160+ assertions). Decomposition branch ready for review/merge.
+
+## Phase 6: Monolith Decomposition (2026-08-10 session)
+- [x] `app.js` (3,816 lines single IIFE) → thin shell (356 lines) + 20 module files under `js/core/` and `js/features/`
+- [x] Reactivated two dead modules extracted in v160 but never wired: `js/core/state-store.js`, `js/core/source-data.js` (duplicate copies deleted from `app.js`)
+- [x] New test suites: `tests/modules.mjs` (81 registry-contract checks), `tests/metrics.mjs` (19 unit tests), `tests/navigation.mjs` (full view tour + bottom-sheet interactions, no console errors)
+- [x] Deleted dead code found during extraction: `renderGoalsView` (unreachable since initial commit), `renderFacultyPill`/`renderHoursMeter` (already dead)
+- [x] `npm test` now runs: modules → metrics → smoke → onboarding → navigation (160+ assertions)
+- [x] Every extraction tagged `stage-0`…`stage-17` for instant revert; backup branch `backup/pre-decompose-v161`
 
 ## Completed
 - [x] Firebase Hosting deployment live at flowmd-04.web.app

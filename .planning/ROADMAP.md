@@ -38,3 +38,10 @@
 - [x] STATE.md updated with final status
 - [x] Full Playwright suite: 58/58 checks green
 - [x] Ready for production deploy (manual CI gate)
+
+## Phase 6: Monolith Decomposition (Complete — branch `refactor/decompose-monolith`)
+- [x] Split `app.js` (3,816 lines) into `js/core/` (state, data, metrics, subjects) + `js/features/` (theme, search, sync, onboarding, plan config, source settings, charts, views)
+- [x] Wire previously-dead `state-store.js` / `source-data.js` modules; delete duplicate copies from `app.js`
+- [x] Add module-registry contract test + metrics unit tests + navigation audit (bottom-sheet coverage)
+- [x] Delete dead code found in the sweep (`renderGoalsView`, `renderFacultyPill`, `renderHoursMeter`)
+- [ ] Phase C (pending separate go-ahead): legacy retro naming cleanup (`pxl-`/`obw-`/`gcm-` prefixes, `marrow_planner_*` storage keys) + storage-key migration

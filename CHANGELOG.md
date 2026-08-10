@@ -1,5 +1,15 @@
 # FlowMD — Change Log
 
+## [2026-08-10] Monolith decomposition — `app.js` split into 20 modules (v178)
+
+- **`app.js` slimmed from 3,816 → 356 lines.** All logic moved into plain-IIFE modules registered on `window.FlowMD.*`, loaded as ordered `<script>` tags (no bundler — CSP forbids `unsafe-eval`).
+- **Module map**: `js/core/` — namespace, constants, state-store, source-data, subjects, metrics, logo; `js/features/` — toast, theme, search, sync, onboarding, study-plan-config, source-settings, charts, views/{dashboard, curriculum, subject-detail, analytics, profile}.
+- **Fixed dormant duplication**: `js/core/state-store.js` and `js/core/source-data.js` (extracted in v160 but never wired) are now loaded; their duplicate copies inside `app.js` were deleted. Two copies of the same state/data logic could previously drift silently.
+- **Dead code removed** (found during the sweep): `renderGoalsView` (unreachable since the initial commit), `renderFacultyPill`, `renderHoursMeter`.
+- **New tests**: `tests/modules.mjs` (81 registry-contract checks), `tests/metrics.mjs` (19 unit tests), `tests/navigation.mjs` (full view tour incl. bottom-sheet open/navigate/dismiss, zero console errors). `npm test` runs modules → metrics → smoke → onboarding → navigation (160+ assertions).
+- **Revert safety**: each extraction tagged `stage-0`…`stage-17`; backup branch `backup/pre-decompose-v161`.
+- Behavior unchanged — same DOM output, same localStorage schema. Verified: 20/20 smoke, 40/40 onboarding, 81/81 registry, 19/19 metrics, navigation tour clean.
+
 ## [2026-08-10] 7-Day Execution Chart — reverted to line style (matching deployed site)
 
 - Reverted the pixel-terminal bar chart back to the **line-style chart** matching flowmd-04.web.app exactly:
