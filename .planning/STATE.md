@@ -39,12 +39,15 @@
 ## In Progress
 - None — all phases complete
 
+## Completed This Session
+- [x] **7-Day Execution Chart pixel-terminal redesign** — replaced the solid-filled line chart (Catmull-Rom smooth curve + gradient area fill + solid circles) with a **pixel-terminal bar chart**: outlined grid tracks (1px stroke) filled with discrete **4×4px pixel cells** (1px gap, scanline/block aesthetic). Trend line becomes a **stepped pixel-staircase** with circle markers. Target line → tight dotted (violet). Grid lines → tight dots. Pixel-accurate re-render at measured container width. Cache-busted to v160. Playwright 60/60 green, 0 console errors.
+
 ## Next
 - Deploy to production when explicitly approved (CI has manual gate: `workflow_dispatch`)
 
 ## Notes
-- Cache-busting version: v158 (index.html `?v=158`)
+- Cache-busting version: v160 (index.html `?v=160`)
 - Live: https://flowmd-04.web.app
 - Repo: https://github.com/mohammedsafi0414/FlowMD
-- Backup refs: `backup/pre-hardening`, `backup/pre-hardening-20260809-113936`, `backup/pre-modular-20260808-123655`epo: https://github.com/mohammedsafi0414/FlowMD
+- Backup refs: `backup/pre-hardening`, `backup/pre-hardening-20260809-113936`, `backup/pre-modular-20260808-123655`
 - git is available (2.55.0) — STATE.md previously claimed "git not on PATH"; that was incorrect

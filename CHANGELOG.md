@@ -1,5 +1,17 @@
 # FlowMD — Change Log
 
+## [2026-08-10] 7-Day Execution Chart — pixel-terminal redesign
+
+- Redesigned the 7-day execution chart from a solid line chart (Catmull-Rom smooth curve + gradient area fill + solid circles) to a **pixel-terminal "scanline" bar chart**:
+  - **Bars**: now drawn as **outlined grid tracks** (1px stroke) filled with discrete **4×4px pixel cells** (1px gap) — like retro terminal progress blocks, not solid fills.
+  - **Trend line**: replaced the smooth curve + gradient area with a **stepped pixel-staircase** path (miter join, dotted stroke) plus circle markers at each data point.
+  - **Target reference line**: changed from long dashes to a **tight dotted** pattern (violet accent-secondary).
+  - **Grid lines**: changed from 4px dashes to **tight dots**.
+  - Added pixel-accurate re-render at measured container width (removes `preserveAspectRatio="none"`; viewBox matches rendered pixel width exactly).
+- Updated CSS: `.ex-chart-area`/`.ex-chart-line`/`.ex-chart-node` → `.ex-trend-line`/`.ex-trend-marker`/`.ex-bar-track`/`.ex-bar-cell`; `.ex-dot-trend` legend dot; dotted grid/target patterns.
+- Cache-busted to v160 (`?v=160` in index.html; sw.js cache `marrow-planner-pwa-v8`).
+- Verified: `node --check app.js` passes; Playwright smoke 20/20 + onboarding 40/40 (60/60 total), no console errors. DOM verified: 7 bar tracks + 577 pixel cells + 1 stepped trend line + 7 markers + 3 dotted grid lines + 1 dotted target line.
+
 ## [2026-08-09] Anatomy icon upgraded → skeleton
 
 - Replaced the anatomy subject icon in `js/core/constants.js` (`SUBJECT_SVG_ICONS.anatomy`) from the generic `body/body.svg` outline to the detailed Health Icons `body/skeleton.svg` (full skeleton, 6150 chars vs 2064).
