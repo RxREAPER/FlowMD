@@ -6987,15 +6987,6 @@ body {
 .ex-dot-met { background: var(--success); }
 .ex-dot-part { background: var(--warning); }
 .ex-dot-zero { background: var(--text-muted); }
-.ex-dot-trend {
-  background: transparent;
-  border: 2px solid var(--accent-primary);
-  width: 12px;
-  height: 4px;
-  border-radius: 2px;
-  position: relative;
-  top: -1px;
-}
 .ex-dot-target {
   background: transparent;
   border: 2px dashed var(--accent-primary);
@@ -7043,51 +7034,49 @@ body {
   text-anchor: end;
 }
 
-.ex-trend-line {
+.ex-chart-area {
+  fill: url(#exChartGrad);
+}
+
+.ex-chart-line {
   fill: none;
   stroke: var(--accent-primary);
-  stroke-width: 1.5;
-  stroke-linecap: butt;
-  stroke-linejoin: miter;
-  stroke-dasharray: 2 2;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   pointer-events: none;
 }
 
-.ex-trend-marker {
-  fill: var(--bg-surface-raised);
-  stroke: var(--accent-primary);
-  stroke-width: 1.5;
-  pointer-events: none;
-}
-
-.ex-chart-bar {
+.ex-chart-point {
   cursor: pointer;
 }
 
-.ex-bar-track {
-  fill: none;
-  stroke-width: 1;
-  stroke: var(--border-color);
-  opacity: 0.7;
-  transition: opacity 0.15s ease;
+.ex-chart-point:hover .ex-chart-node {
+  r: 6;
+  filter: brightness(1.2);
 }
 
-.ex-chart-bar.is-met .ex-bar-track { stroke: var(--success); }
-.ex-chart-bar.is-part .ex-bar-track { stroke: var(--warning); }
-.ex-chart-bar.is-zero .ex-bar-track { stroke: var(--text-muted); opacity: 0.4; }
-
-.ex-bar-cell {
-  stroke-width: 0.5;
-  stroke: var(--border-color);
-  transition: opacity 0.15s ease, filter 0.15s ease;
+.ex-chart-node {
+  fill: var(--bg-surface-raised);
+  stroke: var(--accent-primary);
+  stroke-width: 1.5;
+  cursor: pointer;
 }
 
-.ex-chart-bar.is-met .ex-bar-cell { fill: var(--success); }
-.ex-chart-bar.is-part .ex-bar-cell { fill: var(--warning); }
-.ex-chart-bar.is-zero .ex-bar-cell { fill: var(--text-muted); opacity: 0.5; }
+.ex-node-met {
+  fill: var(--success);
+  stroke: var(--success);
+}
 
-.ex-chart-bar:hover .ex-bar-track { opacity: 1; }
-.ex-chart-bar:hover .ex-bar-cell { filter: brightness(1.1); }
+.ex-node-part {
+  fill: var(--warning);
+  stroke: var(--warning);
+}
+
+.ex-node-zero {
+  fill: var(--text-muted);
+  stroke: var(--text-muted);
+}
 
 .ex-chart-val {
   fill: var(--text-primary);

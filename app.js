@@ -2499,82 +2499,53 @@ function updateTopbarSource() {
     });
   }
 
-﻿  // --- PxlKit PixelTerminalBar Chart Generator ---
-  // 7-Day Execution Chart (Redesign: pixel-terminal "scanline" bars)
-  function renderExecutionChart(last7Days, vidsDay, maxChartVal, svgWidth) {
+﻿// --- 7-Day Execution Chart ---
+  function renderExecutionChart(last7Days, vidsDay, maxChartVal) {
     const dailyCounts = getDailyCountsExcludingBulk();
-
-    // Pixel-accurate coordinate system: viewBox width == rendered width.
-    const chartWidth = svgWidth || 360;
-    const chartHeight = Math.round(chartWidth * (2 / 3));
-    const padL = 16;
-    const padR = 16;
-    const padT = 36;
-    const padB = 30;
-    const plotW = chartWidth - padL - padR;
-    const plotH = chartHeight - padT - padB;
-    const baseY = padT + plotH;
+    const width = 600;
+    const height = 200;
+    const padL = 14;
+    const padR = 14;
+    const padT = 32;
+    const padB = 26;
+    const chartW = width - padL - padR;
+    const chartH = height - padT - padB;
+    const baseY = padT + chartH;
     const scale = Math.max(1, maxChartVal);
-
-    const slotW = plotW / last7Days.length;
-    const barW = Math.max(10, slotW * 0.65);
-
-    // Pixel-cell bar config: bars are columns of small outlined cells, NOT solid
-    const cellSize = 4;
-    const cellGap = 1;
-    const barInner = barW - 4;
 
     const points = last7Days.map((d, i) => {
       const count = dailyCounts[d.dateKey] || 0;
-      const cx = padL + slotW * (i + 0.5);
-      const h = Math.min(plotH, (count / scale) * plotH);
-      const y = baseY - h;
-      return { cx, h, y, count, label: d.label, isMet: count >= vidsDay };
+      const x = padL + (chartW * i) / (last7Days.length - 1);
+      const y = padT + chartH - Math.min(chartH, (count / scale) * chartH);
+      return { x, y, count, label: d.label, isMet: count >= vidsDay };
     });
 
-    const targetY = padT + plotH - Math.min(plotH, (vidsDay / scale) * plotH);
+    const targetY = padT + chartH - Math.min(chartH, (vidsDay / scale) * chartH);
     const total7DayVids = points.reduce((sum, p) => sum + p.count, 0);
     const metDays = points.filter(p => p.isMet).length;
-    const gridY = [0.25, 0.5, 0.75].map(f => padT + plotH - plotH * f);
 
-    // --- Bar geometry: outlined track + pixel-cell fill ---
-    const cellPaths = (p) => {
-      const x = p.cx - barW / 2 + 2;
-      const cells = [];
-      if (p.h <= 0) return cells;
-      const numCells = Math.max(1, Math.floor(p.h / (cellSize + cellGap)));
-      for (let c = 0; c < numCells; c++) {
-        const cy = baseY - (c + 1) * (cellSize + cellGap);
-        cells.push('M ' + x.toFixed(2) + ' ' + cy.toFixed(2) + ' h ' + barInner.toFixed(2) + ' v ' + cellSize.toFixed(2) + ' h ' + (-barInner).toFixed(2) + ' Z');
-      }
-      return cells;
-    };
-
-    // Track outline: rect with a stepped (pixelated) top cap
-    const trackPath = (p) => {
-      const x = p.cx - barW / 2;
-      let d = 'M ' + x.toFixed(2) + ' ' + baseY.toFixed(2) + ' H ' + (x + barW).toFixed(2) + ' V ' + p.y.toFixed(2);
-      const steps = Math.max(1, Math.floor(barW / 6));
-      let stepX = x + barW;
-      for (let s = 0; s < steps; s++) {
-        stepX -= 3;
-        d += ' H ' + stepX.toFixed(2) + ' V ' + (p.y + 2).toFixed(2);
-      }
-      d += ' H ' + x.toFixed(2) + ' Z';
-      return d;
-    };
-
-    // --- Stepped pixel-staircase trend (replaces smooth line) ---
-    const trendPts = points.map(p => [p.cx, baseY - Math.max(2, p.h)]);
-    const stepPath = (pts) => {
-      if (pts.length < 2) return '';
-      let d = 'M ' + pts[0][0].toFixed(2) + ' ' + pts[0][1].toFixed(2);
-      for (let i = 1; i < pts.length; i++) {
-        d += ' V ' + pts[i][1].toFixed(2) + ' H ' + pts[i][0].toFixed(2);
+    const smoothPath = (pts) => {
+      if (pts.length < 2) return pts.length ? 'M ' + pts[0].x.toFixed(2) + ' ' + pts[0].y.toFixed(2) : '';
+      let d = 'M ' + pts[0].x.toFixed(2) + ' ' + pts[0].y.toFixed(2);
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[Math.max(0, i - 1)];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[Math.min(pts.length - 1, i + 2)];
+        const c1x = p1.x + (p2.x - p0.x) / 6;
+        const c1y = p1.y + (p2.y - p0.y) / 6;
+        const c2x = p2.x - (p3.x - p1.x) / 6;
+        const c2y = p2.y - (p3.y - p1.y) / 6;
+        d += ' C ' + c1x.toFixed(2) + ' ' + c1y.toFixed(2) + ', ' + c2x.toFixed(2) + ' ' + c2y.toFixed(2) + ', ' + p2.x.toFixed(2) + ' ' + p2.y.toFixed(2);
       }
       return d;
     };
-    const trendPath = stepPath(trendPts);
+
+    const linePath = smoothPath(points);
+    const areaPath = linePath
+      ? linePath + ' L ' + points[points.length - 1].x.toFixed(2) + ' ' + baseY.toFixed(2) + ' L ' + points[0].x.toFixed(2) + ' ' + baseY.toFixed(2) + ' Z'
+      : '';
+    const gridY = [0.25, 0.5, 0.75].map(f => padT + chartH - chartH * f);
 
     return `
       <section class="ex-chart-card">
@@ -2593,46 +2564,58 @@ function updateTopbarSource() {
           <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-met"></span> Target Met</span>
           <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-part"></span> Partial</span>
           <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-zero"></span> No Study</span>
-          <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-trend"></span> Track</span>
           <span class="ex-chart-legend-item ex-chart-legend-target"><span class="ex-dot ex-dot-target"></span> Daily Target</span>
         </div>
 
         <div class="ex-chart-plot">
-          <svg viewBox="0 0 ${chartWidth} ${chartHeight}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart" data-chart-width="${chartWidth}" data-chart-height="${chartHeight}">
-            ${gridY.map(y => '<line class="ex-chart-gridline" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (chartWidth - padR) + '" y2="' + y.toFixed(1) + '"></line>').join('')}
-            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY.toFixed(1)}" x2="${(chartWidth - padR).toFixed(1)}" y2="${baseY.toFixed(1)}" />
+          <svg viewBox="0 0 ${width} ${height}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart">
+            <defs>
+              <linearGradient id="exChartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" style="stop-color:var(--accent-primary); stop-opacity:0.30" />
+                <stop offset="100%" style="stop-color:var(--accent-primary); stop-opacity:0.02" />
+              </linearGradient>
+            </defs>
 
-            ${trendPath ? '<path class="ex-trend-line" d="' + trendPath + '"></path>' : ''}
-            ${trendPts.map(p => '<circle class="ex-trend-marker" cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) + '" r="2.5"></circle>').join('')}
+            ${gridY.map(y => '<line class="ex-chart-gridline" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (width - padR) + '" y2="' + y.toFixed(1) + '"></line>').join('')}
+            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY}" x2="${width - padR}" y2="${baseY}" />
+            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${width - padR}" y2="${targetY.toFixed(1)}" />
+            <text class="ex-chart-targetlabel" x="${width - padR}" y="${Math.max(12, targetY - 7)}">TARGET ${vidsDay}/DAY</text>
 
-            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${(chartWidth - padR).toFixed(1)}" y2="${targetY.toFixed(1)}" />
+            ${areaPath ? '<path d="' + areaPath + '" class="ex-chart-area" />' : ''}
+            ${linePath ? '<path d="' + linePath + '" class="ex-chart-line" />' : ''}
 
             ${points.map(p => {
-              const cells = cellPaths(p);
-              const track = trackPath(p);
+              const nodeCls = p.count === 0 ? 'zero' : (p.isMet ? 'met' : 'part');
+              const ptCls = p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part');
+              const titleText = p.label + ': ' + p.count + ' video' + (p.count !== 1 ? 's' : '') + (p.isMet ? ' Target Met' : (p.count > 0 ? ' Partial' : ' No study'));
+              const star = p.isMet && p.count > 0 ? ' \u2605' : '';
               return `
-                <g class="ex-chart-bar ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}">
-                  <title>${p.label}: ${p.count} videos ${p.isMet ? 'check_circle' : (p.count > 0 ? 'Partial' : 'No study')}</title>
-                  <path class="ex-bar-track" d="${track}" />
-                  ${cells.map(c => '<path class="ex-bar-cell" d="' + c + '"></path>').join('')}
-                  <text class="ex-chart-val" x="${p.cx.toFixed(2)}" y="${Math.max(padT + 6, p.y - 6).toFixed(2)}">${p.count}${p.isMet && p.count > 0 ? ' \u2605' : ''}</text>
-                </g>
-              `;
-            }).join('')}
+              <g class="ex-chart-point ${ptCls}">
+                <title>${p.label}: ${titleText}</title>
+                <text class="ex-chart-val" x="${p.x.toFixed(2)}" y="${Math.max(12, p.y - 11)}">${p.count}${star}</text>
+                <circle class="ex-chart-node ex-node-${nodeCls}" cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="5" />
+              </g>
+            `}).join('')}
 
-            ${points.map(p => '<text class="ex-chart-xlabel" x="' + p.cx.toFixed(2) + '" y="' + (chartHeight - 6) + '">' + p.label + '</text>').join('')}
+            ${points.map(p => '<text class="ex-chart-xlabel" x="' + p.x.toFixed(2) + '" y="' + (height - 5) + '">' + p.label + '</text>').join('')}
           </svg>
         </div>
 
         <div class="ex-chart-days">
-          ${points.map(p => `
-            <div class="ex-day-tile ex-day-tile--pixel ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}" title="${p.label}: ${p.count} videos ${p.isMet ? 'check_circle' : (p.count > 0 ? 'Partial' : 'No study')}">
-              <div class="ex-day-name">${p.label}</div>
-              <div class="ex-day-count">${p.count}</div>
-              <div class="ex-day-status">${p.isMet ? 'MET' : (p.count > 0 ? 'PARTIAL' : '0 VIDS')}</div>
-              <div class="ex-day-track"><div class="ex-day-fill" style="width:${Math.min(100, Math.round((p.count / Math.max(vidsDay, 1)) * 100))}%"></div></div>
-            </div>
-          `).join('')}
+          ${points.map(p => {
+            const tileCls = p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part');
+            const titleText = p.label + ': ' + p.count + ' video' + (p.count !== 1 ? 's' : '') + ' ' + (p.isMet ? 'Target Met' : (p.count > 0 ? 'Partial' : 'No study'));
+            const fillPct = Math.min(100, Math.round((p.count / Math.max(vidsDay, 1)) * 100));
+            const status = p.isMet ? 'MET' : (p.count > 0 ? 'PARTIAL' : '0 VIDS');
+            return `
+              <div class="ex-day-tile ${tileCls}" title="${titleText}">
+                <div class="ex-day-name">${p.label}</div>
+                <div class="ex-day-count">${p.count}</div>
+                <div class="ex-day-status">${status}</div>
+                <div class="ex-day-track"><div class="ex-day-fill" style="width:${fillPct}%"></div></div>
+              </div>
+            `;
+          }).join('')}
         </div>
 
         <div class="ex-chart-foot">
@@ -2853,7 +2836,7 @@ function updateTopbarSource() {
       </div>
 
       <!-- 7-Day Execution Chart -->
-      ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal, 360)}
+      ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal)}
 
       <!-- Subject Heatmap (moved from dashboard) -->
       <div style="margin-top:20px;">
@@ -2872,18 +2855,6 @@ function updateTopbarSource() {
     });
 
     document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
-
-    // Re-render the execution chart at the measured container width so fonts/
-    // strokes/bars render at true pixel size instead of being upscaled.
-    const chartCard = document.querySelector('.ex-chart-card');
-    if (chartCard) {
-      const plot = chartCard.querySelector('.ex-chart-plot');
-      const width = plot ? Math.floor(plot.clientWidth) : 360;
-      const fresh = renderExecutionChart(last7Days, totalVidsDay, maxChartVal, width);
-      const temp = document.createElement('div');
-      temp.innerHTML = fresh.trim();
-      chartCard.replaceWith(temp.firstChild);
-    }
   }
 
   // --- View 5: Synchronized Targets & Goals View ---
