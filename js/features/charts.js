@@ -187,27 +187,27 @@
     const gridY = [0.25, 0.5, 0.75].map(f => padT + chartH - chartH * f);
 
     return `
-      <section class="ex-chart-card">
-        <div class="ex-chart-head">
-          <div class="ex-chart-titlewrap">
-            <span class="ex-chart-icon"><span class="material-symbols-outlined">bar_chart</span></span>
+      <section class="chart-card">
+        <div class="chart-head">
+          <div class="chart-titlewrap">
+            <span class="chart-icon"><span class="material-symbols-outlined">bar_chart</span></span>
             <div>
-              <div class="ex-chart-kicker">Execution &mdash; Last 7 Days</div>
-              <h3 class="ex-chart-title">7-Day Execution Chart</h3>
+              <div class="chart-kicker">Execution &mdash; Last 7 Days</div>
+              <h3 class="chart-title">7-Day Execution Chart</h3>
             </div>
           </div>
-          <span class="v2-hud-badge ex-chart-target-badge">TARGET ${vidsDay} VIDS/DAY</span>
+          <span class="v2-hud-badge chart-target-badge">TARGET ${vidsDay} VIDS/DAY</span>
         </div>
 
-        <div class="ex-chart-legend">
-          <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-met"></span> Target Met</span>
-          <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-part"></span> Partial</span>
-          <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-zero"></span> No Study</span>
-          <span class="ex-chart-legend-item ex-chart-legend-target"><span class="ex-dot ex-dot-target"></span> Daily Target</span>
+        <div class="chart-legend">
+          <span class="chart-legend-item"><span class="ex-dot ex-dot-met"></span> Target Met</span>
+          <span class="chart-legend-item"><span class="ex-dot ex-dot-part"></span> Partial</span>
+          <span class="chart-legend-item"><span class="ex-dot ex-dot-zero"></span> No Study</span>
+          <span class="chart-legend-item chart-legend-target"><span class="ex-dot ex-dot-target"></span> Daily Target</span>
         </div>
 
-        <div class="ex-chart-plot">
-          <svg viewBox="0 0 ${width} ${height}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart">
+        <div class="chart-plot">
+          <svg viewBox="0 0 ${width} ${height}" class="chart-svg" role="img" aria-label="7-day video execution chart">
             <defs>
               <linearGradient id="exChartGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" style="stop-color:var(--accent-primary); stop-opacity:0.30" />
@@ -215,13 +215,13 @@
               </linearGradient>
             </defs>
 
-            ${gridY.map(y => '<line class="ex-chart-gridline" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (width - padR) + '" y2="' + y.toFixed(1) + '"></line>').join('')}
-            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY}" x2="${width - padR}" y2="${baseY}" />
-            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${width - padR}" y2="${targetY.toFixed(1)}" />
-            <text class="ex-chart-targetlabel" x="${width - padR}" y="${Math.max(12, targetY - 7)}">TARGET ${vidsDay}/DAY</text>
+            ${gridY.map(y => '<line class="chart-gridline" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (width - padR) + '" y2="' + y.toFixed(1) + '"></line>').join('')}
+            <line class="chart-baseline" x1="${padL}" y1="${baseY}" x2="${width - padR}" y2="${baseY}" />
+            <line class="chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${width - padR}" y2="${targetY.toFixed(1)}" />
+            <text class="chart-targetlabel" x="${width - padR}" y="${Math.max(12, targetY - 7)}">TARGET ${vidsDay}/DAY</text>
 
-            ${areaPath ? '<path d="' + areaPath + '" class="ex-chart-area" />' : ''}
-            ${linePath ? '<path d="' + linePath + '" class="ex-chart-line" />' : ''}
+            ${areaPath ? '<path d="' + areaPath + '" class="chart-area" />' : ''}
+            ${linePath ? '<path d="' + linePath + '" class="chart-line" />' : ''}
 
             ${points.map(p => {
               const nodeCls = p.count === 0 ? 'zero' : (p.isMet ? 'met' : 'part');
@@ -229,18 +229,18 @@
               const titleText = p.label + ': ' + p.count + ' video' + (p.count !== 1 ? 's' : '') + (p.isMet ? ' Target Met' : (p.count > 0 ? ' Partial' : ' No study'));
               const star = p.isMet && p.count > 0 ? ' \u2605' : '';
               return `
-              <g class="ex-chart-point ${ptCls}">
+              <g class="chart-point ${ptCls}">
                 <title>${p.label}: ${titleText}</title>
-                <text class="ex-chart-val" x="${p.x.toFixed(2)}" y="${Math.max(12, p.y - 11)}">${p.count}${star}</text>
-                <circle class="ex-chart-node ex-node-${nodeCls}" cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="5" />
+                <text class="chart-val" x="${p.x.toFixed(2)}" y="${Math.max(12, p.y - 11)}">${p.count}${star}</text>
+                <circle class="chart-node ex-node-${nodeCls}" cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="5" />
               </g>
             `}).join('')}
 
-            ${points.map(p => '<text class="ex-chart-xlabel" x="' + p.x.toFixed(2) + '" y="' + (height - 5) + '">' + p.label + '</text>').join('')}
+            ${points.map(p => '<text class="chart-xlabel" x="' + p.x.toFixed(2) + '" y="' + (height - 5) + '">' + p.label + '</text>').join('')}
           </svg>
         </div>
 
-        <div class="ex-chart-days">
+        <div class="chart-days">
           ${points.map(p => {
             const tileCls = p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part');
             const titleText = p.label + ': ' + p.count + ' video' + (p.count !== 1 ? 's' : '') + ' ' + (p.isMet ? 'Target Met' : (p.count > 0 ? 'Partial' : 'No study'));
@@ -257,7 +257,7 @@
           }).join('')}
         </div>
 
-        <div class="ex-chart-foot">
+        <div class="chart-foot">
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--accent-primary)"></span> Total <b>${total7DayVids} vids</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--success)"></span> Target Met <b>${metDays}/7 days</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--warning)"></span> Pace <b>${Math.round((total7DayVids / Math.max(vidsDay * 7, 1)) * 100)}%</b></span>
