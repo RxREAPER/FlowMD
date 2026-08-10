@@ -44,4 +44,6 @@
 - [x] Wire previously-dead `state-store.js` / `source-data.js` modules; delete duplicate copies from `app.js`
 - [x] Add module-registry contract test + metrics unit tests + navigation audit (bottom-sheet coverage)
 - [x] Delete dead code found in the sweep (`renderGoalsView`, `renderFacultyPill`, `renderHoursMeter`)
-- [ ] Phase C (pending separate go-ahead): legacy retro naming cleanup (`pxl-`/`obw-`/`gcm-` prefixes, `marrow_planner_*` storage keys) + storage-key migration
+- [x] Phase C: legacy retro naming cleanup — `pxl-*`/`PXL_ICONS` → `fm-*`/`FLOWMD_ICONS` (v179), `obw-*` → `onboarding-*` (v180), `gcm-*` → `plan-config-*` (v181), `ex-chart-*` → `chart-*` (v182)
+- [x] Storage-key migration v2→v3: `marrow_planner_*` → `flowmd_*`, one-time carry-over + schema-versioned migration, `tests/migration.mjs` (v184)
+- [x] Fixed latent missing-import bugs (`getScopedChapterNames` in dashboard + subject-detail) surfaced by plan-seeded tests (v183)

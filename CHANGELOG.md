@@ -1,5 +1,16 @@
 # FlowMD — Change Log
 
+## [2026-08-10] Phase C — legacy retro-era naming cleanup + storage-key migration (v184)
+
+- **Design tokens renamed** (v179): `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS` across all views, toast, theme, search, charts, constants, the app shell, `index.html`, and `style.css` (347 occurrences); stale `PXLKIT`/`PxlKit`/`16-BIT RETRO RPG` comments → FlowMD.
+- **Onboarding wizard renamed** (v180): `obw-*` classes/IDs → `onboarding-*`; wizard state vars `obwStep/obwSource/obwTheme/obwName/obwSeeded` → `onboarding*`. Test selectors updated in sync.
+- **Plan-config modal renamed** (v181): `gcm-*` classes/IDs → `plan-config-*` in `study-plan-config.js`, `index.html`, and `style.css`.
+- **Execution chart renamed** (v182): `ex-chart-*` classes → `chart-*` (legend `ex-dot-*` markers untouched).
+- **Storage-key migration, schema v2 → v3** (v184): all `marrow_planner_*` keys → `flowmd_*` (incl. the raw `marrow_planner_theme_style` strings). `migrateStateSchema()` carries old values over once, removes legacy keys, and runs **before** the v1→v2 migration so v1-era profiles still get the video-ID prefixing.
+- **New test**: `tests/migration.mjs` (12 checks) — seeds a full v2 profile, asserts every `marrow_planner_*` key removed, values carried over, `flowmd_schema_version = 3`, and the dashboard renders identically to a fresh v3 profile.
+- **Latent bugs fixed** (v183): `dashboard.js` and `subject-detail.js` called `getScopedChapterNames(plan)` without importing it (missing since the extraction — only fired when a plan exists). The navigation audit now seeds a Plan A profile so those paths render on every run.
+- `npm test` now runs 6 suites: modules → metrics → smoke → onboarding → navigation → migration (230+ assertions).
+
 ## [2026-08-10] Monolith decomposition — `app.js` split into 20 modules (v178)
 
 - **`app.js` slimmed from 3,816 → 356 lines.** All logic moved into plain-IIFE modules registered on `window.FlowMD.*`, loaded as ordered `<script>` tags (no bundler — CSP forbids `unsafe-eval`).

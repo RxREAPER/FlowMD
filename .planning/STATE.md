@@ -1,8 +1,16 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 6 (Monolith Decomposition — COMPLETE on `refactor/decompose-monolith` branch, v178)
-- **Status**: All 5 phases complete. 58/58 Playwright checks green + module registry + metrics unit tests (160+ assertions). Decomposition branch ready for review/merge.
+- **Phase**: 6 (Monolith Decomposition — COMPLETE on `refactor/decompose-monolith` branch, v184)
+- **Status**: Decomposition (v178) + Phase C retro-naming cleanup & storage-key migration (v184) complete. 6 test suites (230+ assertions): modules 81, metrics 19, smoke 20, onboarding 40, navigation audit (no errors), migration 12. Branch ready for review/merge/deploy.
+
+## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
+- [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
+- [x] `obw-*` classes/IDs → `onboarding-*` incl. wizard state vars (v180)
+- [x] `gcm-*` classes/IDs → `plan-config-*` (v181)
+- [x] `ex-chart-*` classes → `chart-*` (v182)
+- [x] Storage-key migration v2→v3 (`marrow_planner_*` → `flowmd_*`, one-time carry-over, legacy keys removed) + `tests/migration.mjs` (v184)
+- [x] Fixed latent `getScopedChapterNames` missing imports in dashboard + subject-detail, surfaced by plan-seeded navigation audit (v183)
 
 ## Phase 6: Monolith Decomposition (2026-08-10 session)
 - [x] `app.js` (3,816 lines single IIFE) → thin shell (356 lines) + 20 module files under `js/core/` and `js/features/`
