@@ -52,11 +52,11 @@ const SEED = {
     videosPerDay: 8, dailyTargetHours: 3.5, targetUnits: [],
     queueBatchVideoIds: [], extraBatchesCompletedToday: 0
   }]),
-  'marrow_planner_completed_videos': JSON.stringify({ 'marrow_8::anatomy__v1': true }),
-  'marrow_planner_daily_history': '{}',
-  'marrow_planner_daily_batch': '0',
-  'marrow_planner_queue_completed_in_batch': '0',
-  'marrow_planner_queue_batch_videos': '[]'
+  'flowmd_completed_videos': JSON.stringify({ 'marrow_8::anatomy__v1': true }),
+  'flowmd_daily_history': '{}',
+  'flowmd_daily_batch': '0',
+  'flowmd_queue_completed_in_batch': '0',
+  'flowmd_queue_batch_videos': '[]'
 };
 
 async function run() {

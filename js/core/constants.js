@@ -43,21 +43,22 @@ const FLOWMD_ICONS = {
 
   // --- LocalStorage Schema Version (bump when stored shapes change;
   // loadState() runs migrations for older versions) ---
-  const SCHEMA_VERSION = 2;
+  const SCHEMA_VERSION = 3;
 
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
     SCHEMA_VERSION: 'flowmd_schema_version',
-    COMPLETED_VIDEOS: 'marrow_planner_completed_videos',
-    GOALS: 'marrow_planner_goals',
-    THEME: 'marrow_planner_theme',
-    STREAK: 'marrow_planner_streak',
-    DAILY_BATCH: 'marrow_planner_daily_batch',
-    PERSONAL: 'marrow_planner_personal',
-    URGENCY: 'marrow_planner_urgency',
-    DAILY_HISTORY: 'marrow_planner_daily_history',
-    QUEUE_BATCH: 'marrow_planner_queue_completed_in_batch',
-    QUEUE_BATCH_VIDEOS: 'marrow_planner_queue_batch_videos',
+    COMPLETED_VIDEOS: 'flowmd_completed_videos',
+    GOALS: 'flowmd_goals',
+    THEME: 'flowmd_theme',
+    STREAK: 'flowmd_streak',
+    DAILY_BATCH: 'flowmd_daily_batch',
+    PERSONAL: 'flowmd_personal',
+    URGENCY: 'flowmd_urgency',
+    DAILY_HISTORY: 'flowmd_daily_history',
+    QUEUE_BATCH: 'flowmd_queue_completed_in_batch',
+    QUEUE_BATCH_VIDEOS: 'flowmd_queue_batch_videos',
+    THEME_STYLE: 'flowmd_theme_style',
     TUTORIAL_SEEN: 'flowmd_tutorial_seen',
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',

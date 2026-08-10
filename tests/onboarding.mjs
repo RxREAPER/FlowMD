@@ -43,7 +43,11 @@ function check(name, ok, detail = '') {
 
 const FLOW_KEYS = [
   'flowmd_is_configured', 'flowmd_tutorial_seen', 'flowmd_active_source',
-  'flowmd_personal', 'flowmd_plans_v2',
+  'flowmd_personal', 'flowmd_plans_v2', 'flowmd_schema_version',
+  'flowmd_theme', 'flowmd_theme_style', 'flowmd_goals',
+  'flowmd_completed_videos', 'flowmd_daily_history',
+  'flowmd_queue_completed_in_batch', 'flowmd_queue_batch_videos',
+  // Legacy retro-era keys — still wiped so a stale dev profile can't leak in.
   'marrow_planner_theme', 'marrow_planner_theme_style', 'marrow_planner_personal',
   'marrow_planner_goals', 'marrow_planner_completed_videos', 'marrow_planner_daily_history',
   'marrow_planner_queue_completed_in_batch', 'marrow_planner_queue_batch_videos'
@@ -193,8 +197,8 @@ async function run() {
     const stored = await page.evaluate(() => ({
       configured: localStorage.getItem('flowmd_is_configured'),
       source: localStorage.getItem('flowmd_active_source'),
-      personal: localStorage.getItem('marrow_planner_personal') || localStorage.getItem('flowmd_personal'),
-      theme: localStorage.getItem('marrow_planner_theme')
+      personal: localStorage.getItem('flowmd_personal'),
+      theme: localStorage.getItem('flowmd_theme')
     }));
     check('flowmd_is_configured=true persisted', stored.configured === 'true', String(stored.configured));
     check('activeSource=marrow_6_5 persisted', stored.source === 'marrow_6_5', String(stored.source));

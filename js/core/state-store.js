@@ -40,6 +40,33 @@
       const currentVersion = parseInt(rawVersion, 10) || 0;
       if (currentVersion >= SCHEMA_VERSION) return;
 
+      // v2 → v3: unify storage keys under the flowmd_ prefix (retro-era
+      // marrow_planner_* keys renamed; old values carried over once, then
+      // removed). Runs BEFORE the v1 → v2 block so a v1-era profile's keys
+      // are renamed first and the video-ID prefixing still finds its data.
+      if (currentVersion < 3) {
+        const KEY_RENAMES = {
+          'marrow_planner_completed_videos': 'flowmd_completed_videos',
+          'marrow_planner_goals': 'flowmd_goals',
+          'marrow_planner_theme': 'flowmd_theme',
+          'marrow_planner_streak': 'flowmd_streak',
+          'marrow_planner_daily_batch': 'flowmd_daily_batch',
+          'marrow_planner_personal': 'flowmd_personal',
+          'marrow_planner_urgency': 'flowmd_urgency',
+          'marrow_planner_daily_history': 'flowmd_daily_history',
+          'marrow_planner_queue_completed_in_batch': 'flowmd_queue_completed_in_batch',
+          'marrow_planner_queue_batch_videos': 'flowmd_queue_batch_videos',
+          'marrow_planner_theme_style': 'flowmd_theme_style'
+        };
+        for (const [oldKey, newKey] of Object.entries(KEY_RENAMES)) {
+          const raw = localStorage.getItem(oldKey);
+          if (raw !== null && localStorage.getItem(newKey) === null) {
+            localStorage.setItem(newKey, raw);
+          }
+          localStorage.removeItem(oldKey);
+        }
+      }
+
       // v1 → v2: legacy pre-namespaced video IDs get the marrow_8:: prefix.
       // (Applied against the stored payload before state is assembled.)
       if (currentVersion < 2) {
@@ -153,7 +180,7 @@
         localStorage.setItem(STORAGE_KEYS.THEME, 'dark');
       }
 
-      const savedThemeStyle = localStorage.getItem('marrow_planner_theme_style');
+      const savedThemeStyle = localStorage.getItem(STORAGE_KEYS.THEME_STYLE);
       if (savedThemeStyle === 'modern' || savedThemeStyle === 'retro') {
         state.themeStyle = savedThemeStyle;
       } else {
@@ -217,7 +244,7 @@
       localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
       localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
       localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
-      localStorage.setItem('marrow_planner_theme_style', state.themeStyle || 'modern');
+      localStorage.setItem(STORAGE_KEYS.THEME_STYLE, state.themeStyle || 'modern');
       localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
       localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
       localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
