@@ -32,6 +32,7 @@ const ASSETS = [
   './js/features/views/dashboard.js',
   './js/features/views/curriculum.js',
   './js/features/views/subject-detail.js',
+  './js/features/views/analytics.js',
   './icon.svg',
   './manifest.json',
   './offline.html',
