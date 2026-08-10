@@ -69,8 +69,8 @@
 
     toast.querySelector('.pxl-alert-close-btn').addEventListener('click', () => dismissToast(toast));
 
-    // Auto-dismiss
-    const duration = type === 'error' ? 6000 : 4000;
+    // Auto-dismiss (short enough to notice, quick to get out of the way)
+    const duration = type === 'error' ? 1500 : 1000;
     setTimeout(() => dismissToast(toast), duration);
 
     return toast;

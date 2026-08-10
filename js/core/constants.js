@@ -45,6 +45,10 @@ const PXL_ICONS = {
   // loadState() runs migrations for older versions) ---
   const SCHEMA_VERSION = 2;
 
+  // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
+  // used for dynamic script injection so lazy-loaded data files bust the cache) ---
+  const APP_VERSION = '160';
+
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
     SCHEMA_VERSION: 'flowmd_schema_version',
@@ -61,14 +65,40 @@ const PXL_ICONS = {
     TUTORIAL_SEEN: 'flowmd_tutorial_seen',
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',
-    DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject'
+    DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject',
+    BULK_COMPLETED_CHAPTERS: 'flowmd_bulk_completed_chapters'
   };
 
   // --- Study Sources ---
+  // available: false  → "coming soon" — UI shows it but disables selection
+  // globalVar: string → window[globalVar] is where the data file exposes its array
+  // dataFile: string  → path for the <script> tag and SW cache (relative to root)
+  // To add a new source: add one entry here, drop the data file, add the <script> tag.
   const STUDY_SOURCES = [
-    { id: 'marrow_8', label: 'Marrow Edition 8', short: 'Marrow 8' },
-    { id: 'marrow_6_5', label: 'Marrow Edition 6.5', short: 'Marrow 6.5' },
-    { id: 'prepladder_x', label: 'Prepladder X', short: 'Prepladder X' }
+    {
+      id: 'marrow_8',
+      label: 'Marrow Edition 8',
+      short: 'Marrow 8',
+      available: true,
+      globalVar: 'syllabusData',
+      dataFile: './data.js'
+    },
+    {
+      id: 'marrow_6_5',
+      label: 'Marrow Edition 6.5',
+      short: 'Marrow 6.5',
+      available: true,
+      globalVar: 'syllabusData65',
+      dataFile: './data_marrow_6_5.js'
+    },
+    {
+      id: 'prepladder_x',
+      label: 'Prepladder X',
+      short: 'Prepladder X',
+      available: false,
+      globalVar: 'syllabusDataPPL',
+      dataFile: './data_prepladder_x.js'
+    }
   ];
 
   // --- Dual-Subject Plan Defaults ---
@@ -86,7 +116,7 @@ const PXL_ICONS = {
     targetUnits: []
   });
 
-  const PLAN_A_ACCENT = '#3b82f6';   // cobalt blue
+  const PLAN_A_ACCENT = '#6c3baa';   // royal lavender
   const PLAN_B_ACCENT = '#f43f5e';   // rose pink
 
   const DEFAULT_PERSONAL = {
@@ -94,7 +124,6 @@ const PXL_ICONS = {
   };
 
   const DEFAULT_GOALS = {
-    goalMode: 'video',
     targetDate: '2026-08-15',
     videosPerDay: 8,
     videosPerWeek: 56,
@@ -152,10 +181,10 @@ const PXL_ICONS = {
   const SUBJECT_COLORS = {
     anaesthesia: '#10b981', anatomy: '#a855f7', biochemistry: '#d946ef',
     community_medicine: '#14b8a6', dermatology: '#f59e0b', forensic_medicine: '#eab308',
-    medicine: '#3b82f6', microbiology: '#22c55e', obstetrics___gynaecology: '#ef4444',
+    medicine: '#6c3baa', microbiology: '#22c55e', obstetrics___gynaecology: '#ef4444',
     ophthalmology: '#06b6d4', orthopaedics: '#a855f7', otorhinolaryngology__ent_: '#14b8a6',
     paediatrics: '#ef4444', pathology: '#22c55e', pharmacology: '#f59e0b',
-    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#3b82f6', surgery: '#ef4444', revision_videos: '#8b5cf6'
+    physiology: '#ef4444', psychiatry: '#a855f7', radiology: '#6c3baa', surgery: '#ef4444', revision_videos: '#8b5cf6'
   };
 
   const SUBJECT_FACULTY = {
@@ -188,6 +217,7 @@ const PXL_ICONS = {
     toLocalDateKey,
     todayKey,
     SCHEMA_VERSION,
+    APP_VERSION,
     STORAGE_KEYS,
     STUDY_SOURCES,
     DEFAULT_PLAN,

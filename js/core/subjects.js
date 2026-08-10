@@ -1,8 +1,16 @@
 /* ============================================================
    FlowMD Core — Subject Helpers
-   Pure lookup helpers for subject metadata. Depends on
-   FlowMD.constants (SUBJECT_ICONS / SUBJECT_SVG_ICONS /
-   SUBJECT_COLORS / SUBJECT_FACULTY).
+   Pure lookup helpers for subject metadata.
+
+   Lookup priority for every field:
+     1. Inline field on the subject object from the data file
+        (e.g. subject.color, subject.faculty, subject.svgIcon)
+     2. Static map in constants.js (SUBJECT_COLORS, SUBJECT_FACULTY, …)
+     3. Fuzzy-match scan of the static map
+     4. Hard-coded default
+
+   This means a new data source can carry its own metadata inline
+   and it will work without touching constants.js at all.
    ============================================================ */
 (function () {
   'use strict';
@@ -19,59 +27,76 @@
     return subjectIdOrName.toLowerCase().trim().replace(/[^a-z0-9_]/g, '_');
   }
 
-  function getSubjectIconSrc(subjectIdOrName) {
-    if (!subjectIdOrName) return 'icons/medicine.png';
-    const key = normalizeKey(subjectIdOrName);
+  // Resolve a subject object from either an ID string or a subject object.
+  // Callers may pass a raw string (legacy) or the full subject object from
+  // the dataset (when iterating subjects). Either form works.
+  function resolveSubjectObj(subjectIdOrObj) {
+    if (!subjectIdOrObj) return { id: '', obj: null };
+    if (typeof subjectIdOrObj === 'object') {
+      return { id: subjectIdOrObj.id || '', obj: subjectIdOrObj };
+    }
+    return { id: subjectIdOrObj, obj: null };
+  }
+
+  function getSubjectIconSrc(subjectIdOrObj) {
+    const { id, obj } = resolveSubjectObj(subjectIdOrObj);
+    if (obj && obj.iconSrc) return obj.iconSrc;
+    if (!id) return 'icons/medicine.png';
+    const key = normalizeKey(id);
     if (SUBJECT_ICONS[key]) return SUBJECT_ICONS[key];
-    for (const [id, src] of Object.entries(SUBJECT_ICONS)) {
-      if (key.includes(id) || id.includes(key)) return src;
+    for (const [k, src] of Object.entries(SUBJECT_ICONS)) {
+      if (key.includes(k) || k.includes(key)) return src;
     }
     return 'icons/medicine.png';
   }
 
-  function getSubjectSvgIcon(subjectIdOrName) {
-    if (!subjectIdOrName) return SUBJECT_SVG_ICONS.medicine;
-    const key = normalizeKey(subjectIdOrName);
+  function getSubjectSvgIcon(subjectIdOrObj) {
+    const { id, obj } = resolveSubjectObj(subjectIdOrObj);
+    if (obj && obj.svgIcon) return obj.svgIcon;
+    if (!id) return SUBJECT_SVG_ICONS.medicine;
+    const key = normalizeKey(id);
     if (SUBJECT_SVG_ICONS[key]) return SUBJECT_SVG_ICONS[key];
-    for (const [id, svg] of Object.entries(SUBJECT_SVG_ICONS)) {
-      if (key.includes(id) || id.includes(key)) return svg;
+    for (const [k, svg] of Object.entries(SUBJECT_SVG_ICONS)) {
+      if (key.includes(k) || k.includes(key)) return svg;
     }
     return SUBJECT_SVG_ICONS.medicine;
   }
 
-  function getSubjectAccentColor(subjectIdOrName) {
-    if (!subjectIdOrName) return '#3b82f6';
-    const key = normalizeKey(subjectIdOrName);
+  // Single canonical color lookup — getSubjectColor is an alias kept for
+  // back-compat so existing call sites don't need to change.
+  function getSubjectAccentColor(subjectIdOrObj) {
+    const { id, obj } = resolveSubjectObj(subjectIdOrObj);
+    if (obj && obj.color) return obj.color;
+    if (!id) return '#6c3baa';
+    const key = normalizeKey(id);
     if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
-    for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
-      if (key.includes(id) || id.includes(key)) return c;
+    for (const [k, c] of Object.entries(SUBJECT_COLORS)) {
+      if (key.includes(k) || k.includes(key)) return c;
     }
-    return '#3b82f6';
+    return '#6c3baa';
   }
 
-  function getSubjectFaculty(subjectIdOrName) {
-    if (!subjectIdOrName) return 'Marrow Faculty';
-    const key = normalizeKey(subjectIdOrName);
+  // Alias — kept for back-compat; both functions are identical in behaviour.
+  const getSubjectColor = getSubjectAccentColor;
+
+  function getSubjectFaculty(subjectIdOrObj) {
+    const { id, obj } = resolveSubjectObj(subjectIdOrObj);
+    if (obj && obj.faculty) return obj.faculty;
+    if (!id) return 'Marrow Faculty';
+    const key = normalizeKey(id);
     if (SUBJECT_FACULTY[key]) return SUBJECT_FACULTY[key];
-    for (const [id, faculty] of Object.entries(SUBJECT_FACULTY)) {
-      if (key.includes(id) || id.includes(key)) return faculty;
+    for (const [k, faculty] of Object.entries(SUBJECT_FACULTY)) {
+      if (key.includes(k) || k.includes(key)) return faculty;
     }
     return 'Marrow Faculty';
   }
 
-  function getSubjectColor(subjectIdOrName) {
-    if (!subjectIdOrName) return '#3b82f6';
-    const key = normalizeKey(subjectIdOrName);
-    if (SUBJECT_COLORS[key]) return SUBJECT_COLORS[key];
-    for (const [id, c] of Object.entries(SUBJECT_COLORS)) {
-      if (key.includes(id) || id.includes(key)) return c;
-    }
-    return '#3b82f6';
-  }
-
-  function getSubjectName(subjectIdOrName) {
-    if (!subjectIdOrName) return '';
-    const key = normalizeKey(subjectIdOrName);
+  function getSubjectName(subjectIdOrObj) {
+    const { id, obj } = resolveSubjectObj(subjectIdOrObj);
+    // Inline display name from the data file takes priority
+    if (obj && obj.subject) return obj.subject;
+    if (!id) return '';
+    const key = normalizeKey(id);
     const subjectNames = {
       anatomy: 'Anatomy',
       physiology: 'Physiology',
@@ -94,15 +119,15 @@
       obstetrics___gynaecology: 'Obstetrics & Gynaecology',
       revision_videos: 'Revision Videos'
     };
-    return subjectNames[key] || subjectIdOrName.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    return subjectNames[key] || id.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
   window.FlowMD.subjects = {
     getSubjectIconSrc,
     getSubjectSvgIcon,
     getSubjectAccentColor,
-    getSubjectFaculty,
     getSubjectColor,
+    getSubjectFaculty,
     getSubjectName
   };
 })();

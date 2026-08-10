@@ -41,81 +41,19 @@
 
   const { showToast, dismissToast } = window.FlowMD.toast;
 
-  // --- Safe JSON parsing: corrupt localStorage must never crash the app ---
-  function safeParse(raw, fallback) {
-    if (raw == null || raw === '') return fallback;
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      console.warn('Corrupt localStorage value discarded:', e);
-      return fallback;
-    }
-  }
-
-  // --- localStorage schema versioning + migrations ---
-  function migrateStateSchema() {
-    try {
-      const rawVersion = localStorage.getItem(STORAGE_KEYS.SCHEMA_VERSION);
-      const currentVersion = parseInt(rawVersion, 10) || 0;
-      if (currentVersion >= SCHEMA_VERSION) return;
-
-      // v1 → v2: legacy pre-namespaced video IDs get the marrow_8:: prefix.
-      // (Applied against the stored payload before state is assembled.)
-      if (currentVersion < 2) {
-        const savedVideos = localStorage.getItem(STORAGE_KEYS.COMPLETED_VIDEOS);
-        if (savedVideos) {
-          const parsed = safeParse(savedVideos, {});
-          const migrated = {};
-          let changed = false;
-          for (const key in parsed) {
-            if (key.indexOf('::') === -1) {
-              migrated['marrow_8::' + key] = parsed[key];
-              changed = true;
-            } else {
-              migrated[key] = parsed[key];
-            }
-          }
-          if (changed) localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(migrated));
-        }
-      }
-
-      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
-    } catch (e) {
-      console.warn('Schema migration failed:', e);
-    }
-  }
-
-  // --- Multi-Source Data Layer ---
-  const SOURCE_DATA = {};
-
-  function qualifySourceData(sourceId, data) {
-    return data.map(subject => ({
-      ...subject,
-      chapters: (subject.chapters || []).map(chap => ({
-        ...chap,
-        videos: (chap.videos || []).map(v => ({
-          ...v,
-          id: sourceId + '::' + v.id
-        }))
-      }))
-    }));
-  }
-
-  function initSourceData() {
-    const srcData = {
-      marrow_8: (typeof syllabusData !== 'undefined' && Array.isArray(syllabusData)) ? syllabusData : null,
-      marrow_6_5: (typeof syllabusData65 !== 'undefined' && Array.isArray(syllabusData65)) ? syllabusData65 : null,
-      prepladder_x: null
-    };
-    Object.entries(srcData).forEach(([src, data]) => {
-      SOURCE_DATA[src] = (data && Array.isArray(data)) ? qualifySourceData(src, data) : [];
-    });
-  }
-
-  function getDataset(sourceId) {
-    const sid = sourceId || state.activeSource || 'marrow_8';
-    return SOURCE_DATA[sid] || [];
-  }
+  // --- Shared modules (js/core/*): state store + source data layer ---
+  const state = window.FlowMD.store.getState();
+  const {
+    safeParse, migrateStateSchema, loadState, saveState,
+    markStudyActivity, getStudyStreak, mergePlansLocalWins,
+    snapshotCloudState
+  } = window.FlowMD.store;
+  const {
+    SOURCE_DATA, qualifySourceData, initSourceData, getDataset,
+    getSubjectChapters, getScopedChapterNames, getPlanScopeVideos,
+    getBulkChapterKey, isChapterBulkCompleted, getChapterVideoIds,
+    getDailyCountsExcludingBulk
+  } = window.FlowMD.sourceData;
 
   function getSyllabusStatsForSource(sourceId) {
     const sid = sourceId || state.activeSource || 'marrow_8';
@@ -129,36 +67,29 @@
     }
   }
 
-  // --- App State ---
-  let state = {
-    currentView: 'dashboard',
-    activeSubjectId: 'anatomy',
-    completedVideos: {},
-    expandedChapters: {},
-    goals: { ...DEFAULT_GOALS },
-    personal: { ...DEFAULT_PERSONAL },
-    theme: 'dark',
-    themeStyle: 'modern',
-    searchQuery: '',
-    streakData: { lastStudyDate: null, currentStreak: 0 },
-    dailyHistory: {},
-    queueCompletedInBatch: 0,
-    queueBatchVideoIds: [],
-    isConfigured: false,
-    activeSource: 'marrow_8',
-    isOffline: false,
-    // Dual-Subject Tracking v2
-    plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)],
-    activePlanId: 'plan_a',
-    dailyHistoryBySubject: {}
-  };
-
   const DOM = {};
 
   // --- Initialization ---
   function init() {
     initSourceData();
     loadState();
+    // Baseline for field-level cloud writes: only changes made after load are
+    // ever pushed, so a fresh sign-in doesn't re-upload the whole state.
+    state._prevSyncedState = snapshotCloudState(state);
+    state._dirtyFields = [];
+    if (window.FirebaseSync) {
+      window.FirebaseSync.stateProvider = () => state;
+    }
+    // Lazy-load the active syllabus if it isn't part of the initial page load
+    // (e.g., a returning marrow_6_5 user whose data file is no longer eager).
+    if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
+      window.FlowMD.sourceData.loadSourceScript(state.activeSource)
+        .then(() => { if (typeof render === 'function') render(); })
+        .catch(() => {
+          // Never leave the user on a silent empty dashboard.
+          showToast('Could not load syllabus data. Check your connection and reload.', 'error', 'Data Sync');
+        });
+    }
     cacheDOM();
     applyTheme(state.theme);
     bindEvents();
@@ -176,178 +107,7 @@
     });
   }
 
-  // --- State Persistence & Cloud Sync ---
-  function loadState() {
-    try {
-      migrateStateSchema();
-
-      const savedVideos = localStorage.getItem(STORAGE_KEYS.COMPLETED_VIDEOS);
-      if (savedVideos) state.completedVideos = safeParse(savedVideos, {});
-
-      // Migrate legacy (pre-namespaced) video IDs → marrow_8:: prefix
-      let needsMigrate = false;
-      const migrated = {};
-      for (const key in state.completedVideos) {
-        if (key.indexOf('::') === -1) {
-          migrated['marrow_8::' + key] = state.completedVideos[key];
-          needsMigrate = true;
-        } else {
-          migrated[key] = state.completedVideos[key];
-        }
-      }
-      if (needsMigrate) state.completedVideos = migrated;
-
-      const savedGoals = localStorage.getItem(STORAGE_KEYS.GOALS);
-      if (savedGoals) state.goals = { ...DEFAULT_GOALS, ...safeParse(savedGoals, {}) };
-
-      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
-      if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
-        state.theme = savedTheme;
-      } else {
-        state.theme = 'dark';
-        localStorage.setItem(STORAGE_KEYS.THEME, 'dark');
-      }
-
-      const savedThemeStyle = localStorage.getItem('marrow_planner_theme_style');
-      if (savedThemeStyle === 'modern' || savedThemeStyle === 'retro') {
-        state.themeStyle = savedThemeStyle;
-      } else {
-        state.themeStyle = 'modern';
-      }
-
-      const savedStreak = localStorage.getItem(STORAGE_KEYS.STREAK);
-      if (savedStreak) state.streakData = safeParse(savedStreak, { lastStudyDate: null, currentStreak: 0 });
-
-      const savedPersonal = localStorage.getItem(STORAGE_KEYS.PERSONAL);
-      if (savedPersonal) state.personal = { ...DEFAULT_PERSONAL, ...safeParse(savedPersonal, {}) };
-
-      const savedHistory = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY);
-      if (savedHistory) state.dailyHistory = safeParse(savedHistory, {});
-
-      const savedQueueBatch = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH);
-      if (savedQueueBatch !== null) state.queueCompletedInBatch = parseInt(savedQueueBatch) || 0;
-
-      const savedBatchVids = localStorage.getItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS);
-      if (savedBatchVids) state.queueBatchVideoIds = safeParse(savedBatchVids, []);
-
-      const savedTutorial = localStorage.getItem(STORAGE_KEYS.TUTORIAL_SEEN);
-      if (savedTutorial === 'true') state.isConfigured = true;
-
-      const savedSource = localStorage.getItem('flowmd_active_source');
-      if (savedSource && STUDY_SOURCES.some(s => s.id === savedSource)) {
-        state.activeSource = savedSource;
-      }
-
-      const savedConfigured = localStorage.getItem('flowmd_is_configured');
-      if (savedConfigured === 'true') state.isConfigured = true;
-
-      // --- Dual-Subject Tracking v2: load plans ---
-      const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
-      if (savedPlans) {
-        const parsed = safeParse(savedPlans, []);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          state.plans = parsed;
-        }
-      } else {
-        // Migrate legacy single-subject state to Plan A
-        migrateStateToPlans();
-      }
-
-      const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
-      if (savedHistBySubject) state.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
-
-    } catch (e) {
-      console.warn('Error loading state:', e);
-    }
-  }
-
-  // --- Migrate legacy single-plan state → plans[] ---
-  function migrateStateToPlans() {
-    const legacySub = (state.goals && state.goals.targetSubject) || '';
-    const legacyDate = (state.goals && state.goals.targetDate) || '2026-08-15';
-    const legacyVids = (state.goals && state.goals.videosPerDay) || 8;
-    const legacyHours = (state.goals && state.goals.dailyTargetHours) || 3.5;
-    const legacyBatch = Array.isArray(state.queueBatchVideoIds) ? state.queueBatchVideoIds : [];
-    const legacyDone = state.queueCompletedInBatch || 0;
-
-    state.plans = [{
-      id: 'plan_a',
-      label: 'Plan A',
-      accentColor: PLAN_A_ACCENT,
-      targetSubject: legacySub,
-      targetDate: legacyDate,
-      videosPerDay: legacyVids,
-      videosPerWeek: legacyVids * 7,
-      videosPerMonth: legacyVids * 30,
-      dailyTargetHours: legacyHours,
-      queueBatchVideoIds: legacyBatch,
-      queueCompletedInBatch: legacyDone,
-      targetUnits: []
-    }];
-  }
-
-  let cloudSyncTimeout = null;
   let deferredInstallPrompt = null;
-  function saveState() {
-    try {
-      state.lastLocalUpdate = Date.now();
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
-      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
-      localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
-      localStorage.setItem('marrow_planner_theme_style', state.themeStyle || 'modern');
-      localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
-      localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
-      localStorage.setItem('flowmd_active_source', state.activeSource || 'marrow_8');
-      localStorage.setItem('flowmd_is_configured', state.isConfigured ? 'true' : 'false');
-      // Dual-Subject Tracking v2
-      localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
-      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
-
-      if (window.FirebaseSync && window.FirebaseSync.currentUser) {
-        if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
-        cloudSyncTimeout = setTimeout(() => {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
-        }, 800);
-      }
-    } catch (e) {
-      console.warn('Error saving state:', e);
-    }
-  }
-
-  function markStudyActivity(isAdding = true) {
-    const todayStr = todayKey();
-    if (!state.streakData) state.streakData = { lastStudyDate: null, currentStreak: 0 };
-    if (!state.dailyHistory) state.dailyHistory = {};
-
-    const curCount = state.dailyHistory[todayStr] || 0;
-    if (isAdding) {
-      state.dailyHistory[todayStr] = curCount + 1;
-    } else {
-      state.dailyHistory[todayStr] = Math.max(0, curCount - 1);
-    }
-
-    if (isAdding) {
-      if (state.streakData.lastStudyDate !== todayStr) {
-        const yesterday = toLocalDateKey(new Date(Date.now() - 86400000));
-        if (state.streakData.lastStudyDate === yesterday) {
-          state.streakData.currentStreak = (state.streakData.currentStreak || 0) + 1;
-        } else {
-          state.streakData.currentStreak = 1;
-        }
-        state.streakData.lastStudyDate = todayStr;
-      }
-    }
-    saveState();
-  }
-
-  function getStudyStreak() {
-    const streak = state.streakData || { lastStudyDate: null, currentStreak: 0 };
-    return streak.currentStreak || 0;
-  }
 
   function getDeadlineCountdown(targetDateStr) {
     const now = new Date();
@@ -380,47 +140,7 @@
     };
   }
 
-  // --- Chapter-Scope Helpers (Focus Chapters per Plan) ---
-  function getSubjectChapters(subjectNameOrId) {
-    const dataset = getDataset();
-    if (!dataset || dataset.length === 0) return [];
-    const sub = dataset.find(s => s && (s.subject === subjectNameOrId || s.id === subjectNameOrId));
-    return (sub && sub.chapters) ? sub.chapters : [];
-  }
 
-  function getScopedChapterNames(plan) {
-    if (!plan || !plan.targetSubject || !Array.isArray(plan.targetUnits) || plan.targetUnits.length === 0) return [];
-    const names = plan.targetUnits.map(u => String(u));
-    return getSubjectChapters(plan.targetSubject)
-      .filter(c => c && names.indexOf(String(c.name)) !== -1)
-      .map(c => c.name);
-  }
-
-  // Flatten videos of only the plan's focused chapters (all chapters when unscoped)
-  function getPlanScopeVideos(plan) {
-    const dataset = getDataset();
-    const targetSub = (plan && plan.targetSubject) || '';
-    if (!targetSub || dataset.length === 0) return [];
-    const subjectObj = dataset.find(s => s && (s.subject === targetSub || s.id === targetSub));
-    if (!subjectObj || !subjectObj.chapters) return [];
-
-    let chapters = subjectObj.chapters;
-    if (Array.isArray(plan.targetUnits) && plan.targetUnits.length > 0) {
-      const names = plan.targetUnits.map(u => String(u));
-      const matching = subjectObj.chapters.filter(c => c && names.indexOf(String(c.name)) !== -1);
-      if (matching.length > 0) chapters = matching;
-    }
-
-    const videos = [];
-    chapters.forEach(chap => {
-      if (chap && chap.videos) {
-        chap.videos.forEach(v => {
-          videos.push({ ...v, subjectName: subjectObj.subject, chapterName: chap.name, subjectId: subjectObj.id });
-        });
-      }
-    });
-    return videos;
-  }
 
   function computeMetricsFromVideos(videos) {
     let totalVideos = 0;
@@ -446,6 +166,8 @@
       remainingHours: Math.max(0.1, (totalDurationMins - completedDurationMins) / 60)
     };
   }
+
+
 
   function getSubjectOrSyllabusMetricsForPlan(plan) {
     if (!plan || !plan.targetSubject) return getSubjectOrSyllabusMetrics('');
@@ -510,12 +232,15 @@
 
     if (!Array.isArray(plan.queueBatchVideoIds)) plan.queueBatchVideoIds = [];
 
+    // If user has completed daily target and is doing extra videos, load 1 at a time
+    const isExtraMode = (plan.extraBatchesCompletedToday || 0) > 0;
+    const targetBatchSize = isExtraMode ? 1 : Math.min(baseTargetPace, allSubjectVideos.length || baseTargetPace);
+
     const existingBatchVideos = allSubjectVideos.filter(v => plan.queueBatchVideoIds.includes(v.id));
-    const targetBatchSize = Math.min(baseTargetPace, allSubjectVideos.length || baseTargetPace);
 
     if (existingBatchVideos.length === 0 || existingBatchVideos.length !== targetBatchSize) {
       const uncompletedCandidates = allSubjectVideos.filter(v => !state.completedVideos[v.id]);
-      const newBatch = uncompletedCandidates.slice(0, baseTargetPace);
+      const newBatch = uncompletedCandidates.slice(0, targetBatchSize);
       plan.queueBatchVideoIds = newBatch.map(v => v.id);
       saveState();
     }
@@ -524,7 +249,13 @@
     const queueCompletedInBatch = todaysQueueVideos.filter(v => !!state.completedVideos[v.id]).length;
     plan.queueCompletedInBatch = queueCompletedInBatch;
 
+    // Track total videos completed today for this plan's subject
+    const subjectId = subjectObj ? subjectObj.id : (allSubjectVideos[0] ? allSubjectVideos[0].subjectId : 'anatomy');
+    const totalCompletedToday = (state.dailyHistoryBySubject && state.dailyHistoryBySubject[subjectId] && state.dailyHistoryBySubject[subjectId][todayStr]) || 0;
+
     const isDailyTargetAchieved = todaysQueueVideos.length > 0 && todaysQueueVideos.every(v => !!state.completedVideos[v.id]);
+    // Daily target is considered met when total completed >= baseTargetPace
+    const isDailyTargetMet = totalCompletedToday >= baseTargetPace;
     const allDone = todaysQueueVideos.length === 0;
 
     return {
@@ -535,7 +266,9 @@
       subjectId: subjectObj ? subjectObj.id : (allSubjectVideos[0] ? allSubjectVideos[0].subjectId : 'anatomy'),
       baseTargetPace,
       queueCompletedInBatch,
+      totalCompletedToday,
       isDailyTargetAchieved,
+      isDailyTargetMet,
       allSubjectDone: allDone,
       videos: todaysQueueVideos
     };
@@ -569,6 +302,8 @@
     });
   }
 
+
+
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;
     let cloudUnsub = null;
@@ -589,22 +324,26 @@
           // Merge cloud → local with LOCAL winning on conflicts: the device's
           // offline completions must never be clobbered by a stale cloud snapshot.
           // Cloud still fills gaps (keys absent locally). See .planning/codebase/CONCERNS.md #3.
-          state.completedVideos = { ...(cloudState.completedVideos || {}), ...state.completedVideos };
-          state.goals = { ...(cloudState.goals || {}), ...state.goals };
-          state.personal = { ...(cloudState.personal || {}), ...state.personal };
-          state.dailyHistory = { ...(cloudState.dailyHistory || {}), ...state.dailyHistory };
-          state.dailyHistoryBySubject = { ...(cloudState.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-          state.plans = cloudState.plans ? [...cloudState.plans] : state.plans;
-          state.activePlanId = cloudState.activePlanId || state.activePlanId;
-          state.activeSource = cloudState.activeSource || state.activeSource;
-          state.isConfigured = cloudState.isConfigured || state.isConfigured;
-          state.themeStyle = cloudState.themeStyle || state.themeStyle;
-          state.queueCompletedInBatch = cloudState.queueCompletedInBatch || state.queueCompletedInBatch;
-          state.queueBatchVideoIds = cloudState.queueBatchVideoIds ? [...cloudState.queueBatchVideoIds] : state.queueBatchVideoIds;
-          if (cloudState.streakData) state.streakData = { ...cloudState.streakData, ...(state.streakData || {}) };
+          const clean = window.FlowMD.sync.sanitizeCloudState(cloudState);
+          const merged = window.FlowMD.sync.mergeLocalWins(state, clean);
+          state.completedVideos = merged.completedVideos;
+          state.plans = merged.plans;
+          if (clean.goals) state.goals = Object.assign({}, clean.goals, state.goals);
+          if (clean.personal) state.personal = Object.assign({}, clean.personal, state.personal);
+          if (clean.dailyHistory) state.dailyHistory = Object.assign({}, clean.dailyHistory, state.dailyHistory);
+          if (clean.dailyHistoryBySubject) state.dailyHistoryBySubject = Object.assign({}, clean.dailyHistoryBySubject, state.dailyHistoryBySubject);
+          if (clean.streakData) state.streakData = Object.assign({}, clean.streakData, state.streakData || {});
+          if (clean.activePlanId) state.activePlanId = clean.activePlanId;
+          if (clean.activeSource) state.activeSource = clean.activeSource;
+          if (typeof clean.isConfigured === 'boolean') state.isConfigured = clean.isConfigured;
+          if (clean.themeStyle) state.themeStyle = clean.themeStyle;
+          if (clean.queueBatchVideoIds) state.queueBatchVideoIds = clean.queueBatchVideoIds;
+          if (typeof clean.queueCompletedInBatch === 'number') state.queueCompletedInBatch = clean.queueCompletedInBatch;
           saveState();
         } else {
-          window.FirebaseSync.syncToCloud(user.uid, state, user);
+          await window.FirebaseSync.syncToCloud(user.uid, state, user);
+          state._prevSyncedState = snapshotCloudState(state);
+          state._dirtyFields = [];
         }
         state.personal.isSynced = true;
         state.personal.syncEmail = user.email;
@@ -625,7 +364,11 @@
     window.addEventListener('online', () => {
       state.isOffline = false;
       if (window.FirebaseSync.currentUser) {
-        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
+        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser)
+          .then(() => {
+            state._prevSyncedState = snapshotCloudState(state);
+            state._dirtyFields = [];
+          });
       }
       updateOfflineIndicator();
     });
@@ -635,36 +378,40 @@
     });
   }
 
-  // Merge cloud state with local (timestamp-based conflict resolution)
+  // Merge cloud state with local (clock-skew-safe, write-loop-free).
+  // The snapshot handler NEVER pushes to the cloud: it only applies cloud data
+  // into local state, then saveState()'s dirty-field tracking decides whether a
+  // write is warranted. This kills the old write loop where any device whose
+  // clock was behind the server re-merged-and-pushed a full document on every
+  // snapshot (unbounded Firestore write cost).
   function mergeCloudState(cloudData) {
     try {
-      // If cloud has newer updatedAt, use cloud for non-completion fields
-      // For completedVideos, always merge with local winning
-      const cloudUpdated = cloudData.updatedAt?.toMillis?.() || 0;
-      const localUpdated = state.lastLocalUpdate || 0;
+      const clean = window.FlowMD.sync.sanitizeCloudState(cloudData);
+      const cloudTs = (clean.updatedAt && clean.updatedAt.toMillis) ? clean.updatedAt.toMillis() : 0;
+      const hasLocalDirty = state._dirtyFields && state._dirtyFields.length > 0;
 
-      // Local completions always win (they're the source of truth for offline work)
-      state.completedVideos = { ...(cloudData.completedVideos || {}), ...state.completedVideos };
-
-      // For other fields, use timestamp to decide
-      if (cloudUpdated > localUpdated) {
-        state.goals = { ...(cloudData.goals || {}), ...state.goals };
-        state.personal = { ...(cloudData.personal || {}), ...state.personal };
-        state.dailyHistory = { ...(cloudData.dailyHistory || {}), ...state.dailyHistory };
-        state.dailyHistoryBySubject = { ...(cloudData.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-        state.plans = cloudData.plans ? [...cloudData.plans] : state.plans;
-        state.activePlanId = cloudData.activePlanId || state.activePlanId;
-        state.activeSource = cloudData.activeSource || state.activeSource;
-        state.isConfigured = cloudData.isConfigured || state.isConfigured;
-        state.themeStyle = cloudData.themeStyle || state.themeStyle;
-        state.queueCompletedInBatch = cloudData.queueCompletedInBatch || state.queueCompletedInBatch;
-        state.queueBatchVideoIds = cloudData.queueBatchVideoIds ? [...cloudData.queueBatchVideoIds] : state.queueBatchVideoIds;
-        if (cloudData.streakData) state.streakData = { ...cloudData.streakData, ...(state.streakData || {}) };
+      if (!window.FlowMD.sync.shouldApplyCloud(cloudTs, state.lastLocalUpdate, hasLocalDirty)) {
+        return; // stale cloud snapshot; skip (no write-back loop)
+      }
+      if (hasLocalDirty) {
+        // We have unsynced local changes: union completedVideos (local wins),
+        // keep the dirty set, and let the saveState debounce push them.
+        state.completedVideos = window.FlowMD.sync.mergeLocalWins(
+          { completedVideos: state.completedVideos }, { completedVideos: clean.completedVideos }
+        ).completedVideos;
       } else {
-        // Local is newer - push to cloud
-        if (window.FirebaseSync.currentUser) {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
-        }
+        const merged = window.FlowMD.sync.mergeLocalWins(state, clean);
+        state.completedVideos = merged.completedVideos;
+        state.plans = merged.plans;
+        if (clean.goals) state.goals = Object.assign({}, merged.goals, state.goals);
+        if (clean.personal) state.personal = Object.assign({}, merged.personal, state.personal);
+        if (clean.dailyHistory) state.dailyHistory = merged.dailyHistory;
+        if (clean.dailyHistoryBySubject) state.dailyHistoryBySubject = merged.dailyHistoryBySubject;
+        if (clean.streakData) state.streakData = Object.assign({}, clean.streakData, state.streakData || {});
+        if (clean.activePlanId) state.activePlanId = clean.activePlanId;
+        if (clean.activeSource) state.activeSource = clean.activeSource;
+        if (typeof clean.isConfigured === 'boolean') state.isConfigured = clean.isConfigured;
+        if (clean.themeStyle) state.themeStyle = clean.themeStyle;
       }
       saveState();
       render();
@@ -682,9 +429,17 @@
     state.lastLocalUpdate = Date.now();
     try {
       showToast('Syncing...', 'sync');
-      window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
-      showToast('Synced successfully', 'check_circle');
-      return Promise.resolve(true);
+      return window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser)
+        .then(() => {
+          state._prevSyncedState = snapshotCloudState(state);
+          state._dirtyFields = [];
+          showToast('Synced successfully', 'check_circle');
+          return true;
+        })
+        .catch((e) => {
+          showToast('Sync failed: ' + (e && e.message), 'error');
+          return false;
+        });
     } catch (e) {
       showToast('Sync failed: ' + e.message, 'error');
       return Promise.resolve(false);
@@ -692,7 +447,13 @@
   }
 
   // --- Syllabus Math Engine ---
+  let statsCache = { key: '', value: null };
   function getSyllabusStats() {
+    // Memoized: recompute only when the active source or completedVideos changed
+    // (state-store.saveState bumps completedVideosRevision on completion writes).
+    const cacheKey = state.activeSource + ':' + (state.completedVideosRevision || 0);
+    if (statsCache.key === cacheKey && statsCache.value) return statsCache.value;
+
     const dataset = getDataset();
     if (!dataset || dataset.length === 0) return { totalVideos: 0, completedVideos: 0, percentage: 0, subjectsStats: [] };
 
@@ -747,7 +508,7 @@
 
     const percentage = totalVideos > 0 ? Math.round((completedVideosCount / totalVideos) * 100) : 0;
 
-    return {
+    const result = {
       totalVideos,
       completedVideos: completedVideosCount,
       totalHours: (totalDurationMins / 60).toFixed(1),
@@ -755,6 +516,8 @@
       percentage,
       subjectsStats
     };
+    statsCache = { key: cacheKey, value: result };
+    return result;
   }
 
   // --- Deep Global Search Engine ---
@@ -1137,15 +900,15 @@
           );
         } else if (type === 'action-queue') {
           openInfoModal(
-            "Today's Action Queue",
-            `<p style="margin-bottom: 8px;"><strong>Daily Target Batch:</strong> Locks your daily quota of video lectures (e.g. 3 videos).</p>
-             <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
-               <div class="pxl-alert-content">
-                 <div class="pxl-alert-title">Advance Batch Early</div>
-                 <div class="pxl-alert-message">Completing your daily batch unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Advance to Next Target Batch early to stay ahead of schedule.</div>
-               </div>
-             </div>`
+"Today's Action Queue",
+            `<p style="margin-bottom: 8px;"><strong>Daily Video:</strong> Shows your next video to watch.</p>
+              <div class="pxl-alert pxl-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
+                <span class="material-symbols-outlined pxl-alert-icon">rocket_launch</span>
+                <div class="pxl-alert-content">
+                  <div class="pxl-alert-title">Load Next Video</div>
+                  <div class="pxl-alert-message">Completing a video unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Load Next Video to continue your progress.</div>
+                </div>
+              </div>`
           );
         }
       }
@@ -1188,6 +951,9 @@
     DOM.navItems.forEach(item => {
       item.classList.toggle('active', item.getAttribute('data-view') === viewName);
     });
+    if (window.FirebaseSync && window.FirebaseSync.trackEvent) {
+      window.FirebaseSync.trackEvent('screen_view', { screen_name: viewName });
+    }
     render();
     resetPageScrollTop();
   }
@@ -1416,7 +1182,7 @@ function updateTopbarSource() {
   function renderFacultyPill(faculty, subjectId) {
     const clean = (faculty || 'Marrow Faculty').replace(/^Dr\.?\s*/i, '').trim();
     const initials = clean.split(/\s+/).filter(Boolean).map(w => w.charAt(0)).slice(0, 2).join('').toUpperCase() || 'MC';
-    const subjectColor = getSubjectColor(subjectId) || '#3b82f6';
+    const subjectColor = getSubjectColor(subjectId);
     const subjectColorLight = subjectColor + '22';
     const subjectColorBorder = subjectColor + '66';
     
@@ -1432,7 +1198,7 @@ function updateTopbarSource() {
   function renderFacultyCard(faculty, subjectId) {
     const clean = (faculty || 'Marrow Faculty').replace(/^Dr\.?\s*/i, '').trim();
     const initials = clean.split(/\s+/).filter(Boolean).map(w => w.charAt(0)).slice(0, 2).join('').toUpperCase() || 'MC';
-    const subjectColor = getSubjectColor(subjectId) || '#3b82f6';
+    const subjectColor = getSubjectColor(subjectId);
     const subjectName = getSubjectName(subjectId);
     
     return `
@@ -1485,7 +1251,7 @@ function updateTopbarSource() {
         <div class="obw-sub">Pick where your syllabus data comes from.</div>
         <div class="obw-options">
           ${STUDY_SOURCES.map(s => {
-            const upcoming = s.id === 'prepladder_x';
+            const upcoming = !s.available;
             return `
               <button type="button" class="obw-option ${obwSource === s.id ? 'checked' : ''} ${upcoming ? 'upcoming' : ''}" data-source="${s.id}">
                 <span class="obw-radio"></span>
@@ -1497,10 +1263,10 @@ function updateTopbarSource() {
               </button>`;
           }).join('')}
         </div>
-        ${obwSource === 'prepladder_x' ? `
+        ${!STUDY_SOURCES.find(s => s.id === obwSource)?.available ? `
           <div class="obw-alert">
             <span class="material-symbols-outlined" style="font-size:16px;">info</span>
-            Prepladder X is an upcoming feature. Its syllabus data will be available in a future update.
+            ${getSourceLabel(obwSource)} is an upcoming feature. Its syllabus data will be available in a future update.
           </div>` : ''}
         <div class="obw-hint-path">
           <span class="material-symbols-outlined" style="font-size:16px;">settings</span>
@@ -1571,8 +1337,9 @@ function updateTopbarSource() {
       btn.addEventListener('click', () => {
         const sid = btn.getAttribute('data-source');
         obwSource = sid;
-        if (sid === 'prepladder_x') {
-          showToast('Prepladder X is coming soon — data in a future update.', 'info');
+        const srcObj = STUDY_SOURCES.find(s => s.id === sid);
+        if (srcObj && !srcObj.available) {
+          showToast(srcObj.label + ' is coming soon — data in a future update.', 'info');
         }
         renderOnboardingWizard(obwStep);
       });
@@ -1603,7 +1370,7 @@ function updateTopbarSource() {
 
     const nextBtn = document.getElementById('obw-next');
     if (nextBtn) {
-      nextBtn.disabled = (obwStep === 0 && obwSource === 'prepladder_x');
+      nextBtn.disabled = (obwStep === 0 && !STUDY_SOURCES.find(s => s.id === obwSource)?.available);
       nextBtn.addEventListener('click', () => {
         if (obwStep === 1) {
           const nameInput = document.getElementById('obw-name');
@@ -1650,7 +1417,16 @@ function updateTopbarSource() {
     }
   }
 
-  function finishOnboarding() {
+  async function finishOnboarding() {
+    // Lazy-load the chosen syllabus if it isn't loaded yet (Task C5).
+    try {
+      if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
+        await window.FlowMD.sourceData.loadSourceScript(obwSource);
+      }
+    } catch (e) {
+      showToast('Failed to load syllabus data. Check your connection.', 'error');
+      return;
+    }
     state.isConfigured = true;
     state.activeSource = obwSource;
     state.personal.doctorName = obwName || state.personal.doctorName || 'Dr. Aspirant';
@@ -1695,13 +1471,6 @@ function updateTopbarSource() {
             </div>
 
             <form id="goal-form-a" onsubmit="return false;" class="gcm-form">
-              <div class="gcm-field">
-                <label class="gcm-label">Goal Mode</label>
-                <div class="gcm-seg">
-                  <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video"><span class="material-symbols-outlined">smart_display</span> Videos</button>
-                </div>
-              </div>
-
               <div class="gcm-hint">
                 <span class="material-symbols-outlined">calculate</span>
                 <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
@@ -1802,13 +1571,6 @@ function updateTopbarSource() {
             </div>
 
             <form id="goal-form-b" onsubmit="return false;" class="gcm-form">
-              <div class="gcm-field">
-                <label class="gcm-label">Goal Mode</label>
-                <div class="gcm-seg">
-                  <button type="button" class="segment-btn gcm-seg-btn active" id="tab-btn-video-b"><span class="material-symbols-outlined">smart_display</span> Videos</button>
-                </div>
-              </div>
-
               <div class="gcm-hint">
                 <span class="material-symbols-outlined">calculate</span>
                 <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
@@ -1924,7 +1686,7 @@ function updateTopbarSource() {
     // Helper: render one plan's daily quest block
     function renderPlanQuestBlock(plan, queue) {
       const planColor = plan.accentColor || PLAN_A_ACCENT;
-      const todayDoneForPlan = queue.queueCompletedInBatch;
+      const todayDoneForPlan = queue.totalCompletedToday || 0;
       const dailyPctPlan = Math.min(100, Math.round((todayDoneForPlan / queue.baseTargetPace) * 100));
       const scopedNames = getScopedChapterNames(plan);
 
@@ -1941,13 +1703,13 @@ function updateTopbarSource() {
           ${scopedNames.length > 0 ? `
             <div class="plan-quest-scope">
               <span class="material-symbols-outlined" style="font-size:13px;">filter_alt</span>
-              FOCUS: ${scopedNames.length} chapter${scopedNames.length > 1 ? 's' : ''} · ${scopedNames.slice(0, 3).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ')}${scopedNames.length > 3 ? '…' : ''}
+              FOCUS: ${scopedNames.slice(0, 3).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ')}${scopedNames.length > 3 ? '…' : ''}
             </div>
           ` : ''}
 
           <div class="plan-quest-stats-row">
             <div class="plan-quest-target-text">
-              TARGET: <strong>${queue.baseTargetPace} VIDS/DAY</strong>
+              TARGET: <strong>${(plan.extraBatchesCompletedToday || 0) > 0 ? '1 VIDEO AT A TIME' : queue.baseTargetPace + ' VIDS/DAY'}</strong>
             </div>
             <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height: 30px; padding: 0 10px; font-size: 0.82rem;">
               <span>Open ${queue.subjectName}</span>
@@ -1960,9 +1722,9 @@ function updateTopbarSource() {
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);">
                 <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;"><span class="material-symbols-outlined" style="font-size:18px;">bolt</span></div>
                 <div class="v2-alert-content">
-                  <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA BATCH #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
+                  <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA VIDEO #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
                   <div class="v2-alert-title">🔥 Overachievement Bonus Unlocked!</div>
-                  <div class="v2-alert-body">You've exceeded today's daily target! Completed extra batch #${plan.extraBatchesCompletedToday} (+${queue.baseTargetPace} bonus videos) for ${queue.subjectName}.</div>
+                  <div class="v2-alert-body">You've completed an extra video! Total extra videos today: ${plan.extraBatchesCompletedToday} for ${queue.subjectName}.</div>
                 </div>
                 <div class="v2-alert-bottom-bar" style="width:100%; background:#a855f7;"></div>
               </div>
@@ -1970,7 +1732,7 @@ function updateTopbarSource() {
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px;">
                 <div class="v2-alert-icon-box" style="background: var(--accent-success, #10b981);">${PXL_ICONS.trophy}</div>
                 <div class="v2-alert-content">
-                  <div class="v2-alert-category" style="color: var(--accent-success, #10b981);">${plan.label} DAILY BATCH ▶ COMPLETED</div>
+                  <div class="v2-alert-category" style="color: var(--accent-success, #10b981);">${plan.label} DAILY TARGET ▶ COMPLETED</div>
                   <div class="v2-alert-title">Daily Target Achieved!</div>
                   <div class="v2-alert-body">All ${queue.baseTargetPace} videos done for ${queue.subjectName}.</div>
                 </div>
@@ -1979,7 +1741,7 @@ function updateTopbarSource() {
             `}
             <button class="v2-arcade-btn btn-advance-queue" data-plan-id="${plan.id}" style="width:100%; height:40px; font-weight:700; font-size:0.9rem; justify-content:center; gap:8px;">
               ${PXL_ICONS.rocket}
-              <span>🚀 Advance ${plan.label} — Next Target Batch</span>
+              <span>🚀 Load Next Video</span>
             </button>
           ` : (queue.allSubjectDone ? `
             <div class="congrats-card-pop" style="text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
@@ -2012,7 +1774,7 @@ function updateTopbarSource() {
       `;
     }
 
-    const allQuestsDone = allQueues.every(q => q.isDailyTargetAchieved);
+    const allQuestsDone = allQueues.every(q => q.isDailyTargetMet);
     const hasDualPlans = plans.length >= 2;
 
     DOM.appMain.innerHTML = `
@@ -2140,21 +1902,23 @@ function updateTopbarSource() {
       focusStudyPlanConfig();
     });
 
-    // Per-plan advance batch
+    // Per-plan advance batch (for extra videos beyond daily target)
     document.querySelectorAll('.btn-advance-queue').forEach(btn => {
       btn.addEventListener('click', () => {
         const planId = btn.getAttribute('data-plan-id');
         const plan = planId ? getPlanById(planId) : (state.plans && state.plans[0]);
         if (plan) {
+          // For extra videos: load only 1 at a time
+          plan.extraBatchesCompletedToday = (plan.extraBatchesCompletedToday || 0) + 1;
           plan.queueBatchVideoIds = [];
           plan.queueCompletedInBatch = 0;
           saveState();
-          showToast(`${plan.label} — Next Batch Unlocked!`, 'arrow_forward', `${plan.label} Advanced`);
+          showToast(`${plan.label} — Next Extra Video Loaded!`, 'arrow_forward', `${plan.label} Advanced`);
         } else {
           state.queueBatchVideoIds = [];
           state.queueCompletedInBatch = 0;
           saveState();
-          showToast('Unlocked Next Target Batch!', 'arrow_forward');
+          showToast('Next Video Loaded!', 'arrow_forward');
         }
         render();
       });
@@ -2168,12 +1932,19 @@ function updateTopbarSource() {
 
         if (e.target.checked) {
           state.completedVideos[vidId] = true;
-          markStudyActivity(true);
+          // Get subjectId from the video (scoped to the plan's dataset)
+          const planVideos = plan ? getPlanScopeVideos(plan) : [];
+          const video = planVideos.find(v => v.id === vidId);
+          const subjectId = video ? video.subjectId : null;
+          markStudyActivity(true, subjectId);
           const planLabel = plan ? plan.label : '';
           showToast(`${planLabel ? planLabel + ' — ' : ''}Completed Action Queue Video!`, 'check_circle');
         } else {
           delete state.completedVideos[vidId];
-          markStudyActivity(false);
+          const planVideos = plan ? getPlanScopeVideos(plan) : [];
+          const video = planVideos.find(v => v.id === vidId);
+          const subjectId = video ? video.subjectId : null;
+          markStudyActivity(false, subjectId);
         }
         saveState();
         render();
@@ -2217,11 +1988,16 @@ function updateTopbarSource() {
       </div>
 
       <div class="section-title-row">
-        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum &amp; Subjects</h2>
+        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum & Subjects</h2>
         <div style="display: flex; align-items: center; gap: 8px;">
           ${renderEditionChip()}
           <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
         </div>
+      </div>
+
+      <div class="curriculum-notice" style="margin: 8px 0 16px 0; padding: 10px 12px; background: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-hud); font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px;">
+        <span class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary); flex-shrink: 0; margin-top: 1px;">info</span>
+        <span>Note: Individual video checkboxes → reflected in Analytics (7-day chart, weekly pace, daily counts). Chapter "Select All" checkbox → marks videos complete but excluded from Analytics, so you can mark previously completed chapters as a whole without distorting your analytics.</span>
       </div>
 
       ${filteredSubjects.map(sub => `
@@ -2311,9 +2087,19 @@ function updateTopbarSource() {
         ${subObj.raw.chapters ? subObj.raw.chapters.map(chap => {
           const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
           const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
+          const subjectId = subObj.id;
+          const chapterName = chap.name;
+          const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName);
+          const bulkKey = getBulkChapterKey(subjectId, chapterName);
           return `
             <div class="accordion-header ${state.expandedChapters[chap.name] === true ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;${dimStyle}">
-              <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
+              <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
+                <label class="bulk-chapter-checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;">
+                  <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                  <span class="material-symbols-outlined" style="font-size: 18px; color: ${isBulkCompleted ? 'var(--success)' : 'var(--text-muted)'};">${isBulkCompleted ? 'check_box' : 'check_box_outline_blank'}</span>
+                </label>
+                <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
+              </div>
               <span class="material-symbols-outlined accordion-icon">expand_more</span>
             </div>
 
@@ -2361,10 +2147,36 @@ function updateTopbarSource() {
     });
 
     document.querySelectorAll('.accordion-header').forEach(hdr => {
-      hdr.addEventListener('click', () => {
+      hdr.addEventListener('click', (e) => {
+        // Don't toggle accordion if clicking on the bulk chapter checkbox
+        if (e.target.closest('.bulk-chapter-checkbox-label')) return;
         const chapName = hdr.getAttribute('data-chap-name');
         state.expandedChapters[chapName] = !state.expandedChapters[chapName];
         renderSubjectDetailView(stats);
+      });
+    });
+
+    // Bulk Chapter Completion Checkboxes
+    document.querySelectorAll('.bulk-chapter-checkbox').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        e.stopPropagation(); // Prevent accordion toggle
+        const bulkKey = e.target.getAttribute('data-bulk-key');
+        const [subjectId, chapterName] = bulkKey.split('::');
+        const videoIds = getChapterVideoIds(subjectId, chapterName);
+
+        if (e.target.checked) {
+          // Bulk complete: mark all videos in chapter as completed
+          videoIds.forEach(vidId => { state.completedVideos[vidId] = true; });
+          state.bulkCompletedChapters[bulkKey] = true;
+          showToast(`Chapter "${chapterName}" marked complete (excluded from analytics)`, 'check_box');
+        } else {
+          // Bulk uncomplete: unmark all videos in chapter
+          videoIds.forEach(vidId => { delete state.completedVideos[vidId]; });
+          delete state.bulkCompletedChapters[bulkKey];
+          showToast(`Chapter "${chapterName}" unmarked`, 'check_box_outline_blank');
+        }
+        saveState();
+        renderSubjectDetailView(getSyllabusStats());
       });
     });
 
@@ -2385,55 +2197,82 @@ function updateTopbarSource() {
     });
   }
 
-  // --- PxlKit PixelAreaChart SVG Generator ---
-  // --- 7-Day Execution Chart (Analytics Redesign: theme-adaptive, matches anl-* suite) ---
-  function renderExecutionChart(last7Days, vidsDay, maxChartVal) {
-    // Use container-relative dimensions; width will be 100% via CSS, height scales proportionally
-    const chartWidth = 100;  // logical coordinate system (percentage-based)
-    const chartHeight = 60;  // logical height units (more vertical space)
-    const padL = 4;
-    const padR = 4;
-    const padT = 8;
-    const padB = 8;
+﻿  // --- PxlKit PixelTerminalBar Chart Generator ---
+  // 7-Day Execution Chart (Redesign: pixel-terminal "scanline" bars)
+  function renderExecutionChart(last7Days, vidsDay, maxChartVal, svgWidth) {
+    const dailyCounts = getDailyCountsExcludingBulk();
+
+    // Pixel-accurate coordinate system: viewBox width == rendered width.
+    const chartWidth = svgWidth || 360;
+    const chartHeight = Math.round(chartWidth * (2 / 3));
+    const padL = 16;
+    const padR = 16;
+    const padT = 36;
+    const padB = 30;
     const plotW = chartWidth - padL - padR;
     const plotH = chartHeight - padT - padB;
     const baseY = padT + plotH;
     const scale = Math.max(1, maxChartVal);
 
+    const slotW = plotW / last7Days.length;
+    const barW = Math.max(10, slotW * 0.65);
+
+    // Pixel-cell bar config: bars are columns of small outlined cells, NOT solid
+    const cellSize = 4;
+    const cellGap = 1;
+    const barInner = barW - 4;
+
     const points = last7Days.map((d, i) => {
-      const count = (state.dailyHistory && state.dailyHistory[d.dateKey]) ? state.dailyHistory[d.dateKey] : 0;
-      const x = padL + (plotW * i) / (last7Days.length - 1);
-      const y = padT + plotH - Math.min(plotH, (count / scale) * plotH);
-      return { x, y, count, label: d.label, isMet: count >= vidsDay };
+      const count = dailyCounts[d.dateKey] || 0;
+      const cx = padL + slotW * (i + 0.5);
+      const h = Math.min(plotH, (count / scale) * plotH);
+      const y = baseY - h;
+      return { cx, h, y, count, label: d.label, isMet: count >= vidsDay };
     });
 
     const targetY = padT + plotH - Math.min(plotH, (vidsDay / scale) * plotH);
     const total7DayVids = points.reduce((sum, p) => sum + p.count, 0);
     const metDays = points.filter(p => p.isMet).length;
+    const gridY = [0.25, 0.5, 0.75].map(f => padT + plotH - plotH * f);
 
-    // Catmull-Rom → cubic bezier smoothing
-    const smoothPath = (pts) => {
-      if (pts.length < 2) return pts.length ? `M ${pts[0].x} ${pts[0].y}` : '';
-      let d = `M ${pts[0].x} ${pts[0].y}`;
-      for (let i = 0; i < pts.length - 1; i++) {
-        const p0 = pts[Math.max(0, i - 1)];
-        const p1 = pts[i];
-        const p2 = pts[i + 1];
-        const p3 = pts[Math.min(pts.length - 1, i + 2)];
-        const c1x = p1.x + (p2.x - p0.x) / 6;
-        const c1y = p1.y + (p2.y - p0.y) / 6;
-        const c2x = p2.x - (p3.x - p1.x) / 6;
-        const c2y = p2.y - (p3.y - p1.y) / 6;
-        d += ` C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${p2.x} ${p2.y}`;
+    // --- Bar geometry: outlined track + pixel-cell fill ---
+    const cellPaths = (p) => {
+      const x = p.cx - barW / 2 + 2;
+      const cells = [];
+      if (p.h <= 0) return cells;
+      const numCells = Math.max(1, Math.floor(p.h / (cellSize + cellGap)));
+      for (let c = 0; c < numCells; c++) {
+        const cy = baseY - (c + 1) * (cellSize + cellGap);
+        cells.push('M ' + x.toFixed(2) + ' ' + cy.toFixed(2) + ' h ' + barInner.toFixed(2) + ' v ' + cellSize.toFixed(2) + ' h ' + (-barInner).toFixed(2) + ' Z');
       }
+      return cells;
+    };
+
+    // Track outline: rect with a stepped (pixelated) top cap
+    const trackPath = (p) => {
+      const x = p.cx - barW / 2;
+      let d = 'M ' + x.toFixed(2) + ' ' + baseY.toFixed(2) + ' H ' + (x + barW).toFixed(2) + ' V ' + p.y.toFixed(2);
+      const steps = Math.max(1, Math.floor(barW / 6));
+      let stepX = x + barW;
+      for (let s = 0; s < steps; s++) {
+        stepX -= 3;
+        d += ' H ' + stepX.toFixed(2) + ' V ' + (p.y + 2).toFixed(2);
+      }
+      d += ' H ' + x.toFixed(2) + ' Z';
       return d;
     };
 
-    const linePath = smoothPath(points);
-    const areaPath = linePath
-      ? `${linePath} L ${points[points.length - 1].x} ${baseY} L ${points[0].x} ${baseY} Z`
-      : '';
-    const gridY = [0.25, 0.5, 0.75].map(f => padT + plotH - plotH * f);
+    // --- Stepped pixel-staircase trend (replaces smooth line) ---
+    const trendPts = points.map(p => [p.cx, baseY - Math.max(2, p.h)]);
+    const stepPath = (pts) => {
+      if (pts.length < 2) return '';
+      let d = 'M ' + pts[0][0].toFixed(2) + ' ' + pts[0][1].toFixed(2);
+      for (let i = 1; i < pts.length; i++) {
+        d += ' V ' + pts[i][1].toFixed(2) + ' H ' + pts[i][0].toFixed(2);
+      }
+      return d;
+    };
+    const trendPath = stepPath(trendPts);
 
     return `
       <section class="ex-chart-card">
@@ -2452,43 +2291,40 @@ function updateTopbarSource() {
           <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-met"></span> Target Met</span>
           <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-part"></span> Partial</span>
           <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-zero"></span> No Study</span>
+          <span class="ex-chart-legend-item"><span class="ex-dot ex-dot-trend"></span> Track</span>
           <span class="ex-chart-legend-item ex-chart-legend-target"><span class="ex-dot ex-dot-target"></span> Daily Target</span>
         </div>
 
         <div class="ex-chart-plot">
-          <svg viewBox="0 0 ${chartWidth} ${chartHeight}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="exChartGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" style="stop-color:var(--accent-primary); stop-opacity:0.30" />
-                <stop offset="100%" style="stop-color:var(--accent-primary); stop-opacity:0.02" />
-              </linearGradient>
-            </defs>
+          <svg viewBox="0 0 ${chartWidth} ${chartHeight}" class="ex-chart-svg" role="img" aria-label="7-day video execution chart" data-chart-width="${chartWidth}" data-chart-height="${chartHeight}">
+            ${gridY.map(y => '<line class="ex-chart-gridline" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (chartWidth - padR) + '" y2="' + y.toFixed(1) + '"></line>').join('')}
+            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY.toFixed(1)}" x2="${(chartWidth - padR).toFixed(1)}" y2="${baseY.toFixed(1)}" />
 
-            ${gridY.map(y => `<line class="ex-chart-gridline" x1="${padL}" y1="${y.toFixed(1)}" x2="${chartWidth - padR}" y2="${y.toFixed(1)}" />`).join('')}
-            <line class="ex-chart-baseline" x1="${padL}" y1="${baseY}" x2="${chartWidth - padR}" y2="${baseY}" />
-            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${chartWidth - padR}" y2="${targetY.toFixed(1)}" />
-            <text class="ex-chart-targetlabel" x="${chartWidth - padR}" y="${Math.max(padT + 4, targetY - 4)}">TARGET ${vidsDay}/DAY</text>
+            ${trendPath ? '<path class="ex-trend-line" d="' + trendPath + '"></path>' : ''}
+            ${trendPts.map(p => '<circle class="ex-trend-marker" cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) + '" r="2.5"></circle>').join('')}
 
-            ${areaPath ? `<path d="${areaPath}" class="ex-chart-area" />` : ''}
-            ${linePath ? `<path d="${linePath}" class="ex-chart-line" />` : ''}
+            <line class="ex-chart-targetline" x1="${padL}" y1="${targetY.toFixed(1)}" x2="${(chartWidth - padR).toFixed(1)}" y2="${targetY.toFixed(1)}" />
 
-            ${points.map(p => `
-              <g class="ex-chart-point ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}">
-                <title>${p.label}: ${p.count} video${p.count !== 1 ? 's' : ''} ${p.isMet ? '✓ Target Met' : p.count > 0 ? 'Partial' : 'No study'}</title>
-                <text class="ex-chart-val" x="${p.x}" y="${Math.max(padT + 4, p.y - 4)}">${p.count}${p.isMet && p.count > 0 ? ' ★' : ''}</text>
-                <circle class="ex-chart-node ex-node-${p.count === 0 ? 'zero' : (p.isMet ? 'met' : 'part')}" cx="${p.x}" cy="${p.y}" r="2.5" />
-              </g>
-            `).join('')}
+            ${points.map(p => {
+              const cells = cellPaths(p);
+              const track = trackPath(p);
+              return `
+                <g class="ex-chart-bar ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}">
+                  <title>${p.label}: ${p.count} videos ${p.isMet ? 'check_circle' : (p.count > 0 ? 'Partial' : 'No study')}</title>
+                  <path class="ex-bar-track" d="${track}" />
+                  ${cells.map(c => '<path class="ex-bar-cell" d="' + c + '"></path>').join('')}
+                  <text class="ex-chart-val" x="${p.cx.toFixed(2)}" y="${Math.max(padT + 6, p.y - 6).toFixed(2)}">${p.count}${p.isMet && p.count > 0 ? ' \u2605' : ''}</text>
+                </g>
+              `;
+            }).join('')}
 
-            ${points.map(p => `
-              <text class="ex-chart-xlabel" x="${p.x}" y="${chartHeight - 2}">${p.label}</text>
-            `).join('')}
+            ${points.map(p => '<text class="ex-chart-xlabel" x="' + p.cx.toFixed(2) + '" y="' + (chartHeight - 6) + '">' + p.label + '</text>').join('')}
           </svg>
         </div>
 
         <div class="ex-chart-days">
           ${points.map(p => `
-            <div class="ex-day-tile ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}" title="${p.label}: ${p.count} video${p.count !== 1 ? 's' : ''} ${p.isMet ? '✓ Target Met' : p.count > 0 ? 'Partial' : 'No study'}">
+            <div class="ex-day-tile ex-day-tile--pixel ${p.count === 0 ? 'is-zero' : (p.isMet ? 'is-met' : 'is-part')}" title="${p.label}: ${p.count} videos ${p.isMet ? 'check_circle' : (p.count > 0 ? 'Partial' : 'No study')}">
               <div class="ex-day-name">${p.label}</div>
               <div class="ex-day-count">${p.count}</div>
               <div class="ex-day-status">${p.isMet ? 'MET' : (p.count > 0 ? 'PARTIAL' : '0 VIDS')}</div>
@@ -2514,7 +2350,6 @@ function updateTopbarSource() {
 
     const now = new Date();
     const todayStr = todayKey();
-    const todayDone = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
     const daysLeft = Math.max(1, Math.ceil((new Date(state.goals.targetDate || '2026-08-15') - now) / 86400000));
 
     const last7Days = [];
@@ -2525,11 +2360,15 @@ function updateTopbarSource() {
       last7Days.push({ dateKey, label });
     }
 
-    let actual7DaysCount = last7Days.reduce((sum, d) => sum + ((state.dailyHistory && state.dailyHistory[d.dateKey]) || 0), 0);
+    // Get daily counts excluding bulk completed chapters
+    const dailyCounts = getDailyCountsExcludingBulk();
+
+    const todayDone = dailyCounts[todayStr] || 0;
+    let actual7DaysCount = last7Days.reduce((sum, d) => sum + (dailyCounts[d.dateKey] || 0), 0);
     let actual30DaysCount = 0;
     for (let i = 29; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      actual30DaysCount += (state.dailyHistory && state.dailyHistory[toLocalDateKey(d)]) || 0;
+      actual30DaysCount += dailyCounts[toLocalDateKey(d)] || 0;
     }
 
     // Aggregate total daily target across all plans
@@ -2543,7 +2382,7 @@ function updateTopbarSource() {
 
     const weeklyPct = Math.min(100, Math.round((actual7DaysCount / Math.max(1, ideal7DaysTarget)) * 100));
     const monthlyPct = Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100));
-    const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => (state.dailyHistory && state.dailyHistory[d.dateKey]) || 0), 1);
+    const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => dailyCounts[d.dateKey] || 0), 1);
 
     // Per-plan stats
     const planStats = plans.map((plan, idx) => {
@@ -2670,7 +2509,7 @@ function updateTopbarSource() {
           </button>
         </div>
         <div class="anl-hero-chips">
-          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#3b82f6"></span> Syllabus <b>${stats.percentage}%</b></span>
+          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--accent-primary)"></span> Syllabus <b>${stats.percentage}%</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#10b981"></span> Daily Target <b>${totalVidsDay}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#f59e0b"></span> 7-Day <b>${actual7DaysCount}/${ideal7DaysTarget}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#a855f7"></span> Days Left <b>${daysLeft}</b></span>
@@ -2712,7 +2551,7 @@ function updateTopbarSource() {
       </div>
 
       <!-- 7-Day Execution Chart -->
-      ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal)}
+      ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal, 360)}
 
       <!-- Subject Heatmap (moved from dashboard) -->
       <div style="margin-top:20px;">
@@ -2731,6 +2570,18 @@ function updateTopbarSource() {
     });
 
     document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
+
+    // Re-render the execution chart at the measured container width so fonts/
+    // strokes/bars render at true pixel size instead of being upscaled.
+    const chartCard = document.querySelector('.ex-chart-card');
+    if (chartCard) {
+      const plot = chartCard.querySelector('.ex-chart-plot');
+      const width = plot ? Math.floor(plot.clientWidth) : 360;
+      const fresh = renderExecutionChart(last7Days, totalVidsDay, maxChartVal, width);
+      const temp = document.createElement('div');
+      temp.innerHTML = fresh.trim();
+      chartCard.replaceWith(temp.firstChild);
+    }
   }
 
   // --- View 5: Synchronized Targets & Goals View ---
@@ -2880,26 +2731,27 @@ function updateTopbarSource() {
         ${isSynced ? `
           <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: 'Poppins', sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
             <span class="material-symbols-outlined">cloud_done</span>
-            Synced as ${syncEmail}
+            Synced as ${escapeHtml(syncEmail)}
           </div>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online.
+            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online. FlowMD stores your email, display name, photo, and study progress in Firebase (Google Cloud, US regions). You can export or delete all of it anytime from Profile.
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline.
+            Syncs completions, streaks, plans &amp; preferences across devices in real-time (~1s). Works offline. FlowMD stores your email, display name, photo, and study progress in Firebase (Google Cloud, US regions) — export or delete anytime from Profile.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
           </button>
         `}
+        <a href="privacy.html" style="display: inline-block; margin-top: 10px; font-size: 0.78rem; color: var(--accent-primary); text-decoration: underline;">Privacy Policy</a>
       </div>
 
-      <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary, #2563eb);">
+      <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary);">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb); font-size: 20px;">support_agent</span>
+          <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;">support_agent</span>
           <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin: 0;">Developer Support & Contact</h3>
         </div>
         <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
@@ -2924,6 +2776,22 @@ function updateTopbarSource() {
           <span class="material-symbols-outlined">delete_forever</span> Reset All App Data
         </button>
       </div>
+
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px; border: 1px solid rgba(239, 68, 68, 0.4);">
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span class="material-symbols-outlined" style="color: var(--danger); font-size: 20px;">warning</span>
+          Danger Zone
+        </h3>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+          Export a copy of your synced data, or permanently delete your account and all stored data.
+        </p>
+        <button class="v2-arcade-btn" id="btn-export-data" style="width: 100%; margin-bottom: 10px;">
+          <span class="material-symbols-outlined">download</span> Export My Data
+        </button>
+        <button class="v2-arcade-btn" id="btn-delete-account" style="width: 100%; background: var(--danger);">
+          <span class="material-symbols-outlined">delete_forever</span> Delete My Data &amp; Account
+        </button>
+      </div>
     `;
 
     document.getElementById('profile-edit-form')?.addEventListener('submit', (e) => {
@@ -2938,6 +2806,56 @@ function updateTopbarSource() {
       if (confirm('Are you sure you want to reset all app progress and targets? This cannot be undone.')) {
         localStorage.clear();
         location.reload();
+      }
+    });
+
+    document.getElementById('btn-export-data')?.addEventListener('click', async () => {
+      if (!window.FirebaseSync || !window.FirebaseSync.currentUser) {
+        showToast('Sign in to export your data', 'error');
+        return;
+      }
+      try {
+        const data = await window.FirebaseSync.exportState(window.FirebaseSync.currentUser.uid);
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flowmd-data-export.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Data exported', 'check_circle');
+      } catch (err) {
+        showToast('Export failed: ' + ((err && err.message) || 'error'), 'error');
+      }
+    });
+
+    document.getElementById('btn-delete-account')?.addEventListener('click', async () => {
+      if (!window.FirebaseSync || !window.FirebaseSync.currentUser) {
+        showToast('Sign in to delete your account', 'error');
+        return;
+      }
+      if (!confirm('Delete your FlowMD account and ALL synced data? This cannot be undone.')) return;
+      if (!confirm('Are you absolutely sure? Your study progress will be permanently erased.')) return;
+      const doDelete = async () => {
+        await window.FirebaseSync.deleteAccount(window.FirebaseSync.currentUser.uid);
+        localStorage.clear();
+        location.reload();
+      };
+      try {
+        await doDelete();
+      } catch (err) {
+        if (err && err.code === 'auth/requires-recent-login') {
+          try {
+            await window.FirebaseSync.signInWithGoogle();
+            await doDelete();
+          } catch (err2) {
+            showToast('Delete failed: ' + ((err2 && err2.message) || 'error'), 'error');
+          }
+        } else {
+          showToast('Delete failed: ' + ((err && err.message) || 'error'), 'error');
+        }
       }
     });
 
@@ -3362,13 +3280,27 @@ function updateTopbarSource() {
       btnApplyA.onclick = () => {
         state.isConfigured = true;
         if (!state.plans[0]) state.plans[0] = DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
-        state.plans[0].targetSubject = subSelectA ? subSelectA.value : '';
+        const prevSubject = state.plans[0].targetSubject;
+        const newSubject = subSelectA ? subSelectA.value : '';
+        state.plans[0].targetSubject = newSubject;
         state.plans[0].targetDate = dateInputA ? dateInputA.value : '2026-08-15';
         state.plans[0].videosPerDay = Math.max(1, parseInt(vidsInputA ? vidsInputA.value : 8) || 8);
         state.plans[0].videosPerWeek = state.plans[0].videosPerDay * 7;
         state.plans[0].videosPerMonth = state.plans[0].videosPerDay * 30;
-        state.plans[0].goalMode = state.goals.goalMode || 'video';
+        const prevUnits = state.plans[0].targetUnits;
         state.plans[0].targetUnits = getSelectedUnitsForPlanKey(false);
+        if (prevSubject !== newSubject) {
+          // Subject changed: reset queue state so the daily quest reloads a
+          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
+          state.plans[0].queueBatchVideoIds = [];
+          state.plans[0].queueCompletedInBatch = 0;
+          state.plans[0].extraBatchesCompletedToday = 0;
+          state.plans[0].lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (state.plans[0].targetUnits || []).join('|')) {
+          state.plans[0].queueBatchVideoIds = [];
+          state.plans[0].queueCompletedInBatch = 0;
+          state.plans[0].extraBatchesCompletedToday = 0;
+        }
 
         // Keep legacy state.goals updated
         state.goals.targetSubject = state.plans[0].targetSubject;
@@ -3388,13 +3320,27 @@ function updateTopbarSource() {
         if (state.plans.length < 2) {
           state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
         }
-        state.plans[1].targetSubject = subSelectB ? subSelectB.value : 'Pathology';
+        const prevSubject = state.plans[1].targetSubject;
+        const newSubject = subSelectB ? subSelectB.value : 'Pathology';
+        state.plans[1].targetSubject = newSubject;
         state.plans[1].targetDate = dateInputB ? dateInputB.value : '2026-08-15';
         state.plans[1].videosPerDay = Math.max(1, parseInt(vidsInputB ? vidsInputB.value : 8) || 8);
         state.plans[1].videosPerWeek = state.plans[1].videosPerDay * 7;
         state.plans[1].videosPerMonth = state.plans[1].videosPerDay * 30;
-        state.plans[1].goalMode = state.goals.goalModeB || 'video';
+        const prevUnits = state.plans[1].targetUnits;
         state.plans[1].targetUnits = getSelectedUnitsForPlanKey(true);
+        if (prevSubject !== newSubject) {
+          // Subject changed: reset queue state so the daily quest reloads a
+          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
+          state.plans[1].queueBatchVideoIds = [];
+          state.plans[1].queueCompletedInBatch = 0;
+          state.plans[1].extraBatchesCompletedToday = 0;
+          state.plans[1].lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (state.plans[1].targetUnits || []).join('|')) {
+          state.plans[1].queueBatchVideoIds = [];
+          state.plans[1].queueCompletedInBatch = 0;
+          state.plans[1].extraBatchesCompletedToday = 0;
+        }
 
         saveState();
         showToast('Plan B Target Configured & Saved!', 'check_circle', 'Plan B Updated');
@@ -3415,18 +3361,7 @@ function updateTopbarSource() {
       };
     }
 
-    // --- Mode Switchers for Plan A ---
-    const btnVideoA = document.getElementById('tab-btn-video');
-    const fieldsVideoA = document.getElementById('fields-video-mode');
-    state.goals.goalMode = 'video';
-
-    function setModalModeA(mode) {
-      state.goals.goalMode = mode;
-      synchronizeModalPace('init', 'plan_a');
-    }
-
-    if (btnVideoA) btnVideoA.onclick = () => setModalModeA('video');
-
+    // --- Subject & Pace Listeners for Plan A ---
     if (subSelectA) subSelectA.onchange = () => {
       renderUnitChips('plan_a', subSelectA.value);
       synchronizeModalPace('subjectChange', 'plan_a');
@@ -3434,18 +3369,7 @@ function updateTopbarSource() {
     if (dateInputA) dateInputA.oninput = () => synchronizeModalPace('date', 'plan_a');
     if (vidsInputA) vidsInputA.oninput = () => synchronizeModalPace('dailyVids', 'plan_a');
 
-    // --- Mode Switchers for Plan B ---
-    const btnVideoB = document.getElementById('tab-btn-video-b');
-    const fieldsVideoB = document.getElementById('fields-video-mode-b');
-    state.goals.goalModeB = 'video';
-
-    function setModalModeB(mode) {
-      state.goals.goalModeB = mode;
-      synchronizeModalPace('init', 'plan_b');
-    }
-
-    if (btnVideoB) btnVideoB.onclick = () => setModalModeB('video');
-
+    // --- Subject & Pace Listeners for Plan B ---
     if (subSelectB) subSelectB.onchange = () => {
       renderUnitChips('plan_b', subSelectB.value);
       synchronizeModalPace('subjectChange', 'plan_b');
@@ -3496,8 +3420,6 @@ function updateTopbarSource() {
     });
 
     switchGoalTab('plan_a');
-    setModalModeA(state.goals.goalMode || 'video');
-    setModalModeB(state.goals.goalModeB || 'video');
   }
 
   function synchronizeModalPace(source, planKey = 'plan_a') {
@@ -3582,8 +3504,8 @@ function updateTopbarSource() {
     const current = state.activeSource || 'marrow_8';
     const options = STUDY_SOURCES.map(s => {
       const checked = s.id === current ? 'checked' : '';
-      const upcoming = s.id === 'prepladder_x' ? 'upcoming' : '';
-      const sub = s.id === 'prepladder_x' ? 'Coming soon — syllabus data arrives in a future update.' : `Switch to the ${s.short} syllabus for all subjects, chapters & targets.`;
+      const upcoming = !s.available ? 'upcoming' : '';
+      const sub = !s.available ? 'Coming soon — syllabus data arrives in a future update.' : `Switch to the ${s.short} syllabus for all subjects, chapters & targets.`;
       return `
         <button type="button" class="obw-option ${checked} ${upcoming}" data-src="${s.id}" role="radio" aria-checked="${checked ? 'true' : 'false'}">
           <span class="obw-radio"></span>
@@ -3596,13 +3518,13 @@ function updateTopbarSource() {
 
     modal.innerHTML = `
       <div class="modal-card" style="max-width: 480px; width: 92%;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px solid var(--retro-cyan, var(--accent-primary, #2563eb)); padding-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px solid var(--retro-cyan, var(--accent-primary)); padding-bottom: 12px;">
           <div>
-            <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, var(--accent-primary, #f59e0b)); letter-spacing: 0.08em; text-transform: uppercase;">
+            <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, var(--accent-primary)); letter-spacing: 0.08em; text-transform: uppercase;">
               <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">settings</span> SETTINGS
             </div>
             <h3 style="font-family: var(--font-display), monospace; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0; display: flex; align-items: center; gap: 8px;">
-              <span class="material-symbols-outlined" style="color: var(--accent-primary, #2563eb);">auto_stories</span>
+              <span class="material-symbols-outlined" style="color: var(--accent-primary);">auto_stories</span>
               <span>Study Source</span>
             </h3>
           </div>
@@ -3617,9 +3539,9 @@ function updateTopbarSource() {
           ${options}
         </div>
 
-        <div id="scs-upcoming-alert" class="obw-alert" style="display:${current === 'prepladder_x' ? 'flex' : 'none'};">
+        <div id="scs-upcoming-alert" class="obw-alert" style="display:${!STUDY_SOURCES.find(s => s.id === current)?.available ? 'flex' : 'none'};">
           <span class="material-symbols-outlined" style="font-size:16px;">info</span>
-          Prepladder X is an upcoming feature. Its syllabus data will be available in a future update.
+          ${getSourceLabel(current)} is an upcoming feature. Its syllabus data will be available in a future update.
         </div>
 
         <div class="obw-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
@@ -3629,7 +3551,7 @@ function updateTopbarSource() {
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
           <button id="scs-cancel" class="v2-arcade-btn" style="height: 40px; background: var(--bg-surface-raised); color: var(--text-primary);">Cancel</button>
-          <button id="scs-save" class="v2-arcade-btn" style="height: 40px; background: var(--accent-primary, #2563eb); color: #ffffff;">Save Source</button>
+          <button id="scs-save" class="v2-arcade-btn" style="height: 40px; background: var(--accent-primary); color: #ffffff;">Save Source</button>
         </div>
       </div>
     `;
@@ -3651,20 +3573,30 @@ function updateTopbarSource() {
           o.classList.toggle('checked', o === opt);
           o.setAttribute('aria-checked', o === opt ? 'true' : 'false');
         });
-        if (upcomingAlert) upcomingAlert.style.display = selected === 'prepladder_x' ? 'flex' : 'none';
+        if (upcomingAlert) upcomingAlert.style.display = !STUDY_SOURCES.find(s => s.id === selected)?.available ? 'flex' : 'none';
       });
     });
 
-    modal.querySelector('#scs-save').addEventListener('click', () => {
+    modal.querySelector('#scs-save').addEventListener('click', async () => {
       if (selected === current) { close(); return; }
       const prevSource = current;
+      // Lazy-load the target syllabus if it isn't loaded yet (the inactive
+      // data file is no longer in index.html — see Task C5).
+      if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
+        try {
+          await window.FlowMD.sourceData.loadSourceScript(selected);
+        } catch (e) {
+          showToast('Failed to load ' + getSourceLabel(selected) + ' data. Check your connection.', 'error', 'Source Unavailable');
+          return;
+        }
+      }
       state.activeSource = selected;
-      if (state.activeSource === 'prepladder_x') {
+      if (!STUDY_SOURCES.find(s => s.id === state.activeSource)?.available) {
         // Only allow if dataset exists; otherwise reject with toast.
         const hasData = SOURCE_DATA && SOURCE_DATA[selected] && SOURCE_DATA[selected].length > 0;
         if (!hasData) {
           state.activeSource = prevSource;
-          showToast('Prepladder X syllabus is not available yet.', 'error', 'Source Unavailable');
+          showToast(getSourceLabel(selected) + ' syllabus is not available yet.', 'error', 'Source Unavailable');
           return;
         }
       }

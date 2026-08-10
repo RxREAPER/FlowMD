@@ -7,7 +7,7 @@
     "version:bump": "node scripts/bump-version.js",
     "test": "node tests/smoke.mjs && node tests/onboarding.mjs",
     "deploy:firebase": "firebase deploy --only hosting,firestore:rules",
-    "deploy": "npm run version:bump && git add -A && git commit -m \"chore: bump cache version\" && git push && npm run deploy:firebase",
+    "deploy": "npm run version:bump && git add index.html sw.js && git commit -m \"chore: bump cache version\" && git push && npm run deploy:firebase",
     "deploy:quick": "npm run version:bump && npm run deploy:firebase",
     "deploy:all": "npm run version:bump && firebase deploy"
   },
@@ -17,6 +17,7 @@
     "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.1",
     "firebase-tools": "^15.24.0",
     "libsodium-wrappers": "^0.8.4",
     "playwright": "^1.62.1"
