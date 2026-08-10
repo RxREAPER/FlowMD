@@ -63,7 +63,8 @@ const EXPECTED = {
   onboarding: ['renderOnboardingWizard', 'finishOnboarding'],
   shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal'],
   planConfig: ['renderStudyPlanConfigCard', 'initStudyPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
-  sourceSettings: ['openSourceSettingsModal']
+  sourceSettings: ['openSourceSettingsModal'],
+  charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap']
 };
 
 async function run() {
