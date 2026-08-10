@@ -1,5 +1,10 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Fix Google sign-in — CSP blocked the Firebase authDomain iframe (v193)
+
+- **Bug**: `signInWithPopup` failed with either "Sign in failed" or the Google tab closing right after account selection. Firebase Auth relays the popup result through an invisible iframe on the authDomain (`https://flowmd-04.firebaseapp.com/__/auth/iframe`), but the app's CSP `frame-src` only allowed `accounts.google.com`/`apis.google.com` — the console logged `Framing 'https://flowmd-04.firebaseapp.com/' violates CSP frame-src`, so the OAuth completed, the tab closed, and the result never reached the app.
+- **Fix**: added `https://flowmd-04.firebaseapp.com` to `frame-src` in both the `index.html` meta CSP and the deployed `firebase.json` header CSP.
+
 ## [2026-08-11] PWA install helper — first-visit install UI + Profile guide (v191)
 
 - **New module** `js/features/pwa-install.js` (`window.FlowMD.pwaInstall`): single source of truth for the install lifecycle — captures `beforeinstallprompt`, tracks installed/installable state (`display-mode: standalone` + `appinstalled` + persisted `flowmd_pwa_installed`), and exposes `requestInstall()`.
