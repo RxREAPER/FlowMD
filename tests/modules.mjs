@@ -59,7 +59,9 @@ const EXPECTED = {
             'getSubjectOrSyllabusMetrics'],
   theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip'],
   search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults'],
-  sync: ['initFirebaseSync', 'mergeCloudState', 'manualSync']
+  sync: ['initFirebaseSync', 'mergeCloudState', 'manualSync'],
+  onboarding: ['renderOnboardingWizard', 'finishOnboarding'],
+  shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal']
 };
 
 async function run() {
