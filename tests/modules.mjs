@@ -64,7 +64,8 @@ const EXPECTED = {
   shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal'],
   planConfig: ['renderStudyPlanConfigCard', 'initStudyPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
   sourceSettings: ['openSourceSettingsModal'],
-  charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap']
+  charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap'],
+  views: ['renderDashboardView']
 };
 
 async function run() {

@@ -29,6 +29,7 @@ const ASSETS = [
   './js/features/study-plan-config.js',
   './js/features/source-settings.js',
   './js/features/charts.js',
+  './js/features/views/dashboard.js',
   './icon.svg',
   './manifest.json',
   './offline.html',
