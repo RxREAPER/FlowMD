@@ -3,6 +3,12 @@ name: FlowMD CI / Deploy
 on:
   push:
     branches: [main]
+    # The deploy job's version-bump commit only touches these files; ignoring
+    # them on push keeps the bump from re-triggering this workflow's test job.
+    paths-ignore:
+      - index.html
+      - sw.js
+      - js/core/constants.js
   pull_request:
   workflow_dispatch:
 
@@ -33,6 +39,10 @@ jobs:
   deploy:
     needs: test
     if: github.event_name == 'workflow_dispatch'
+    # The version-bump step pushes back to main; the default GITHUB_TOKEN is
+    # read-only, so it needs contents: write or the push fails with a 403.
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
