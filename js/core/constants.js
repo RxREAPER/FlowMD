@@ -47,7 +47,7 @@ const PXL_ICONS = {
 
   // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
   // used for dynamic script injection so lazy-loaded data files bust the cache) ---
-  const APP_VERSION = '160';
+  const APP_VERSION = '161';
 
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
