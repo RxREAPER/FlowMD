@@ -87,105 +87,105 @@ async function run() {
 
     // Trigger check
     check('Wizard shows on first run (no config)',
-      (await page.locator('.obw-card').count()) > 0);
+      (await page.locator('.onboarding-card').count()) > 0);
     check('Wizard step 1 label correct',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
     check('Dashboard is gated while unconfigured',
       (await page.locator('#study-plan-config').count()) === 0);
 
     // Step 1 — study source
-    const optCount = await page.locator('.obw-option').count();
+    const optCount = await page.locator('.onboarding-option').count();
     check('Step 1 renders 3 study-source options', optCount === 3, `found ${optCount}`);
     check('Marrow 8 pre-selected by default',
-      await hasClass(page, '.obw-option[data-source="marrow_8"]', 'checked'));
+      await hasClass(page, '.onboarding-option[data-source="marrow_8"]', 'checked'));
     check('Next enabled with valid default source',
-      !(await page.locator('#obw-next').isDisabled()));
+      !(await page.locator('#onboarding-next').isDisabled()));
 
-    await page.locator('.obw-option[data-source="prepladder_x"]').click();
+    await page.locator('.onboarding-option[data-source="prepladder_x"]').click();
     await page.waitForTimeout(200);
     check('Prepladder X option marked upcoming',
-      await hasClass(page, '.obw-option[data-source="prepladder_x"]', 'upcoming'));
+      await hasClass(page, '.onboarding-option[data-source="prepladder_x"]', 'upcoming'));
     check('Next DISABLED while prepladder_x selected',
-      await page.locator('#obw-next').isDisabled());
+      await page.locator('#onboarding-next').isDisabled());
     const toastText = await page.locator('#toast-container').innerText().catch(() => '');
     check('Prepladder X shows "coming soon" toast',
       /coming soon|future update/i.test(toastText), toastText.slice(0, 60));
 
-    await page.locator('.obw-option[data-source="marrow_6_5"]').click();
+    await page.locator('.onboarding-option[data-source="marrow_6_5"]').click();
     await page.waitForTimeout(200);
     check('Marrow 6.5 selection sticks after re-render',
-      await hasClass(page, '.obw-option[data-source="marrow_6_5"]', 'checked'));
+      await hasClass(page, '.onboarding-option[data-source="marrow_6_5"]', 'checked'));
     check('Next re-enabled after valid source',
-      !(await page.locator('#obw-next').isDisabled()));
+      !(await page.locator('#onboarding-next').isDisabled()));
     check('Back button hidden on step 1',
-      !(await page.locator('#obw-back').isVisible()));
+      !(await page.locator('#onboarding-back').isVisible()));
 
     await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step1-dark.png') });
 
     // Step 2 — name + theme
-    await page.locator('#obw-next').click();
+    await page.locator('#onboarding-next').click();
     await page.waitForTimeout(250);
     check('Step 2 label correct',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
-    check('Name input rendered', (await page.locator('#obw-name').count()) === 1);
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
+    check('Name input rendered', (await page.locator('#onboarding-name').count()) === 1);
     check('Theme grid renders 2 options',
-      (await page.locator('.obw-theme-opt').count()) === 2);
+      (await page.locator('.onboarding-theme-opt').count()) === 2);
     check('Dark theme pre-checked',
-      await hasClass(page, '.obw-theme-opt[data-theme-val="dark"]', 'checked'));
+      await hasClass(page, '.onboarding-theme-opt[data-theme-val="dark"]', 'checked'));
 
-    await page.locator('#obw-name').fill('Dr. Safi Test');
-    await page.locator('.obw-theme-opt[data-theme-val="light"]').click();
+    await page.locator('#onboarding-name').fill('Dr. Safi Test');
+    await page.locator('.onboarding-theme-opt[data-theme-val="light"]').click();
     await page.waitForTimeout(200);
     check('Light theme applies live',
       (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'light');
     check('Light theme option marked checked',
-      await hasClass(page, '.obw-theme-opt[data-theme-val="light"]', 'checked'));
+      await hasClass(page, '.onboarding-theme-opt[data-theme-val="light"]', 'checked'));
 
     await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step2-light.png') });
 
     // Back navigation retains choices
-    await page.locator('#obw-back').click();
+    await page.locator('#onboarding-back').click();
     await page.waitForTimeout(250);
     check('Back returns to step 1',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
     check('Source choice retained after back',
-      await hasClass(page, '.obw-option[data-source="marrow_6_5"]', 'checked'));
+      await hasClass(page, '.onboarding-option[data-source="marrow_6_5"]', 'checked'));
 
-    await page.locator('#obw-next').click();
+    await page.locator('#onboarding-next').click();
     await page.waitForTimeout(250);
     check('Forward returns to step 2',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
 
     // Step 2 — name + theme + sign-in (skip sign-in)
-    check('Sign in button rendered on step 2', (await page.locator('#obw-signin').count()) === 1);
-    check('Skip button rendered on step 2', (await page.locator('#obw-skip-signin').count()) === 1);
+    check('Sign in button rendered on step 2', (await page.locator('#onboarding-signin').count()) === 1);
+    check('Skip button rendered on step 2', (await page.locator('#onboarding-skip-signin').count()) === 1);
 
     // Skip sign-in
-    await page.locator('#obw-skip-signin').click();
+    await page.locator('#onboarding-skip-signin').click();
     await page.waitForTimeout(250);
 
     // Step 3 — summary + finish
     check('Step 3 label correct',
-      (await page.locator('.obw-card').innerText()).includes('FIRST SETUP · STEP 3 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 3 OF 3'));
     check('Step 3 shows "all set" summary',
-      /You're all set/.test(await page.locator('.obw-card').innerText()));
+      /You're all set/.test(await page.locator('.onboarding-card').innerText()));
     check('Step 3 summary echoes chosen source',
-      (await page.locator('.obw-card').innerText()).includes('Marrow Edition 6.5'));
+      (await page.locator('.onboarding-card').innerText()).includes('Marrow Edition 6.5'));
     check('Step 3 summary echoes chosen theme',
-      (await page.locator('.obw-card').innerText()).includes('Light Mode'));
+      (await page.locator('.onboarding-card').innerText()).includes('Light Mode'));
     check('Step 3 renders 3 guide items',
-      (await page.locator('.obw-guide-item').count()) === 3);
+      (await page.locator('.onboarding-guide-item').count()) === 3);
     check('Step 3 includes Cloud Sync features list',
-      (await page.locator('.obw-card').innerText()).includes('Cloud Sync'));
+      (await page.locator('.onboarding-card').innerText()).includes('Cloud Sync'));
 
     await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step3-light.png') });
 
-    await page.locator('#obw-next').click();
+    await page.locator('#onboarding-next').click();
     await page.waitForTimeout(600);
 
     // Finish → dashboard
     check('Wizard removed after finishing',
-      (await page.locator('.obw-card').count()) === 0);
+      (await page.locator('.onboarding-card').count()) === 0);
     check('Dashboard renders after finishing',
       (await page.locator('#study-plan-config').count()) === 1);
 
@@ -208,7 +208,7 @@ async function run() {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(800);
     check('Wizard does NOT reappear after reload',
-      (await page.locator('.obw-card').count()) === 0);
+      (await page.locator('.onboarding-card').count()) === 0);
     check('Dashboard persists after reload',
       (await page.locator('#study-plan-config').count()) === 1);
 
@@ -229,7 +229,7 @@ async function run() {
     await page.waitForTimeout(800);
 
     check('Legacy tutorial_seen=true skips wizard (migrated to configured)',
-      (await page.locator('.obw-card').count()) === 0);
+      (await page.locator('.onboarding-card').count()) === 0);
     check('Legacy user lands on dashboard',
       (await page.locator('#study-plan-config').count()) === 1);
 

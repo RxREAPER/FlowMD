@@ -217,9 +217,9 @@
           ${hasTargetSet
             ? plans.map((plan, idx) => renderPlanQuestBlock(plan, allQueues[idx])).join('')
             : `
-              <div class="obw-empty-cta">
-                <div class="obw-title" style="margin-bottom:6px;">No study target set yet</div>
-                <div class="obw-sub">Pick a subject and a daily pace to start your daily quests.</div>
+              <div class="onboarding-empty-cta">
+                <div class="onboarding-title" style="margin-bottom:6px;">No study target set yet</div>
+                <div class="onboarding-sub">Pick a subject and a daily pace to start your daily quests.</div>
                 <button type="button" class="v2-arcade-btn" id="btn-set-first-target" style="height:46px; min-width:150px; padding:0 16px; margin-top:14px;">Set Your First Target 🎯</button>
               </div>`}
         </div>

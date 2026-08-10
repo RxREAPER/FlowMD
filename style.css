@@ -6304,7 +6304,7 @@ body {
 }
 
 /* --- Onboarding wizard path hint --- */
-.obw-hint-path {
+.onboarding-hint-path {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -6321,12 +6321,12 @@ body {
   text-align: left;
 }
 
-.obw-hint-path .material-symbols-outlined {
+.onboarding-hint-path .material-symbols-outlined {
   flex-shrink: 0;
   color: var(--accent-primary);
 }
 
-.obw-hint-path b {
+.onboarding-hint-path b {
   color: var(--text-primary);
   font-weight: 700;
 }
@@ -6484,7 +6484,7 @@ body {
   box-shadow: 0 0 0 0 var(--v2-ink);
 }
 
-[data-theme-style="retro"] .obw-hint-path {
+[data-theme-style="retro"] .onboarding-hint-path {
   font-family: var(--font-hud), "VT323", monospace;
   font-size: 15px;
   background-color: var(--bg-surface-raised);
@@ -6493,7 +6493,7 @@ body {
   border-radius: 0;
 }
 
-[data-theme-style="retro"] .obw-hint-path b {
+[data-theme-style="retro"] .onboarding-hint-path b {
   color: var(--retro-cyan);
 }
 
@@ -7323,11 +7323,11 @@ body {
   font-family: var(--font-hud), "VT323", monospace;
 }
 
-/* --- Onboarding Wizard + Study Source modal (obw-* suite) --- */
-.obw-card {
+/* --- Onboarding Wizard + Study Source modal (onboarding-* suite) --- */
+.onboarding-card {
   text-align: center;
 }
-.obw-step-line {
+.onboarding-step-line {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -7340,12 +7340,12 @@ body {
   text-transform: uppercase;
   color: var(--text-muted);
 }
-.obw-dots {
+.onboarding-dots {
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
-.obw-dot {
+.onboarding-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -7353,38 +7353,38 @@ body {
   border: 1px solid var(--text-muted);
   transition: all 0.2s ease;
 }
-.obw-dot.active {
+.onboarding-dot.active {
   background: var(--accent-primary);
   border-color: var(--accent-primary);
   box-shadow: 0 0 8px var(--accent-glow);
 }
-.obw-dot.done {
+.onboarding-dot.done {
   background: var(--success);
   border-color: var(--success);
 }
-.obw-head {
+.onboarding-head {
   text-align: left;
 }
-.obw-title {
+.onboarding-title {
   font-family: var(--font-display), 'Inter', sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 4px 0;
 }
-.obw-sub {
+.onboarding-sub {
   font-family: var(--font-hud), 'Inter', sans-serif;
   font-size: 0.82rem;
   color: var(--text-secondary);
   margin: 0 0 8px 0;
 }
-.obw-options {
+.onboarding-options {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin: 14px 0 8px 0;
 }
-.obw-option {
+.onboarding-option {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -7400,20 +7400,20 @@ body {
   cursor: pointer;
   transition: all 0.18s ease;
 }
-.obw-option:hover {
+.onboarding-option:hover {
   border-color: var(--accent-primary);
   background: var(--bg-surface-hover);
   transform: translateY(-1px);
 }
-.obw-option.checked {
+.onboarding-option.checked {
   border-color: var(--accent-primary);
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(99, 102, 241, 0.1) 100%);
   box-shadow: 0 0 0 1px var(--accent-primary);
 }
-.obw-option.upcoming {
+.onboarding-option.upcoming {
   opacity: 0.7;
 }
-.obw-radio {
+.onboarding-radio {
   flex-shrink: 0;
   width: 18px;
   height: 18px;
@@ -7423,10 +7423,10 @@ body {
   position: relative;
   transition: all 0.18s ease;
 }
-.obw-option.checked .obw-radio {
+.onboarding-option.checked .onboarding-radio {
   border-color: var(--accent-primary);
 }
-.obw-option.checked .obw-radio::after {
+.onboarding-option.checked .onboarding-radio::after {
   content: '';
   position: absolute;
   inset: 3px;
@@ -7434,14 +7434,14 @@ body {
   background: var(--accent-primary);
   box-shadow: 0 0 8px var(--accent-glow);
 }
-.obw-option-title {
+.onboarding-option-title {
   display: block;
   font-family: var(--font-display), 'Inter', sans-serif;
   font-size: 0.98rem;
   font-weight: 700;
   color: var(--text-primary);
 }
-.obw-option-sub {
+.onboarding-option-sub {
   display: block;
   font-family: var(--font-hud), 'Inter', sans-serif;
   font-size: 0.78rem;
@@ -7449,10 +7449,10 @@ body {
   margin-top: 3px;
   line-height: 1.4;
 }
-.obw-option .v2-hud-badge {
+.onboarding-option .v2-hud-badge {
   margin-left: auto;
 }
-.obw-alert {
+.onboarding-alert {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -7468,18 +7468,18 @@ body {
   border-radius: 8px;
   text-align: left;
 }
-.obw-alert .material-symbols-outlined {
+.onboarding-alert .material-symbols-outlined {
   flex-shrink: 0;
   color: var(--accent-primary);
 }
-.obw-footer {
+.onboarding-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   margin-top: 20px;
 }
-.obw-name-input {
+.onboarding-name-input {
   width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
@@ -7492,17 +7492,17 @@ body {
   outline: none;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.obw-name-input:focus {
+.onboarding-name-input:focus {
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
-.obw-theme-grid {
+.onboarding-theme-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: 8px;
 }
-.obw-theme-opt {
+.onboarding-theme-opt {
   padding: 12px 10px;
   text-align: center;
   font-family: 'Inter', system-ui, sans-serif;
@@ -7515,23 +7515,23 @@ body {
   cursor: pointer;
   transition: all 0.18s ease;
 }
-.obw-theme-opt:hover {
+.onboarding-theme-opt:hover {
   border-color: var(--accent-primary);
 }
-.obw-theme-opt.checked {
+.onboarding-theme-opt.checked {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(99, 102, 241, 0.1) 100%);
   box-shadow: 0 0 0 1px var(--accent-primary);
 }
-.obw-guide-list {
+.onboarding-guide-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 16px;
   text-align: left;
 }
-.obw-guide-item {
+.onboarding-guide-item {
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -7540,7 +7540,7 @@ body {
   line-height: 1.5;
   color: var(--text-secondary);
 }
-.obw-guide-num {
+.onboarding-guide-num {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
@@ -7555,95 +7555,95 @@ body {
   border: 1px solid var(--accent-primary);
   border-radius: 50%;
 }
-.obw-empty-cta {
+.onboarding-empty-cta {
   text-align: center;
   padding: 6px 0 2px 0;
 }
-.obw-empty-cta .obw-title,
-.obw-empty-cta .obw-sub {
+.onboarding-empty-cta .onboarding-title,
+.onboarding-empty-cta .onboarding-sub {
   text-align: center;
 }
 
-/* obw-* light theme */
-[data-theme="light"] .obw-option {
+/* onboarding-* light theme */
+[data-theme="light"] .onboarding-option {
   background: #ffffff;
   border-color: rgba(0, 0, 0, 0.12);
 }
-[data-theme="light"] .obw-option:hover {
+[data-theme="light"] .onboarding-option:hover {
   background: #f8fafc;
 }
-[data-theme="light"] .obw-option.checked {
+[data-theme="light"] .onboarding-option.checked {
   border-color: var(--accent-primary);
   background: rgba(59, 130, 246, 0.08);
 }
-[data-theme="light"] .obw-option-sub,
-[data-theme="light"] .obw-sub {
+[data-theme="light"] .onboarding-option-sub,
+[data-theme="light"] .onboarding-sub {
   color: var(--text-secondary);
 }
-[data-theme="light"] .obw-name-input,
-[data-theme="light"] .obw-theme-opt {
+[data-theme="light"] .onboarding-name-input,
+[data-theme="light"] .onboarding-theme-opt {
   background: #ffffff;
   border-color: rgba(0, 0, 0, 0.12);
 }
-[data-theme="light"] .obw-alert {
+[data-theme="light"] .onboarding-alert {
   background: #f8fafc;
   border-color: rgba(0, 0, 0, 0.1);
 }
 
-/* obw-* retro theme */
-[data-theme-style="retro"] .obw-card {
+/* onboarding-* retro theme */
+[data-theme-style="retro"] .onboarding-card {
   border: 3px solid var(--v2-ink);
   border-radius: 0;
   box-shadow: 8px 8px 0 0 #000000;
 }
-[data-theme-style="retro"] .obw-title {
+[data-theme-style="retro"] .onboarding-title {
   font-family: var(--font-display), 'Pixelify Sans', monospace;
   text-shadow: 2px 2px 0 #000000;
 }
-[data-theme-style="retro"] .obw-option {
+[data-theme-style="retro"] .onboarding-option {
   border: 2px solid var(--v2-ink);
   border-radius: 0;
   background-color: var(--bg-surface-raised);
 }
-[data-theme-style="retro"] .obw-option.checked {
+[data-theme-style="retro"] .onboarding-option.checked {
   border: 2px solid var(--v2-ink);
   box-shadow: 4px 4px 0 0 var(--v2-ink);
   background-color: var(--bg-surface-raised);
 }
-[data-theme-style="retro"] .obw-radio {
+[data-theme-style="retro"] .onboarding-radio {
   border-radius: 0;
 }
-[data-theme-style="retro"] .obw-option.checked .obw-radio::after {
+[data-theme-style="retro"] .onboarding-option.checked .onboarding-radio::after {
   border-radius: 0;
 }
-[data-theme-style="retro"] .obw-option-title {
+[data-theme-style="retro"] .onboarding-option-title {
   font-family: var(--font-display), 'Pixelify Sans', monospace;
 }
-[data-theme-style="retro"] .obw-option-sub,
-[data-theme-style="retro"] .obw-sub,
-[data-theme-style="retro"] .obw-alert {
+[data-theme-style="retro"] .onboarding-option-sub,
+[data-theme-style="retro"] .onboarding-sub,
+[data-theme-style="retro"] .onboarding-alert {
   font-family: var(--font-hud), 'VT323', monospace;
 }
-[data-theme-style="retro"] .obw-alert {
+[data-theme-style="retro"] .onboarding-alert {
   border: 2px solid var(--v2-ink);
   border-radius: 0;
 }
-[data-theme-style="retro"] .obw-name-input,
-[data-theme-style="retro"] .obw-theme-opt {
+[data-theme-style="retro"] .onboarding-name-input,
+[data-theme-style="retro"] .onboarding-theme-opt {
   border: 2px solid var(--v2-ink);
   border-radius: 0;
 }
-[data-theme-style="retro"] .obw-theme-opt.checked {
+[data-theme-style="retro"] .onboarding-theme-opt.checked {
   border: 2px solid var(--v2-ink);
   box-shadow: 3px 3px 0 0 var(--v2-ink);
 }
-[data-theme-style="retro"] .obw-guide-num {
+[data-theme-style="retro"] .onboarding-guide-num {
   border-radius: 0;
 }
-[data-theme-style="retro"] .obw-step-line {
+[data-theme-style="retro"] .onboarding-step-line {
   font-family: var(--font-hud), 'VT323', monospace;
 }
-[data-theme-style="retro"] .obw-dot {
+[data-theme-style="retro"] .onboarding-dot {
   border-radius: 0;
 }
 

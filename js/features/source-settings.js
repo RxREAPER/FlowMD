@@ -33,11 +33,11 @@
       const upcoming = !s.available ? 'upcoming' : '';
       const sub = !s.available ? 'Coming soon — syllabus data arrives in a future update.' : `Switch to the ${s.short} syllabus for all subjects, chapters & targets.`;
       return `
-        <button type="button" class="obw-option ${checked} ${upcoming}" data-src="${s.id}" role="radio" aria-checked="${checked ? 'true' : 'false'}">
-          <span class="obw-radio"></span>
+        <button type="button" class="onboarding-option ${checked} ${upcoming}" data-src="${s.id}" role="radio" aria-checked="${checked ? 'true' : 'false'}">
+          <span class="onboarding-radio"></span>
           <span>
-            <span class="obw-option-title">${s.label}</span>
-            <span class="obw-option-sub" style="display:block;">${sub}</span>
+            <span class="onboarding-option-title">${s.label}</span>
+            <span class="onboarding-option-sub" style="display:block;">${sub}</span>
           </span>
         </button>`;
     }).join('');
@@ -61,16 +61,16 @@
           Choose which syllabus edition to plan against. The selected source drives every subject, chapter &amp; topic shown in the app.
         </p>
 
-        <div class="obw-options" style="margin: 14px 0 8px 0;">
+        <div class="onboarding-options" style="margin: 14px 0 8px 0;">
           ${options}
         </div>
 
-        <div id="scs-upcoming-alert" class="obw-alert" style="display:${!STUDY_SOURCES.find(s => s.id === current)?.available ? 'flex' : 'none'};">
+        <div id="scs-upcoming-alert" class="onboarding-alert" style="display:${!STUDY_SOURCES.find(s => s.id === current)?.available ? 'flex' : 'none'};">
           <span class="material-symbols-outlined" style="font-size:16px;">info</span>
           ${getSourceLabel(current)} is an upcoming feature. Its syllabus data will be available in a future update.
         </div>
 
-        <div class="obw-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
+        <div class="onboarding-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
           <span class="material-symbols-outlined" style="font-size:16px;">warning</span>
           Switching source resets your study plans &amp; targets for a fresh start on the new syllabus.
         </div>
@@ -92,10 +92,10 @@
 
     let selected = current;
     const upcomingAlert = modal.querySelector('#scs-upcoming-alert');
-    modal.querySelectorAll('.obw-option').forEach(opt => {
+    modal.querySelectorAll('.onboarding-option').forEach(opt => {
       opt.addEventListener('click', () => {
         selected = opt.getAttribute('data-src');
-        modal.querySelectorAll('.obw-option').forEach(o => {
+        modal.querySelectorAll('.onboarding-option').forEach(o => {
           o.classList.toggle('checked', o === opt);
           o.setAttribute('aria-checked', o === opt ? 'true' : 'false');
         });
