@@ -1,9 +1,51 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Only authenticated users can read and write their own data document
+    function signedIn() {
+      return request.auth != null;
+    }
+    function ownData(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Field-level sanity checks. We deliberately do NOT use hasOnly() here:
+    // legacy docs may carry fields from older app versions, and update()
+    // merges over them — an allow-list would brick those users. Unknown
+    // fields are instead stripped client-side by sanitizeCloudState()
+    // before every write (Task A1), and type/size caps below bound abuse.
+    function validWrite() {
+      let d = request.resource.data;
+      return
+        d.completedVideos is map && d.completedVideos.size() <= 20000 &&
+        d.plans is list && d.plans.size() <= 4 &&
+        d.dailyHistory is map && d.dailyHistory.size() <= 4000 &&
+        d.dailyHistoryBySubject is map && d.dailyHistoryBySubject.size() <= 40 &&
+        d.queueBatchVideoIds is list && d.queueBatchVideoIds.size() <= 200 &&
+        // NOTE: googleDisplayName / googlePhotoURL are deliberately NOT
+        // type-checked here. The live client writes user?.photoURL || null, and
+        // Firestore rules have no null literal — checking them would reject
+        // every update on existing docs that already contain a null photo URL
+        // (no in-app fix possible = bricked sync). The client sanitizer already
+        // caps their length (Task A1), and Firestore's hard 1 MiB document
+        // ceiling still bounds abuse.
+        (!('activePlanId' in d) || (d.activePlanId is string && d.activePlanId.size() <= 64)) &&
+        (!('activeSource' in d) || d.activeSource in ['marrow_8', 'marrow_6_5', 'prepladder_x']) &&
+        (!('themeStyle' in d) || d.themeStyle in ['modern', 'retro']) &&
+        (!('isConfigured' in d) || d.isConfigured is bool) &&
+        (!('speed' in d) || (d.speed is number && d.speed >= 0.5 && d.speed <= 4)) &&
+        (!('queueCompletedInBatch' in d) || (d.queueCompletedInBatch is int && d.queueCompletedInBatch >= 0 && d.queueCompletedInBatch <= 200));
+    }
+
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow get: if ownData(userId);
+      allow list: if false;
+      allow create: if signedIn() && ownData(userId) && validWrite();
+      allow update: if signedIn() && ownData(userId) && validWrite();
+      // Self-only delete: the user may erase their own document (Task B3's
+      // account deletion), but nobody can delete another user's doc. A user
+      // already has full write access to their own doc, so this adds no
+      // attack surface while enabling the in-app "Delete My Data" flow.
+      allow delete: if ownData(userId);
     }
   }
 }
