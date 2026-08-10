@@ -51,7 +51,12 @@ const EXPECTED = {
   sourceData: ['SOURCE_DATA', 'qualifySourceData', 'initSourceData', 'getDataset',
                'getSubjectChapters', 'getScopedChapterNames', 'getPlanScopeVideos',
                'getBulkChapterKey', 'isChapterBulkCompleted', 'getChapterVideoIds',
-               'getDailyCountsExcludingBulk', 'getSourceLabel', 'getEditionShort']
+               'getDailyCountsExcludingBulk', 'getSourceLabel', 'getEditionShort'],
+  metrics: ['getSyllabusStatsForSource', 'getDeadlineCountdown', 'calculateFinishETA',
+            'computeMetricsFromVideos', 'getSubjectOrSyllabusMetricsForPlan',
+            'getMetricsForModalScope', 'getTodayQueueForPlan', 'getAllPlanQueues',
+            'getTodaysActionQueue', 'getPlanById', 'getSyllabusStats',
+            'getSubjectOrSyllabusMetrics']
 };
 
 async function run() {
