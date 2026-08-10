@@ -10,7 +10,7 @@
   'use strict';
 
   const { getState, getStudyStreak, markStudyActivity, saveState } = window.FlowMD.store;
-  const { getPlanScopeVideos } = window.FlowMD.sourceData;
+  const { getPlanScopeVideos, getScopedChapterNames } = window.FlowMD.sourceData;
   const { getAllPlanQueues } = window.FlowMD.metrics;
   const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;

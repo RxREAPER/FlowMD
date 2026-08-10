@@ -30,8 +30,20 @@ async function run() {
 
   await page.goto(`${BASE}/`);
   await page.evaluate(() => {
+    // Rich profile: a configured Plan A on Anatomy plus one completed video.
+    // Exercises the plan-quest dashboard path (catches missing imports that
+    // only fire when a plan exists — see the getScopedChapterNames fix).
     localStorage.setItem('flowmd_is_configured', 'true');
     localStorage.setItem('flowmd_tutorial_seen', 'true');
+    localStorage.setItem('flowmd_active_source', 'marrow_8');
+    localStorage.setItem('flowmd_plans_v2', JSON.stringify([{
+      id: 'plan_a', label: 'Plan A', accentColor: '#7c3aed',
+      targetSubject: 'Anatomy', targetDate: '2999-01-01',
+      videosPerDay: 8, dailyTargetHours: 3.5, targetUnits: [],
+      queueBatchVideoIds: [], extraBatchesCompletedToday: 0
+    }]));
+    localStorage.setItem('flowmd_completed_videos', JSON.stringify({ 'marrow_8::anatomy__v1': true }));
+    localStorage.setItem('flowmd_daily_history', JSON.stringify({ [new Date().toISOString().slice(0, 10)]: 1 }));
   });
   await page.reload();
   await page.waitForLoadState('networkidle');

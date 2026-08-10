@@ -13,7 +13,7 @@
   'use strict';
 
   const { getState, saveState, markStudyActivity } = window.FlowMD.store;
-  const { getChapterVideoIds, isChapterBulkCompleted, getBulkChapterKey, getDailyCountsExcludingBulk } = window.FlowMD.sourceData;
+  const { getChapterVideoIds, isChapterBulkCompleted, getBulkChapterKey, getDailyCountsExcludingBulk, getScopedChapterNames } = window.FlowMD.sourceData;
   const { getSyllabusStats, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
   const { getSubjectColor, getSubjectName, getSubjectFaculty } = window.FlowMD.subjects;
   const { showToast } = window.FlowMD.toast;
