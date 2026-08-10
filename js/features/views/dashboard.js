@@ -42,7 +42,7 @@
 
     let totalVidsDay = 0;
     plans.forEach(p => {
-      totalVidsDay += Math.max(1, parseInt(p.videosPerDay) || 8);
+      totalVidsDay += parseInt(p.videosPerDay, 10) || 0;
     });
 
     // Helper: render one plan's daily quest block

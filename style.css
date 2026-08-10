@@ -6769,6 +6769,50 @@ body {
   margin-bottom: 20px;
 }
 
+/* Empty state — no study target configured yet */
+.anl-goal-empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 18px 16px;
+  margin-bottom: 20px;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-secondary);
+}
+
+.anl-goal-empty .material-symbols-outlined {
+  font-size: 28px;
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.anl-goal-empty strong {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.anl-goal-empty small {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.anl-goal-empty .v2-arcade-btn {
+  margin-left: auto;
+}
+
+@media (max-width: 480px) {
+  .anl-goal-empty .v2-arcade-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
 .anl-goal-tile {
   position: relative;
   display: flex;

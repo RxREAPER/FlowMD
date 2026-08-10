@@ -124,11 +124,14 @@
   }
 
   // --- Migrate legacy single-plan state → plans[] ---
+  // Carries over ONLY values the legacy goals actually stored. A fresh user
+  // (no flowmd_plans, no legacy goals) must end up with an unset plan — the
+  // site waits for the user to fill subject / pace / deadline.
   function migrateStateToPlans() {
-    const legacySub = (state.goals && state.goals.targetSubject) || '';
-    const legacyDate = (state.goals && state.goals.targetDate) || '2026-08-15';
-    const legacyVids = (state.goals && state.goals.videosPerDay) || 8;
-    const legacyHours = (state.goals && state.goals.dailyTargetHours) || 3.5;
+    const legacyGoals = (state.goals && typeof state.goals === 'object') ? state.goals : {};
+    const legacyVids = (legacyGoals.videosPerDay && legacyGoals.videosPerDay > 0) ? legacyGoals.videosPerDay : null;
+    const legacyWeek = (legacyGoals.videosPerWeek && legacyGoals.videosPerWeek > 0) ? legacyGoals.videosPerWeek : null;
+    const legacyMonth = (legacyGoals.videosPerMonth && legacyGoals.videosPerMonth > 0) ? legacyGoals.videosPerMonth : null;
     const legacyBatch = Array.isArray(state.queueBatchVideoIds) ? state.queueBatchVideoIds : [];
     const legacyDone = state.queueCompletedInBatch || 0;
 
@@ -136,12 +139,12 @@
       id: 'plan_a',
       label: 'Plan A',
       accentColor: PLAN_A_ACCENT,
-      targetSubject: legacySub,
-      targetDate: legacyDate,
+      targetSubject: legacyGoals.targetSubject || '',
+      targetDate: legacyGoals.targetDate || '',
       videosPerDay: legacyVids,
-      videosPerWeek: legacyVids * 7,
-      videosPerMonth: legacyVids * 30,
-      dailyTargetHours: legacyHours,
+      videosPerWeek: legacyVids ? (legacyWeek || legacyVids * 7) : null,
+      videosPerMonth: legacyVids ? (legacyMonth || legacyVids * 30) : null,
+      dailyTargetHours: legacyGoals.dailyTargetHours || null,
       queueBatchVideoIds: legacyBatch,
       queueCompletedInBatch: legacyDone,
       targetUnits: []

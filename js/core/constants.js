@@ -47,7 +47,7 @@ const FLOWMD_ICONS = {
 
   // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
   // used for dynamic script injection so lazy-loaded data files bust the cache) ---
-  const APP_VERSION = '194';
+  const APP_VERSION = '195';
 
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
@@ -103,15 +103,18 @@ const FLOWMD_ICONS = {
   ];
 
   // --- Dual-Subject Plan Defaults ---
+  // No assumed subject / pace / deadline: a plan stays unset until the user
+  // fills in the Study Plan Config. `null` pace fields mean "not configured" —
+  // consumers must treat them as unset, never as a hidden default pace.
   const DEFAULT_PLAN = (id, label, accentColor) => ({
     id,
     label,
     accentColor,
     targetSubject: '',
-    targetDate: '2026-08-15',
-    videosPerDay: 8,
-    videosPerWeek: 56,
-    videosPerMonth: 240,
+    targetDate: '',
+    videosPerDay: null,
+    videosPerWeek: null,
+    videosPerMonth: null,
     queueBatchVideoIds: [],
     queueCompletedInBatch: 0,
     targetUnits: []
@@ -125,10 +128,10 @@ const FLOWMD_ICONS = {
   };
 
   const DEFAULT_GOALS = {
-    targetDate: '2026-08-15',
-    videosPerDay: 8,
-    videosPerWeek: 56,
-    videosPerMonth: 202,
+    targetDate: '',
+    videosPerDay: null,
+    videosPerWeek: null,
+    videosPerMonth: null,
     targetSubject: '',
     visibleCards: { daily: true, weekly: true, monthly: true }
   };

@@ -29,10 +29,13 @@
     const plans = (state.plans && state.plans.length > 0) ? state.plans : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)];
     const allQueues = getAllPlanQueues();
     const hasDualPlans = plans.length >= 2;
+    // A target exists only when the user has actually configured one.
+    const hasTarget = plans.some(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
 
     const now = new Date();
     const todayStr = todayKey();
-    const daysLeft = Math.max(1, Math.ceil((new Date(state.goals.targetDate || '2026-08-15') - now) / 86400000));
+    const targetDateMs = state.goals.targetDate ? new Date(state.goals.targetDate).getTime() : NaN;
+    const daysLeft = isNaN(targetDateMs) ? 0 : Math.max(1, Math.ceil((targetDateMs - now) / 86400000));
 
     const last7Days = [];
     for (let i = 6; i >= 0; i--) {
@@ -53,17 +56,17 @@
       actual30DaysCount += dailyCounts[toLocalDateKey(d)] || 0;
     }
 
-    // Aggregate total daily target across all plans
+    // Aggregate total daily target across all plans (0 when nothing configured)
     let totalVidsDay = 0;
-    plans.forEach(p => { totalVidsDay += Math.max(1, parseInt(p.videosPerDay) || 8); });
+    plans.forEach(p => { totalVidsDay += parseInt(p.videosPerDay, 10) || 0; });
 
     const ideal7DaysTarget = totalVidsDay * 7;
     const ideal30DaysTarget = totalVidsDay * 30;
     const paceDelta = actual7DaysCount - ideal7DaysTarget;
     const lectureDeficit = Math.abs(paceDelta);
 
-    const weeklyPct = Math.min(100, Math.round((actual7DaysCount / Math.max(1, ideal7DaysTarget)) * 100));
-    const monthlyPct = Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100));
+    const weeklyPct = hasTarget ? Math.min(100, Math.round((actual7DaysCount / Math.max(1, ideal7DaysTarget)) * 100)) : 0;
+    const monthlyPct = hasTarget ? Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100)) : 0;
     const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => dailyCounts[d.dateKey] || 0), 1);
 
     // Per-plan stats
@@ -71,12 +74,14 @@
       const q = allQueues[idx];
       const m = getSubjectOrSyllabusMetricsForPlan(plan);
       const scopedUnits = getScopedChapterNames(plan);
-      const vids = Math.max(1, parseInt(plan.videosPerDay) || 8);
+      const vids = parseInt(plan.videosPerDay, 10) || 0;
       const remVids = Math.max(0, m.remainingVideos);
-      const daysNeeded = Math.ceil(remVids / vids);
+      const daysNeeded = vids > 0 ? Math.ceil(remVids / vids) : 0;
       const finishDate = new Date(Date.now() + daysNeeded * 24 * 60 * 60 * 1000);
-      const finishDateStr = finishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-      const targetDate = new Date(plan.targetDate || '2026-08-15');
+      const finishDateStr = plan.targetDate
+        ? finishDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        : '—';
+      const targetDate = plan.targetDate ? new Date(plan.targetDate) : new Date(NaN);
       const daysLeft = Math.max(1, Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24)));
       const ideal7 = vids * 7;
       const ideal30 = vids * 30;
@@ -144,7 +149,7 @@
       delta: 'rolling 30-day pace'
     });
 
-    const planTiles = planStats.map(ps => {
+    const planTiles = planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => {
       const behind = ps.finishDate > ps.targetDate;
       const daysDiff = Math.abs(Math.ceil((ps.finishDate - ps.targetDate) / 86400000));
       const planPct = Math.min(100, Math.round((actual7DaysCount / Math.max(1, ps.ideal7)) * 100));
@@ -194,7 +199,7 @@
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--accent-primary)"></span> Syllabus <b>${stats.percentage}%</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#10b981"></span> Daily Target <b>${totalVidsDay}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#f59e0b"></span> 7-Day <b>${actual7DaysCount}/${ideal7DaysTarget}</b></span>
-          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#a855f7"></span> Days Left <b>${daysLeft}</b></span>
+          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#a855f7"></span> Days Left <b>${daysLeft || '—'}</b></span>
         </div>
       </section>
 
@@ -202,7 +207,7 @@
       <div class="anl-report-card">
         <div class="anl-report-card-head">
           <div class="anl-report-card-title"><span class="material-symbols-outlined mat">tune</span> Preparation Setup</div>
-          <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${daysLeft} Days Left</span>
+          <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${daysLeft ? daysLeft + ' Days Left' : 'Not set'}</span>
         </div>
         <div class="anl-report-focus">
           <div>
@@ -211,26 +216,35 @@
           </div>
           <div style="text-align:right;">
             <div class="lbl">Daily Pace</div>
-            <div class="val"><small>${state.goals.videosPerDay || 8}</small> vids/day</div>
+            <div class="val"><small>${state.goals.videosPerDay || '—'}</small> vids/day</div>
           </div>
         </div>
         <div class="anl-report-facts">
-          <div class="anl-report-fact"><div class="lbl">Daily</div><div class="val">${state.goals.videosPerDay || 8} vids</div></div>
-          <div class="anl-report-fact"><div class="lbl">Weekly</div><div class="val">${state.goals.videosPerWeek || 56} vids</div></div>
-          <div class="anl-report-fact"><div class="lbl">Monthly</div><div class="val">${state.goals.videosPerMonth || 240} vids</div></div>
-          <div class="anl-report-fact"><div class="lbl">Target Date</div><div class="val">${state.goals.targetDate || '2026-08-15'}</div></div>
+          <div class="anl-report-fact"><div class="lbl">Daily</div><div class="val">${state.goals.videosPerDay || '—'} vids</div></div>
+          <div class="anl-report-fact"><div class="lbl">Weekly</div><div class="val">${state.goals.videosPerWeek || '—'} vids</div></div>
+          <div class="anl-report-fact"><div class="lbl">Monthly</div><div class="val">${state.goals.videosPerMonth || '—'} vids</div></div>
+          <div class="anl-report-fact"><div class="lbl">Target Date</div><div class="val">${state.goals.targetDate || 'Not set'}</div></div>
         </div>
         <button class="v2-arcade-btn" id="btn-analytics-open-goals" style="width:100%;"><span class="material-symbols-outlined">track_changes</span> Synchronize Pace &amp; Goals</button>
       </div>
 
       <!-- Goal Pulse -->
       <div class="anl-goal-section-label"><span class="material-symbols-outlined" style="font-size:18px; color:var(--accent-primary);">target</span> Goal Pulse — Today / Week / Month</div>
-      <div class="anl-goal-grid">
-        ${todayTile}
-        ${weekTile}
-        ${monthTile}
-        ${planTiles}
-      </div>
+      ${hasTarget ? `
+        <div class="anl-goal-grid">
+          ${todayTile}
+          ${weekTile}
+          ${monthTile}
+          ${planTiles}
+        </div>` : `
+        <div class="anl-goal-empty">
+          <span class="material-symbols-outlined">track_changes</span>
+          <div>
+            <strong>No study target set yet</strong>
+            <small>Set a subject, daily pace &amp; deadline to power your Goal Pulse.</small>
+          </div>
+          <button type="button" class="v2-arcade-btn" id="btn-analytics-set-target" style="height:38px; padding:0 16px;">Set Your Target</button>
+        </div>`}
 
       <!-- 7-Day Execution Chart -->
       ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal)}
@@ -243,7 +257,7 @@
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
-      const shareText = `<span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">target</span> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
+      const shareText = `<span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">target</span> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome'));
       } else {
@@ -252,6 +266,7 @@
     });
 
     document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
+    document.getElementById('btn-analytics-set-target')?.addEventListener('click', focusStudyPlanConfig);
   }
 
   // --- View 5: Synchronized Targets & Goals View ---

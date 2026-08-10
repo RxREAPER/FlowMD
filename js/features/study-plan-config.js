@@ -53,7 +53,7 @@
             <form id="goal-form-a" onsubmit="return false;" class="plan-config-form">
               <div class="plan-config-hint">
                 <span class="material-symbols-outlined">calculate</span>
-                <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
+                <span id="smart-math-text">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
               </div>
 
               <div class="plan-config-field">
@@ -85,9 +85,9 @@
               <div class="plan-config-field">
                 <div class="plan-config-field-head">
                   <label class="plan-config-label" for="input-target-date" style="margin:0;">Target Deadline</label>
-                  <span id="days-remaining-badge" class="plan-config-badge">26 Days Left</span>
+                  <span id="days-remaining-badge" class="plan-config-badge">Not set</span>
                 </div>
-                <input type="date" id="input-target-date" value="2026-08-15" class="plan-config-input">
+                <input type="date" id="input-target-date" value="" class="plan-config-input">
               </div>
 
               <div id="fields-video-mode" class="plan-config-pace-grid" style="display:grid;">
@@ -95,7 +95,7 @@
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
                   <div class="plan-config-pace-input-wrap">
                     <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-day" value="8" class="plan-config-pace-input">
+                    <input type="number" min="1" id="input-videos-per-day" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
                   <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
@@ -104,7 +104,7 @@
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
                   <div class="plan-config-pace-input-wrap">
                     <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-week" value="56" class="plan-config-pace-input">
+                    <input type="number" min="1" id="input-videos-per-week" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
                   <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
@@ -113,7 +113,7 @@
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
                   <div class="plan-config-pace-input-wrap">
                     <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-month" value="240" class="plan-config-pace-input">
+                    <input type="number" min="1" id="input-videos-per-month" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
                   <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
@@ -153,7 +153,7 @@
             <form id="goal-form-b" onsubmit="return false;" class="plan-config-form">
               <div class="plan-config-hint">
                 <span class="material-symbols-outlined">calculate</span>
-                <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
+                <span id="smart-math-text-b">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
               </div>
 
               <div class="plan-config-field">
@@ -178,9 +178,9 @@
               <div class="plan-config-field">
                 <div class="plan-config-field-head">
                   <label class="plan-config-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
-                  <span id="days-remaining-badge-b" class="plan-config-badge">26 Days Left</span>
+                  <span id="days-remaining-badge-b" class="plan-config-badge">Not set</span>
                 </div>
-                <input type="date" id="input-target-date-b" value="2026-08-15" class="plan-config-input">
+                <input type="date" id="input-target-date-b" value="" class="plan-config-input">
               </div>
 
               <div id="fields-video-mode-b" class="plan-config-pace-grid" style="display:grid;">
@@ -188,7 +188,7 @@
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
                   <div class="plan-config-pace-input-wrap">
                     <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-day-b" value="8" class="plan-config-pace-input">
+                    <input type="number" min="1" id="input-videos-per-day-b" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
                   <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
@@ -197,7 +197,7 @@
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
                   <div class="plan-config-pace-input-wrap">
                     <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-week-b" value="56" class="plan-config-pace-input">
+                    <input type="number" min="1" id="input-videos-per-week-b" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
                   <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
@@ -206,7 +206,7 @@
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
                   <div class="plan-config-pace-input-wrap">
                     <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-month-b" value="240" class="plan-config-pace-input">
+                    <input type="number" min="1" id="input-videos-per-month-b" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
                   <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
@@ -273,10 +273,16 @@
     function renderSubjectOptionsFor(sourceId, selectEl, preferredValue) {
       if (!selectEl) return null;
       const stats = getSyllabusStatsForSource(sourceId);
-      let html = stats.subjectsStats.map(s => `
-        <option value="${s.name}">${s.name} (${s.totalVideos} Videos • ${s.totalHours}h)</option>
-      `).join('');
-      if (!html) html = '<option value="">No subjects available</option>';
+      const subs = stats.subjectsStats || [];
+      // A leading placeholder so a fresh plan never silently selects a subject.
+      let html = '<option value="">— Select a subject —</option>';
+      if (subs.length > 0) {
+        html += subs.map(s => `
+          <option value="${s.name}">${s.name} (${s.totalVideos} Videos • ${s.totalHours}h)</option>
+        `).join('');
+      } else {
+        html = '<option value="">No subjects available</option>';
+      }
       selectEl.innerHTML = html;
       if (preferredValue && selectEl.querySelector(`option[value="${preferredValue}"]`)) {
         selectEl.value = preferredValue;
@@ -310,23 +316,23 @@
       }
     }
     const dateInputA = document.getElementById('input-target-date');
-    if (dateInputA) dateInputA.value = planA.targetDate || '2026-08-15';
+    if (dateInputA) dateInputA.value = planA.targetDate || '';
     const vidsInputA = document.getElementById('input-videos-per-day');
-    if (vidsInputA) vidsInputA.value = planA.videosPerDay || 8;
+    if (vidsInputA) vidsInputA.value = planA.videosPerDay || '';
 
-    // Populate Plan B Form
+    // Populate Plan B Form (no assumed subject — placeholder until chosen)
     if (subSelectB) {
-      const prefB = planB.targetSubject || 'Pathology';
-      if (subSelectB.querySelector(`option[value="${prefB}"]`)) {
+      const prefB = planB.targetSubject || '';
+      if (prefB && subSelectB.querySelector(`option[value="${prefB}"]`)) {
         subSelectB.value = prefB;
       } else if (subSelectB.options.length > 0) {
         subSelectB.selectedIndex = 0;
       }
     }
     const dateInputB = document.getElementById('input-target-date-b');
-    if (dateInputB) dateInputB.value = planB.targetDate || '2026-08-15';
+    if (dateInputB) dateInputB.value = planB.targetDate || '';
     const vidsInputB = document.getElementById('input-videos-per-day-b');
-    if (vidsInputB) vidsInputB.value = planB.videosPerDay || 8;
+    if (vidsInputB) vidsInputB.value = planB.videosPerDay || '';
 
     // --- Focus Chapter: render + wire single-select chips ---
     function updateChapterCount(isPlanB, total) {
@@ -359,7 +365,9 @@
       }
 
       if (chapters.length === 0) {
-        container.innerHTML = '<div class="plan-config-chips-empty">No chapters found for this subject.</div>';
+        container.innerHTML = subjectVal
+          ? '<div class="plan-config-chips-empty">No chapters found for this subject.</div>'
+          : '<div class="plan-config-chips-empty">Select a subject to see its chapters.</div>';
         updateChapterCount(isPlanB, 0);
         return;
       }
@@ -487,18 +495,25 @@
     }
 
     // --- Save Plan A Action ---
+    // The site waits for the user: subject, deadline and daily pace must all
+    // be filled in before a plan is saved — nothing is assumed.
     const btnApplyA = document.getElementById('btn-apply-goals');
     if (btnApplyA) {
       btnApplyA.onclick = () => {
+        const newSubject = subSelectA ? subSelectA.value : '';
+        const newDate = dateInputA ? dateInputA.value : '';
+        const newVids = parseInt(vidsInputA ? vidsInputA.value : '', 10);
+        if (!newSubject) { showToast('Select a priority target subject first.', 'error', 'Incomplete Target'); return; }
+        if (!newDate) { showToast('Pick a target deadline date.', 'error', 'Incomplete Target'); return; }
+        if (!newVids || newVids < 1) { showToast('Enter your daily video pace (min 1).', 'error', 'Incomplete Target'); return; }
         state.isConfigured = true;
         if (!state.plans[0]) state.plans[0] = DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
         const prevSubject = state.plans[0].targetSubject;
-        const newSubject = subSelectA ? subSelectA.value : '';
         state.plans[0].targetSubject = newSubject;
-        state.plans[0].targetDate = dateInputA ? dateInputA.value : '2026-08-15';
-        state.plans[0].videosPerDay = Math.max(1, parseInt(vidsInputA ? vidsInputA.value : 8) || 8);
-        state.plans[0].videosPerWeek = state.plans[0].videosPerDay * 7;
-        state.plans[0].videosPerMonth = state.plans[0].videosPerDay * 30;
+        state.plans[0].targetDate = newDate;
+        state.plans[0].videosPerDay = newVids;
+        state.plans[0].videosPerWeek = newVids * 7;
+        state.plans[0].videosPerMonth = newVids * 30;
         const prevUnits = state.plans[0].targetUnits;
         state.plans[0].targetUnits = getSelectedUnitsForPlanKey(false);
         if (prevSubject !== newSubject) {
@@ -525,20 +540,25 @@
       };
     }
 
-    // --- Save Plan B Action ---
+    // --- Save Plan B Action (waits for user input — no assumed values) ---
     const btnApplyB = document.getElementById('btn-apply-goals-b');
     if (btnApplyB) {
       btnApplyB.onclick = () => {
+        const newSubject = subSelectB ? subSelectB.value : '';
+        const newDate = dateInputB ? dateInputB.value : '';
+        const newVids = parseInt(vidsInputB ? vidsInputB.value : '', 10);
+        if (!newSubject) { showToast('Select a priority target subject for Plan B.', 'error', 'Incomplete Target'); return; }
+        if (!newDate) { showToast('Pick a target deadline date for Plan B.', 'error', 'Incomplete Target'); return; }
+        if (!newVids || newVids < 1) { showToast('Enter the daily video pace for Plan B (min 1).', 'error', 'Incomplete Target'); return; }
         if (state.plans.length < 2) {
-          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
+          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT));
         }
         const prevSubject = state.plans[1].targetSubject;
-        const newSubject = subSelectB ? subSelectB.value : 'Pathology';
         state.plans[1].targetSubject = newSubject;
-        state.plans[1].targetDate = dateInputB ? dateInputB.value : '2026-08-15';
-        state.plans[1].videosPerDay = Math.max(1, parseInt(vidsInputB ? vidsInputB.value : 8) || 8);
-        state.plans[1].videosPerWeek = state.plans[1].videosPerDay * 7;
-        state.plans[1].videosPerMonth = state.plans[1].videosPerDay * 30;
+        state.plans[1].targetDate = newDate;
+        state.plans[1].videosPerDay = newVids;
+        state.plans[1].videosPerWeek = newVids * 7;
+        state.plans[1].videosPerMonth = newVids * 30;
         const prevUnits = state.plans[1].targetUnits;
         state.plans[1].targetUnits = getSelectedUnitsForPlanKey(true);
         if (prevSubject !== newSubject) {
@@ -626,7 +646,7 @@
           const vidsWeek = document.getElementById(isPlanB ? 'input-videos-per-week-b' : 'input-videos-per-week');
           const vidsMonth = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
           const day = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
-          if (day) { const d = parseFloat(day.value) || 8; if (vidsWeek) vidsWeek.value = Math.max(1, Math.round(d * 7)); if (vidsMonth) vidsMonth.value = Math.max(1, Math.round(d * 30)); }
+          if (day && day.value) { const d = parseFloat(day.value); if (d > 0) { if (vidsWeek) vidsWeek.value = Math.max(1, Math.round(d * 7)); if (vidsMonth) vidsMonth.value = Math.max(1, Math.round(d * 30)); } }
         }
       };
     });
@@ -637,7 +657,7 @@
   function synchronizeModalPace(source, planKey = 'plan_a') {
     const isPlanB = (planKey === 'plan_b');
     const subSelect = document.getElementById(isPlanB ? 'select-target-subject-b' : 'select-target-subject');
-    const selectedSubVal = subSelect ? subSelect.value : (isPlanB ? 'Pathology' : '');
+    const selectedSubVal = subSelect ? subSelect.value : '';
     const modalSource = state.activeSource || 'marrow_8';
     const selectedUnits = getSelectedUnitsForPlanKey(isPlanB);
     const metrics = getMetricsForModalScope(selectedSubVal, selectedUnits, modalSource);
@@ -651,6 +671,12 @@
     const planObj = isPlanB ? (state.plans[1] || {}) : (state.plans[0] || {});
 
     if (source === 'init' || source === 'subjectChange') {
+      if (!selectedSubVal) {
+        // No subject picked yet — wait for the user; never assume a pace or
+        // deadline for an unconfigured plan.
+        if (badge) badge.textContent = 'Not set';
+        return;
+      }
       const defaultPace = planObj.videosPerDay || 8;
       const daysNeeded = Math.ceil(metrics.remainingVideos / defaultPace);
       const targetDate = new Date(now.getTime() + daysNeeded * 24 * 60 * 60 * 1000);

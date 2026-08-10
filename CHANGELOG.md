@@ -1,5 +1,12 @@
 # FlowMD — Change Log
 
+## [2026-08-11] No assumed goals for new users; source switch resets to unset (v195)
+
+- **Bug**: fresh profiles (and users after switching study source) were silently given assumed targets — subject auto-selected, `8 vids/day`, `56/week`, `240/month`, and a hardcoded `2026-08-15` deadline — so the Goal Pulse / 7-day chart never visibly changed after a source switch.
+- **Fix**: `DEFAULT_PLAN` / `DEFAULT_GOALS` and the legacy `migrateStateToPlans()` carry no numeric or date defaults anymore (empty subject, empty deadline, `null` paces). The Study Plan Config form now starts with a “— Select a subject —” placeholder, empty pace/deadline fields, and refuses to save until subject + daily pace + deadline are filled in. Analytics shows an honest “No study target set yet” state (Goal Pulse + Preparation Setup show `—`/`Not set`, never fake numbers) instead of assumed values.
+- **Source switch** (`source-settings.js`) now resets to a truly unset plan, so the Goal Pulse and 7-day chart visibly change and wait for fresh input.
+- Smoke test +2 checks: fresh profile starts with an empty plan config; Analytics Goal Pulse shows the empty state. (29 checks)
+
 ## [2026-08-11] Fix Google sign-in — CSP blocked the Firebase authDomain iframe (v193)
 
 - **Bug**: `signInWithPopup` failed with either "Sign in failed" or the Google tab closing right after account selection. Firebase Auth relays the popup result through an invisible iframe on the authDomain (`https://flowmd-04.firebaseapp.com/__/auth/iframe`), but the app's CSP `frame-src` only allowed `accounts.google.com`/`apis.google.com` — the console logged `Framing 'https://flowmd-04.firebaseapp.com/' violates CSP frame-src`, so the OAuth completed, the tab closed, and the result never reached the app.

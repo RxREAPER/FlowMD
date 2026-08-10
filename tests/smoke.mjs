@@ -129,6 +129,17 @@ async function run() {
   check('Study plan config shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
   check('Study plan config has plan selector', await page.locator('#goal-plan-select').count() === 1);
 
+  // A fresh profile must NOT have assumed subject/pace/deadline values — the
+  // site waits for the user to fill the Study Plan Config.
+  const configValues = await page.evaluate(() => ({
+    subject: document.getElementById('select-target-subject')?.value ?? null,
+    vids: document.getElementById('input-videos-per-day')?.value ?? null,
+    date: document.getElementById('input-target-date')?.value ?? null
+  }));
+  check('Plan config starts empty for a new user (no assumed subject/pace/deadline)',
+    configValues.subject === '' && configValues.vids === '' && configValues.date === '',
+    JSON.stringify(configValues));
+
   // First-visit PWA install helper (fresh profile → not installed, not dismissed)
   const installBanner = await page.locator('#pwa-install-banner-card').count();
   check('First-visit install helper banner shows on dashboard', installBanner === 1,
@@ -151,7 +162,11 @@ async function run() {
 
   // Analytics view
   await clickNav(page, 'analytics');
-  check('Analytics view renders content', (await page.locator('#app-main').innerText()).length > 50);
+  const anlText = await page.locator('#app-main').innerText();
+  check('Analytics view renders content', anlText.length > 50);
+  check('Analytics Goal Pulse shows empty state when no target set',
+    anlText.includes('Goal Pulse') && anlText.includes('No study target set yet'),
+    'empty-state CTA present');
 
   // Profile view
   await clickNav(page, 'profile');
