@@ -1,0 +1,715 @@
+/* ============================================================
+   FlowMD Features — Study Plan Config
+   The always-visible inline config card + the dual-plan goal
+   wizard (subject select, chapter chips, pace sync, A/B apply).
+
+   Extracted verbatim from app.js (2026-08-10). Behavior unchanged.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const { getState, saveState } = window.FlowMD.store;
+  const { getDataset, getSourceLabel } = window.FlowMD.sourceData;
+  const { getSyllabusStatsForSource, getSubjectOrSyllabusMetrics, getMetricsForModalScope } = window.FlowMD.metrics;
+  const { STUDY_SOURCES, DEFAULT_PLAN, PLAN_A_ACCENT, PLAN_B_ACCENT, toLocalDateKey, escapeHtml, escapeAttr, PXL_ICONS } = window.FlowMD.constants;
+  const { showToast } = window.FlowMD.toast;
+
+  // Same live object reference app.js uses — mutations are in-place.
+  const state = getState();
+
+  // --- Study Plan Config: always-visible inline form card ---
+  function renderStudyPlanConfigCard() {
+    return `
+      <section id="study-plan-config" class="study-plan-config-section" aria-label="Study plan configuration">
+        <div class="spc-header">
+          <h2 class="spc-title">Study Plan Configuration</h2>
+          <p class="spc-sub">Set your daily pace, target deadline &amp; dual-track goals. Everything auto-synchronizes.</p>
+        </div>
+
+        <div class="spc-body">
+          <!-- Plan Selector Dropdown + Dual-Track Toggle -->
+          <div class="spc-toolbar">
+            <div class="spc-plan-select-wrap">
+              <span class="material-symbols-outlined spc-flag-icon">flag</span>
+              <select id="goal-plan-select" class="gcm-input spc-plan-select" aria-label="Select plan to configure">
+                <option value="plan_a">Plan A — Primary Target</option>
+              </select>
+              <span class="material-symbols-outlined spc-select-arrow">expand_more</span>
+            </div>
+            <label class="gcm-dual spc-dual-toggle">
+              <input type="checkbox" id="toggle-plan-b">
+              <span class="gcm-switch"><i></i></span>
+              <span class="gcm-dual-label">Dual-Track</span>
+            </label>
+          </div>
+
+          <!-- PLAN A FORM -->
+          <div id="goal-plan-a-form">
+            <div class="gcm-plan-head">
+              <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan A — Primary Target</span>
+              <span class="gcm-plan-role">Main <b>Subject Goal</b></span>
+            </div>
+
+            <form id="goal-form-a" onsubmit="return false;" class="gcm-form">
+              <div class="gcm-hint">
+                <span class="material-symbols-outlined">calculate</span>
+                <span id="smart-math-text">Deadline &amp; targets automatically synchronized!</span>
+              </div>
+
+              <div class="gcm-field">
+                <label class="gcm-label" for="select-target-subject">Priority Target Subject</label>
+                <div class="gcm-select-wrap">
+                  <select id="select-target-subject" class="gcm-input"></select>
+                  <span class="material-symbols-outlined">expand_more</span>
+                </div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="gcm-chips-count"></span></label>
+                </div>
+                <div class="gcm-hint" style="margin:4px 0 8px 0;">
+                  <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
+                  <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
+                </div>
+                <div class="gcm-chips" id="chapter-chips-a"></div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-hint" style="margin:0;">
+                  <span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span>
+                  <span>Syllabus source: <b id="goal-source-label">Marrow Edition 8</b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
+                </div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" for="input-target-date" style="margin:0;">Target Deadline</label>
+                  <span id="days-remaining-badge" class="gcm-badge">26 Days Left</span>
+                </div>
+                <input type="date" id="input-target-date" value="2026-08-15" class="gcm-input">
+              </div>
+
+              <div id="fields-video-mode" class="gcm-pace-grid" style="display:grid;">
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-day" value="8" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-week" value="56" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-month" value="240" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+              </div>
+
+              
+              <div class="gcm-guide math-guide-card">
+                <div class="gcm-guide-header math-guide-header">
+                  <span class="material-symbols-outlined">info</span>
+                  <span>How Plan A Date &amp; Pace Auto-Synchronize</span>
+                  <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
+                </div>
+                <div class="gcm-guide-body math-guide-body">
+                  <strong>Auto-Synchronization:</strong><br>
+                  &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan A <strong>Daily Pace</strong>.<br>
+                  &bull; Changing <strong>Daily Pace</strong> auto-updates Plan A <strong>Target Date</strong>.
+                </div>
+              </div>
+
+              <div class="gcm-actions">
+                <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Save &amp; Apply Plan A Target</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- PLAN B FORM -->
+          <div id="goal-plan-b-form" style="display:none;">
+            <div class="gcm-plan-head">
+              <span class="gcm-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan B — Secondary Target</span>
+              <span class="gcm-plan-role">Parallel <b>Subject Goal</b></span>
+            </div>
+
+            <form id="goal-form-b" onsubmit="return false;" class="gcm-form">
+              <div class="gcm-hint">
+                <span class="material-symbols-outlined">calculate</span>
+                <span id="smart-math-text-b">Deadline &amp; targets automatically synchronized!</span>
+              </div>
+
+              <div class="gcm-field">
+                <label class="gcm-label" for="select-target-subject-b">Priority Target Subject</label>
+                <div class="gcm-select-wrap">
+                  <select id="select-target-subject-b" class="gcm-input"></select>
+                  <span class="material-symbols-outlined">expand_more</span>
+                </div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="gcm-chips-count"></span></label>
+                </div>
+                <div class="gcm-hint" style="margin:4px 0 8px 0;">
+                  <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
+                  <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
+                </div>
+                <div class="gcm-chips" id="chapter-chips-b"></div>
+              </div>
+
+              <div class="gcm-field">
+                <div class="gcm-field-head">
+                  <label class="gcm-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
+                  <span id="days-remaining-badge-b" class="gcm-badge">26 Days Left</span>
+                </div>
+                <input type="date" id="input-target-date-b" value="2026-08-15" class="gcm-input">
+              </div>
+
+              <div id="fields-video-mode-b" class="gcm-pace-grid" style="display:grid;">
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Daily</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-day-b" value="8" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Weekly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-week-b" value="56" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+                <div class="gcm-pace">
+                  <div class="gcm-pace-top"><span class="gcm-pace-label">Monthly</span><span class="gcm-pace-unit">vids</span></div>
+                  <div class="gcm-pace-input-wrap">
+                    <button type="button" class="gcm-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
+                    <input type="number" min="1" id="input-videos-per-month-b" value="240" class="gcm-pace-input">
+                    <button type="button" class="gcm-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
+                  </div>
+                  <label class="gcm-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                </div>
+              </div>
+
+              
+              <div class="gcm-guide math-guide-card">
+                <div class="gcm-guide-header math-guide-header">
+                  <span class="material-symbols-outlined">info</span>
+                  <span>How Plan B Date &amp; Pace Auto-Synchronize</span>
+                  <span class="material-symbols-outlined gcm-guide-arrow math-guide-toggle-icon">expand_more</span>
+                </div>
+                <div class="gcm-guide-body math-guide-body">
+                  <strong>Auto-Synchronization:</strong><br>
+                  &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan B <strong>Daily Pace</strong>.<br>
+                  &bull; Changing <strong>Daily Pace</strong> auto-updates Plan B <strong>Target Date</strong>.
+                </div>
+              </div>
+
+              <div class="gcm-actions">
+                <button type="button" class="gcm-btn gcm-btn-prim" id="btn-apply-goals-b">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Save &amp; Apply Plan B Target</span>
+                </button>
+                <button type="button" class="gcm-btn gcm-btn-danger" id="btn-remove-plan-b">
+                  <span class="material-symbols-outlined">disabled_by_default</span>
+                  <span>Disable / Remove Plan B</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  // --- View 1: Dashboard View ---
+
+  function getSelectedUnitsForPlanKey(isPlanB) {
+    const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
+    if (!container) return [];
+    const allChip = container.querySelector('.gcm-chip[data-chap="__all__"]');
+    if (allChip && allChip.classList.contains('selected')) return [];
+    const selChip = container.querySelector('.gcm-chip.selected[data-chap]');
+    const name = selChip ? selChip.getAttribute('data-chap') : null;
+    return (name && name !== '__all__') ? [name] : [];
+  }
+
+  // --- Goal Modal Helpers (Dual-Plan Fully Functional) ---
+  function focusStudyPlanConfig() {
+    if (state.currentView !== 'dashboard') {
+      if (window.FlowMD.shell) window.FlowMD.shell.switchView('dashboard');
+    }
+    const card = document.getElementById('study-plan-config');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function initStudyPlanConfig() {
+    const subSelectA = document.getElementById('select-target-subject');
+    const subSelectB = document.getElementById('select-target-subject-b');
+    const srcLabelEl = document.getElementById('goal-source-label');
+    const sid = state.activeSource || 'marrow_8';
+
+    function renderSubjectOptionsFor(sourceId, selectEl, preferredValue) {
+      if (!selectEl) return null;
+      const stats = getSyllabusStatsForSource(sourceId);
+      let html = stats.subjectsStats.map(s => `
+        <option value="${s.name}">${s.name} (${s.totalVideos} Videos • ${s.totalHours}h)</option>
+      `).join('');
+      if (!html) html = '<option value="">No subjects available</option>';
+      selectEl.innerHTML = html;
+      if (preferredValue && selectEl.querySelector(`option[value="${preferredValue}"]`)) {
+        selectEl.value = preferredValue;
+      } else {
+        selectEl.selectedIndex = 0;
+      }
+      return stats;
+    }
+
+    function populateSubjectUI() {
+      if (srcLabelEl) {
+        const src = STUDY_SOURCES.find(s => s.id === sid);
+        srcLabelEl.textContent = src ? src.label : 'Marrow Edition 8';
+      }
+      renderSubjectOptionsFor(sid, subSelectA, state.plans && state.plans[0] ? state.plans[0].targetSubject : '');
+      renderSubjectOptionsFor(sid, subSelectB, state.plans && state.plans[1] ? state.plans[1].targetSubject : '');
+    }
+
+    populateSubjectUI();
+
+    const planA = state.plans[0] || DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
+    const hasPlanB = state.plans.length >= 2;
+    const planB = hasPlanB ? state.plans[1] : DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology');
+
+    // Populate Plan A Form
+    if (subSelectA) {
+      if (planA.targetSubject && subSelectA.querySelector(`option[value="${planA.targetSubject}"]`)) {
+        subSelectA.value = planA.targetSubject;
+      } else if (subSelectA.options.length > 0) {
+        subSelectA.selectedIndex = 0;
+      }
+    }
+    const dateInputA = document.getElementById('input-target-date');
+    if (dateInputA) dateInputA.value = planA.targetDate || '2026-08-15';
+    const vidsInputA = document.getElementById('input-videos-per-day');
+    if (vidsInputA) vidsInputA.value = planA.videosPerDay || 8;
+
+    // Populate Plan B Form
+    if (subSelectB) {
+      const prefB = planB.targetSubject || 'Pathology';
+      if (subSelectB.querySelector(`option[value="${prefB}"]`)) {
+        subSelectB.value = prefB;
+      } else if (subSelectB.options.length > 0) {
+        subSelectB.selectedIndex = 0;
+      }
+    }
+    const dateInputB = document.getElementById('input-target-date-b');
+    if (dateInputB) dateInputB.value = planB.targetDate || '2026-08-15';
+    const vidsInputB = document.getElementById('input-videos-per-day-b');
+    if (vidsInputB) vidsInputB.value = planB.videosPerDay || 8;
+
+    // --- Focus Chapter: render + wire single-select chips ---
+    function updateChapterCount(isPlanB, total) {
+      const countEl = document.getElementById(isPlanB ? 'chapters-count-b' : 'chapters-count-a');
+      if (!countEl) return;
+      const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
+      const allChip = container ? container.querySelector('.gcm-chip[data-chap="__all__"]') : null;
+      if (allChip && allChip.classList.contains('selected')) {
+        countEl.textContent = 'All chapters';
+      } else {
+        const selChip = container ? container.querySelector('.gcm-chip.selected[data-chap]:not([data-chap="__all__"])') : null;
+        countEl.textContent = selChip ? `1 of ${total || 0}` : 'All chapters';
+      }
+    }
+
+    function renderUnitChips(planKey, subjectVal) {
+      const isPlanB = (planKey === 'plan_b');
+      const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
+      if (!container) return;
+      const idx = isPlanB ? 1 : 0;
+
+      const sid = state.activeSource || 'marrow_8';
+      let chapters = [];
+      try {
+        const dataset = getDataset();
+        const sub = dataset.find(s => s && (s.subject === subjectVal || s.id === subjectVal));
+        chapters = (sub && sub.chapters) ? sub.chapters : [];
+      } catch (e) {
+        chapters = [];
+      }
+
+      if (chapters.length === 0) {
+        container.innerHTML = '<div class="gcm-chips-empty">No chapters found for this subject.</div>';
+        updateChapterCount(isPlanB, 0);
+        return;
+      }
+
+      const savedUnits = (state.plans && state.plans[idx] && Array.isArray(state.plans[idx].targetUnits) && state.plans[idx].targetUnits.length > 0)
+        ? state.plans[idx].targetUnits.map(u => String(u)) : null;
+
+      // Single focus per plan: exactly one saved chapter -> select it; anything else (none or legacy multi) -> All Chapters.
+      let focusedName = null;
+      if (savedUnits && savedUnits.length === 1) {
+        const match = chapters.find(c => c && String(c.name) === savedUnits[0]);
+        if (match) focusedName = String(match.name);
+      }
+
+      const searchId = `gcm-chapter-search-${isPlanB ? 'b' : 'a'}`;
+      const allChip = `<button type="button" class="gcm-chip ${focusedName ? '' : 'selected'}" data-chap="__all__"><span class="material-symbols-outlined" style="font-size:15px;">select_all</span><span>All Chapters</span></button>`;
+
+      container.innerHTML = `
+        <div class="gcm-chips-search">
+          <span class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);">search</span>
+          <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:'Poppins', sans-serif; font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
+        </div>
+        <div class="gcm-chips-list" style="max-height:280px; overflow-y:auto;">${allChip + chapters.map(c => {
+        const name = String(c.name);
+        const on = (focusedName === name);
+        const vcount = (c.videos && c.videos.length) || 0;
+        return `<button type="button" class="gcm-chip ${on ? 'selected' : ''}" data-chap="${name}"><span>${name}</span><span class="gcm-chip-vids">${vcount}</span></button>`;
+      }).join('')}</div>
+      `;
+
+      // Search filter
+      const searchInput = document.getElementById(searchId);
+      const chipList = container.querySelector('.gcm-chips-list');
+      if (searchInput && chipList) {
+        searchInput.addEventListener('input', () => {
+          const q = searchInput.value.toLowerCase().trim();
+          chipList.querySelectorAll('.gcm-chip').forEach(chip => {
+            const name = chip.querySelector('span')?.textContent?.toLowerCase() || '';
+            const match = q === '' || name.includes(q);
+            chip.style.display = match ? 'inline-flex' : 'none';
+          });
+        });
+      }
+
+      chipList.querySelectorAll('.gcm-chip').forEach(chip => {
+        chip.onclick = () => {
+          if (chip.classList.contains('selected')) {
+            if (chip.getAttribute('data-chap') !== '__all__') {
+              // Deselect a focused chapter -> back to full subject
+              container.querySelectorAll('.gcm-chip').forEach(c => c.classList.remove('selected'));
+              container.querySelector('.gcm-chip[data-chap="__all__"]')?.classList.add('selected');
+            }
+          } else {
+            container.querySelectorAll('.gcm-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+          }
+          updateChapterCount(isPlanB, chapters.length);
+          synchronizeModalPace('subjectChange', planKey);
+        };
+      });
+
+      updateChapterCount(isPlanB, chapters.length);
+    }
+
+    renderUnitChips('plan_a', subSelectA ? subSelectA.value : '');
+    renderUnitChips('plan_b', subSelectB ? subSelectB.value : '');
+
+    const togglePlanB = document.getElementById('toggle-plan-b');
+    if (togglePlanB) togglePlanB.checked = hasPlanB;
+
+    const planSelect = document.getElementById('goal-plan-select');
+    const formA = document.getElementById('goal-plan-a-form');
+    const formB = document.getElementById('goal-plan-b-form');
+    const dualStatusEl = document.getElementById('spc-dual-status');
+
+    function syncPlanSelectOptions() {
+      if (!planSelect) return;
+      const hasB = state.plans.length >= 2 || (togglePlanB && togglePlanB.checked);
+      const optB = planSelect.querySelector('option[value="plan_b"]');
+      if (hasB && !optB) {
+        const opt = document.createElement('option');
+        opt.value = 'plan_b';
+        opt.textContent = 'Plan B — Secondary Target';
+        planSelect.appendChild(opt);
+      } else if (!hasB && optB) {
+        optB.remove();
+      }
+    }
+
+    function switchGoalTab(activePlan) {
+      const isB = (activePlan === 'plan_b');
+      if (planSelect) planSelect.value = isB ? 'plan_b' : 'plan_a';
+      if (formA) formA.style.display = isB ? 'none' : 'block';
+      if (formB) formB.style.display = isB ? 'block' : 'none';
+      if (dualStatusEl) dualStatusEl.textContent = isB ? 'On' : 'Off';
+      if (isB && togglePlanB && !togglePlanB.checked) {
+        togglePlanB.checked = true;
+        if (state.plans.length < 2) {
+          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
+        }
+      }
+      synchronizeModalPace('init', isB ? 'plan_b' : 'plan_a');
+    }
+
+    syncPlanSelectOptions();
+    if (planSelect) planSelect.onchange = () => switchGoalTab(planSelect.value);
+
+    if (togglePlanB) {
+      togglePlanB.onchange = () => {
+        if (togglePlanB.checked) {
+          if (state.plans.length < 2) {
+            state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
+          }
+          syncPlanSelectOptions();
+          switchGoalTab('plan_b');
+        } else {
+          if (state.plans.length >= 2) {
+            state.plans.splice(1, 1);
+          }
+          syncPlanSelectOptions();
+          switchGoalTab('plan_a');
+        }
+        saveState();
+      };
+    }
+
+    // --- Save Plan A Action ---
+    const btnApplyA = document.getElementById('btn-apply-goals');
+    if (btnApplyA) {
+      btnApplyA.onclick = () => {
+        state.isConfigured = true;
+        if (!state.plans[0]) state.plans[0] = DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
+        const prevSubject = state.plans[0].targetSubject;
+        const newSubject = subSelectA ? subSelectA.value : '';
+        state.plans[0].targetSubject = newSubject;
+        state.plans[0].targetDate = dateInputA ? dateInputA.value : '2026-08-15';
+        state.plans[0].videosPerDay = Math.max(1, parseInt(vidsInputA ? vidsInputA.value : 8) || 8);
+        state.plans[0].videosPerWeek = state.plans[0].videosPerDay * 7;
+        state.plans[0].videosPerMonth = state.plans[0].videosPerDay * 30;
+        const prevUnits = state.plans[0].targetUnits;
+        state.plans[0].targetUnits = getSelectedUnitsForPlanKey(false);
+        if (prevSubject !== newSubject) {
+          // Subject changed: reset queue state so the daily quest reloads a
+          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
+          state.plans[0].queueBatchVideoIds = [];
+          state.plans[0].queueCompletedInBatch = 0;
+          state.plans[0].extraBatchesCompletedToday = 0;
+          state.plans[0].lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (state.plans[0].targetUnits || []).join('|')) {
+          state.plans[0].queueBatchVideoIds = [];
+          state.plans[0].queueCompletedInBatch = 0;
+          state.plans[0].extraBatchesCompletedToday = 0;
+        }
+
+        // Keep legacy state.goals updated
+        state.goals.targetSubject = state.plans[0].targetSubject;
+        state.goals.targetDate = state.plans[0].targetDate;
+        state.goals.videosPerDay = state.plans[0].videosPerDay;
+
+        saveState();
+        showToast('Plan A Target Configured & Saved!', 'check_circle', 'Plan A Updated');
+        render();
+      };
+    }
+
+    // --- Save Plan B Action ---
+    const btnApplyB = document.getElementById('btn-apply-goals-b');
+    if (btnApplyB) {
+      btnApplyB.onclick = () => {
+        if (state.plans.length < 2) {
+          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
+        }
+        const prevSubject = state.plans[1].targetSubject;
+        const newSubject = subSelectB ? subSelectB.value : 'Pathology';
+        state.plans[1].targetSubject = newSubject;
+        state.plans[1].targetDate = dateInputB ? dateInputB.value : '2026-08-15';
+        state.plans[1].videosPerDay = Math.max(1, parseInt(vidsInputB ? vidsInputB.value : 8) || 8);
+        state.plans[1].videosPerWeek = state.plans[1].videosPerDay * 7;
+        state.plans[1].videosPerMonth = state.plans[1].videosPerDay * 30;
+        const prevUnits = state.plans[1].targetUnits;
+        state.plans[1].targetUnits = getSelectedUnitsForPlanKey(true);
+        if (prevSubject !== newSubject) {
+          // Subject changed: reset queue state so the daily quest reloads a
+          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
+          state.plans[1].queueBatchVideoIds = [];
+          state.plans[1].queueCompletedInBatch = 0;
+          state.plans[1].extraBatchesCompletedToday = 0;
+          state.plans[1].lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (state.plans[1].targetUnits || []).join('|')) {
+          state.plans[1].queueBatchVideoIds = [];
+          state.plans[1].queueCompletedInBatch = 0;
+          state.plans[1].extraBatchesCompletedToday = 0;
+        }
+
+        saveState();
+        showToast('Plan B Target Configured & Saved!', 'check_circle', 'Plan B Updated');
+        render();
+      };
+    }
+
+    // --- Remove Plan B Action ---
+    const btnRemoveB = document.getElementById('btn-remove-plan-b');
+    if (btnRemoveB) {
+      btnRemoveB.onclick = () => {
+        if (state.plans.length >= 2) state.plans.splice(1, 1);
+        if (togglePlanB) togglePlanB.checked = false;
+        saveState();
+        showToast('Plan B Target Disabled.', 'info', 'Single Plan Mode');
+        switchGoalTab('plan_a');
+        render();
+      };
+    }
+
+    // --- Subject & Pace Listeners for Plan A ---
+    if (subSelectA) subSelectA.onchange = () => {
+      renderUnitChips('plan_a', subSelectA.value);
+      synchronizeModalPace('subjectChange', 'plan_a');
+    };
+    if (dateInputA) dateInputA.oninput = () => synchronizeModalPace('date', 'plan_a');
+    if (vidsInputA) vidsInputA.oninput = () => synchronizeModalPace('dailyVids', 'plan_a');
+
+    // --- Subject & Pace Listeners for Plan B ---
+    if (subSelectB) subSelectB.onchange = () => {
+      renderUnitChips('plan_b', subSelectB.value);
+      synchronizeModalPace('subjectChange', 'plan_b');
+    };
+    if (dateInputB) dateInputB.oninput = () => synchronizeModalPace('date', 'plan_b');
+    if (vidsInputB) vidsInputB.oninput = () => synchronizeModalPace('dailyVids', 'plan_b');
+
+    // Math Guide Accordion Toggles
+    document.querySelectorAll('.math-guide-card').forEach(card => {
+      const header = card.querySelector('.math-guide-header');
+      const body = card.querySelector('.math-guide-body');
+      const icon = card.querySelector('.math-guide-toggle-icon');
+      if (header && body) {
+        header.onclick = () => {
+          const isHidden = (body.style.display === 'none' || !body.style.display);
+          body.style.display = isHidden ? 'block' : 'none';
+          if (icon) icon.textContent = isHidden ? 'expand_less' : 'expand_more';
+        };
+      }
+    });
+
+    // Stepper buttons (±) for the pace inputs
+    document.querySelectorAll('#study-plan-config .gcm-step').forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        const wrap = btn.closest('.gcm-pace-input-wrap');
+        const input = wrap ? wrap.querySelector('.gcm-pace-input') : null;
+        if (!input) return;
+        const isPlus = btn.textContent.trim() === '+';
+        const step = parseFloat(input.step) || 1;
+        const min = input.min !== '' ? parseFloat(input.min) : -Infinity;
+        const max = input.max !== '' ? parseFloat(input.max) : Infinity;
+        let val = (parseFloat(input.value) || 0) + (isPlus ? step : -step);
+        val = Math.min(max, Math.max(min, val));
+        input.value = val;
+        const isPlanB = !!btn.closest('#goal-plan-b-form');
+        const planKey = isPlanB ? 'plan_b' : 'plan_a';
+        const isDaily = /per-day|daily-target/.test(input.id);
+        if (isDaily) {
+          synchronizeModalPace('dailyVids', planKey);
+        } else {
+          const vidsWeek = document.getElementById(isPlanB ? 'input-videos-per-week-b' : 'input-videos-per-week');
+          const vidsMonth = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
+          const day = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
+          if (day) { const d = parseFloat(day.value) || 8; if (vidsWeek) vidsWeek.value = Math.max(1, Math.round(d * 7)); if (vidsMonth) vidsMonth.value = Math.max(1, Math.round(d * 30)); }
+        }
+      };
+    });
+
+    switchGoalTab('plan_a');
+  }
+
+  function synchronizeModalPace(source, planKey = 'plan_a') {
+    const isPlanB = (planKey === 'plan_b');
+    const subSelect = document.getElementById(isPlanB ? 'select-target-subject-b' : 'select-target-subject');
+    const selectedSubVal = subSelect ? subSelect.value : (isPlanB ? 'Pathology' : '');
+    const modalSource = state.activeSource || 'marrow_8';
+    const selectedUnits = getSelectedUnitsForPlanKey(isPlanB);
+    const metrics = getMetricsForModalScope(selectedSubVal, selectedUnits, modalSource);
+
+    const dateInput = document.getElementById(isPlanB ? 'input-target-date-b' : 'input-target-date');
+    const badge = document.getElementById(isPlanB ? 'days-remaining-badge-b' : 'days-remaining-badge');
+    const bannerText = document.getElementById(isPlanB ? 'smart-math-text-b' : 'smart-math-text');
+    const vidsInput = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
+
+    let now = new Date();
+    const planObj = isPlanB ? (state.plans[1] || {}) : (state.plans[0] || {});
+
+    if (source === 'init' || source === 'subjectChange') {
+      const defaultPace = planObj.videosPerDay || 8;
+      const daysNeeded = Math.ceil(metrics.remainingVideos / defaultPace);
+      const targetDate = new Date(now.getTime() + daysNeeded * 24 * 60 * 60 * 1000);
+      if (dateInput) dateInput.value = toLocalDateKey(targetDate);
+    }
+
+    let targetDate = new Date(dateInput ? dateInput.value : '2026-12-31');
+    const isPast = (targetDate <= now);
+    if (isNaN(targetDate.getTime()) || targetDate <= now) {
+      targetDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    }
+
+    let days = Math.max(1, Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24)));
+
+    if (source === 'dailyVids') {
+      const userVids = Math.max(1, parseInt(vidsInput ? vidsInput.value : 1) || 1);
+      days = Math.ceil(metrics.remainingVideos / userVids);
+      targetDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+      if (dateInput) dateInput.value = toLocalDateKey(targetDate);
+    }
+
+    if (badge) badge.textContent = `${days} Days Left`;
+
+    const dailyVids = Math.max(1, Math.ceil(metrics.remainingVideos / days));
+    const weeklyVids = dailyVids * 7;
+    const monthlyVids = dailyVids * 30;
+
+    if (source !== 'dailyVids' && vidsInput) vidsInput.value = dailyVids;
+    const vidsWeekEl = document.getElementById(isPlanB ? 'input-videos-per-week-b' : 'input-videos-per-week');
+    if (vidsWeekEl) vidsWeekEl.value = weeklyVids;
+    const vidsMonthEl = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
+    if (vidsMonthEl) vidsMonthEl.value = monthlyVids;
+
+    const dateFormatted = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    if (bannerText) {
+      if (isPast) {
+        bannerText.textContent = `⚠️ Target deadline has passed. Update daily target to auto-generate completion date.`;
+      } else {
+        const daysToFinish = Math.ceil(metrics.remainingVideos / dailyVids);
+        const scopedNote = (metrics.scopedChapters > 0 && metrics.totalChapters > 0 && metrics.scopedChapters < metrics.totalChapters)
+          ? ` (${metrics.scopedChapters} chapters)` : '';
+        if (daysToFinish < days) {
+          bannerText.textContent = `🎉 Comfortably Ahead! Finish ${selectedSubVal}${scopedNote} in ${daysToFinish} days.`;
+        } else {
+          bannerText.textContent = `🎯 Right on Track! ${dailyVids} vids/day finishes ${selectedSubVal}${scopedNote} on ${dateFormatted}.`;
+        }
+      }
+    }
+  }
+
+  // --- Study Source Settings Modal (separate dialog from Profile → Settings) ---
+
+  // Expose
+  window.FlowMD.planConfig = {
+    renderStudyPlanConfigCard,
+    initStudyPlanConfig,
+    synchronizeModalPace,
+    focusStudyPlanConfig,
+    getSelectedUnitsForPlanKey
+  };
+})();

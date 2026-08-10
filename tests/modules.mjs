@@ -61,7 +61,8 @@ const EXPECTED = {
   search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults'],
   sync: ['initFirebaseSync', 'mergeCloudState', 'manualSync'],
   onboarding: ['renderOnboardingWizard', 'finishOnboarding'],
-  shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal']
+  shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal'],
+  planConfig: ['renderStudyPlanConfigCard', 'initStudyPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey']
 };
 
 async function run() {

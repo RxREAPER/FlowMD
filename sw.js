@@ -26,6 +26,7 @@ const ASSETS = [
   './js/features/search.js',
   './js/features/sync.js',
   './js/features/onboarding.js',
+  './js/features/study-plan-config.js',
   './icon.svg',
   './manifest.json',
   './offline.html',
