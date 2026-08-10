@@ -32,22 +32,25 @@
 
         const cloudState = await window.FirebaseSync.loadFromCloud(user.uid);
         if (cloudState) {
+          // Drop unknown/malformed fields from the cloud doc before merging
+          // (hardening: sanitizeCloudState whitelists known, well-typed fields).
+          const clean = window.FlowMD.sync.sanitizeCloudState(cloudState);
           // Merge cloud → local with LOCAL winning on conflicts: the device's
           // offline completions must never be clobbered by a stale cloud snapshot.
           // Cloud still fills gaps (keys absent locally). See .planning/codebase/CONCERNS.md #3.
-          state.completedVideos = { ...(cloudState.completedVideos || {}), ...state.completedVideos };
-          state.goals = { ...(cloudState.goals || {}), ...state.goals };
-          state.personal = { ...(cloudState.personal || {}), ...state.personal };
-          state.dailyHistory = { ...(cloudState.dailyHistory || {}), ...state.dailyHistory };
-          state.dailyHistoryBySubject = { ...(cloudState.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-          state.plans = mergePlansLocalWins(cloudState.plans, state.plans);
-          state.activePlanId = cloudState.activePlanId || state.activePlanId;
-          state.activeSource = cloudState.activeSource || state.activeSource;
-          state.isConfigured = cloudState.isConfigured || state.isConfigured;
-          state.themeStyle = cloudState.themeStyle || state.themeStyle;
-          state.queueCompletedInBatch = cloudState.queueCompletedInBatch || state.queueCompletedInBatch;
-          state.queueBatchVideoIds = cloudState.queueBatchVideoIds ? [...cloudState.queueBatchVideoIds] : state.queueBatchVideoIds;
-          if (cloudState.streakData) state.streakData = { ...cloudState.streakData, ...(state.streakData || {}) };
+          state.completedVideos = { ...(clean.completedVideos || {}), ...state.completedVideos };
+          state.goals = { ...(clean.goals || {}), ...state.goals };
+          state.personal = { ...(clean.personal || {}), ...state.personal };
+          state.dailyHistory = { ...(clean.dailyHistory || {}), ...state.dailyHistory };
+          state.dailyHistoryBySubject = { ...(clean.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
+          state.plans = mergePlansLocalWins(clean.plans, state.plans);
+          state.activePlanId = clean.activePlanId || state.activePlanId;
+          state.activeSource = clean.activeSource || state.activeSource;
+          state.isConfigured = clean.isConfigured || state.isConfigured;
+          state.themeStyle = clean.themeStyle || state.themeStyle;
+          state.queueCompletedInBatch = clean.queueCompletedInBatch || state.queueCompletedInBatch;
+          state.queueBatchVideoIds = clean.queueBatchVideoIds ? [...clean.queueBatchVideoIds] : state.queueBatchVideoIds;
+          if (clean.streakData) state.streakData = { ...clean.streakData, ...(state.streakData || {}) };
           saveState();
         } else {
           window.FirebaseSync.syncToCloud(user.uid, state, user);
@@ -81,31 +84,34 @@
     });
   }
 
-  // Merge cloud state with local (timestamp-based conflict resolution)
+  // Merge cloud state with local (sanitized, clock-skew-aware resolution)
   function mergeCloudState(cloudData) {
     try {
-      // If cloud has newer updatedAt, use cloud for non-completion fields
-      // For completedVideos, always merge with local winning
-      const cloudUpdated = cloudData.updatedAt?.toMillis?.() || 0;
+      // Drop unknown/malformed fields before anything else touches the doc.
+      const clean = window.FlowMD.sync.sanitizeCloudState(cloudData);
+      const cloudUpdated = clean.updatedAt?.toMillis?.() || 0;
       const localUpdated = state.lastLocalUpdate || 0;
+      const hasLocalDirty = state._dirtyFields && state._dirtyFields.length > 0;
 
       // Local completions always win (they're the source of truth for offline work)
-      state.completedVideos = { ...(cloudData.completedVideos || {}), ...state.completedVideos };
+      state.completedVideos = { ...(clean.completedVideos || {}), ...state.completedVideos };
 
-      // For other fields, use timestamp to decide
-      if (cloudUpdated > localUpdated) {
-        state.goals = { ...(cloudData.goals || {}), ...state.goals };
-        state.personal = { ...(cloudData.personal || {}), ...state.personal };
-        state.dailyHistory = { ...(cloudData.dailyHistory || {}), ...state.dailyHistory };
-        state.dailyHistoryBySubject = { ...(cloudData.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-        state.plans = mergePlansLocalWins(cloudData.plans, state.plans);
-        state.activePlanId = cloudData.activePlanId || state.activePlanId;
-        state.activeSource = cloudData.activeSource || state.activeSource;
-        state.isConfigured = cloudData.isConfigured || state.isConfigured;
-        state.themeStyle = cloudData.themeStyle || state.themeStyle;
-        state.queueCompletedInBatch = cloudData.queueCompletedInBatch || state.queueCompletedInBatch;
-        state.queueBatchVideoIds = cloudData.queueBatchVideoIds ? [...cloudData.queueBatchVideoIds] : state.queueBatchVideoIds;
-        if (cloudData.streakData) state.streakData = { ...cloudData.streakData, ...(state.streakData || {}) };
+      // For other fields, apply cloud when it is newer than local (within a
+      // 5s clock-skew window) or when we have unsynced local changes; only
+      // when cloud is genuinely stale do we push local back up.
+      if (window.FlowMD.sync.shouldApplyCloud(cloudUpdated, localUpdated, hasLocalDirty)) {
+        state.goals = { ...(clean.goals || {}), ...state.goals };
+        state.personal = { ...(clean.personal || {}), ...state.personal };
+        state.dailyHistory = { ...(clean.dailyHistory || {}), ...state.dailyHistory };
+        state.dailyHistoryBySubject = { ...(clean.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
+        state.plans = mergePlansLocalWins(clean.plans, state.plans);
+        state.activePlanId = clean.activePlanId || state.activePlanId;
+        state.activeSource = clean.activeSource || state.activeSource;
+        state.isConfigured = clean.isConfigured || state.isConfigured;
+        state.themeStyle = clean.themeStyle || state.themeStyle;
+        state.queueCompletedInBatch = clean.queueCompletedInBatch || state.queueCompletedInBatch;
+        state.queueBatchVideoIds = clean.queueBatchVideoIds ? [...clean.queueBatchVideoIds] : state.queueBatchVideoIds;
+        if (clean.streakData) state.streakData = { ...clean.streakData, ...(state.streakData || {}) };
       } else {
         // Local is newer - push to cloud
         if (window.FirebaseSync.currentUser) {
@@ -137,10 +143,13 @@
     }
   }
 
-  // Expose
-  window.FlowMD.sync = {
+  // Expose. js/core/sync.js (loaded before this module) already registers the
+  // pure helpers (sanitizeCloudState, shouldApplyCloud, mergeLocalWins,
+  // computeDirtyFields, ...) on window.FlowMD.sync — merge the live wiring in
+  // rather than overwriting, so state-store's dirty-field push keeps working.
+  window.FlowMD.sync = Object.assign({}, window.FlowMD.sync || {}, {
     initFirebaseSync,
     mergeCloudState,
     manualSync
-  };
+  });
 })();

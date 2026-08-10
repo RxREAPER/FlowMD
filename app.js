@@ -18,8 +18,11 @@
   const {
     getState,
     loadState,
-    saveState
+    saveState,
+    snapshotCloudState
   } = window.FlowMD.store;
+
+  const { showToast } = window.FlowMD.toast;
 
   const { initSourceData } = window.FlowMD.sourceData;
 

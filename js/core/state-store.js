@@ -264,7 +264,7 @@
     [STORAGE_KEYS.COMPLETED_VIDEOS, () => JSON.stringify(state.completedVideos)],
     [STORAGE_KEYS.GOALS, () => JSON.stringify(state.goals)],
     [STORAGE_KEYS.THEME, () => state.theme],
-    ['marrow_planner_theme_style', () => state.themeStyle || 'modern'],
+    [STORAGE_KEYS.THEME_STYLE, () => state.themeStyle || 'modern'],
     [STORAGE_KEYS.STREAK, () => JSON.stringify(state.streakData)],
     [STORAGE_KEYS.PERSONAL, () => JSON.stringify(state.personal)],
     [STORAGE_KEYS.DAILY_HISTORY, () => JSON.stringify(state.dailyHistory || {})],
@@ -285,22 +285,24 @@
   function saveState() {
     try {
       state.lastLocalUpdate = Date.now();
-      localStorage.setItem(STORAGE_KEYS.COMPLETED_VIDEOS, JSON.stringify(state.completedVideos));
-      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(state.goals));
-      localStorage.setItem(STORAGE_KEYS.THEME, state.theme);
-      localStorage.setItem(STORAGE_KEYS.THEME_STYLE, state.themeStyle || 'modern');
-      localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(state.streakData));
-      localStorage.setItem(STORAGE_KEYS.PERSONAL, JSON.stringify(state.personal));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY, JSON.stringify(state.dailyHistory || {}));
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH, (state.queueCompletedInBatch || 0).toString());
-      localStorage.setItem(STORAGE_KEYS.QUEUE_BATCH_VIDEOS, JSON.stringify(state.queueBatchVideoIds || []));
-      localStorage.setItem('flowmd_active_source', state.activeSource || 'marrow_8');
-      localStorage.setItem('flowmd_is_configured', state.isConfigured ? 'true' : 'false');
-      // Dual-Subject Tracking v2
-      localStorage.setItem(STORAGE_KEYS.PLANS, JSON.stringify(state.plans || []));
-      localStorage.setItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, JSON.stringify(state.dailyHistoryBySubject || {}));
-      localStorage.setItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, JSON.stringify(state.bulkCompletedChapters || {}));
-      localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
+      // Selective writes: unchanged keys are skipped so no-op saves never
+      // churn localStorage or trigger storage events in other tabs.
+      LOCAL_KEYS.forEach((pair) => {
+        const key = pair[0];
+        const value = pair[1]();
+        if (localSnapshot === null || localSnapshot[key] !== value) {
+          localStorage.setItem(key, value);
+          if (localSnapshot !== null && key === STORAGE_KEYS.COMPLETED_VIDEOS) {
+            // completedVideos changed → the memoized syllabus stats are stale.
+            state.completedVideosRevision = (state.completedVideosRevision || 0) + 1;
+          }
+          if (localSnapshot !== null) localSnapshot[key] = value;
+        }
+      });
+      if (localSnapshot === null) {
+        localSnapshot = {};
+        LOCAL_KEYS.forEach(pair => { localSnapshot[pair[0]] = pair[1](); });
+      }
 
       if (window.FirebaseSync && window.FirebaseSync.currentUser) {
         // Track what has changed since the last successful cloud push. The

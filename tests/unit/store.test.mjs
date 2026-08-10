@@ -63,7 +63,7 @@ test('saveState selective writes: unchanged state writes nothing after the first
   assert.equal(setItemCalls.length, 0, 'no-op save writes nothing');
   st.completedVideos['v1'] = true;
   FlowMD.store.saveState();
-  assert.deepEqual(setItemCalls, ['marrow_planner_completed_videos']);
+  assert.deepEqual(setItemCalls, ['flowmd_completed_videos']);
   assert.equal(st.completedVideosRevision, 1, 'completion change bumps stats revision');
 });
 
