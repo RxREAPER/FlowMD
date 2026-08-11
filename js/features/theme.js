@@ -45,7 +45,7 @@
   function renderEditionChip() {
     return `
       <button type="button" class="edition-chip btn-open-source-settings" title="Current study edition — tap to change">
-        <span class="material-symbols-outlined" style="font-size:15px;">auto_stories</span>
+        <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-auto_stories"/></svg>
         <span>${getEditionShort()}</span>
       </button>`;
   }

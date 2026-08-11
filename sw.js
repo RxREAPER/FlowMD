@@ -16,6 +16,7 @@ const ASSETS = [
   './firebase.js',
   './js/core/namespace.js',
   './js/core/constants.js',
+  './js/core/icons.js',
   './js/core/state-store.js',
   './js/core/source-data.js',
   './js/core/metrics.js',
@@ -54,11 +55,10 @@ const FIREBASE_SDKS = [
 ];
 
 // Google Fonts CSS - must match the <link> URLs in index.html. The CSS and
-// every woff2 file it references are precached at install so Material Symbols
-// icons and web fonts work on the very first offline visit.
+// every woff2 file it references are precached at install so web fonts work
+// on the very first offline visit. (Icons are inline SVG now — no icon font.)
 const FONT_CSS_URLS = [
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap',
-  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200'
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap'
 ];
 
 // Cache key: origin + pathname (query stripped) - matches the runtime

@@ -64,7 +64,7 @@
 
           ${scopedNames.length > 0 ? `
             <div class="plan-quest-scope">
-              <span class="material-symbols-outlined" style="font-size:13px;">filter_alt</span>
+              <svg class="material-symbols-outlined" style="font-size:13px;"><use href="#fmd-i-filter_alt"/></svg>
               FOCUS: ${scopedNames.slice(0, 3).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ')}${scopedNames.length > 3 ? '…' : ''}
             </div>
           ` : ''}
@@ -75,14 +75,14 @@
             </div>
             <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height: 30px; padding: 0 10px; font-size: 0.82rem;">
               <span>Open ${queue.subjectName}</span>
-              <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+              <svg class="material-symbols-outlined" style="font-size: 14px;"><use href="#fmd-i-arrow_forward"/></svg>
             </button>
           </div>
 
           ${queue.isDailyTargetAchieved ? `
             ${(plan.extraBatchesCompletedToday || 0) > 0 ? `
               <div class="v2-achievement-alert congrats-card-pop" style="margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);">
-                <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;"><span class="material-symbols-outlined" style="font-size:18px;">bolt</span></div>
+                <div class="v2-alert-icon-box" style="background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;"><svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-bolt"/></svg></div>
                 <div class="v2-alert-content">
                   <div class="v2-alert-category" style="color: #a855f7;">${plan.label} EXTRA VIDEO #${plan.extraBatchesCompletedToday + 1} ▶ OVERACHIEVED!</div>
                   <div class="v2-alert-title">🔥 Overachievement Bonus Unlocked!</div>
@@ -108,7 +108,7 @@
           ` : (queue.allSubjectDone ? `
             <div class="congrats-card-pop" style="text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
               ${FLOWMD_ICONS.trophy}
-              <span>All ${queue.subjectName} videos completed! <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">celebration</span></span>
+              <span>All ${queue.subjectName} videos completed! <svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-celebration"/></svg></span>
             </div>
           ` : `
             <div style="display:flex; flex-direction:column; gap: 2px;">
@@ -146,9 +146,9 @@
           <div class="fm-feature-card-header-badges">
             ${renderEditionChip()}
             ${hasDualPlans ? `
-              <span class="v2-hud-badge" style="color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-color: #e11d48;"><span class="material-symbols-outlined" style="font-size:16px;">bolt</span> DUAL-TRACK MODE</span>
+              <span class="v2-hud-badge" style="color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-color: #e11d48;"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-bolt"/></svg> DUAL-TRACK MODE</span>
              ` : ''}
-            <span class="v2-hud-badge" style="margin-left:auto;"><span class="material-symbols-outlined" style="font-size:16px;">local_fire_department</span> ${streakCount} day streak</span>
+            <span class="v2-hud-badge" style="margin-left:auto;"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-local_fire_department"/></svg> ${streakCount} day streak</span>
           </div>
           <h1 class="fm-feature-card-title">Welcome back, ${escapeHtml(docName)}!</h1>
           <p class="fm-feature-card-desc">
@@ -179,7 +179,7 @@
         <div class="v2-achievement-alert congrats-card-pop all-quests-banner">
           <div class="v2-alert-icon-box" style="background: #ffd700;">${FLOWMD_ICONS.trophy}</div>
           <div class="v2-alert-content">
-            <div class="v2-alert-category all-quests-category"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">emoji_events</span> ALL DAILY QUESTS COMPLETE!</div>
+            <div class="v2-alert-category all-quests-category"><svg class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;"><use href="#fmd-i-emoji_events"/></svg> ALL DAILY QUESTS COMPLETE!</div>
             <div class="v2-alert-title">Outstanding Performance!</div>
             <div class="v2-alert-body">Every plan's daily target has been achieved today!</div>
           </div>
@@ -190,7 +190,7 @@
       <!-- Daily Quest Section (per plan) -->
       <div class="v2-quest-card action-queue-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><span class="material-symbols-outlined mat">emoji_events</span> Daily Quests</div>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Quests</div>
           <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${hasDualPlans ? 'DUAL TRACK' : `${allQueues[0]?.subjectName || 'All Topics'}`}</span>
         </div>
         <div style="padding-top:4px;">

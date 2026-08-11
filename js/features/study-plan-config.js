@@ -30,11 +30,11 @@
           <!-- Plan Selector Dropdown + Dual-Track Toggle -->
           <div class="spc-toolbar">
             <div class="spc-plan-select-wrap">
-              <span class="material-symbols-outlined spc-flag-icon">flag</span>
+              <svg class="material-symbols-outlined spc-flag-icon"><use href="#fmd-i-flag"/></svg>
               <select id="goal-plan-select" class="plan-config-input spc-plan-select" aria-label="Select plan to configure">
                 <option value="plan_a">Plan A — Primary Target</option>
               </select>
-              <span class="material-symbols-outlined spc-select-arrow">expand_more</span>
+              <svg class="material-symbols-outlined spc-select-arrow"><use href="#fmd-i-expand_more"/></svg>
             </div>
             <label class="plan-config-dual spc-dual-toggle">
               <input type="checkbox" id="toggle-plan-b">
@@ -46,13 +46,13 @@
           <!-- PLAN A FORM -->
           <div id="goal-plan-a-form">
             <div class="plan-config-plan-head">
-              <span class="plan-config-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan A — Primary Target</span>
+              <span class="plan-config-plan-badge"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-flag"/></svg> Plan A — Primary Target</span>
               <span class="plan-config-plan-role">Main <b>Subject Goal</b></span>
             </div>
 
             <form id="goal-form-a" onsubmit="return false;" class="plan-config-form">
               <div class="plan-config-hint">
-                <span class="material-symbols-outlined">calculate</span>
+                <svg class="material-symbols-outlined"><use href="#fmd-i-calculate"/></svg>
                 <span id="smart-math-text">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
               </div>
 
@@ -60,7 +60,7 @@
                 <label class="plan-config-label" for="select-target-subject">Priority Target Subject</label>
                 <div class="plan-config-select-wrap">
                   <select id="select-target-subject" class="plan-config-input"></select>
-                  <span class="material-symbols-outlined">expand_more</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-expand_more"/></svg>
                 </div>
               </div>
 
@@ -69,7 +69,7 @@
                   <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="plan-config-chips-count"></span></label>
                 </div>
                 <div class="plan-config-hint" style="margin:4px 0 8px 0;">
-                  <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
+                  <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-filter_alt"/></svg>
                   <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
                 </div>
                 <div class="plan-config-chips" id="chapter-chips-a"></div>
@@ -77,7 +77,7 @@
 
               <div class="plan-config-field">
                 <div class="plan-config-hint" style="margin:0;">
-                  <span class="material-symbols-outlined" style="font-size:18px;">auto_stories</span>
+                  <svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-auto_stories"/></svg>
                   <span>Syllabus source: <b id="goal-source-label">Marrow Edition 8</b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
                 </div>
               </div>
@@ -98,7 +98,7 @@
                     <input type="number" min="1" id="input-videos-per-day" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
                 </div>
                 <div class="plan-config-pace">
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
@@ -107,7 +107,7 @@
                     <input type="number" min="1" id="input-videos-per-week" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
                 </div>
                 <div class="plan-config-pace">
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
@@ -116,16 +116,16 @@
                     <input type="number" min="1" id="input-videos-per-month" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
                   </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
                 </div>
               </div>
 
               
               <div class="plan-config-guide math-guide-card">
                 <div class="plan-config-guide-header math-guide-header">
-                  <span class="material-symbols-outlined">info</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
                   <span>How Plan A Date &amp; Pace Auto-Synchronize</span>
-                  <span class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon">expand_more</span>
+                  <svg class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon"><use href="#fmd-i-expand_more"/></svg>
                 </div>
                 <div class="plan-config-guide-body math-guide-body">
                   <strong>Auto-Synchronization:</strong><br>
@@ -136,7 +136,7 @@
 
               <div class="plan-config-actions">
                 <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals">
-                  <span class="material-symbols-outlined">check_circle</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
                   <span>Save &amp; Apply Plan A Target</span>
                 </button>
               </div>
@@ -146,13 +146,13 @@
           <!-- PLAN B FORM -->
           <div id="goal-plan-b-form" style="display:none;">
             <div class="plan-config-plan-head">
-              <span class="plan-config-plan-badge"><span class="material-symbols-outlined" style="font-size:16px;">flag</span> Plan B — Secondary Target</span>
+              <span class="plan-config-plan-badge"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-flag"/></svg> Plan B — Secondary Target</span>
               <span class="plan-config-plan-role">Parallel <b>Subject Goal</b></span>
             </div>
 
             <form id="goal-form-b" onsubmit="return false;" class="plan-config-form">
               <div class="plan-config-hint">
-                <span class="material-symbols-outlined">calculate</span>
+                <svg class="material-symbols-outlined"><use href="#fmd-i-calculate"/></svg>
                 <span id="smart-math-text-b">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
               </div>
 
@@ -160,7 +160,7 @@
                 <label class="plan-config-label" for="select-target-subject-b">Priority Target Subject</label>
                 <div class="plan-config-select-wrap">
                   <select id="select-target-subject-b" class="plan-config-input"></select>
-                  <span class="material-symbols-outlined">expand_more</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-expand_more"/></svg>
                 </div>
               </div>
 
@@ -169,7 +169,7 @@
                   <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="plan-config-chips-count"></span></label>
                 </div>
                 <div class="plan-config-hint" style="margin:4px 0 8px 0;">
-                  <span class="material-symbols-outlined" style="font-size:15px;">filter_alt</span>
+                  <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-filter_alt"/></svg>
                   <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
                 </div>
                 <div class="plan-config-chips" id="chapter-chips-b"></div>
@@ -191,7 +191,7 @@
                     <input type="number" min="1" id="input-videos-per-day-b" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
                 </div>
                 <div class="plan-config-pace">
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
@@ -200,7 +200,7 @@
                     <input type="number" min="1" id="input-videos-per-week-b" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
                 </div>
                 <div class="plan-config-pace">
                   <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
@@ -209,16 +209,16 @@
                     <input type="number" min="1" id="input-videos-per-month-b" value="" class="plan-config-pace-input">
                     <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
                   </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><span class="ms material-symbols-outlined">check_circle</span><span>On</span></label>
+                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
                 </div>
               </div>
 
               
               <div class="plan-config-guide math-guide-card">
                 <div class="plan-config-guide-header math-guide-header">
-                  <span class="material-symbols-outlined">info</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
                   <span>How Plan B Date &amp; Pace Auto-Synchronize</span>
-                  <span class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon">expand_more</span>
+                  <svg class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon"><use href="#fmd-i-expand_more"/></svg>
                 </div>
                 <div class="plan-config-guide-body math-guide-body">
                   <strong>Auto-Synchronization:</strong><br>
@@ -229,11 +229,11 @@
 
               <div class="plan-config-actions">
                 <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals-b">
-                  <span class="material-symbols-outlined">check_circle</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
                   <span>Save &amp; Apply Plan B Target</span>
                 </button>
                 <button type="button" class="plan-config-btn plan-config-btn-danger" id="btn-remove-plan-b">
-                  <span class="material-symbols-outlined">disabled_by_default</span>
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-disabled_by_default"/></svg>
                   <span>Disable / Remove Plan B</span>
                 </button>
               </div>
@@ -383,11 +383,11 @@
       }
 
       const searchId = `plan-config-chapter-search-${isPlanB ? 'b' : 'a'}`;
-      const allChip = `<button type="button" class="plan-config-chip ${focusedName ? '' : 'selected'}" data-chap="__all__"><span class="material-symbols-outlined" style="font-size:15px;">select_all</span><span>All Chapters</span></button>`;
+      const allChip = `<button type="button" class="plan-config-chip ${focusedName ? '' : 'selected'}" data-chap="__all__"><svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-select_all"/></svg><span>All Chapters</span></button>`;
 
       container.innerHTML = `
         <div class="plan-config-chips-search">
-          <span class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);">search</span>
+          <svg class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);"><use href="#fmd-i-search"/></svg>
           <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:'Poppins', sans-serif; font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
         </div>
         <div class="plan-config-chips-list" style="max-height:280px; overflow-y:auto;">${allChip + chapters.map(c => {
@@ -618,7 +618,7 @@
         header.onclick = () => {
           const isHidden = (body.style.display === 'none' || !body.style.display);
           body.style.display = isHidden ? 'block' : 'none';
-          if (icon) icon.textContent = isHidden ? 'expand_less' : 'expand_more';
+          if (icon && window.FlowMD.icons) window.FlowMD.icons.setIcon(icon, isHidden ? 'expand_less' : 'expand_more');
         };
       }
     });

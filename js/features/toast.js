@@ -57,9 +57,9 @@
     
     const titleHtml = title ? `<div class="fm-alert-title">${escapeHtml(title)}</div>` : '';
     toast.innerHTML = `
-      <span class="material-symbols-outlined fm-alert-icon">${alertIcon}</span>
+      ${window.FlowMD.icons.renderIcon(alertIcon, 'fm-alert-icon')}
       <div class="fm-alert-content">${titleHtml}<div class="fm-alert-message">${escapeHtml(message)}</div></div>
-      <button class="fm-alert-close-btn" aria-label="Dismiss"><span class="material-symbols-outlined">close</span></button>
+      <button class="fm-alert-close-btn" aria-label="Dismiss"><svg class="material-symbols-outlined"><use href="#fmd-i-close"/></svg></button>
     `;
 
     const container = document.getElementById('toast-container');

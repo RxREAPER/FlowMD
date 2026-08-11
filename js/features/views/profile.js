@@ -66,7 +66,7 @@
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-          <span class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;">settings</span>
+          <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-settings"/></svg>
           Settings
         </h3>
         <div class="profile-settings-row">
@@ -78,7 +78,7 @@
             </div>
           </div>
           <button class="v2-arcade-btn" id="btn-change-source" style="height: 38px; padding: 0 16px; min-width: 96px;">
-            <span class="material-symbols-outlined" style="font-size: 18px;">swap_horiz</span> Change
+            <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-swap_horiz"/></svg> Change
           </button>
         </div>
         <div class="profile-settings-hint">Switching source changes the syllabus, targets &amp; focus chapters shown in the app.</div>
@@ -88,7 +88,7 @@
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Google Cloud Sync</h3>
         ${isSynced ? `
           <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: 'Poppins', sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
-            <span class="material-symbols-outlined">cloud_done</span>
+            <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_done"/></svg>
             Synced as ${syncEmail}
           </div>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
@@ -101,14 +101,14 @@
             Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
-            <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
+            <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_sync"/></svg> Sign In with Google
           </button>
         `}
       </div>
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-          <span class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;">install_mobile</span>
+          <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-install_mobile"/></svg>
           Install App
         </h3>
         <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
@@ -119,20 +119,20 @@
 
       <div class="v2-pixel-card support-card" style="padding: 18px; margin-bottom: 24px; border-left: 4px solid var(--accent-primary);">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;">support_agent</span>
+          <svg class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;"><use href="#fmd-i-support_agent"/></svg>
           <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin: 0;">Developer Support & Contact</h3>
         </div>
         <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
           Need help or have a question? Click below to reveal the developer contact email.
         </p>
         <button class="v2-arcade-btn" id="btn-show-support-email" style="height: 38px; width: 100%;">
-          <span class="material-symbols-outlined">mail</span> Show Contact Email
+          <svg class="material-symbols-outlined"><use href="#fmd-i-mail"/></svg> Show Contact Email
         </button>
         <div id="hidden-support-email" class="support-email-reveal" style="display: none; margin-top: 16px;">
           <div class="support-email-inner">
             <span class="support-email-text">ezioauditore9553@gmail.com</span>
             <button class="v2-arcade-btn" id="btn-copy-support-email" style="height: 32px; padding: 0 12px; font-size: 0.78rem;">
-              <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span> Copy
+              <svg class="material-symbols-outlined" style="font-size: 16px;"><use href="#fmd-i-content_copy"/></svg> Copy
             </button>
           </div>
         </div>
@@ -141,7 +141,7 @@
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Data Management</h3>
         <button class="v2-arcade-btn" id="btn-reset-data" style="width: 100%; background: var(--danger);">
-          <span class="material-symbols-outlined">delete_forever</span> Reset All App Data
+          <svg class="material-symbols-outlined"><use href="#fmd-i-delete_forever"/></svg> Reset All App Data
         </button>
       </div>
     `;
@@ -213,18 +213,18 @@
 
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <button class="v2-arcade-btn" id="bs-btn-view-profile" style="width: 100%; justify-content: flex-start;">
-          <span class="material-symbols-outlined">person</span> View Full Profile & Settings
+          <svg class="material-symbols-outlined"><use href="#fmd-i-person"/></svg> View Full Profile & Settings
         </button>
         <button class="v2-arcade-btn" id="bs-btn-view-goals" style="width: 100%; justify-content: flex-start;">
-          <span class="material-symbols-outlined">tune</span> Synchronize Pace & Goals
+          <svg class="material-symbols-outlined"><use href="#fmd-i-tune"/></svg> Synchronize Pace & Goals
         </button>
         ${isSynced ? `
           <button class="v2-arcade-btn" id="bs-btn-logout" style="width: 100%; justify-content: flex-start; background: var(--danger);">
-            <span class="material-symbols-outlined">logout</span> Sign Out (${escapeHtml(syncEmail)})
+            <svg class="material-symbols-outlined"><use href="#fmd-i-logout"/></svg> Sign Out (${escapeHtml(syncEmail)})
           </button>
         ` : `
           <button class="v2-arcade-btn" id="bs-btn-login" style="width: 100%; justify-content: flex-start;">
-            <span class="material-symbols-outlined">cloud_sync</span> Sign In with Google
+            <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_sync"/></svg> Sign In with Google
           </button>
         `}
       </div>

@@ -3,6 +3,20 @@
    Unified Dark Theme, HSL Tokens & Android Material Design
    ============================================================ */
 
+/* --- Inline SVG icons (Material Symbols paths, no icon font) ---
+   Every icon is an <svg class="material-symbols-outlined"> referencing a
+   hidden sprite via <use href="#fmd-i-{name}"/>. Sized with 1em so the
+   existing per-context font-size rules keep working unchanged; colored via
+   currentColor so existing color rules keep working unchanged. */
+.material-symbols-outlined {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+}
+
 /* --- CSS Tokens & Theme Palette --- */
 :root, [data-theme="dark"] {
   --bg-app: #0b0f19;

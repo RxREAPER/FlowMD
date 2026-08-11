@@ -57,11 +57,11 @@
         </div>
         ${!STUDY_SOURCES.find(s => s.id === onboardingSource)?.available ? `
           <div class="onboarding-alert">
-            <span class="material-symbols-outlined" style="font-size:16px;">info</span>
+            <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-info"/></svg>
             ${getSourceLabel(onboardingSource)} is an upcoming feature. Its syllabus data will be available in a future update.
           </div>` : ''}
         <div class="onboarding-hint-path">
-          <span class="material-symbols-outlined" style="font-size:16px;">settings</span>
+          <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-settings"/></svg>
           <span>You can change your study source anytime later from <b>Profile → Settings → Study Source</b>.</span>
         </div>
       `;
@@ -86,7 +86,7 @@
         <div class="onboarding-sub">Sign in with Google to backup progress & sync across devices.</div>
         <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
           <button type="button" class="v2-arcade-btn onboarding-cta" id="onboarding-signin" style="width:100%;">
-            <span class="material-symbols-outlined" style="margin-right:8px;">cloud_sync</span>
+            <svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-cloud_sync"/></svg>
             Sign in with Google
           </button>
           <button type="button" class="v2-arcade-btn onboarding-skip" id="onboarding-skip-signin" style="width:100%; background:transparent; color:var(--text-secondary); border:1px solid var(--border);">Skip for now</button>
@@ -185,7 +185,7 @@
       signinBtn.addEventListener('click', async () => {
         if (!window.FirebaseSync) return;
         signinBtn.disabled = true;
-        signinBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px;">sync</span> Signing in...';
+        signinBtn.innerHTML = '<svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-sync"/></svg> Signing in...';
         try {
           await window.FirebaseSync.signInWithGoogle();
           showToast('Signed in successfully!', 'check_circle');
@@ -194,7 +194,7 @@
         } catch (e) {
           showToast('Sign-in failed: ' + e.message, 'error');
           signinBtn.disabled = false;
-          signinBtn.innerHTML = '<span class="material-symbols-outlined" style="margin-right:8px;">cloud_sync</span> Sign in with Google';
+          signinBtn.innerHTML = '<svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-cloud_sync"/></svg> Sign in with Google';
         }
       });
     }

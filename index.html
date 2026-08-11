@@ -19,11 +19,10 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   
-  <!-- Google Fonts & Material Symbols -->
+  <!-- Google Fonts (text faces only — icons are inline SVG, no font) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   
   <!-- Unified Mobile-First Stylesheet -->
   <link rel="stylesheet" href="style.css?v=202">
@@ -53,12 +52,12 @@
         </div>
         <!-- Active Study Edition Indicator (populated by app.js) -->
         <span class="edition-badge" id="topbar-source-badge" title="Study Source" role="button" tabindex="0">
-          <span class="material-symbols-outlined">auto_stories</span>
+          <svg class="material-symbols-outlined"><use href="#fmd-i-auto_stories"/></svg>
           <span class="edition-badge-text">Marrow 8</span>
         </span>
         <!-- Offline Indicator (hidden by default, shown by app.js when offline) -->
         <span class="offline-indicator" id="topbar-offline-indicator" style="display: none;" title="You are offline">
-          <span class="material-symbols-outlined" style="font-size: 16px;">wifi_off</span>
+          <svg class="material-symbols-outlined" style="font-size: 16px;"><use href="#fmd-i-wifi_off"/></svg>
           <span style="font-size: 0.7rem; margin-left: 4px;">Offline</span>
         </span>
         <span class="topbar-source-hint" style="font-size: 0.7rem; color: var(--text-muted); margin-left: 8px; font-weight: 400;">(you can change study source anytime later from Profile → Settings → Study Source)</span>
@@ -74,15 +73,15 @@
         <!-- Theme Toggle Switch -->
         <div class="retro-theme-toggle" id="theme-toggle-btn" title="Toggle Light / Dark Mode">
           <div class="retro-theme-track">
-            <span class="material-symbols-outlined icon-sun">light_mode</span>
-            <span class="material-symbols-outlined icon-moon">dark_mode</span>
+            <svg class="material-symbols-outlined icon-sun"><use href="#fmd-i-light_mode"/></svg>
+            <svg class="material-symbols-outlined icon-moon"><use href="#fmd-i-dark_mode"/></svg>
             <div class="retro-theme-thumb" id="theme-slider-thumb"></div>
           </div>
         </div>
 
         <!-- Manual Sync Button (shown when signed in) -->
         <button class="sync-btn" id="manual-sync-btn" title="Sync Now" style="display: none;" aria-label="Sync with cloud">
-          <span class="material-symbols-outlined" style="font-size: 20px;">sync</span>
+          <svg class="material-symbols-outlined" style="font-size: 20px;"><use href="#fmd-i-sync"/></svg>
         </button>
       </div>
     </header>
@@ -90,7 +89,7 @@
     <!-- Dedicated Sub-Topbar Retro Search Bar Component (Below Topbar) -->
     <div class="v2-subtopbar-search-container">
       <div class="v2-subtopbar-search-box" id="btn-toggle-search" title="Click to Search">
-        <span class="material-symbols-outlined search-icon" style="font-size: 20px; color: var(--accent-primary);">search</span>
+        <svg class="material-symbols-outlined search-icon" style="font-size: 20px; color: var(--accent-primary);"><use href="#fmd-i-search"/></svg>
         <input type="text" id="topbar-search-input" placeholder="Search 20 subjects, chapters, topics..." readonly>
       </div>
     </div>
@@ -167,16 +166,16 @@
     <div class="modal-card plan-config-card">
       <div class="plan-config-hero">
         <div class="plan-config-hero-top">
-          <button class="plan-config-icon-btn" title="Close" id="source-settings-close"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+          <button class="plan-config-icon-btn" title="Close" id="source-settings-close"><svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-close"/></svg></button>
         </div>
-        <div class="plan-config-hero-icon"><span class="material-symbols-outlined">auto_stories</span></div>
+        <div class="plan-config-hero-icon"><svg class="material-symbols-outlined"><use href="#fmd-i-auto_stories"/></svg></div>
         <div class="plan-config-hero-kicker">Study Source</div>
         <h2 class="plan-config-hero-title">Select Study Syllabus Edition</h2>
         <p class="plan-config-hero-sub">Choose the official MBBS study source. Changing resets your current plan and progress.</p>
       </div>
       <div class="plan-config-body">
         <div class="plan-config-hint" style="margin-bottom:16px;">
-          <span class="material-symbols-outlined">info</span>
+          <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
           <span>Each source has different subjects and chapters. You can change this anytime in <b>Profile → Settings → Study Source</b>.</span>
         </div>
         <div class="plan-config-field">
@@ -185,7 +184,7 @@
             <div class="source-option" data-source="marrow_8" style="cursor:pointer;">
               <label class="source-option-label" style="display:flex;align-items:center;gap:12px;cursor:pointer;">
                 <input type="radio" class="source-option-radio" name="source-select" value="marrow_8" checked>
-                <span class="material-symbols-outlined" style="color:var(--accent-primary);">menu_book</span>
+                <svg class="material-symbols-outlined" style="color:var(--accent-primary);"><use href="#fmd-i-menu_book"/></svg>
                 <div>
                   <div style="font-weight:600;">Marrow Edition 8</div>
                   <div style="font-size:0.85rem;color:var(--text-muted);">Official MBBS 2026 syllabus</div>
@@ -195,7 +194,7 @@
             <div class="source-option" data-source="marrow_6_5" style="cursor:pointer;">
               <label class="source-option-label" style="display:flex;align-items:center;gap:12px;cursor:pointer;">
                 <input type="radio" class="source-option-radio" name="source-select" value="marrow_6_5">
-                <span class="material-symbols-outlined" style="color:#f59e0b;">menu_book</span>
+                <svg class="material-symbols-outlined" style="color:#f59e0b;"><use href="#fmd-i-menu_book"/></svg>
                 <div>
                   <div style="font-weight:600;">Marrow Edition 6.5</div>
                   <div style="font-size:0.85rem;color:var(--text-muted);">Previous MBBS syllabus (2024)</div>
@@ -205,7 +204,7 @@
             <div class="source-option" data-source="prepladder_x" style="cursor:pointer;">
               <label class="source-option-label" style="display:flex;align-items:center;gap:12px;cursor:pointer;">
                 <input type="radio" class="source-option-radio" name="source-select" value="prepladder_x">
-                <span class="material-symbols-outlined" style="color:#10b981;">menu_book</span>
+                <svg class="material-symbols-outlined" style="color:#10b981;"><use href="#fmd-i-menu_book"/></svg>
                 <div>
                   <div style="font-weight:600;">Prepladder X</div>
                   <div style="font-size:0.85rem;color:var(--text-muted);">Coming Soon - Premium preview</div>
@@ -216,13 +215,13 @@
         </div>
         <div class="plan-config-field">
           <div class="plan-config-hint" style="background:rgba(239, 68, 68, 0.1);border-color:rgba(239, 68, 68, 0.3);">
-            <span class="material-symbols-outlined">warning</span>
+            <svg class="material-symbols-outlined"><use href="#fmd-i-warning"/></svg>
             <span><b>Warning:</b> Switching sources will reset your current study plan and progress. Any completed videos will be preserved.</span>
           </div>
         </div>
         <div class="plan-config-actions">
           <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-save-source-settings">
-            <span class="material-symbols-outlined">check_circle</span>
+            <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
             <span>Save & Switch Source</span>
           </button>
           <button type="button" class="plan-config-btn plan-config-btn-ghost" id="btn-cancel-source-settings">Cancel</button>
@@ -238,13 +237,13 @@
     <div class="fm-feature-card-wrapper" style="max-width: 460px; width: 92%;">
       <div class="fm-feature-card-header-badges" style="justify-content: flex-end;">
         <button class="v2-arcade-btn" id="info-modal-close" title="Close" style="width: 28px; height: 28px; padding: 0; background: transparent; border: none; color: #fff;">
-          <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+          <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-close"/></svg>
         </button>
       </div>
 
       <div class="fm-feature-card" style="padding: 20px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--retro-border, #282f42); padding-bottom: 10px;">
-          <span class="material-symbols-outlined" style="color: var(--retro-cyan, #00f0ff); font-size: 24px;">info</span>
+          <svg class="material-symbols-outlined" style="color: var(--retro-cyan, #00f0ff); font-size: 24px;"><use href="#fmd-i-info"/></svg>
           <h3 id="info-modal-title" style="color: var(--retro-gold, #ffcc00); font-family: var(--font-display), 'Pixelify Sans', monospace; font-size: 1.15rem; font-weight: 700; margin: 0;">
             Explanation
           </h3>
@@ -265,9 +264,9 @@
   <div class="modal-overlay" id="spotlight-search-modal" style="display:none; z-index: 9990; align-items: flex-start; padding-top: 40px;">
     <div class="modal-card v2-pixel-card spotlight-card" style="max-width: 580px; width: 95%; max-height: 82vh; padding: 0; overflow: hidden; border: 2px solid var(--v2-ink);">
       <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 2px solid var(--v2-ink); background: var(--bg-surface);">
-        <span class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 22px;">search</span>
+        <svg class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 22px;"><use href="#fmd-i-search"/></svg>
         <input type="text" id="spotlight-search-input" placeholder="SEARCH 19 SUBJECTS, CHAPTERS, OR VIDEO TOPICS..." autocomplete="off" style="flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-family: 'Poppins', sans-serif; font-size: 1.15rem; letter-spacing: 0.04em;">
-        <button class="v2-arcade-btn" id="spotlight-close-btn" title="Close" style="width: 32px; height: 32px; padding: 0;"><span class="material-symbols-outlined" style="font-size: 18px;">close</span></button>
+        <button class="v2-arcade-btn" id="spotlight-close-btn" title="Close" style="width: 32px; height: 32px; padding: 0;"><svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-close"/></svg></button>
       </div>
       <div id="spotlight-results-container" style="padding: 16px 18px; max-height: calc(82vh - 65px); overflow-y: auto;">
         <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Poppins', sans-serif; font-size: 1.1rem;">
@@ -290,6 +289,7 @@
   <script src="data_marrow_6_5.js?v=202"></script>
   <script src="js/core/namespace.js?v=202"></script>
   <script src="js/core/constants.js?v=202"></script>
+  <script src="js/core/icons.js?v=202"></script>
   <script src="js/core/state-store.js?v=202"></script>
   <script src="js/core/source-data.js?v=202"></script>
   <script src="js/core/subjects.js?v=202"></script>

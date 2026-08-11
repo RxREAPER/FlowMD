@@ -48,6 +48,7 @@ function check(name, ok, detail = '') {
 const EXPECTED = {
   store: ['getState', 'safeParse', 'migrateStateSchema', 'loadState', 'saveState',
           'markStudyActivity', 'getStudyStreak', 'mergePlansLocalWins'],
+  icons: ['ensureSprite', 'renderIcon', 'setIcon', 'ICON_PATHS'],
   sourceData: ['SOURCE_DATA', 'qualifySourceData', 'initSourceData', 'getDataset',
                'getSubjectChapters', 'getScopedChapterNames', 'getPlanScopeVideos',
                'getBulkChapterKey', 'isChapterBulkCompleted', 'getChapterVideoIds',

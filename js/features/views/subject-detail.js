@@ -42,7 +42,7 @@ function renderFacultyCard(faculty, subjectId) {
           <span class="faculty-card-name">${faculty || 'Marrow Faculty'}</span>
           <span class="faculty-card-subject">${subjectName}</span>
         </div>
-        <span class="material-symbols-outlined faculty-card-verified" aria-label="Verified faculty">verified</span>
+        <svg class="material-symbols-outlined faculty-card-verified" aria-label="Verified faculty"><use href="#fmd-i-verified"/></svg>
         <div class="faculty-card-border"></div>
       </div>`;
   }
@@ -75,7 +75,7 @@ function renderFacultyCard(faculty, subjectId) {
 
         <!-- Back Button - separate at top -->
         <button class="pwa-back-btn" id="btn-back-to-curriculum" aria-label="Back to curriculum">
-          <span class="material-symbols-outlined">arrow_back</span>
+          <svg class="material-symbols-outlined"><use href="#fmd-i-arrow_back"/></svg>
         </button>
 
         <div class="pwa-subject-detail-header">
@@ -89,7 +89,7 @@ function renderFacultyCard(faculty, subjectId) {
 
         ${hasFocusScope ? `
           <div class="pwa-focus-banner">
-            <span class="material-symbols-outlined">filter_alt</span>
+            <svg class="material-symbols-outlined"><use href="#fmd-i-filter_alt"/></svg>
             <span>${focusedChapterSet.size} focused chapter${focusedChapterSet.size > 1 ? 's' : ''} — chapters outside focus are dimmed</span>
           </div>
         ` : ''}
@@ -99,7 +99,7 @@ function renderFacultyCard(faculty, subjectId) {
             ${subObj.raw.chapters ? subObj.raw.chapters.length : 0} UNITS / CHAPTERS
           </span>
           <button class="v2-arcade-btn" id="btn-toggle-all-chapters" style="height: 30px; padding: 0 10px; font-size: 0.8rem; background: var(--bg-surface-raised); color: var(--text-primary);">
-            <span class="material-symbols-outlined" style="font-size: 16px;">unfold_more</span>
+            <svg class="material-symbols-outlined" style="font-size: 16px;"><use href="#fmd-i-unfold_more"/></svg>
             <span>${Object.values(state.expandedChapters).some(v => v === true) ? 'Collapse All' : 'Expand All'}</span>
           </button>
         </div>
@@ -116,11 +116,11 @@ function renderFacultyCard(faculty, subjectId) {
               <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
                 <label class="bulk-chapter-checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;">
                   <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
-                  <span class="material-symbols-outlined" style="font-size: 18px; color: ${isBulkCompleted ? 'var(--success)' : 'var(--text-muted)'};">${isBulkCompleted ? 'check_box' : 'check_box_outline_blank'}</span>
+                  ${window.FlowMD.icons.renderIcon(isBulkCompleted ? 'check_box' : 'check_box_outline_blank', '', 'font-size: 18px; color: ' + (isBulkCompleted ? 'var(--success)' : 'var(--text-muted)'))}
                 </label>
                 <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
               </div>
-              <span class="material-symbols-outlined accordion-icon">expand_more</span>
+              <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
             </div>
 
             <div class="accordion-body ${state.expandedChapters[chap.name] === true ? 'active' : ''}">

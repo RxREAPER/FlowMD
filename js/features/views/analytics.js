@@ -94,7 +94,7 @@
         <span class="anl-goal-badge-top" style="${o.badgeStyle || ''}">${o.badge}</span>
         <div class="anl-goal-head">
           <div class="anl-goal-tag">
-            <span class="anl-goal-ico"><span class="material-symbols-outlined">${o.icon}</span></span>
+            <span class="anl-goal-ico">${window.FlowMD.icons.renderIcon(o.icon)}</span>
             <span class="anl-goal-title">${o.title}</span>
           </div>
         </div>
@@ -180,7 +180,7 @@
       <!-- Study Intelligence Report Hero -->
       <section class="anl-report-hero">
         <div class="anl-hero-main">
-          <div class="anl-hero-icon"><span class="material-symbols-outlined">monitoring</span></div>
+          <div class="anl-hero-icon"><svg class="material-symbols-outlined"><use href="#fmd-i-monitoring"/></svg></div>
           <div>
             <div class="anl-hero-kicker">Study Intelligence Report</div>
             <h2 class="anl-hero-title">Your Study Intelligence</h2>
@@ -189,9 +189,9 @@
         </div>
         <div class="anl-hero-actions">
           ${renderEditionChip()}
-          <span class="v2-hud-badge" style="color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'}; border-color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'};"><span class="material-symbols-outlined" style="font-size:14px;">speed</span> ${weeklyPct}% Weekly Pace</span>
+          <span class="v2-hud-badge" style="color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'}; border-color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'};"><svg class="material-symbols-outlined" style="font-size:14px;"><use href="#fmd-i-speed"/></svg> ${weeklyPct}% Weekly Pace</span>
           <button class="v2-arcade-btn" id="btn-share-report" style="height:34px; padding:0 14px; font-size:0.82rem; background:var(--accent-gradient);">
-            <span class="material-symbols-outlined" style="font-size:16px;">share</span>
+            <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-share"/></svg>
             <span>Share Report</span>
           </button>
         </div>
@@ -206,7 +206,7 @@
       <!-- Preparation Setup & Target Goals -->
       <div class="anl-report-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><span class="material-symbols-outlined mat">tune</span> Preparation Setup</div>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-tune"/></svg> Preparation Setup</div>
           <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${daysLeft ? daysLeft + ' Days Left' : 'Not set'}</span>
         </div>
         <div class="anl-report-focus">
@@ -225,11 +225,11 @@
           <div class="anl-report-fact"><div class="lbl">Monthly</div><div class="val">${state.goals.videosPerMonth || '—'} vids</div></div>
           <div class="anl-report-fact"><div class="lbl">Target Date</div><div class="val">${state.goals.targetDate || 'Not set'}</div></div>
         </div>
-        <button class="v2-arcade-btn" id="btn-analytics-open-goals" style="width:100%;"><span class="material-symbols-outlined">track_changes</span> Synchronize Pace &amp; Goals</button>
+        <button class="v2-arcade-btn" id="btn-analytics-open-goals" style="width:100%;"><svg class="material-symbols-outlined"><use href="#fmd-i-track_changes"/></svg> Synchronize Pace &amp; Goals</button>
       </div>
 
       <!-- Goal Pulse -->
-      <div class="anl-goal-section-label"><span class="material-symbols-outlined" style="font-size:18px; color:var(--accent-primary);">target</span> Goal Pulse — Today / Week / Month</div>
+      <div class="anl-goal-section-label"><svg class="material-symbols-outlined" style="font-size:18px; color:var(--accent-primary);"><use href="#fmd-i-target"/></svg> Goal Pulse — Today / Week / Month</div>
       ${hasTarget ? `
         <div class="anl-goal-grid">
           ${todayTile}
@@ -238,7 +238,7 @@
           ${planTiles}
         </div>` : `
         <div class="anl-goal-empty">
-          <span class="material-symbols-outlined">track_changes</span>
+          <svg class="material-symbols-outlined"><use href="#fmd-i-track_changes"/></svg>
           <div>
             <strong>No study target set yet</strong>
             <small>Set a subject, daily pace &amp; deadline to power your Goal Pulse.</small>
@@ -257,7 +257,7 @@
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
-      const shareText = `<span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">target</span> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
+      const shareText = `<svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-target"/></svg> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome'));
       } else {

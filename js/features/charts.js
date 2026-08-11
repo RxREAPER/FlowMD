@@ -190,7 +190,7 @@
       <section class="chart-card">
         <div class="chart-head">
           <div class="chart-titlewrap">
-            <span class="chart-icon"><span class="material-symbols-outlined">bar_chart</span></span>
+            <span class="chart-icon"><svg class="material-symbols-outlined"><use href="#fmd-i-bar_chart"/></svg></span>
             <div>
               <div class="chart-kicker">Execution &mdash; Last 7 Days</div>
               <h3 class="chart-title">7-Day Execution Chart</h3>

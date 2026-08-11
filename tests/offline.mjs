@@ -68,12 +68,17 @@ async function iconState(page) {
     const el = document.querySelector('.material-symbols-outlined');
     if (!el) return { found: false };
     const r = el.getBoundingClientRect();
+    const use = el.querySelector('use');
+    const href = use ? use.getAttribute('href') : '';
+    const symbol = href ? document.querySelector(href) : null;
     return {
       found: true,
+      isSvg: el.tagName === 'svg',
       width: Math.round(r.width),
       height: Math.round(r.height),
-      text: el.textContent.trim().slice(0, 20),
-      fontLoaded: document.fonts.check('16px "Material Symbols Outlined"')
+      ligatureText: el.textContent.trim().slice(0, 20),
+      hasUse: !!use,
+      spriteResolves: !!symbol
     };
   });
 }
@@ -95,9 +100,10 @@ async function run() {
 
   const onlineIcon = await iconState(page);
   check('Online: app loads', (await page.locator('#app-main').count()) === 1);
-  check('Online: Material Symbols render as glyphs (not ligature text)',
-    onlineIcon.found && onlineIcon.width <= 32 && onlineIcon.height <= 32,
-    `w=${onlineIcon.width} h=${onlineIcon.height} text="${onlineIcon.text}"`);
+  check('Online: icons are inline SVG (sprite use, no ligature text, no font)',
+    onlineIcon.found && onlineIcon.isSvg && onlineIcon.hasUse && onlineIcon.spriteResolves &&
+    onlineIcon.width > 0 && onlineIcon.ligatureText === '',
+    `svg=${onlineIcon.isSvg} w=${onlineIcon.width} h=${onlineIcon.height} lig="${onlineIcon.ligatureText}" use=${onlineIcon.hasUse} sprite=${onlineIcon.spriteResolves}`);
   check('Online: no page errors', errors.length === 0, errors.slice(0, 3).join(' | ').slice(0, 200));
 
   // 2. Wait for the SW to finish installing (this precaches the shell, data,
@@ -131,10 +137,10 @@ async function run() {
     `title="${offline.title}" main=${offline.mainChars} nav=${offline.hasNav}`);
 
   const offlineIcon = await iconState(page);
-  check('Offline: Material Symbols still render as glyphs (precached at install)',
-    offlineIcon.found && offlineIcon.width <= 32 && offlineIcon.height <= 32 &&
-    offlineIcon.fontLoaded === true,
-    `w=${offlineIcon.width} h=${offlineIcon.height} fontLoaded=${offlineIcon.fontLoaded}`);
+  check('Offline: icons render from the inline sprite (no font, no ligature text)',
+    offlineIcon.found && offlineIcon.isSvg && offlineIcon.hasUse && offlineIcon.spriteResolves &&
+    offlineIcon.width > 0 && offlineIcon.ligatureText === '',
+    `svg=${offlineIcon.isSvg} w=${offlineIcon.width} h=${offlineIcon.height} lig="${offlineIcon.ligatureText}" use=${offlineIcon.hasUse} sprite=${offlineIcon.spriteResolves}`);
   check('Offline: no page errors', errors.length === 0, errors.slice(0, 3).join(' | ').slice(0, 200));
 
   // 4. Confirm the Firebase SDKs made it into the install-time precache

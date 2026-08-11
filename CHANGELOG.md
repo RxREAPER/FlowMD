@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Material Symbols font replaced with inline SVG sprite — icons can never degrade to ligature text again (v203)
+
+- **The icon-failure bug class is structurally dead.** All 55 Material Symbols the app uses (52 static + `error`/`check_box`/`check_box_outline_blank` dynamic) are now official SVG paths in a hidden `<symbol>` sprite (`js/core/icons.js`, 22 KB), referenced as `<svg class="material-symbols-outlined"><use href="#fmd-i-{name}"/></svg>`. No icon font, no font fetch, no cache, no CSP/CORS — offline, first-ever visit, slow network: the ligature-text symptom (`local_fire_department`) is impossible because there is no font to fail.
+- **Zero design change**: same official artwork, `1em` sizing (all existing `font-size` rules keep working), `currentColor` fill (all existing `color` rules keep working). Verified visually on dashboard + analytics; sprite symbols 55/55 resolve; dynamic `expand_more`↔`expand_less` accordion toggle re-wired via `icons.setIcon()`.
+- **Payload removed**: the Material Symbols Google Fonts CSS link + its woff2 precache are gone from `index.html` and `sw.js` (~1 MB of cached font assets); the SW still precaches the text fonts (Inter/Outfit/Poppins) and now precaches `icons.js`.
+- **Migration mechanics**: 111 static spans converted by script (class/style/aria kept); 3 dynamic templates (toast, analytics goal tiles, subject-detail bulk checkbox) now call `icons.renderIcon(name, class, style)`.
+- **Tests updated**: offline test now asserts inline-SVG + sprite resolution + zero ligature text (online AND offline), modules registry +5 checks (100 total). Full suite green: 100/19/32/40/nav/22/7/scope/20.
+
 ## [2026-08-11] Firestore doc slimmed — dead, transient, and redundant data no longer synced (v202)
 
 - **Dead fields removed from the cloud doc**: `speed` (always `1.5`), `subjectUrgency` (always `{}`), `dailyBatch` (always `null`), and `lastSyncedAt` (never read — `updatedAt` is the merge clock). None existed in app state or were ever consumed; they were written as constants on every sync.

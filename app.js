@@ -75,6 +75,7 @@
     }
     cacheDOM();
     applyTheme(state.theme);
+    if (window.FlowMD.icons) window.FlowMD.icons.ensureSprite();
     bindEvents();
     initFirebaseSync();
     initServiceWorker();
@@ -114,7 +115,7 @@
     const bodyEl = document.getElementById('info-modal-body');
     if (!modal || !titleEl || !bodyEl) return;
 
-    titleEl.innerHTML = `<span class="material-symbols-outlined">help</span> <span style="font-family: var(--font-display);">${title}</span>`;
+    titleEl.innerHTML = `<svg class="material-symbols-outlined"><use href="#fmd-i-help"/></svg> <span style="font-family: var(--font-display);">${title}</span>`;
     bodyEl.innerHTML = bodyHTML;
     modal.style.display = 'flex';
   }
@@ -240,7 +241,7 @@
             'Projected Completion Date',
             `<p style="margin-bottom: 8px;"><strong>Formula:</strong> <code>(Total Syllabus Videos − Completed Videos) ÷ Daily Video Pace</code></p>
              <div class="fm-alert fm-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined fm-alert-icon">check_circle</span>
+               <svg class="material-symbols-outlined fm-alert-icon"><use href="#fmd-i-check_circle"/></svg>
                <div class="fm-alert-content">
                  <div class="fm-alert-title">Dynamic Real-Time Shifting</div>
                  <div class="fm-alert-message">This ETA dynamically adjusts as you complete videos or change daily pace target in Profile settings.</div>
@@ -252,7 +253,7 @@
             'Ideal vs Actual Schedule Delta',
             `<p style="margin-bottom: 8px;"><strong>Schedule Delta:</strong> Compares actual 7-day completed lectures against your target quota (Daily Target × 7).</p>
              <div class="fm-alert fm-alert-warning" style="margin: 10px 0 0 0; padding: 12px;">
-               <span class="material-symbols-outlined fm-alert-icon">warning</span>
+               <svg class="material-symbols-outlined fm-alert-icon"><use href="#fmd-i-warning"/></svg>
                <div class="fm-alert-content">
                  <div class="fm-alert-title">Automatic Schedule Recovery</div>
                  <div class="fm-alert-message">When behind pace, FlowMD calculates exact extra daily videos needed to recover without burn-out.</div>
@@ -263,10 +264,10 @@
           openInfoModal("Today's Action Queue",
             `<p style="margin-bottom: 8px;"><strong>Daily Video:</strong> Shows your next video to watch.</p>
               <div class="fm-alert fm-alert-success" style="margin: 10px 0 0 0; padding: 12px;">
-                <span class="material-symbols-outlined fm-alert-icon">rocket_launch</span>
+                <svg class="material-symbols-outlined fm-alert-icon"><use href="#fmd-i-rocket_launch"/></svg>
                 <div class="fm-alert-content">
                   <div class="fm-alert-title">Load Next Video</div>
-                  <div class="fm-alert-message">Completing a video unlocks <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">rocket_launch</span> Load Next Video to continue your progress.</div>
+                  <div class="fm-alert-message">Completing a video unlocks <svg class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;"><use href="#fmd-i-rocket_launch"/></svg> Load Next Video to continue your progress.</div>
                 </div>
               </div>`
           );

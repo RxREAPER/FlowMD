@@ -124,14 +124,14 @@
           <div class="pwa-install-banner-content">
             <div class="pwa-install-text">
               <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                <span class="v2-hud-badge"><span class="material-symbols-outlined" style="font-size:16px;">smartphone</span> INSTALL APP</span>
+                <span class="v2-hud-badge"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-smartphone"/></svg> INSTALL APP</span>
               </div>
               <h3 class="pwa-install-title">Install FlowMD</h3>
               <p class="pwa-install-desc">Full-screen app, offline access &amp; faster startup.</p>
             </div>
             <div class="pwa-install-buttons">
               <button type="button" class="v2-arcade-btn" id="btn-pwa-install-now" style="height: 38px; font-size: 0.88rem;">
-                <span class="material-symbols-outlined" style="font-size: 18px;">get_app</span>
+                <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-get_app"/></svg>
                 <span>Install</span>
               </button>
               <button type="button" class="v2-arcade-btn" id="btn-pwa-dismiss-banner" style="height: 38px; background: var(--bg-surface-raised); color: var(--text-secondary); font-size: 0.88rem;">Dismiss</button>
@@ -144,17 +144,17 @@
         <div class="pwa-install-banner-content" style="align-items: flex-start;">
           <div class="pwa-install-text">
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-              <span class="v2-hud-badge"><span class="material-symbols-outlined" style="font-size:16px;">add_to_home_screen</span> INSTALL HELP</span>
+              <span class="v2-hud-badge"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-add_to_home_screen"/></svg> INSTALL HELP</span>
             </div>
             <h3 class="pwa-install-title">Add FlowMD to your Home Screen</h3>
             <p class="pwa-install-desc">Runs full-screen, works offline, and loads faster — just like a native app.</p>
             <div class="pwa-install-steps">
               <div class="pwa-install-step">
-                <span class="material-symbols-outlined">smartphone</span>
+                <svg class="material-symbols-outlined"><use href="#fmd-i-smartphone"/></svg>
                 <div><strong>Android (Chrome):</strong> tap <span class="pwa-install-kbd">⋮</span> Browser Menu → <span class="pwa-install-kbd">Install app</span> (or "Add to Home screen")</div>
               </div>
               <div class="pwa-install-step">
-                <span class="material-symbols-outlined">ios_share</span>
+                <svg class="material-symbols-outlined"><use href="#fmd-i-ios_share"/></svg>
                 <div><strong>iPhone / iPad (Safari):</strong> tap <span class="pwa-install-kbd">Share</span> → <span class="pwa-install-kbd">Add to Home Screen</span></div>
               </div>
             </div>
@@ -172,25 +172,25 @@
   function renderProfileInstallCard() {
     if (installed) {
       return `<div id="pwa-install-profile-card"><div class="profile-install-status installed">
-        <span class="material-symbols-outlined">check_circle</span>
+        <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
         FlowMD is installed — enjoy full-screen offline access!
       </div></div>`;
     }
     if (isInstallable()) {
       return `<div id="pwa-install-profile-card">
         <button class="v2-arcade-btn" id="btn-pwa-install-now" style="width: 100%;">
-          <span class="material-symbols-outlined">get_app</span> Install FlowMD App
+          <svg class="material-symbols-outlined"><use href="#fmd-i-get_app"/></svg> Install FlowMD App
         </button>
       </div>`;
     }
     return `<div id="pwa-install-profile-card">
       <div class="pwa-install-steps">
         <div class="pwa-install-step">
-          <span class="material-symbols-outlined">smartphone</span>
+          <svg class="material-symbols-outlined"><use href="#fmd-i-smartphone"/></svg>
           <div><strong>Android (Chrome):</strong> Browser Menu <span class="pwa-install-kbd">⋮</span> → <span class="pwa-install-kbd">Install app</span></div>
         </div>
         <div class="pwa-install-step">
-          <span class="material-symbols-outlined">ios_share</span>
+          <svg class="material-symbols-outlined"><use href="#fmd-i-ios_share"/></svg>
           <div><strong>iPhone (Safari):</strong> tap <span class="pwa-install-kbd">Share</span> → <span class="pwa-install-kbd">Add to Home Screen</span></div>
         </div>
       </div>

@@ -47,14 +47,14 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 2px solid var(--retro-cyan, var(--accent-primary)); padding-bottom: 12px;">
           <div>
             <div style="font-family: var(--font-hud), monospace; font-size: 0.75rem; font-weight: 700; color: var(--retro-gold, var(--accent-primary)); letter-spacing: 0.08em; text-transform: uppercase;">
-              <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">settings</span> SETTINGS
+              <svg class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;"><use href="#fmd-i-settings"/></svg> SETTINGS
             </div>
             <h3 style="font-family: var(--font-display), monospace; font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 2px 0 0 0; display: flex; align-items: center; gap: 8px;">
-              <span class="material-symbols-outlined" style="color: var(--accent-primary);">auto_stories</span>
+              <svg class="material-symbols-outlined" style="color: var(--accent-primary);"><use href="#fmd-i-auto_stories"/></svg>
               <span>Study Source</span>
             </h3>
           </div>
-          <button id="scs-close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1;"><span class="material-symbols-outlined" style="font-size:20px;">close</span></button>
+          <button id="scs-close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1;"><svg class="material-symbols-outlined" style="font-size:20px;"><use href="#fmd-i-close"/></svg></button>
         </div>
 
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 6px 0; line-height: 1.5;">
@@ -66,12 +66,12 @@
         </div>
 
         <div id="scs-upcoming-alert" class="onboarding-alert" style="display:${!STUDY_SOURCES.find(s => s.id === current)?.available ? 'flex' : 'none'};">
-          <span class="material-symbols-outlined" style="font-size:16px;">info</span>
+          <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-info"/></svg>
           ${getSourceLabel(current)} is an upcoming feature. Its syllabus data will be available in a future update.
         </div>
 
         <div class="onboarding-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
-          <span class="material-symbols-outlined" style="font-size:16px;">warning</span>
+          <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-warning"/></svg>
           Switching source resets your study plans &amp; targets for a fresh start on the new syllabus.
         </div>
 

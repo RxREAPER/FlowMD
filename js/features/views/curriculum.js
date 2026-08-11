@@ -36,7 +36,7 @@
       </div>
 
       <div class="curriculum-notice" style="margin: 8px 0 16px 0; padding: 10px 12px; background: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-hud); font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px;">
-        <span class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary); flex-shrink: 0; margin-top: 1px;">info</span>
+        <svg class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary); flex-shrink: 0; margin-top: 1px;"><use href="#fmd-i-info"/></svg>
         <span>Note: Individual video checkboxes → reflected in Analytics (7-day chart, weekly pace, daily counts). Chapter "Select All" checkbox → marks videos complete but excluded from Analytics, so you can mark previously completed chapters as a whole without distorting your analytics.</span>
       </div>
 
@@ -52,7 +52,7 @@
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
               <span class="v2-hud-badge" style="${sub.percentage === 100 ? 'color: var(--success); border-color: var(--success);' : ''}">${sub.percentage}%</span>
-              <span class="material-symbols-outlined" style="color: var(--text-muted);">chevron_right</span>
+              <svg class="material-symbols-outlined" style="color: var(--text-muted);"><use href="#fmd-i-chevron_right"/></svg>
             </div>
           </div>
         </div>
