@@ -51,8 +51,10 @@ const V_ALLOW = ['.plan-config-chips-list', '.modal-card', '#spotlight-results-c
 const OVERLAY_ROOTS = '.modal-overlay, #bottom-sheet-overlay, [style*="z-index: 99999"]';
 
 const results = [];
+let failCount = 0;
 function check(name, ok, detail = '') {
   results.push({ name, ok });
+  if (!ok) failCount++;
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ' — ' + detail : ''}`);
 }
 
@@ -172,8 +174,12 @@ async function nav(page, view) {
 
 async function run() {
   await new Promise((r) => server.listen(port, '127.0.0.1', r));
+
+  // Static source guards — the global CSS safety nets must never be removed.
+  const css = await readFile(join(root, 'style.css'), 'utf8');
+  check('style.css has the global layout safety-nets block', css.includes('Global layout safety nets'));
+
   const browser = await chromium.launch();
-  let failures = 0;
 
   for (const vp of VIEWPORTS) {
     const ctx = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
@@ -186,15 +192,14 @@ async function run() {
 
     const audit = async (label, { reachability = true } = {}) => {
       const m = await page.evaluate(MEASURE);
-      if (!m.booted) { check(`${vp.name}:${label} booted`, false); failures++; return; }
+      if (!m.booted) { check(`${vp.name}:${label} booted`, false); return; }
       for (const i of m.issues) {
         check(`${vp.name}:${label} [${i.type}]`, false, `${i.el} — ${i.detail}`);
-        failures++;
       }
       if (!m.issues.length) check(`${vp.name}:${label} layout clean`, true);
       if (reachability) {
         const r = await page.evaluate(REACHABILITY);
-        if (!r.ok) { check(`${vp.name}:${label} full-scroll reachability`, false, `nav area has ${r.at}`); failures++; }
+        if (!r.ok) { check(`${vp.name}:${label} full-scroll reachability`, false, `nav area has ${r.at}`); }
         else check(`${vp.name}:${label} full-scroll reachability`, true);
       }
     };
@@ -226,15 +231,14 @@ async function run() {
 
     if (pageErrors.length) {
       check(`${vp.name}: no page errors`, false, pageErrors.slice(0, 2).join(' | '));
-      failures++;
     }
     await ctx.close();
   }
 
   await browser.close();
   server.close();
-  console.log(`\n${results.length - failures}/${results.length} render checks passed`);
-  process.exit(failures ? 1 : 0);
+  console.log(`\n${results.length - failCount}/${results.length} render checks passed`);
+  process.exit(failCount ? 1 : 0);
 }
 
 run().catch((err) => { console.error('Render audit crashed:', err); process.exit(2); });

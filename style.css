@@ -82,6 +82,25 @@
   --v2-purple-accent: #8b5cf6;
 }
 
+/* ============================================================
+   Global layout safety nets — prevent the recurring failure
+   classes structurally (horizontal page overflow, escaping
+   media, inputs that refuse to shrink in flex/grid).
+   ============================================================ */
+html, body {
+  overflow-x: clip;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+input, select, textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+
 [data-theme-style="retro"], [data-theme-style="retro"] [data-theme="dark"] {
   --font-display: "Courier New", ui-monospace, monospace;
   --font-hud: "Courier New", ui-monospace, monospace;
