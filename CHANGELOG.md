@@ -1,5 +1,12 @@
 # FlowMD — Change Log
 
+## [2026-08-12] Fix: switching study source no longer wipes plans, goals or quests (v213)
+
+- **Root cause found and fixed**: the source-switch handler (`source-settings.js`) reset `state.plans` to a single default Plan A and wiped `state.goals` on EVERY switch. That destroyed configured Plan A + Plan B (subjects, paces, deadlines), emptied the daily-quest list, and made analytics Preparation Setup / Goal Pulse show "Not set" — which also read as "data not syncing" on real devices. Completions themselves always survived (they're keyed per source: `marrow_8::` / `marrow_6_5::`), but the empty plan hid them.
+- **Now**: switching source preserves all plans, goals, paces, deadlines and doctor name; only the derived per-day queue bookkeeping resets so it regenerates from the new edition's dataset. The modal warning text was updated to match. Verified: switching 8 → 6.5 → 8 keeps Plan A (Anatomy, 3/day, 2027-06-30), Plan B (Physiology, 2/day, 2027-12-01), and both editions' completions.
+- **New smoke regression** (44/44 checks pass) — the suite now switches source and asserts plans + per-source completions survive.
+- Also ships: v211 rendering fixes and v212 permanent rendering correctness (cross-viewport render audit, CSS safety nets, retro theme removal, inline-style guard, on-device layout self-check) — all previously committed but not yet deployed.
+
 ## [2026-08-12] Permanent rendering correctness — render audit, safety nets, retro removal, layout self-check (v212)
 
 - **New `tests/render.mjs`** — a permanent cross-viewport render audit wired into `npm test`: boots the app at 360/800/1280px, walks every view and dialogue (dashboard, curriculum, analytics, profile, subject detail, source modal, search modal, bottom sheet), and fails on any horizontal page overflow, element escaping the viewport, hard-clipped text, or content trapped under the bottom nav at full scroll. It covers the 769–900px band the suite previously missed (where the plan-config steppers overflowed) and is proven to catch that bug class (44/44 checks on the current app).

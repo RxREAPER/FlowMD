@@ -342,6 +342,57 @@ async function run() {
     await dismissOverlays(page);
   }
 
+  // Source switch preserves plans, goals and per-source completions
+  // (regression: the switch used to reset plans to a single default Plan A,
+  // wiping Plan B, paces/deadlines and the quest list).
+  {
+    await page.evaluate(() => {
+      const st = window.FlowMD.store.getState();
+      st.plans[0].targetSubject = 'Anatomy';
+      st.plans[0].videosPerDay = 3;
+      st.plans[0].videosPerWeek = 21;
+      st.plans[0].videosPerMonth = 90;
+      st.plans[0].targetDate = '2027-06-30';
+      if (!st.plans[1]) st.plans.push({ id: 'plan_b', label: 'Plan B', accentColor: '#f43f5e', targetSubject: 'Physiology', videosPerDay: 2, videosPerWeek: 14, videosPerMonth: 60, targetDate: '2027-12-01', targetUnits: [] });
+      st.completedVideos['marrow_8::anatomy__v1'] = true;
+      st.completedVideos['marrow_6_5::anatomy__v1'] = true;
+      window.FlowMD.store.saveState();
+    });
+    await page.evaluate(() => { window.FlowMD.sourceSettings.openSourceSettingsModal(); });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+      const opt = document.querySelector('.onboarding-option[data-src="marrow_6_5"]');
+      if (opt) opt.click();
+      const save = document.querySelector('#scs-save');
+      if (save) save.click();
+    });
+    await page.waitForTimeout(400);
+    const preserved = await page.evaluate(() => {
+      const st = window.FlowMD.store.getState();
+      return {
+        source: st.activeSource,
+        planCount: st.plans.length,
+        planB: st.plans.some(p => p.id === 'plan_b' && p.targetSubject === 'Physiology'),
+        planADay: st.plans[0] && st.plans[0].videosPerDay,
+        planADate: st.plans[0] && st.plans[0].targetDate,
+        completed: Object.keys(st.completedVideos).length
+      };
+    });
+    check('Source switch preserves plans + per-source completions',
+      preserved.source === 'marrow_6_5' && preserved.planCount === 2 && preserved.planB && preserved.planADay === 3 && preserved.planADate === '2027-06-30' && preserved.completed === 2,
+      JSON.stringify(preserved));
+    // Switch back so the rest of the flow runs on the default edition.
+    await page.evaluate(() => { window.FlowMD.sourceSettings.openSourceSettingsModal(); });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+      const opt = document.querySelector('.onboarding-option[data-src="marrow_8"]');
+      if (opt) opt.click();
+      const save = document.querySelector('#scs-save');
+      if (save) save.click();
+    });
+    await page.waitForTimeout(400);
+  }
+
   // Toast system
   await page.evaluate(() => window.showToast ? window.showToast('smoke test', 'success', 'Test') : null);
   await page.waitForTimeout(300);

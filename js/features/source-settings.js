@@ -1,9 +1,10 @@
 /* ============================================================
    FlowMD Features — Study Source Settings Modal
-   Source-switch modal: pick a syllabus edition, warns on reset,
-   applies a fresh plan/target setup for the new dataset.
+   Source-switch modal: pick a syllabus edition. Plans, targets and
+   goals are preserved across the switch (completions are keyed per
+   source), so quests and analytics keep working on the new edition.
 
-   Extracted verbatim from app.js (2026-08-10). Behavior unchanged.
+   Extracted verbatim from app.js (2026-08-10); reset removed 2026-08-12.
    ============================================================ */
 (function () {
   'use strict';
@@ -72,7 +73,7 @@
 
         <div class="onboarding-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
           <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-warning"/></svg>
-          Switching source resets your study plans &amp; targets for a fresh start on the new syllabus.
+          Switching source keeps your plans, targets &amp; goals — each edition tracks its own completions separately.
         </div>
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
@@ -116,9 +117,17 @@
           return;
         }
       }
-      // Fresh setup for the new dataset
-      state.plans = [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)];
-      state.goals = { ...DEFAULT_GOALS };
+      // Keep the user's plans & goals across a source switch. The subjects
+      // are largely shared between editions and completions are keyed per
+      // source (marrow_8:: / marrow_6_5::), so quests, targets and analytics
+      // keep working after the switch — only the derived per-day queue state
+      // resets so it regenerates from the new edition's dataset. This stops
+      // the reported data loss: configured Plan A / Plan B, paces, deadlines
+      // and checkmarks used to vanish on every source change.
+      state.plans = (state.plans && state.plans.length
+        ? state.plans
+        : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)]
+      ).map((p) => Object.assign({}, p, { queueBatchVideoIds: [], queueCompletedInBatch: 0 }));
       saveState();
       close();
       showToast(`Switched to ${getSourceLabel(selected)}.`, 'check_circle', 'Study Source Updated');
