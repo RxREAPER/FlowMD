@@ -2069,6 +2069,13 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 480px) {
