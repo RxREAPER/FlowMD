@@ -60,7 +60,7 @@ const EXPECTED = {
             'getSubjectOrSyllabusMetrics'],
   theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip'],
   search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults'],
-  sync: ['initFirebaseSync', 'mergeCloudState', 'manualSync',
+  sync: ['initFirebaseSync', 'pullFromCloud', 'manualSync', 'mergeCloudPerField',
          'compressCompletedVideos', 'rehydrateCompletedVideos', 'pruneHistoryMaps',
          'PLAN_CLOUD_KEYS'],
   onboarding: ['renderOnboardingWizard', 'finishOnboarding'],

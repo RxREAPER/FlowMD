@@ -325,6 +325,14 @@
         // baseline snapshot only advances after a push succeeds, so rapid
         // consecutive saveState() calls accumulate — no change is dropped.
         state._dirtyFields = window.FlowMD.sync.computeDirtyFields(state._prevSyncedState, snapshotCloudState(state));
+        // Local per-field clock: stamp every field that changed since the last
+        // push. pullFromCloud compares these against the cloud's fieldSyncTimes
+        // to decide which side wins each field.
+        if (state._dirtyFields && state._dirtyFields.length > 0) {
+          if (!state.fieldSyncTimes) state.fieldSyncTimes = {};
+          const now = state.lastLocalUpdate || Date.now();
+          state._dirtyFields.forEach((f) => { state.fieldSyncTimes[f] = now; });
+        }
         if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
         cloudSyncTimeout = setTimeout(() => {
           if (!state._dirtyFields || state._dirtyFields.length === 0) return;
@@ -332,7 +340,19 @@
           // any change made DURING the push flagged dirty for the next cycle.
           const snapshot = snapshotCloudState(state);
           const fields = {};
-          state._dirtyFields.forEach(f => { fields[f] = state[f]; });
+          state._dirtyFields.forEach(f => {
+            // Per-field clock guard: never rewrite a field the cloud already
+            // has newer than local (e.g. values just applied by a pull). Only
+            // fields local actually changed since its last write go up.
+            const localT = Number((state.fieldSyncTimes || {})[f]) || 0;
+            const cloudT = Number((state._cloudSyncTimes || {})[f]) || 0;
+            if (localT >= cloudT) fields[f] = state[f];
+          });
+          if (Object.keys(fields).length === 0) {
+            state._prevSyncedState = snapshot;
+            state._dirtyFields = [];
+            return;
+          }
           // Keep Google profile info fresh on every push (matches old behavior).
           const u = window.FirebaseSync.currentUser;
           if (u) {
@@ -343,6 +363,13 @@
             .then(() => {
               state._prevSyncedState = snapshot;
               state._dirtyFields = [];
+              // Advance the local clock for the pushed fields to the write
+              // moment so the next comparison sees them as "local owns these".
+              const t = Date.now();
+              Object.keys(fields).forEach((f) => {
+                if (!state.fieldSyncTimes) state.fieldSyncTimes = {};
+                state.fieldSyncTimes[f] = t;
+              });
             })
             .catch((err) => {
               console.warn('Cloud sync deferred, will retry on next change:', err);

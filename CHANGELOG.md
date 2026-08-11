@@ -1,5 +1,14 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Cross-device sync is now pull-then-push — no more write clashes (v205)
+
+- **The real-time `onSnapshot` listener is gone.** Previously every write from any device (including your own) instantly re-merged and could re-push, so two signed-in devices ping-ponged writes at each other and edits "reverted" (the reported clashes). Sync now only happens when a device pulls or pushes deliberately — nothing can write back into your device without you asking.
+- **Sync Now = pull-then-push** (Profile → Google Cloud Sync, plus auto-run when the device comes back online): first the cloud doc is read and merged into local state, then only the fields this device actually changed since the pull are written back. A sync can never fight itself.
+- **Per-field newest-wins arbitration** (`mergeCloudPerField`): each field carries its own last-write clock (`fieldSyncTimes`, written with every push, compared on every pull). The side that last changed a field wins it — no more whole-doc clock-skew guessing. `completedVideos` stays a union (cloud fills gaps, local wins conflicts) so completions from either device always survive.
+- **Local changes still auto-push** (unchanged): every local save writes changed fields to the cloud 800ms later, but the push guard skips fields the cloud already has newer — your data always leaves the device, nothing ever clobbers it back.
+- **Simpler code**: removed the old `shouldApplyCloud` clock-skew arbitration, the unused `subscribeToCloud`/`onSnapshot` listener, and the sign-in merge special-case. UI copy updated (no more "syncs in real-time (~1s)"), Sync Now button added with the `sync` icon.
+- **Tests**: +4 unit tests for `mergeCloudPerField` (cloud-newer wins, local-newer wins, completedVideos union, no-timestamp first sync), registry +1 (101 total, `pullFromCloud`/`mergeCloudPerField` contract-checked), 22/22 unit green; full suite green (101/19/32/40/22/7/scope-clean).
+
 ## [2026-08-11] Google Fonts removed — system font stacks + zero external font requests (v204)
 
 - **No more Google Fonts, at all.** The Inter/Outfit/Poppins/Pixelify Sans/VT323 CSS link, preconnects, and every woff2 precache are gone from `index.html` and `sw.js`. All text now renders from system stacks (`system-ui`/`-apple-system`/`Segoe UI` for modern, `Courier New`/`ui-monospace` for the retro pixel/HUD look), declared once in the `--font-*` variables in `style.css`.

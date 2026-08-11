@@ -89,7 +89,16 @@ async function run() {
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push('[pageerror] ' + String(e)));
-  page.on('console', (m) => { if (m.type() === 'error') errors.push('[console] ' + m.text()); });
+  page.on('console', (m) => {
+    if (m.type() !== 'error') return;
+    const text = m.text();
+    // The Firebase SDK scripts are cross-origin and can transiently fail to
+    // load under test load (ERR_FAILED). They're not needed for this test's
+    // assertions (offline capability comes from the SW precache, checked
+    // separately below), so ignore gstatic/analytics network errors.
+    if (/gstatic|googletagmanager|google-analytics|analytics\.google/.test(text)) return;
+    errors.push('[console] ' + text);
+  });
 
   // 1. Online first load (SW installs; icons must already be glyphs).
   await page.goto(`${BASE}/`);

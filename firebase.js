@@ -116,6 +116,14 @@
           googlePhotoURL: user?.photoURL || null,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
+        // Per-field sync clock for pull arbitration: each written field maps
+        // to the client time of its last write. mergeCloudPerField compares
+        // these (not the whole-doc updatedAt) so stale fields from one device
+        // can never overwrite newer fields from another.
+        payload.fieldSyncTimes = {};
+        Object.keys(payload).forEach((f) => {
+          if (f !== 'fieldSyncTimes' && f !== 'updatedAt') payload.fieldSyncTimes[f] = Date.now();
+        });
         await db.collection('users').doc(uid).set(payload, { merge: true });
         console.log('Successfully synced state to Firebase Cloud.');
       } catch (err) {
@@ -145,6 +153,12 @@
         const payload = Object.assign({}, fields, {
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+        // Stamp the per-field clock for every field being written so pull
+        // arbitration can tell which side last changed each field.
+        const now = Date.now();
+        const fieldTimes = {};
+        Object.keys(fields).forEach((f) => { fieldTimes[f] = now; });
+        payload.fieldSyncTimes = fieldTimes;
         await db.collection('users').doc(uid).update(payload);
       } catch (err) {
         if (err && err.code === 'not-found') {
@@ -196,20 +210,6 @@
       try {
         if (analytics && name) analytics.logEvent(name, params || {});
       } catch (e) { /* never throw from analytics */ }
-    },
-
-    // Real-time listener for cross-device sync
-    subscribeToCloud(uid, onChange) {
-      if (!db || !uid) return () => {};
-      const unsub = db.collection('users').doc(uid)
-        .onSnapshot((doc) => {
-          if (doc.exists) {
-            onChange(doc.data());
-          }
-        }, (err) => {
-          console.error('onSnapshot error:', err);
-        });
-      return unsub;
     }
   };
 })();

@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  const { getState, saveState, mergePlansLocalWins } = window.FlowMD.store;
+  const { getState, saveState } = window.FlowMD.store;
   const { showToast } = window.FlowMD.toast;
   const { updateOfflineIndicator } = window.FlowMD.theme;
 
@@ -20,49 +20,24 @@
     let cloudUnsub = null;
 
     window.FirebaseSync.onAuthChange(async (user) => {
-      // Clean up previous listener
-      if (cloudUnsub) {
-        cloudUnsub();
-        cloudUnsub = null;
-      }
-
       if (user) {
         showToast(`Signed in as ${user.email}`, 'account_circle');
         state.isOffline = false;
 
-        const cloudState = await window.FirebaseSync.loadFromCloud(user.uid);
-        if (cloudState) {
-          // Drop unknown/malformed fields from the cloud doc before merging
-          // (hardening: sanitizeCloudState whitelists known, well-typed fields).
-          const clean = window.FlowMD.sync.sanitizeCloudState(cloudState);
-          // Merge cloud → local with LOCAL winning on conflicts: the device's
-          // offline completions must never be clobbered by a stale cloud snapshot.
-          // Cloud still fills gaps (keys absent locally). See .planning/codebase/CONCERNS.md #3.
-          // completedVideos arrives source-prefix-compressed (see syncToCloud)
-          // and is re-prefixed with the current source before the union.
-          const cloudVideos = window.FlowMD.sync.rehydrateCompletedVideos(clean.completedVideos, state.activeSource || 'marrow_8');
-          state.completedVideos = { ...cloudVideos, ...state.completedVideos };
-          state.goals = { ...(clean.goals || {}), ...state.goals };
-          state.personal = { ...(clean.personal || {}), ...state.personal };
-          state.dailyHistory = { ...(clean.dailyHistory || {}), ...state.dailyHistory };
-          state.dailyHistoryBySubject = { ...(clean.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-          state.plans = mergePlansLocalWins(clean.plans, state.plans);
-          state.activePlanId = clean.activePlanId || state.activePlanId;
-          state.activeSource = clean.activeSource || state.activeSource;
-          state.isConfigured = clean.isConfigured || state.isConfigured;
-          state.themeStyle = clean.themeStyle || state.themeStyle;
-          if (clean.streakData) state.streakData = { ...clean.streakData, ...(state.streakData || {}) };
+        // One pull at sign-in (no real-time listener: sync is pull-then-push,
+        // driven by the Sync button / auto-push of local changes only). This
+        // kills the cross-device write ping-pong — no snapshot ever fires a
+        // write on this device, so two devices can never fight over the doc.
+        const merged = await pullFromCloud(user.uid);
+        if (merged) {
+          applyMergedState(merged);
           saveState();
         } else {
+          // No cloud doc yet: seed it with the current local state.
           window.FirebaseSync.syncToCloud(user.uid, state, user);
         }
         state.personal.isSynced = true;
         state.personal.syncEmail = user.email;
-
-        // Subscribe to real-time updates
-        cloudUnsub = window.FirebaseSync.subscribeToCloud(user.uid, (cloudData) => {
-          mergeCloudState(cloudData);
-        });
       } else {
         state.personal.isSynced = false;
         state.personal.syncEmail = '';
@@ -71,11 +46,13 @@
       if (window.FlowMD.shell) window.FlowMD.shell.render();
     });
 
-    // Periodic connectivity check
+    // Coming back online: run a proper pull-then-push sync so field clocks
+    // arbitrate (a raw push would stamp every field as freshly local-owned
+    // and clobber changes another device made while we were offline).
     window.addEventListener('online', () => {
       state.isOffline = false;
-      if (window.FirebaseSync.currentUser) {
-        window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
+      if (window.FirebaseSync && window.FirebaseSync.currentUser) {
+        manualSync();
       }
       updateOfflineIndicator();
     });
@@ -85,72 +62,100 @@
     });
   }
 
-  // Merge cloud state with local (sanitized, clock-skew-aware resolution)
-  function mergeCloudState(cloudData) {
+  // Pull cloud → merge with local using per-field newest-wins. completedVideos
+  // is a union (cloud fills gaps, local wins conflicts) so completions from
+  // either device always survive. Returns the merged field set, or null when
+  // there is no cloud doc. Never writes — a pull alone can't clash.
+  async function pullFromCloud(uid) {
     try {
-      // Drop unknown/malformed fields before anything else touches the doc.
-      const clean = window.FlowMD.sync.sanitizeCloudState(cloudData);
-      const cloudUpdated = clean.updatedAt?.toMillis?.() || 0;
-      const localUpdated = state.lastLocalUpdate || 0;
-      const hasLocalDirty = state._dirtyFields && state._dirtyFields.length > 0;
-
-      // Local completions always win (they're the source of truth for offline
-      // work); cloud keys arrive compressed and are re-prefixed first.
-      const cloudVideos = window.FlowMD.sync.rehydrateCompletedVideos(clean.completedVideos, state.activeSource || 'marrow_8');
-      state.completedVideos = { ...cloudVideos, ...state.completedVideos };
-
-      // For other fields, apply cloud when it is newer than local (within a
-      // 5s clock-skew window) or when we have unsynced local changes; only
-      // when cloud is genuinely stale do we push local back up.
-      if (window.FlowMD.sync.shouldApplyCloud(cloudUpdated, localUpdated, hasLocalDirty)) {
-        state.goals = { ...(clean.goals || {}), ...state.goals };
-        state.personal = { ...(clean.personal || {}), ...state.personal };
-        state.dailyHistory = { ...(clean.dailyHistory || {}), ...state.dailyHistory };
-        state.dailyHistoryBySubject = { ...(clean.dailyHistoryBySubject || {}), ...state.dailyHistoryBySubject };
-        state.plans = mergePlansLocalWins(clean.plans, state.plans);
-        state.activePlanId = clean.activePlanId || state.activePlanId;
-        state.activeSource = clean.activeSource || state.activeSource;
-        state.isConfigured = clean.isConfigured || state.isConfigured;
-        state.themeStyle = clean.themeStyle || state.themeStyle;
-        if (clean.streakData) state.streakData = { ...clean.streakData, ...(state.streakData || {}) };
-      } else {
-        // Local is newer - push to cloud
-        if (window.FirebaseSync.currentUser) {
-          window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state);
-        }
-      }
-      saveState();
-      if (window.FlowMD.shell) window.FlowMD.shell.render();
+      const cloudState = await window.FirebaseSync.loadFromCloud(uid);
+      if (!cloudState) return null;
+      // Drop unknown/malformed fields, re-prefix compressed video keys, and
+      // resolve each field by its per-field clock (see js/core/sync.js).
+      const clean = window.FlowMD.sync.sanitizeCloudState(cloudState);
+      clean.completedVideos = window.FlowMD.sync.rehydrateCompletedVideos(
+        clean.completedVideos, state.activeSource || 'marrow_8'
+      );
+      return window.FlowMD.sync.mergeCloudPerField(
+        clean, state, clean.fieldSyncTimes, state.fieldSyncTimes || {}
+      );
     } catch (e) {
-      console.warn('mergeCloudState error:', e);
+      console.warn('pullFromCloud error:', e);
+      return null;
     }
   }
 
-  // Manual sync function
-  function manualSync() {
+  // Copy the merged cloud result onto live state (only keys the app knows).
+  function applyMergedState(merged) {
+    const cloudTimes = Object.assign({}, merged.fieldSyncTimes || {});
+    const localTimes = Object.assign({}, state.fieldSyncTimes || {});
+    state._cloudSyncTimes = cloudTimes;
+    const UNION = window.FlowMD.sync.UNION_FIELDS || ['completedVideos'];
+    const now = Date.now();
+    Object.keys(merged).forEach((field) => {
+      if (field === 'fieldSyncTimes') return;
+      if (state[field] !== undefined) state[field] = merged[field];
+      // Reconcile the local clock per field: cloud-won fields adopt the cloud
+      // timestamp (so a later auto-push won't rewrite them); local-won fields
+      // keep a timestamp newer than cloud (so a later push still sends them).
+      const cloudT = Number(cloudTimes[field]) || 0;
+      const localT = Number(localTimes[field]) || 0;
+      const cloudWon = cloudT > localT && UNION.indexOf(field) === -1;
+      if (!state.fieldSyncTimes) state.fieldSyncTimes = {};
+      state.fieldSyncTimes[field] = cloudWon ? cloudT : Math.max(localT, now);
+    });
+    state.lastPullAt = now;
+  }
+
+  // Manual sync: pull-then-push. The pull merges (never writes); the push
+  // writes ONLY the fields the local device actually changed since the pull —
+  // fields the cloud won stay untouched, so a sync can never fight itself.
+  async function manualSync() {
     if (!window.FirebaseSync || !window.FirebaseSync.currentUser) {
       showToast('Sign in to sync', 'error');
-      return Promise.resolve(false);
+      return false;
     }
-    state.lastLocalUpdate = Date.now();
+    const uid = window.FirebaseSync.currentUser.uid;
+    showToast('Syncing...', 'sync');
     try {
-      showToast('Syncing...', 'sync');
-      window.FirebaseSync.syncToCloud(window.FirebaseSync.currentUser.uid, state, window.FirebaseSync.currentUser);
+      const before = Object.assign({}, state);
+      const merged = await pullFromCloud(uid);
+      if (merged) {
+        applyMergedState(merged);
+        // Push only fields that changed on THIS device relative to what the
+        // pull produced (JSON-compare; cloud-won fields are untouched, so
+        // they stay out of the write and keep their cloud clock).
+        const pushed = {};
+        Object.keys(state).forEach((f) => {
+          if (f === 'fieldSyncTimes' || f === 'lastPullAt') return;
+          const a = before[f];
+          const b = state[f];
+          if (a === b) return;
+          if (a !== undefined && JSON.stringify(a) === JSON.stringify(b)) return;
+          pushed[f] = b;
+        });
+        if (Object.keys(pushed).length > 0) {
+          await window.FirebaseSync.updateCloudFields(uid, pushed);
+        }
+      } else {
+        await window.FirebaseSync.syncToCloud(uid, state, window.FirebaseSync.currentUser);
+      }
       showToast('Synced successfully', 'check_circle');
-      return Promise.resolve(true);
+      if (window.FlowMD.shell) window.FlowMD.shell.render();
+      return true;
     } catch (e) {
       showToast('Sync failed: ' + e.message, 'error');
-      return Promise.resolve(false);
+      return false;
     }
   }
 
   // Expose. js/core/sync.js (loaded before this module) already registers the
-  // pure helpers (sanitizeCloudState, shouldApplyCloud, mergeLocalWins,
+  // pure helpers (sanitizeCloudState, mergeLocalWins, mergeCloudPerField,
   // computeDirtyFields, ...) on window.FlowMD.sync — merge the live wiring in
   // rather than overwriting, so state-store's dirty-field push keeps working.
   window.FlowMD.sync = Object.assign({}, window.FlowMD.sync || {}, {
     initFirebaseSync,
-    mergeCloudState,
+    pullFromCloud,
     manualSync
   });
 })();

@@ -92,13 +92,16 @@
             Synced as ${syncEmail}
           </div>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Your data syncs in real-time across all signed-in devices (~1s). Works offline — auto-syncs when online.
+            Changes on this device save automatically; press Sync Now to pull changes made on your other devices and push yours. Works offline.
           </div>
+          <button class="v2-arcade-btn" id="btn-sync-now" style="width: 100%; margin-bottom: 8px;">
+            <svg class="material-symbols-outlined"><use href="#fmd-i-sync"/></svg> Sync Now
+          </button>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline.
+            Backs up completions, streaks, plans &amp; preferences; press Sync Now to share changes across devices.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_sync"/></svg> Sign In with Google
@@ -170,6 +173,12 @@
         } catch (e) {
           showToast('Sign in failed.', 'error');
         }
+      }
+    });
+
+    document.getElementById('btn-sync-now')?.addEventListener('click', async () => {
+      if (window.FlowMD.sync && window.FlowMD.sync.manualSync) {
+        await window.FlowMD.sync.manualSync();
       }
     });
 

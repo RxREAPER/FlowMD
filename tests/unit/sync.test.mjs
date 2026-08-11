@@ -25,18 +25,6 @@ test('sanitizeCloudState drops wrong-typed completedVideos and plans', () => {
   assert.deepEqual(sync.sanitizeCloudState({ plans: 'oops' }).plans, undefined);
 });
 
-test('shouldApplyCloud: cloud newer than local applies, clock skew within 5s window tolerated', () => {
-  assert.equal(sync.shouldApplyCloud(1000, 500, false), true);
-  // cloud looks 4.5s older than local — inside the 5s skew window → apply
-  assert.equal(sync.shouldApplyCloud(1000, 5500, false), true);
-  // cloud strictly older beyond the skew window → genuinely stale → skip
-  assert.equal(sync.shouldApplyCloud(1000, 15000, false), false);
-});
-
-test('shouldApplyCloud: local dirty changes always apply + trigger write-back', () => {
-  assert.equal(sync.shouldApplyCloud(1000, 15000, true), true);
-});
-
 test('mergeLocalWins: completedVideos unions with local winning', () => {
   const merged = sync.mergeLocalWins(
     { completedVideos: { a: true, b: true } },        // local
@@ -63,11 +51,26 @@ test('computeDirtyFields only reports changed top-level fields', () => {
   assert.deepEqual(toPlain(sync.computeDirtyFields(prev, next)), ['completedVideos']);
 });
 
-test('write-loop guard: identical cloud snapshot never re-triggers a write-back', () => {
-  // Equal timestamps apply (harmless merge)…
-  assert.equal(sync.shouldApplyCloud(5000, 5000, false), true);
-  // …but without local dirty changes and cloud strictly older, we do NOT push
-  assert.equal(sync.shouldApplyCloud(1000, 20000, false), false);
+test('write-loop guard: equal timestamps resolve deterministically and cloud-won fields are not re-claimed', () => {
+  // Equal timestamps: local wins (the local device keeps its value and its
+  // clock; the merged result is the local value for non-union fields).
+  const merged = sync.mergeCloudPerField(
+    { themeStyle: 'retro' },
+    { themeStyle: 'modern' },
+    { themeStyle: 5000 },
+    { themeStyle: 5000 }
+  );
+  assert.equal(merged.themeStyle, 'modern');
+  // A field the cloud owns (newer cloud clock) must not be re-claimed by a
+  // later push: merge keeps the cloud value, and the cloud clock stays
+  // >= local, which is exactly what the auto-push guard checks.
+  const merged2 = sync.mergeCloudPerField(
+    { activePlanId: 'plan_b' },
+    { activePlanId: 'plan_a' },
+    { activePlanId: 9000 },
+    { activePlanId: 1000 }
+  );
+  assert.equal(merged2.activePlanId, 'plan_b');
 });
 
 test('compressCompletedVideos strips the redundant source prefix from every key', () => {
@@ -124,4 +127,49 @@ test('sanitizeCloudState drops dead fields and strips transient keys from plans'
   assert.deepEqual(toPlain(out.plans), [{
     id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8
   }]);
+});
+
+// --- mergeCloudPerField: per-field newest-wins arbitration (manual sync) ---
+
+test('mergeCloudPerField: cloud wins fields whose sync time is newer than local', () => {
+  const merged = sync.mergeCloudPerField(
+    { goals: { videosPerDay: 10 }, themeStyle: 'retro' },   // cloud
+    { goals: { videosPerDay: 8 }, themeStyle: 'modern' },   // local
+    { goals: 2000, themeStyle: 2000 },                      // cloud times
+    { goals: 1000, themeStyle: 1000 }                       // local times
+  );
+  assert.equal(merged.goals.videosPerDay, 10);
+  assert.equal(merged.themeStyle, 'retro');
+});
+
+test('mergeCloudPerField: local wins fields whose sync time is newer than cloud', () => {
+  const merged = sync.mergeCloudPerField(
+    { goals: { videosPerDay: 10 }, themeStyle: 'retro' },
+    { goals: { videosPerDay: 8 }, themeStyle: 'modern' },
+    { goals: 1000, themeStyle: 1000 },
+    { goals: 2000, themeStyle: 2000 }
+  );
+  assert.equal(merged.goals.videosPerDay, 8);
+  assert.equal(merged.themeStyle, 'modern');
+});
+
+test('mergeCloudPerField: completedVideos is a union — cloud additions join, local wins conflicts', () => {
+  const merged = sync.mergeCloudPerField(
+    { completedVideos: { v1: true, v2: false } },   // cloud
+    { completedVideos: { v2: true, v3: true } },    // local
+    { completedVideos: 9999 },
+    { completedVideos: 1000 }
+  );
+  assert.deepEqual(toPlain(merged.completedVideos), { v1: true, v2: true, v3: true });
+});
+
+test('mergeCloudPerField: local-only fields stay, cloud-only fields arrive, no timestamps = cloud wins', () => {
+  const merged = sync.mergeCloudPerField(
+    { activeSource: 'marrow_6_5' },     // cloud-only, no times at all
+    { personal: { doctorName: 'Dr. A' } }, // local-only
+    {},
+    {}
+  );
+  assert.equal(merged.activeSource, 'marrow_6_5');
+  assert.deepEqual(toPlain(merged.personal), { doctorName: 'Dr. A' });
 });

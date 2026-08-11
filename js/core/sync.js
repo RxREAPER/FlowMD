@@ -16,7 +16,7 @@
     'completedVideos', 'goals', 'streakData', 'personal',
     'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
     'activeSource', 'isConfigured', 'themeStyle', 'googleDisplayName',
-    'googlePhotoURL', 'updatedAt', 'lastLocalUpdate'
+    'googlePhotoURL', 'updatedAt', 'lastLocalUpdate', 'fieldSyncTimes'
   ];
 
   // Fields a plan keeps in the cloud doc. Transient daily state (the queue
@@ -96,25 +96,6 @@
     return out;
   }
 
-  // Clock-skew tolerance: server timestamps and client Date.now() differ by up
-  // to a few seconds on healthy devices. Anything older than 5s than local is
-  // genuinely stale — unless we have unsynced local changes, which always apply.
-  // (Treating sub-5s drift as "apply" also covers the write-loop bug: a device
-  // whose clock is behind the server used to re-merge-and-push on every snapshot.
-  // With the 5s window the merge is idempotent and field-level dirty tracking
-  // below means an unchanged state never triggers a write.)
-  const SKEW_TOLERANCE_MS = 5000;
-
-  function shouldApplyCloud(cloudTsMillis, localTsMillis, hasLocalDirty) {
-    if (hasLocalDirty) return true;
-    const local = Number(localTsMillis) || 0;
-    const cloud = Number(cloudTsMillis) || 0;
-    if (cloud <= 0) return false;
-    // Apply when cloud is newer than local, or close enough that clock
-    // skew (not real staleness) explains the difference.
-    return cloud + SKEW_TOLERANCE_MS >= local;
-  }
-
   // Local-wins merge. completedVideos is ALWAYS a union with local winning
   // (offline completions are the source of truth). Other maps: cloud fills
   // gaps, local wins conflicts. Plans merge by id (see mergePlansLocalWins).
@@ -144,6 +125,37 @@
       base.plans = mergePlansLocalWins(cloud.plans, local.plans);
     }
     return base;
+  }
+
+  // Fields whose value is a plain map merged with local-wins (completedVideos
+  // is a union: offline completions on EITHER device must survive). Everything
+  // else resolves by per-field clock — the side that last wrote wins.
+  const UNION_FIELDS = ['completedVideos'];
+
+  // Merge a cloud doc into local state using per-field timestamps (not the
+  // whole-doc updatedAt). fieldSyncTimes maps field -> ms epoch of the last
+  // time that field was written. The field with the newer timestamp wins;
+  // a field with NO local timestamp loses to any cloud copy (first sync).
+  // completedVideos is exempted: cloud keys that local lacks are added
+  // (union, local wins conflicts) so completions from either device survive.
+  function mergeCloudPerField(cloud, local, cloudSyncTimes, localSyncTimes) {
+    const cloudTimes = cloudSyncTimes || {};
+    const localTimes = localSyncTimes || {};
+    const result = Object.assign({}, cloud);
+    Object.keys(local || {}).forEach((field) => {
+      const isUnion = UNION_FIELDS.indexOf(field) !== -1;
+      const cloudHas = Object.prototype.hasOwnProperty.call(cloud, field);
+      if (!cloudHas) { result[field] = local[field]; return; }
+      if (isUnion) {
+        const base = Object.assign({}, cloud[field] || {});
+        Object.keys(local[field] || {}).forEach((k) => { base[k] = local[field][k]; });
+        result[field] = base;
+        return;
+      }
+      const cloudWins = (Number(cloudTimes[field]) || 0) > (Number(localTimes[field]) || 0);
+      if (!cloudWins) result[field] = local[field];
+    });
+    return result;
   }
 
   // Top-level field names whose JSON differs between two states.
@@ -208,14 +220,15 @@
 
   window.FlowMD.sync = {
     sanitizeCloudState,
-    shouldApplyCloud,
     mergeLocalWins,
     mergePlansLocalWins,
+    mergeCloudPerField,
     computeDirtyFields,
     compressCompletedVideos,
     rehydrateCompletedVideos,
     pruneHistoryMaps,
     KNOWN_FIELDS,
-    PLAN_CLOUD_KEYS
+    PLAN_CLOUD_KEYS,
+    UNION_FIELDS
   };
 })();
