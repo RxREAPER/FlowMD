@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-12] Permanent rendering correctness — render audit, safety nets, retro removal, layout self-check (v212)
+
+- **New `tests/render.mjs`** — a permanent cross-viewport render audit wired into `npm test`: boots the app at 360/800/1280px, walks every view and dialogue (dashboard, curriculum, analytics, profile, subject detail, source modal, search modal, bottom sheet), and fails on any horizontal page overflow, element escaping the viewport, hard-clipped text, or content trapped under the bottom nav at full scroll. It covers the 769–900px band the suite previously missed (where the plan-config steppers overflowed) and is proven to catch that bug class (44/44 checks on the current app).
+- **Global layout safety nets** in `style.css`: `overflow-x: clip` on html/body, `max-width: 100%` on media, and `min-width: 0`/`max-width: 100%` on form controls — the recurring failure classes (page overflow, escaping boxes, inputs that refuse to shrink in flex/grid) are now structurally impossible, with a suite guard that fails if the block is ever removed.
+- **Retro theme removed.** `themeStyle` is normalized to `modern` on load, in cloud sanitization, and during migration; all 203 `[data-theme-style="retro"]` CSS rule blocks and the toast retro rules were purged (−1,277 lines). Unit + migration tests cover the coercion; the render audit now guards two theme states instead of four.
+- **Inline-style guard** — `tests/inline-styles.mjs` fails on any *new* `style="…"` in view templates or index.html (committed baseline of 172; shrinks as styles migrate to classes). The spotlight search input's inline style was moved to a real CSS class; the bottom-nav label fix now covers the full phone range (≤480px).
+- **On-device layout self-check** — after every render the app detects horizontal overflow/clipping in the real browser (catching device- and browser-specific breakage the automated suite cannot see) and shows the result in Profile → Device Layout Check. Last five reports persist in localStorage and are never synced to the cloud. Pure analysis logic is unit-tested (`tests/unit/layout-check.test.mjs`).
+
 ## [2026-08-12] Rendering fixes across device widths (v211)
 
 - **Fix: Study Plan Config steppers overflowed the card at ~769–900px widths.** The Daily/Weekly/Monthly pace grid used fixed 3 columns, but each stepper's minimum width (~283px) couldn't fit three across in a narrower card — the Monthly box spilled past the viewport and its `+` button was invisible (plus a horizontal page scrollbar). The grid now uses `repeat(auto-fit, minmax(150px, 1fr))`, so the columns wrap gracefully at every width while staying identical to the old 3-column layout on wide screens.
