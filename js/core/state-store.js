@@ -257,11 +257,22 @@
   // older is dead weight in localStorage and the Firestore doc.
   const HISTORY_RETENTION_DAYS = 90;
 
-  // Shallow copy of just the cloud-writable fields — used as the baseline for
+  // Snapshot of just the cloud-writable fields — used as the baseline for
   // dirty-field comparison so a no-op save never schedules a cloud write.
+  // DEEP copy: the baseline must never share object references with live
+  // state, or an in-place edit (e.g. `state.plans[0].videosPerDay = x`, which
+  // the Study Plan Config does) would compare identical (a === b) and never
+  // be seen as dirty — silently losing the edit for the cloud.
   function snapshotCloudState(st) {
     const snap = {};
-    CLOUD_STATE_FIELDS.forEach(f => { if (st[f] !== undefined) snap[f] = st[f]; });
+    CLOUD_STATE_FIELDS.forEach(f => {
+      if (st[f] === undefined) return;
+      try {
+        snap[f] = JSON.parse(JSON.stringify(st[f]));
+      } catch (e) {
+        snap[f] = st[f];
+      }
+    });
     return snap;
   }
 

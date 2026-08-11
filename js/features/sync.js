@@ -121,8 +121,18 @@
       const CLOUD_FIELDS = ['completedVideos', 'goals', 'streakData', 'personal',
         'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
         'activeSource', 'isConfigured', 'themeStyle'];
+      // DEEP copy: the baseline must never share references with live state,
+      // or in-place edits (state.plans[0].x = y) compare identical and are
+      // never flagged dirty — silently lost for the cloud.
       const base = {};
-      CLOUD_FIELDS.forEach((f) => { if (state[f] !== undefined) base[f] = state[f]; });
+      CLOUD_FIELDS.forEach((f) => {
+        if (state[f] === undefined) return;
+        try {
+          base[f] = JSON.parse(JSON.stringify(state[f]));
+        } catch (_) {
+          base[f] = state[f];
+        }
+      });
       state._prevSyncedState = base;
     } catch (_) { /* baseline advance must never break a sync */ }
   }

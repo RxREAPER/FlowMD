@@ -110,6 +110,30 @@
     return merged;
   }
 
+  // Plans merge PER PLAN ID, arbitrated by the field-level clock: the side
+  // whose plans field was written later wins the per-plan VALUES of shared
+  // ids, but plan ids from EITHER side always survive. Wholesale replacement
+  // was the "plans got wiped" bug: a device that added Plan B lost it to a
+  // device that merely edited Plan A (and vice versa). With this merge, a
+  // concurrent Plan A edit on one device and a Plan B addition on the other
+  // converge to BOTH plans, with the newer side's values on the shared id.
+  function mergePlansByClock(cloudPlans, localPlans, cloudWinsClock) {
+    const cloudArr = Array.isArray(cloudPlans) ? cloudPlans : [];
+    const localArr = Array.isArray(localPlans) ? localPlans : [];
+    if (cloudArr.length === 0) return localArr.slice();
+    if (localArr.length === 0) return cloudArr.slice();
+    const merged = localArr.map((lp) => {
+      if (!lp || !lp.id) return lp;
+      const cp = cloudArr.find(p => p && p.id === lp.id);
+      if (!cp) return lp;
+      return cloudWinsClock ? Object.assign({}, lp, cp) : Object.assign({}, cp, lp);
+    });
+    cloudArr.forEach((cp) => {
+      if (cp && cp.id && !merged.find(p => p && p.id === cp.id)) merged.push(cp);
+    });
+    return merged;
+  }
+
   function unionLocalWins(localMap, cloudMap) {
     const base = Object.assign({}, cloudMap || {});
     Object.keys(localMap || {}).forEach(k => { base[k] = localMap[k]; });
@@ -222,6 +246,9 @@
       if (!cloudEmpty && localEmpty) { result[field] = cloudVal; return; }
       if (cloudEmpty && localEmpty) { result[field] = localVal; return; }
       // Neither side is empty — resolve by clock.
+      const cloudT = Number(cloudTimes[field]) || 0;
+      const localT = Number(localTimes[field]) || 0;
+      const skewed = cloudT > Date.now() + MAX_CLOCK_SKEW_MS;
       if (field === 'activeSource' && cloudVal !== localVal) {
         // A default source must never clobber a deliberate one.
         const localDefault = localVal === 'marrow_8';
@@ -231,9 +258,13 @@
           return;
         }
       }
-      const cloudT = Number(cloudTimes[field]) || 0;
-      const localT = Number(localTimes[field]) || 0;
-      if (cloudT > Date.now() + MAX_CLOCK_SKEW_MS) { result[field] = localVal; return; }
+      if (field === 'plans') {
+        // Per-plan-id merge: no plan is ever lost; the side with the newer
+        // field clock wins the values of shared plan ids.
+        result[field] = mergePlansByClock(cloudVal, localVal, !skewed && cloudT > localT);
+        return;
+      }
+      if (skewed) { result[field] = localVal; return; }
       const cloudWins = cloudT > localT;
       if (!cloudWins) result[field] = localVal;
     });
@@ -295,6 +326,7 @@
     sanitizeCloudState,
     mergeLocalWins,
     mergePlansLocalWins,
+    mergePlansByClock,
     mergeCloudPerField,
     computeDirtyFields,
     isEmptyForField,

@@ -227,3 +227,47 @@ test('mergeCloudPerField: newer REAL cloud edit still wins over older local edit
   );
   assert.equal(merged.plans[0].videosPerDay, 10, 'genuinely newer cloud edit wins');
 });
+
+// --- Per-plan merge: concurrent Plan A edit + Plan B addition must converge ---
+
+test('mergePlansByClock: newer side wins shared ids, BOTH plans survive (no plan lost)', () => {
+  // Cloud (newer): Plan A = 8 and Plan B = 5. Local (older): Plan A = 10 only.
+  const merged = sync.mergePlansByClock(
+    [{ id: 'plan_a', videosPerDay: 8 }, { id: 'plan_b', videosPerDay: 5 }],
+    [{ id: 'plan_a', videosPerDay: 10 }],
+    true
+  );
+  const byId = {};
+  merged.forEach(p => { byId[p.id] = p; });
+  assert.equal(merged.length, 2, 'both plans survive');
+  assert.equal(byId.plan_a.videosPerDay, 8, 'newer (cloud) wins the shared plan id');
+  assert.equal(byId.plan_b.videosPerDay, 5, 'cloud-only plan is appended');
+});
+
+test('mergePlansByClock: older side wins shared ids when ITS clock is newer', () => {
+  const merged = sync.mergePlansByClock(
+    [{ id: 'plan_a', videosPerDay: 8 }, { id: 'plan_b', videosPerDay: 5 }],
+    [{ id: 'plan_a', videosPerDay: 10 }, { id: 'plan_c', videosPerDay: 3 }],
+    false // local field clock is newer
+  );
+  const byId = {};
+  merged.forEach(p => { byId[p.id] = p; });
+  assert.equal(merged.length, 3, 'all three plans survive');
+  assert.equal(byId.plan_a.videosPerDay, 10, 'local (newer) wins the shared id');
+  assert.equal(byId.plan_b.videosPerDay, 5, 'cloud-only plan is appended');
+  assert.equal(byId.plan_c.videosPerDay, 3, 'local-only plan stays');
+});
+
+test('mergeCloudPerField: concurrent plans — local Plan A edit + cloud Plan B addition both survive', () => {
+  const merged = sync.mergeCloudPerField(
+    { plans: [{ id: 'plan_a', videosPerDay: 8 }, { id: 'plan_b', videosPerDay: 5 }] },
+    { plans: [{ id: 'plan_a', videosPerDay: 10 }] },
+    { plans: 1000 },  // cloud is OLDER — local wins the shared id
+    { plans: 2000 }
+  );
+  const byId = {};
+  merged.plans.forEach(p => { byId[p.id] = p; });
+  assert.equal(merged.plans.length, 2);
+  assert.equal(byId.plan_a.videosPerDay, 10, 'local (newer) edit survives');
+  assert.equal(byId.plan_b.videosPerDay, 5, 'cloud-only plan is not lost');
+});

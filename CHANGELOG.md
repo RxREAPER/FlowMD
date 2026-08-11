@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Comprehensive sync verification — full scenario matrix, two more real bugs found & fixed (v209)
+
+- **New test architecture**: shared harness (`tests/unit/sync-harness.mjs`) runs the REAL production sync modules in sandboxed devices against an in-memory Firestore mock (auth, offline, events included).
+- **New full scenario matrix** (`tests/unit/sync-matrix.test.mjs`, 10 scenarios): sign-in seeds a missing doc / pulls an existing one; legacy pre-v205 docs (no clocks, unprefixed keys) migrate on sign-in; concurrent plans converge with NO plan lost; same-plan edits propagate; uncheck behavior documented (device-local by design); 1000-key completion stress; offline edits converge on re-connect; three devices converge with zero echo writes.
+- **Bug found & fixed — in-place plan edits were silently lost**: the push baseline (`_prevSyncedState`) held SHARED references to live state, so `state.plans[0].videosPerDay = x` (exactly what the Study Plan Config does) compared identical to the baseline and was never flagged dirty — the edit never reached the cloud after any prior push/pull. Baselines are now deep copies in `state-store.js`, `applyMergedState`, and the test harness. (The two-device tests had masked it by mirroring the same shared-reference behavior.)
+- **Bug found & fixed — concurrent plan edits lost a plan**: the merge replaced the whole `plans` array by field clock, so a device that added Plan B lost it to a device that merely edited Plan A (and vice versa). Plans now merge PER PLAN ID (`mergePlansByClock`): both plans always survive, and the side whose field clock is newer wins the values of shared ids — same-plan edits still propagate.
+- **Unit tests now 44 (was 32)**: 23 core merge tests + 7 two-device + 10 matrix + 4 harness-backed extras; full suite green twice (104/19/33/40/22/7/44).
+
 ## [2026-08-11] Sync data-loss fix — empty docs can no longer wipe your data, manual sync actually pushes edits, both editions keep their completions (v208)
 
 - **Bug — Sync Now wiped plans / goals / doctor name / source / quests**: `updateCloudFields` REPLACED the whole `fieldSyncTimes` clock map with only the fields just written. Each push destroyed every other field's clock, so cross-device arbitration became asymmetric — whoever pushed last stamped fresh clocks, and the next pull on the other device decided "cloud newer" and wiped its data (then refused to push it back). Clocks are now written with dot-path merges into the existing map, so every field's clock survives every write.
