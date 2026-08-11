@@ -340,6 +340,12 @@
     else if (state.currentView === 'subject_detail') safeRender(() => renderSubjectDetailView(DOM, stats), 'subject_detail', stats);
     else if (state.currentView === 'analytics') safeRender(() => renderAnalyticsView(DOM, stats), 'analytics', stats);
     else safeRender(() => renderProfileView(DOM, stats), 'profile', stats);
+
+    // On-device layout self-check — catches overflow/clipping in the real
+    // browser that the automated suite cannot see (no-op if module absent).
+    if (window.FlowMD.layoutCheck && window.FlowMD.layoutCheck.runLayoutCheck) {
+      window.FlowMD.layoutCheck.runLayoutCheck();
+    }
   }
 
   // --- Haptics Utility (Vibration Feedback API) ---

@@ -291,6 +291,22 @@ async function run() {
     // Refresh button re-fetches and keeps the panel alive
     const refreshBtn = await page.locator('#btn-refresh-sync-diag').count();
     check('Sync Diagnostics has a working Refresh button', refreshBtn === 1, `found ${refreshBtn}`);
+
+    // Device layout self-check row (populated from the last in-browser run).
+    const layoutDiag = await page.evaluate(() => {
+      if (window.FlowMD.layoutCheck && window.FlowMD.layoutCheck.runLayoutCheck) {
+        window.FlowMD.layoutCheck.runLayoutCheck();
+      }
+      if (window.FlowMD.shell) window.FlowMD.shell.render();
+      const last = window.FlowMD.layoutCheck && window.FlowMD.layoutCheck.getLastReport
+        ? window.FlowMD.layoutCheck.getLastReport()
+        : null;
+      return JSON.stringify({ has: !!last, clean: last ? last.clean : null, issues: last ? last.issues : null });
+    });
+    await page.waitForTimeout(250);
+    const layoutRow = await page.locator('#layout-check-summary').innerText().catch(() => '');
+    check('Profile shows Device Layout Check row and clean state',
+      layoutRow.includes('No issues') && layoutDiag.includes('"clean":true'), `${layoutRow.slice(0, 40)} | diag=${layoutDiag.slice(0, 80)}`);
   }
 
   // Search modal

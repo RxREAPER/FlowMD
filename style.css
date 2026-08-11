@@ -5593,10 +5593,10 @@ body {
   }
 }
 
-/* Very narrow phones: keep bottom-nav labels on one line without clipping */
-@media (max-width: 330px) {
+/* Phones: keep bottom-nav labels on one line without clipping */
+@media (max-width: 480px) {
   .android-nav-item .nav-bar-label {
-    font-size: 0.58rem;
+    font-size: 0.6rem;
     letter-spacing: 0.01em;
     white-space: nowrap;
   }

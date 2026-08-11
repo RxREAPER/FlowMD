@@ -115,6 +115,17 @@
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <svg class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary);"><use href="#fmd-i-verified"/></svg>
+          Device Layout Check
+        </h3>
+        <div class="profile-settings-hint" id="layout-check-summary" style="font-size: 0.8rem;">Checking…</div>
+        <div class="profile-settings-hint" style="font-size: 0.72rem; margin-top: 4px;">
+          FlowMD checks this device's screen for boxes that overflow or text that gets clipped. If an issue appears here, it is reported in the browser console with details.
+        </div>
+      </div>
+
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
           <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-install_mobile"/></svg>
           Install App
         </h3>
@@ -209,6 +220,18 @@
 
     // Fill the diagnostics panel with live local-vs-cloud arbitration data.
     if (isSynced) renderSyncDiagnostics();
+
+    // Device layout self-check summary (last run in this browser).
+    const layoutSummary = document.getElementById('layout-check-summary');
+    if (layoutSummary && window.FlowMD.layoutCheck && window.FlowMD.layoutCheck.getLastReport) {
+      const last = window.FlowMD.layoutCheck.getLastReport();
+      if (last) {
+        layoutSummary.textContent = last.clean ? 'No issues detected on this device ✓' : 'Issues detected — see browser console for details';
+        layoutSummary.style.color = last.clean ? 'var(--success)' : 'var(--danger)';
+      } else {
+        layoutSummary.textContent = 'No issues detected on this device';
+      }
+    }
   }
 
   // --- Sync Diagnostics Panel ---

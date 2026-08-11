@@ -9,6 +9,7 @@ const MODULE_FILES = {
   namespace: 'js/core/namespace.js',
   constants: 'js/core/constants.js',
   sync: 'js/core/sync.js',
+  'layout-check': 'js/core/layout-check.js',
   'state-store': 'js/core/state-store.js',
   'source-data': 'js/core/source-data.js'
 };
@@ -32,6 +33,6 @@ export function createFlowMDSandbox({ modules = ['namespace', 'constants', 'sync
   return { FlowMD: window.FlowMD, localStorage, setItemCalls };
 }
 
-export function loadFlowMD() {
-  return createFlowMDSandbox().FlowMD;
+export function loadFlowMD(opts = {}) {
+  return createFlowMDSandbox(opts).FlowMD;
 }
