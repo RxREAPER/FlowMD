@@ -1,5 +1,18 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Two-device sync proof — pull-then-push verified end-to-end, echo writes eliminated (v206)
+
+- **New two-device test suite** (`tests/unit/sync-twodevice.test.mjs`): two simulated devices run the REAL production sync modules against a shared in-memory cloud store (same contract as firebase.js — per-field clocks, compressed video keys). Four scenarios prove the sync design end-to-end:
+  1. Different fields edited on each device → both edits survive after a round of syncs;
+  2. Same field edited on both → the newer edit wins, the older is never resurrected;
+  3. completedVideos is a union → completions from both devices all survive (cloud key stored compressed);
+  4. **No write ping-pong** → after both devices settle, repeated syncs produce ZERO writes (a write counter asserts it).
+- **Two real bugs found by the proof and fixed**:
+  - `manualSync`'s push could re-push fields it had just pulled (echo): the pull stamped their clocks via `applyMergedState`, so they looked locally edited. The push phase now snapshots the per-field clocks BEFORE the pull and writes only fields whose pre-pull local clock is genuinely newer than the cloud's (unions always safe).
+  - After a pull, the push baseline (`_prevSyncedState`) was stale, so a later debounced auto-push could rewrite just-pulled fields. `applyMergedState` now advances the baseline to the merged state — pulled fields are "already synced" and never echo back.
+- Bookkeeping fields (`_cloudSyncTimes`, `_dirtyFields`, `_prevSyncedState`, ...) are explicitly excluded from the manual push — they were previously at risk of being written into the cloud doc.
+- **Test infrastructure fixes**: the offline test was flaky (1 in 3 runs) because Google Analytics beacons (`googletagmanager.com` / `google-analytics.com`) intermittently fail in the sandbox — the error collector now ignores network resource failures (they're not app errors; offline capability is asserted separately). Full suite: 101/19/32/40/22/7/scope-clean/26 unit.
+
 ## [2026-08-11] Cross-device sync is now pull-then-push — no more write clashes (v205)
 
 - **The real-time `onSnapshot` listener is gone.** Previously every write from any device (including your own) instantly re-merged and could re-push, so two signed-in devices ping-ponged writes at each other and edits "reverted" (the reported clashes). Sync now only happens when a device pulls or pushes deliberately — nothing can write back into your device without you asking.

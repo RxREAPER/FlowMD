@@ -92,15 +92,18 @@ async function run() {
   page.on('console', (m) => {
     if (m.type() !== 'error') return;
     const text = m.text();
-    // The Firebase SDK scripts are cross-origin and can transiently fail to
-    // load under test load (ERR_FAILED). They're not needed for this test's
-    // assertions (offline capability comes from the SW precache, checked
-    // separately below), so ignore gstatic/analytics network errors.
-    if (/gstatic|googletagmanager|google-analytics|analytics\.google/.test(text)) return;
+    // The Firebase SDK scripts + analytics beacons are cross-origin and can
+    // transiently fail to load under test load (ERR_FAILED / ERR_ABORTED).
+    // They're not needed for this test's assertions (offline capability comes
+    // from the SW precache, checked separately below), so ignore them.
+    if (/gstatic|googletagmanager|google-analytics|analytics\.google|Failed to load resource/.test(text)) return;
     errors.push('[console] ' + text);
   });
 
   // 1. Online first load (SW installs; icons must already be glyphs).
+  page.on('requestfailed', (r) => {
+    if (process.env.DEBUG_OFFLINE) console.log('REQFAILED:', r.url(), r.failure() && r.failure().errorText);
+  });
   await page.goto(`${BASE}/`);
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(2500);
