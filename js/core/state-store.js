@@ -381,9 +381,19 @@
                 if (!state.fieldSyncTimes) state.fieldSyncTimes = {};
                 state.fieldSyncTimes[f] = t;
               });
+              // Report the auto-push outcome to the sync diagnostics panel.
+              if (window.FlowMD.sync && window.FlowMD.sync.recordAutoPushResult) {
+                window.FlowMD.sync.recordAutoPushResult({ ok: true, pushed: Object.keys(fields) });
+              }
             })
             .catch((err) => {
               console.warn('Cloud sync deferred, will retry on next change:', err);
+              if (window.FlowMD.sync && window.FlowMD.sync.recordAutoPushResult) {
+                window.FlowMD.sync.recordAutoPushResult({
+                  ok: false,
+                  error: String((err && err.message) || err)
+                });
+              }
             });
         }, 800);
       }

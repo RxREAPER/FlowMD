@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Sync Diagnostics panel in Profile — field-level arbitration made visible (v210)
+
+- **New panel** (Profile → Google Cloud Sync → Sync Diagnostics, shown when signed in): a per-field table of every arbitrated cloud field with the **local clock vs cloud clock** (relative time), a **Wins** badge (`LOCAL` = this device is newer, `CLOUD` = another device is newer, `TIE` = equal, `UNION` = completions merge both sides), and a readable value summary on each side (plans, goals, streak, doctor name, completions count, source…). When the two sides diverge, the cloud's value is shown under the local one.
+- **Last-sync result line**: after Sync Now / sign-in pull / reconnect, the panel records status + message + which fields were pushed and which were pulled; a second line reports the debounced auto-save outcome (success/failure + fields). Results persist in localStorage (`flowmd_sync_diagnostics`) and are **never** written to the cloud doc (excluded from every push path).
+- **Live refresh**: the panel re-reads the cloud doc on every Profile render and via a Refresh button; if the read fails (offline) it falls back to the last-known cloud clocks from the previous successful pull and says so.
+- **New pure helpers** (`js/core/sync.js`, unit-tested): `computeFieldArbitration()` (per-field verdict) and `buildSyncDiagnostics()` (ordered rows + summaries). Recording lives in `js/features/sync.js` (`recordSyncResult` / `recordAutoPushResult`), with `state-store.js`'s auto-push reporting through the same recorder.
+- **Tests**: +5 unit tests (verdicts, union/tie, row summaries, empty/no-clock, cloud-only first-sync) and +5 smoke checks (panel renders when signed in, LOCAL + CLOUD badges, divergence values, Refresh button). Full suite green: 104/19/38/40/22/7/49 unit.
+
 ## [2026-08-11] Comprehensive sync verification — full scenario matrix, two more real bugs found & fixed (v209)
 
 - **New test architecture**: shared harness (`tests/unit/sync-harness.mjs`) runs the REAL production sync modules in sandboxed devices against an in-memory Firestore mock (auth, offline, events included).

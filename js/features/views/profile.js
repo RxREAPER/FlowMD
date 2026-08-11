@@ -97,11 +97,15 @@
           <button class="v2-arcade-btn" id="btn-sync-now" style="width: 100%; margin-bottom: 8px;">
             <svg class="material-symbols-outlined"><use href="#fmd-i-sync"/></svg> Sync Now
           </button>
+          <div id="sync-diagnostics-panel"></div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
           <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
             Backs up completions, streaks, plans &amp; preferences; press Sync Now to share changes across devices.
+          </div>
+          <div class="profile-settings-hint" style="font-size: 0.72rem;">
+            Sync Diagnostics (per-field clocks &amp; last-sync result) appear here after you sign in.
           </div>
           <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
             <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_sync"/></svg> Sign In with Google
@@ -202,6 +206,111 @@
         showToast('Email copied to clipboard!', 'content_copy');
       });
     });
+
+    // Fill the diagnostics panel with live local-vs-cloud arbitration data.
+    if (isSynced) renderSyncDiagnostics();
+  }
+
+  // --- Sync Diagnostics Panel ---
+  // Shows each cloud field's local vs cloud clock, which side wins the next
+  // sync, and the last sync / auto-save result — arbitration made visible.
+  function fmtClock(ms) {
+    if (!ms) return 'never';
+    const diff = Date.now() - ms;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+    const d = new Date(ms);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) +
+      ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  async function renderSyncDiagnostics() {
+    const panel = document.getElementById('sync-diagnostics-panel');
+    if (!panel) return;
+    const uid = window.FirebaseSync && window.FirebaseSync.currentUser
+      ? window.FirebaseSync.currentUser.uid
+      : null;
+    let cloudState = null;
+    let cloudFresh = false;
+    if (uid && window.FlowMD.sync && window.FlowMD.sync.fetchCloudState) {
+      try {
+        cloudState = await window.FlowMD.sync.fetchCloudState(uid);
+        cloudFresh = true;
+      } catch (e) {
+        cloudState = null; // offline / read error — fall through to last-known
+      }
+    }
+    // Live read failed (offline): fall back to the last-known cloud clocks
+    // from the most recent successful pull so the table still has meaning.
+    if (!cloudState && state._cloudSyncTimes) {
+      cloudState = { fieldSyncTimes: state._cloudSyncTimes };
+    }
+    if (!window.FlowMD.sync || !window.FlowMD.sync.buildSyncDiagnostics) {
+      panel.innerHTML = '';
+      return;
+    }
+    const report = window.FlowMD.sync.buildSyncDiagnostics(state, cloudState, state.syncDiagnostics);
+    const d = state.syncDiagnostics || {};
+
+    const verdictBadge = (v) => {
+      switch (v) {
+        case 'LOCAL': return '<span class="sync-diag-badge sync-diag-local">LOCAL</span>';
+        case 'CLOUD': return '<span class="sync-diag-badge sync-diag-cloud">CLOUD</span>';
+        case 'TIE': return '<span class="sync-diag-badge sync-diag-tie">TIE</span>';
+        case 'UNION': return '<span class="sync-diag-badge sync-diag-union">UNION</span>';
+        default: return '<span class="sync-diag-badge sync-diag-none">—</span>';
+      }
+    };
+
+    let statusHtml = '';
+    if (d.lastSync) {
+      if (d.lastSync.status === 'failed') {
+        statusHtml = `<div class="sync-diag-status sync-diag-fail">Last sync failed ${fmtClock(d.lastSync.at)} — ${escapeHtml(d.lastSync.error || 'unknown error')}</div>`;
+      } else {
+        const pushed = d.lastSync.pushed && d.lastSync.pushed.length ? ' · pushed: ' + d.lastSync.pushed.join(', ') : '';
+        const pulled = d.lastSync.pulled && d.lastSync.pulled.length ? ' · pulled: ' + d.lastSync.pulled.join(', ') : '';
+        statusHtml = `<div class="sync-diag-status sync-diag-ok">Last sync ${fmtClock(d.lastSync.at)} — ${escapeHtml(d.lastSync.message || 'ok')}${escapeHtml(pushed)}${escapeHtml(pulled)}</div>`;
+      }
+    }
+    if (d.autoPush) {
+      if (d.autoPush.ok) {
+        statusHtml += `<div class="sync-diag-status sync-diag-ok">Auto-save ${fmtClock(d.autoPush.at)} — ${d.autoPush.pushed.length ? 'pushed ' + d.autoPush.pushed.join(', ') : 'no changes'}</div>`;
+      } else {
+        statusHtml += `<div class="sync-diag-status sync-diag-fail">Auto-save failed ${fmtClock(d.autoPush.at)} — ${escapeHtml(d.autoPush.error || 'unknown error')}</div>`;
+      }
+    }
+    if (!statusHtml) statusHtml = '<div class="sync-diag-status">No sync yet — press Sync Now to see arbitration</div>';
+
+    const rowsHtml = report.rows.length
+      ? report.rows.map(r => `
+        <tr>
+          <td class="sync-diag-field">${escapeHtml(r.field)}<div class="sync-diag-val">${escapeHtml(r.localValue)}${r.cloudValue !== r.localValue ? '<br>cloud: ' + escapeHtml(r.cloudValue) : ''}</div></td>
+          <td>${fmtClock(r.localClock)}</td>
+          <td>${fmtClock(r.cloudClock)}</td>
+          <td>${verdictBadge(r.verdict)}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" class="sync-diag-empty">No arbitrated fields yet — edit something, then press Sync Now.</td></tr>';
+
+    panel.innerHTML = `
+      <div class="sync-diag">
+        <div class="sync-diag-head">
+          <div class="sync-diag-title">Sync Diagnostics</div>
+          <button type="button" class="v2-arcade-btn" id="btn-refresh-sync-diag" style="height: 30px; padding: 0 10px; font-size: 0.75rem;">Refresh</button>
+        </div>
+        ${cloudFresh ? '' : '<div class="sync-diag-status sync-diag-warn">Offline or cloud read failed — showing last-known cloud clocks.</div>'}
+        ${statusHtml}
+        <table class="sync-diag-table">
+          <thead><tr><th>Field</th><th>Local clock</th><th>Cloud clock</th><th>Wins</th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+        <div class="sync-diag-legend">
+          <b>Wins</b> = which side the next sync trusts: <span class="sync-diag-badge sync-diag-local">LOCAL</span> this device is newer · <span class="sync-diag-badge sync-diag-cloud">CLOUD</span> another device is newer · <span class="sync-diag-badge sync-diag-union">UNION</span> both sides merge (completions)
+        </div>
+      </div>
+    `;
+
+    document.getElementById('btn-refresh-sync-diag')?.addEventListener('click', renderSyncDiagnostics);
   }
 
   // --- Profile Bottom Sheet Controller ---

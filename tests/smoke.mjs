@@ -253,6 +253,46 @@ async function run() {
   check('Profile shows brief Install App guide', profileHasInstallGuide,
     profileHasInstallGuide ? 'install card present' : 'install card MISSING');
 
+  // Sync Diagnostics panel: inject a fake signed-in cloud (no network), render
+  // the profile, and verify the panel shows per-field local-vs-cloud clocks,
+  // winner badges and the last-sync status.
+  {
+    const diag = await page.evaluate(() => {
+      const now = Date.now();
+      const st = window.FlowMD.store.getState();
+      st.personal.isSynced = true;
+      st.personal.syncEmail = 'diag@test.dev';
+      st.fieldSyncTimes = { plans: now, goals: now - 5000, personal: now - 60000 };
+      window.FirebaseSync = window.FirebaseSync || {};
+      window.FirebaseSync.currentUser = { uid: 'diag-user' };
+      window.FirebaseSync.loadFromCloud = async () => ({
+        plans: [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy' }],
+        goals: { targetSubject: 'Anatomy', videosPerDay: 3 },
+        personal: { doctorName: 'Dr. Cloud' },
+        activeSource: 'marrow_8',
+        fieldSyncTimes: { plans: now - 20000, goals: now - 10000, personal: now - 1000 }
+      });
+      window.FirebaseSync.updateCloudFields = async () => {};
+      window.FirebaseSync.syncToCloud = async () => {};
+      window.FlowMD.shell.render();
+      return new Promise((resolve) => setTimeout(resolve, 400));
+    });
+    const diagText = await page.locator('#sync-diagnostics-panel').innerText().catch(() => '');
+    check('Sync Diagnostics panel renders when signed in',
+      diagText.includes('Sync Diagnostics') && diagText.length > 40,
+      diagText.slice(0, 120));
+    check('Sync Diagnostics shows LOCAL winner (newer local clock)', diagText.includes('LOCAL'),
+      'plans row should be LOCAL');
+    check('Sync Diagnostics shows CLOUD winner (newer cloud clock)', diagText.includes('CLOUD'),
+      'personal row should be CLOUD');
+    check('Sync Diagnostics shows field values (Plan A + Dr. Cloud)',
+      diagText.includes('Plan A') && diagText.includes('Dr. Cloud'),
+      diagText.slice(0, 200));
+    // Refresh button re-fetches and keeps the panel alive
+    const refreshBtn = await page.locator('#btn-refresh-sync-diag').count();
+    check('Sync Diagnostics has a working Refresh button', refreshBtn === 1, `found ${refreshBtn}`);
+  }
+
   // Search modal
   const searchBtn = await page.locator('#btn-toggle-search').count();
   check('Search button present', searchBtn > 0);

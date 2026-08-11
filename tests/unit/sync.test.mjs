@@ -271,3 +271,78 @@ test('mergeCloudPerField: concurrent plans — local Plan A edit + cloud Plan B 
   assert.equal(byId.plan_a.videosPerDay, 10, 'local (newer) edit survives');
   assert.equal(byId.plan_b.videosPerDay, 5, 'cloud-only plan is not lost');
 });
+
+// --- Sync diagnostics: per-field arbitration report (Profile panel) ---
+
+test('computeFieldArbitration: newer side wins, no-clocks reported as none', () => {
+  const arb = sync.computeFieldArbitration(
+    { plans: 2000, goals: 1000, streakData: 0 },
+    { plans: 1000, goals: 2000, activeSource: 3000 }
+  );
+  assert.equal(arb.plans.verdict, 'LOCAL');
+  assert.equal(arb.goals.verdict, 'CLOUD');
+  assert.equal(arb.activeSource.verdict, 'CLOUD');
+  assert.equal(arb.streakData.verdict, 'none');
+});
+
+test('computeFieldArbitration: completedVideos is always UNION, equal clocks are a TIE', () => {
+  assert.equal(sync.computeFieldArbitration({ completedVideos: 5000 }, { completedVideos: 1000 }).completedVideos.verdict, 'UNION');
+  assert.equal(sync.computeFieldArbitration({ themeStyle: 1234 }, { themeStyle: 1234 }).themeStyle.verdict, 'TIE');
+});
+
+test('buildSyncDiagnostics: rows carry clocks, verdicts and readable value summaries', () => {
+  const report = sync.buildSyncDiagnostics(
+    {
+      fieldSyncTimes: { plans: 2000, goals: 1000 },
+      plans: [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy' }],
+      goals: { targetSubject: 'Anatomy', videosPerDay: 8 },
+      personal: { doctorName: 'Dr. Faiz' },
+      completedVideos: { 'marrow_8::v1': true, 'marrow_8::v2': true }
+    },
+    {
+      fieldSyncTimes: { plans: 1000, goals: 2000, activeSource: 5000 },
+      plans: [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy' }],
+      goals: { targetSubject: 'Anatomy', videosPerDay: 3 },
+      activeSource: 'marrow_6_5',
+      completedVideos: { 'marrow_8::v1': true }
+    },
+    { lastSync: { at: 123, status: 'success', message: '1 field pushed', pushed: ['plans'], pulled: [] } }
+  );
+  const rows = {};
+  report.rows.forEach(r => { rows[r.field] = r; });
+  assert.equal(rows.plans.verdict, 'LOCAL', 'newer local clock → LOCAL');
+  assert.equal(rows.goals.verdict, 'CLOUD', 'newer cloud clock → CLOUD');
+  assert.equal(rows.activeSource.verdict, 'CLOUD');
+  assert.equal(rows.completedVideos.verdict, 'UNION');
+  assert.equal(rows.plans.localValue, 'Plan A');
+  assert.equal(rows.goals.localValue, 'Anatomy · 8/day');
+  assert.equal(rows.personal.localValue, 'Dr. Faiz');
+  assert.equal(rows.completedVideos.localValue, '2 completed');
+  assert.equal(rows.plans.localClock, 2000);
+  assert.equal(rows.plans.cloudClock, 1000);
+  assert.equal(report.cloudPresent, true);
+  assert.equal(report.lastSync.pushed[0], 'plans');
+});
+
+test('buildSyncDiagnostics: no clocks anywhere → empty row set (nothing arbitrated yet)', () => {
+  const report = sync.buildSyncDiagnostics(
+    { plans: [{ id: 'plan_a' }], fieldSyncTimes: {} },
+    null,
+    null
+  );
+  assert.equal(report.rows.length, 0);
+  assert.equal(report.cloudPresent, false);
+  assert.equal(report.lastSync, null);
+});
+
+test('buildSyncDiagnostics: cloud-only fields appear even without local clocks (first sync)', () => {
+  const report = sync.buildSyncDiagnostics(
+    { fieldSyncTimes: {} },
+    { fieldSyncTimes: { activeSource: 5000 }, activeSource: 'marrow_6_5' },
+    null
+  );
+  const rows = {};
+  report.rows.forEach(r => { rows[r.field] = r; });
+  assert.equal(rows.activeSource.verdict, 'CLOUD');
+  assert.equal(rows.activeSource.cloudValue, 'marrow_6_5');
+});

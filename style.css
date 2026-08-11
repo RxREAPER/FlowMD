@@ -6418,6 +6418,115 @@ body {
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
+/* --- Sync Diagnostics panel (Profile) --- */
+.sync-diag {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px dashed var(--border-color);
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.06);
+}
+
+.sync-diag-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sync-diag-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.sync-diag-status {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.sync-diag-ok { color: var(--success); }
+.sync-diag-fail { color: var(--danger); }
+.sync-diag-warn { color: #f59e0b; }
+
+.sync-diag-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.7rem;
+  margin-top: 6px;
+}
+
+.sync-diag-table th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sync-diag-table td {
+  padding: 5px 6px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(127, 127, 127, 0.12);
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.sync-diag-table td.sync-diag-field {
+  color: var(--text-primary);
+  font-weight: 600;
+  white-space: normal;
+  max-width: 120px;
+}
+
+.sync-diag-val {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.sync-diag-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 10px 6px !important;
+}
+
+.sync-diag-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.sync-diag-local { background: rgba(34, 197, 94, 0.18); color: #34d399; }
+.sync-diag-cloud { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+.sync-diag-tie { background: rgba(99, 102, 241, 0.18); color: #a5b4fc; }
+.sync-diag-union { background: rgba(34, 211, 238, 0.18); color: #67e8f9; }
+.sync-diag-none { background: rgba(127, 127, 127, 0.15); color: var(--text-muted); }
+
+.sync-diag-legend {
+  margin-top: 8px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.64rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
 /* --- Curriculum subject tab hours badge --- */
 .pwa-subject-tab-badge {
   font-family: var(--font-hud), sans-serif;

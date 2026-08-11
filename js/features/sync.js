@@ -15,6 +15,51 @@
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
 
+  // --- Sync diagnostics (local-only bookkeeping: never cloud-pushed) ---
+  // Persists the outcome of the last manual sync and the last auto-push so
+  // the Profile diagnostics panel can show arbitration on real devices.
+  const SYNC_DIAG_KEY = 'flowmd_sync_diagnostics';
+  function loadSyncDiagnostics() {
+    try {
+      const raw = localStorage.getItem(SYNC_DIAG_KEY);
+      if (raw) state.syncDiagnostics = JSON.parse(raw);
+    } catch (e) { /* corrupt diagnostics are discarded */ }
+    if (!state.syncDiagnostics || typeof state.syncDiagnostics !== 'object') state.syncDiagnostics = {};
+  }
+  loadSyncDiagnostics();
+
+  function persistSyncDiagnostics() {
+    try {
+      localStorage.setItem(SYNC_DIAG_KEY, JSON.stringify(state.syncDiagnostics || {}));
+    } catch (e) { /* persistence must never break a sync */ }
+  }
+
+  // Record the outcome of a user-facing sync (Sync Now / sign-in pull / reconnect).
+  function recordSyncResult(info) {
+    state.syncDiagnostics = state.syncDiagnostics || {};
+    state.syncDiagnostics.lastSync = {
+      at: Date.now(),
+      status: info.status || 'unknown',
+      message: info.message || '',
+      pushed: info.pushed || [],
+      pulled: info.pulled || [],
+      error: info.error || null
+    };
+    persistSyncDiagnostics();
+  }
+
+  // Record the outcome of the debounced auto-push (state-store saveState).
+  function recordAutoPushResult(info) {
+    state.syncDiagnostics = state.syncDiagnostics || {};
+    state.syncDiagnostics.autoPush = {
+      at: Date.now(),
+      ok: !!info.ok,
+      pushed: info.pushed || [],
+      error: info.error || null
+    };
+    persistSyncDiagnostics();
+  }
+
   function initFirebaseSync() {
     if (!window.FirebaseSync) return;
     let cloudUnsub = null;
@@ -32,9 +77,20 @@
         if (merged) {
           applyMergedState(merged);
           saveState();
+          recordSyncResult({
+            status: 'success',
+            message: 'Signed in — pulled cloud data',
+            pulled: Object.keys(merged).filter((f) =>
+              f !== 'fieldSyncTimes' && f !== 'updatedAt' && f !== 'lastLocalUpdate'
+            )
+          });
         } else {
           // No cloud doc yet: seed it with the current local state.
           window.FirebaseSync.syncToCloud(user.uid, state, user);
+          recordSyncResult({
+            status: 'success',
+            message: 'Signed in — created cloud backup from this device'
+          });
         }
         state.personal.isSynced = true;
         state.personal.syncEmail = user.email;
@@ -156,6 +212,9 @@
       // pulled fields (stamped by applyMergedState), which would look like
       // local edits and echo back to the cloud.
       const beforeTimes = Object.assign({}, state.fieldSyncTimes || {});
+      // Pre-pull local field references, used to report which fields the
+      // merge actually changed (the "pulled" list in the diagnostics panel).
+      const beforeLocal = Object.assign({}, state);
       const clean = await fetchCloudState(uid);
       if (clean) {
         const merged = window.FlowMD.sync.mergeCloudPerField(
@@ -163,7 +222,7 @@
         );
         applyMergedState(merged);
         const BOOKKEEPING = ['fieldSyncTimes', 'lastPullAt', 'lastLocalUpdate',
-          '_prevSyncedState', '_dirtyFields', '_cloudSyncTimes'];
+          '_prevSyncedState', '_dirtyFields', '_cloudSyncTimes', 'syncDiagnostics'];
         const cloudTimes = Object.assign({}, state._cloudSyncTimes || {});
         const UNION = window.FlowMD.sync.UNION_FIELDS || ['completedVideos'];
         const isEmptyFor = window.FlowMD.sync.isEmptyForField || (() => false);
@@ -187,13 +246,28 @@
         if (Object.keys(pushed).length > 0) {
           await window.FirebaseSync.updateCloudFields(uid, pushed);
         }
+        recordSyncResult({
+          status: 'success',
+          message: Object.keys(pushed).length > 0
+            ? Object.keys(pushed).length + ' field(s) pushed'
+            : 'In sync — nothing to push',
+          pushed: Object.keys(pushed),
+          pulled: Object.keys(merged).filter((f) =>
+            BOOKKEEPING.indexOf(f) === -1 && merged[f] !== beforeLocal[f]
+          )
+        });
       } else {
         await window.FirebaseSync.syncToCloud(uid, state, window.FirebaseSync.currentUser);
+        recordSyncResult({
+          status: 'success',
+          message: 'No cloud doc — seeded it with this device\'s state'
+        });
       }
       showToast('Synced successfully', 'check_circle');
       if (window.FlowMD.shell) window.FlowMD.shell.render();
       return true;
     } catch (e) {
+      recordSyncResult({ status: 'failed', error: (e && e.message) || String(e) });
       showToast('Sync failed: ' + e.message, 'error');
       return false;
     }
@@ -207,6 +281,8 @@
     initFirebaseSync,
     fetchCloudState,
     pullFromCloud,
-    manualSync
+    manualSync,
+    recordSyncResult,
+    recordAutoPushResult
   });
 })();

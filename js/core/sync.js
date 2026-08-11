@@ -287,6 +287,116 @@
     return dirty;
   }
 
+  // --- Sync diagnostics (Profile panel; pure + unit-tested) ---
+
+  // Fields shown in the sync-diagnostics table, in display order. Transient
+  // and bookkeeping fields are excluded — only fields a device arbitrates.
+  const DIAG_FIELDS = [
+    'completedVideos', 'plans', 'activePlanId', 'goals', 'personal',
+    'streakData', 'activeSource', 'themeStyle', 'isConfigured',
+    'dailyHistory', 'dailyHistoryBySubject', 'googleDisplayName'
+  ];
+
+  // Compact human-readable summary of a field's value for the diagnostics row.
+  function fieldSummary(field, value) {
+    if (value === undefined || value === null) return '—';
+    switch (field) {
+      case 'completedVideos':
+        return Object.keys(value).length > 0 ? Object.keys(value).length + ' completed' : 'none';
+      case 'plans':
+        if (!Array.isArray(value) || value.length === 0) return 'none';
+        return value.map(p => (p && (p.label || p.id)) || '?').join(', ');
+      case 'goals': {
+        if (typeof value !== 'object') return '—';
+        const parts = [];
+        if (value.targetSubject) parts.push(value.targetSubject);
+        if (value.videosPerDay) parts.push(value.videosPerDay + '/day');
+        if (value.videosPerWeek) parts.push(value.videosPerWeek + '/week');
+        if (value.videosPerMonth) parts.push(value.videosPerMonth + '/month');
+        if (value.targetDate) parts.push('by ' + value.targetDate);
+        return parts.length ? parts.join(' · ') : 'unset';
+      }
+      case 'personal':
+        return (value && value.doctorName) || '—';
+      case 'streakData':
+        return value && value.currentStreak ? value.currentStreak + '-day streak' : 'none';
+      case 'activeSource': return String(value);
+      case 'activePlanId': return String(value);
+      case 'themeStyle': return String(value);
+      case 'isConfigured': return value ? 'configured' : 'not configured';
+      case 'dailyHistory':
+        return typeof value === 'object' ? Object.keys(value).length + ' day(s)' : '—';
+      case 'dailyHistoryBySubject':
+        return typeof value === 'object' ? Object.keys(value).length + ' subject(s)' : '—';
+      case 'googleDisplayName': return String(value);
+      default: return '—';
+    }
+  }
+
+  // Per-field arbitration verdict: LOCAL (this device's clock is newer),
+  // CLOUD (the cloud copy is newer), TIE (equal nonzero clocks), UNION
+  // (completedVideos — both sides always merge), or none (no clock yet).
+  function computeFieldArbitration(localTimes, cloudTimes) {
+    const out = {};
+    const keys = {};
+    Object.keys(localTimes || {}).forEach(k => { keys[k] = 1; });
+    Object.keys(cloudTimes || {}).forEach(k => { keys[k] = 1; });
+    Object.keys(keys).forEach((f) => {
+      const lt = Number((localTimes || {})[f]) || 0;
+      const ct = Number((cloudTimes || {})[f]) || 0;
+      let verdict = 'none';
+      if (lt > 0 || ct > 0) {
+        if (UNION_FIELDS.indexOf(f) !== -1) verdict = 'UNION';
+        else if (lt > ct) verdict = 'LOCAL';
+        else if (ct > lt) verdict = 'CLOUD';
+        else verdict = 'TIE';
+      }
+      out[f] = { local: lt, cloud: ct, verdict };
+    });
+    return out;
+  }
+
+  // Build the diagnostics report the Profile panel renders: one row per
+  // arbitrated field (clock comparison + readable value summary on both
+  // sides) plus the recorded last-sync / auto-push outcomes. Pure — no DOM.
+  function buildSyncDiagnostics(localState, cloudState, diagnostics) {
+    const localTimes = (localState && localState.fieldSyncTimes) || {};
+    const cloudTimes = (cloudState && cloudState.fieldSyncTimes) || {};
+    const arbitration = computeFieldArbitration(localTimes, cloudTimes);
+    const order = DIAG_FIELDS.slice();
+    Object.keys(arbitration).forEach(f => { if (order.indexOf(f) === -1) order.push(f); });
+    const rows = order
+      .filter((f) => {
+        if (arbitration[f]) return true; // has a clock on either side
+        if (cloudState && Object.prototype.hasOwnProperty.call(cloudState, f)) return true;
+        // Real local data with no clock yet (never synced): still show it so
+        // the user sees the field exists and will sync on the next change.
+        if (localState && Object.prototype.hasOwnProperty.call(localState, f)) {
+          return !isEmptyForField(f, localState[f]);
+        }
+        return false;
+      })
+      .map((f) => {
+        const a = arbitration[f] || { local: 0, cloud: 0, verdict: 'none' };
+        // Union fields always merge both sides — even before any clock exists.
+        const verdict = UNION_FIELDS.indexOf(f) !== -1 && a.verdict === 'none' ? 'UNION' : a.verdict;
+        return {
+          field: f,
+          localClock: a.local,
+          cloudClock: a.cloud,
+          verdict,
+          localValue: fieldSummary(f, localState && localState[f]),
+          cloudValue: fieldSummary(f, cloudState && cloudState[f])
+        };
+      });
+    return {
+      rows,
+      cloudPresent: !!cloudState,
+      lastSync: (diagnostics && diagnostics.lastSync) || null,
+      autoPush: (diagnostics && diagnostics.autoPush) || null
+    };
+  }
+
   // --- Cloud-doc completedVideos format ---
 
   // Video IDs in state/localStorage carry a runtime source prefix
@@ -332,6 +442,9 @@
     isEmptyForField,
     rehydrateCompletedVideos,
     pruneHistoryMaps,
+    computeFieldArbitration,
+    buildSyncDiagnostics,
+    DIAG_FIELDS,
     KNOWN_FIELDS,
     PLAN_CLOUD_KEYS,
     UNION_FIELDS,
