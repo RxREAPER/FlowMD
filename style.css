@@ -2805,6 +2805,22 @@ body {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* Spotlight search input — never hard-clip the placeholder on narrow screens */
+#spotlight-search-input {
+  min-width: 0;
+  flex: 1 1 0%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  #spotlight-search-input {
+    font-size: 0.92rem !important;
+    letter-spacing: 0.02em !important;
+  }
+}
+
 [data-theme="light"] .modal-card {
   background-color: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.1) !important;
@@ -5855,7 +5871,7 @@ body {
 
 .plan-config-pace-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 8px;
 }
 
@@ -6569,6 +6585,15 @@ body {
     height: 28px;
     padding: 0 10px;
     font-size: 0.68rem;
+  }
+}
+
+/* Very narrow phones: keep bottom-nav labels on one line without clipping */
+@media (max-width: 330px) {
+  .android-nav-item .nav-bar-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
   }
 }
 

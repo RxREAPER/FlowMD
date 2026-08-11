@@ -1,5 +1,12 @@
 # FlowMD — Change Log
 
+## [2026-08-12] Rendering fixes across device widths (v211)
+
+- **Fix: Study Plan Config steppers overflowed the card at ~769–900px widths.** The Daily/Weekly/Monthly pace grid used fixed 3 columns, but each stepper's minimum width (~283px) couldn't fit three across in a narrower card — the Monthly box spilled past the viewport and its `+` button was invisible (plus a horizontal page scrollbar). The grid now uses `repeat(auto-fit, minmax(150px, 1fr))`, so the columns wrap gracefully at every width while staying identical to the old 3-column layout on wide screens.
+- **Fix: spotlight search placeholder hard-clipped mid-word on phones** (e.g. "SEARCH 19 SUBJECTS, C"). The input had no CSS (inline `flex: 1` only) and its 49-char placeholder couldn't fit; it now has `min-width: 0` + `text-overflow: ellipsis` and a smaller font on ≤480px screens.
+- **Fix: bottom-nav "CURRICULUM" label clipped on very narrow phones (≤320px).** Labels now use a smaller font/letter-spacing and no-wrap at ≤330px so they fit on one line.
+- **New cross-viewport regression checks in the smoke test** (42/42 pass): at 800px the pace grid has no horizontal overflow and all three stepper `+` buttons are visible; at 320px nav labels are unclipped; at 390px the search placeholder ellipsizes instead of hard-clipping.
+
 ## [2026-08-11] Sync Diagnostics panel in Profile — field-level arbitration made visible (v210)
 
 - **New panel** (Profile → Google Cloud Sync → Sync Diagnostics, shown when signed in): a per-field table of every arbitrated cloud field with the **local clock vs cloud clock** (relative time), a **Wins** badge (`LOCAL` = this device is newer, `CLOUD` = another device is newer, `TIE` = equal, `UNION` = completions merge both sides), and a readable value summary on each side (plans, goals, streak, doctor name, completions count, source…). When the two sides diverge, the cloud's value is shown under the local one.

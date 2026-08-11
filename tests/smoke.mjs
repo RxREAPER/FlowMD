@@ -362,6 +362,81 @@ async function run() {
     await ctx65.close();
   }
 
+  // --- Cross-viewport rendering regressions (device layout guard) ---
+  // 1. Tablet width (800px): the plan-config pace grid must fit inside the card,
+  //    with every stepper "+" button visible (regression: third column used to
+  //    overflow the viewport, hiding the Monthly + button).
+  {
+    const ctx = await browser.newContext({ viewport: { width: 800, height: 900 } });
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/`);
+    await page.evaluate(() => {
+      localStorage.setItem('flowmd_is_configured', 'true');
+      localStorage.setItem('flowmd_tutorial_seen', 'true');
+    });
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(400);
+    const docOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
+    check('No horizontal page overflow at 800px (pace grid fits the card)', docOverflow === false);
+    const plusVisible = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.plan-config-pace'))
+        .filter((pb) => pb.getBoundingClientRect().width > 0)
+        .map((pb) => pb.querySelectorAll('.plan-config-step')[1])
+        .filter(Boolean)
+        .map((btn) => { const r = btn.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth; });
+    });
+    check('Daily/Weekly/Monthly stepper + buttons all visible at 800px',
+      plusVisible.length === 3 && plusVisible.every(Boolean), `${plusVisible.length} visible`);
+    await ctx.close();
+  }
+
+  // 2. Narrow phone (320px): bottom-nav labels must fit on one line unclipped.
+  {
+    const ctx = await browser.newContext({ viewport: { width: 320, height: 640 } });
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/`);
+    await page.evaluate(() => {
+      localStorage.setItem('flowmd_is_configured', 'true');
+      localStorage.setItem('flowmd_tutorial_seen', 'true');
+    });
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(400);
+    const clipped = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.android-nav-item .nav-bar-label'))
+        .filter((l) => l.offsetParent !== null)
+        .map((l) => ({ txt: l.innerText, overflow: l.scrollWidth > l.clientWidth + 1 }))
+        .filter((x) => x.overflow);
+    });
+    check('Bottom-nav labels not clipped at 320px', clipped.length === 0, JSON.stringify(clipped));
+    await ctx.close();
+  }
+
+  // 3. Phone (390px): the spotlight search placeholder must ellipsize, never
+  //    hard-clip mid-word (regression: it showed "SEARCH 19 SUBJECTS, C").
+  {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/`);
+    await page.evaluate(() => {
+      localStorage.setItem('flowmd_is_configured', 'true');
+      localStorage.setItem('flowmd_tutorial_seen', 'true');
+    });
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await page.locator('#btn-toggle-search').click();
+    await page.waitForTimeout(300);
+    const ph = await page.evaluate(() => {
+      const input = document.querySelector('#spotlight-search-input');
+      if (!input) return null;
+      return { ellipsis: getComputedStyle(input).textOverflow === 'ellipsis', minW: getComputedStyle(input).minWidth };
+    });
+    check('Search placeholder ellipsized (not hard-clipped) at 390px',
+      !!ph && ph.ellipsis === true && ph.minW === '0px', JSON.stringify(ph));
+    await ctx.close();
+  }
+
   await browser.close();
 
   const failed = results.filter((r) => !r.ok);
