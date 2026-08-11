@@ -151,7 +151,7 @@
       state.personal.doctorName = document.getElementById('prof-doc-name').value || 'Dr. Aspirant';
       saveState();
       showToast('Profile updated!', 'check_circle');
-      render();
+      if (window.FlowMD.shell) window.FlowMD.shell.render();
     });
 
     document.getElementById('btn-reset-data')?.addEventListener('click', () => {

@@ -536,7 +536,7 @@
 
         saveState();
         showToast('Plan A Target Configured & Saved!', 'check_circle', 'Plan A Updated');
-        render();
+        if (window.FlowMD.shell) window.FlowMD.shell.render();
       };
     }
 
@@ -576,7 +576,7 @@
 
         saveState();
         showToast('Plan B Target Configured & Saved!', 'check_circle', 'Plan B Updated');
-        render();
+        if (window.FlowMD.shell) window.FlowMD.shell.render();
       };
     }
 
@@ -589,7 +589,7 @@
         saveState();
         showToast('Plan B Target Disabled.', 'info', 'Single Plan Mode');
         switchGoalTab('plan_a');
-        render();
+        if (window.FlowMD.shell) window.FlowMD.shell.render();
       };
     }
 

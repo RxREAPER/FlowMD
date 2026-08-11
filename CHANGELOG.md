@@ -1,5 +1,11 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Daily Quest checkboxes dead — scope leaks from the module split (v201)
+
+- **Bug**: clicking a Daily Quest checkbox visually toggled it but nothing registered — no completion, no toast, no progress. The change handler called `getPlanById()` and bare `render()`, which were in scope inside the old monolithic `app.js` but not in the extracted `dashboard.js` module → `ReferenceError` on every click (same class as the earlier `getScopedChapterNames` extraction miss; render-only audits never click, so it slipped through). The same leaks silently broke **Load Next Video**, **Save & Apply Plan A/B Target**, **Disable Plan B**, and **saving the profile name**.
+- **Fix**: `dashboard.js` now imports `getPlanById` from `window.FlowMD.metrics`; all bare `render()` calls in `dashboard.js`, `profile.js`, and `study-plan-config.js` route through `window.FlowMD.shell.render()`.
+- **Test**: the navigation audit now real-clicks a quest checkbox and asserts the completion registers in state, the progress counter advances, and a toast appears (catches scope leaks on every run).
+
 ## [2026-08-11] Study Plan Config: subject dropdown closes itself; picking a subject invented pace/deadline (v199)
 
 - **Bug 1 — dropdown closes before picking**: Chrome fires `beforeinstallprompt` on first user engagement, which is often exactly when the user opens the subject dropdown. The install helper's `notifyChanged()` responded by re-rendering the entire view, destroying the open `<select>` (native picker shuts instantly). `pwa-install.js` now patches only the install banner / Profile card **in place** (never a full re-render), and the Install / Dismiss buttons moved to document-level delegation so in-place swaps can't lose their handlers.

@@ -54,6 +54,31 @@ async function run() {
     if (await btn.count()) { await btn.first().click({ force: true }).catch(() => {}); await page.waitForTimeout(500); }
     console.log(`view ${view}: rendered ${(await page.locator('#app-main').innerText().catch(() => '')).length} chars`);
   }
+  // Daily Quest checkbox interaction — a real click must register the
+  // completion end-to-end. Guards the getPlanById / bare-render scope leaks
+  // that only throw when the user clicks (render-only audits miss them).
+  await page.locator('.android-nav-item[data-view="dashboard"]').first().click({ force: true }).catch(() => {});
+  await page.waitForTimeout(400);
+  const questChk = page.locator('.queue-chk').first();
+  if (await questChk.count()) {
+    const vidId = await questChk.getAttribute('data-video-id');
+    await page.locator('.v2-pixel-checkbox-label').first().click({ force: true }).catch((e) => errors.push('[assert] quest checkbox click failed: ' + e.message));
+    await page.waitForTimeout(700);
+    const registered = await page.evaluate((id) => {
+      const s = window.FlowMD.store.getState();
+      return {
+        inState: !!s.completedVideos[id],
+        progressText: (document.querySelector('.plan-quest-progress') || {}).textContent || null,
+        toastCount: document.querySelectorAll('#toast-container > div').length
+      };
+    }, vidId);
+    console.log('quest checkbox click registers:', JSON.stringify(registered));
+    if (!registered.inState) errors.push('[assert] quest checkbox completion did not register in state');
+    if (registered.toastCount === 0) errors.push('[assert] no completion toast after quest checkbox click');
+  } else {
+    errors.push('[assert] no queue checkboxes rendered on the plan dashboard');
+  }
+
   // Subject detail via curriculum row
   await page.locator('.android-nav-item[data-view="curriculum"]').first().click({ force: true }).catch(() => {});
   await page.waitForTimeout(400);
