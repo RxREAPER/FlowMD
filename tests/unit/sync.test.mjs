@@ -25,6 +25,11 @@ test('sanitizeCloudState drops wrong-typed completedVideos and plans', () => {
   assert.deepEqual(sync.sanitizeCloudState({ plans: 'oops' }).plans, undefined);
 });
 
+test('sanitizeCloudState coerces legacy retro themeStyle to modern', () => {
+  const out = sync.sanitizeCloudState({ themeStyle: 'retro', activeSource: 'marrow_8' });
+  assert.equal(toPlain(out).themeStyle, 'modern');
+});
+
 test('mergeLocalWins: completedVideos unions with local winning', () => {
   const merged = sync.mergeLocalWins(
     { completedVideos: { a: true, b: true } },        // local

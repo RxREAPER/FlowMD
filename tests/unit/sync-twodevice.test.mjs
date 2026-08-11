@@ -42,23 +42,23 @@ test('two devices editing the SAME field: the newer edit wins, the older is not 
   const A = createDevice('A', cloud, uid);
   const B = createDevice('B', cloud, uid);
 
-  // Both change the same field. A syncs first (cloud = A's retro), then B
+  // Both change the same field. A syncs first (cloud = A's plan_b), then B
   // makes a NEWER edit — that must win.
-  A.edit((s) => { s.themeStyle = 'retro'; });
+  A.edit((s) => { s.activePlanId = 'plan_b'; });
   await A.manualSync();
   await A.flush();
 
-  await B.manualSync();          // B pulls A's retro — no local conflict yet
+  await B.manualSync();          // B pulls A's plan_b — no local conflict yet
   await B.flush();
-  B.edit((s) => { s.themeStyle = 'modern'; });
+  B.edit((s) => { s.activePlanId = 'plan_c'; });
   await B.manualSync();          // push B's newer edit
   await B.flush();
   await A.manualSync();          // A pulls B's newer edit
   await A.flush();
 
   const cloudDoc = cloud.getDoc();
-  assert.equal(cloudDoc.themeStyle, 'modern', 'newer edit (B) wins in the cloud');
-  assert.equal(A.state.themeStyle, 'modern', 'newer edit propagates to A');
+  assert.equal(cloudDoc.activePlanId, 'plan_c', 'newer edit (B) wins in the cloud');
+  assert.equal(A.state.activePlanId, 'plan_c', 'newer edit propagates to A');
 });
 
 test('completedVideos is a union: completions on both devices all survive', async () => {

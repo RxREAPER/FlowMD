@@ -178,6 +178,7 @@ async function run() {
   // Static source guards — the global CSS safety nets must never be removed.
   const css = await readFile(join(root, 'style.css'), 'utf8');
   check('style.css has the global layout safety-nets block', css.includes('Global layout safety nets'));
+  check('style.css contains no retro theme selectors', !css.includes('data-theme-style="retro"'));
 
   const browser = await chromium.launch();
 

@@ -152,7 +152,7 @@ async function run() {
     String(migrated.values['flowmd_daily_history']).slice(0, 60));
   check('Doctor name carried over', /Dr\. Migration Test/.test(migrated.values['flowmd_personal'] || ''),
     String(migrated.values['flowmd_personal']).slice(0, 60));
-  check('Theme style carried over', migrated.values['flowmd_theme_style'] === 'retro',
+  check('Theme style normalized to modern after migration', migrated.values['flowmd_theme_style'] === 'modern',
     String(migrated.values['flowmd_theme_style']));
   check('Theme carried over', migrated.values['flowmd_theme'] === 'dark',
     String(migrated.values['flowmd_theme']));

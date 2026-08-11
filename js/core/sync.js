@@ -78,7 +78,7 @@
           if (typeof v === 'string' && v.length <= 64) out.activePlanId = v;
           break;
         case 'themeStyle':
-          if (v === 'modern' || v === 'retro') out.themeStyle = v;
+          out.themeStyle = 'modern'; // retro theme removed — always normalize
           break;
         case 'isConfigured':
           if (typeof v === 'boolean') out.isConfigured = v;

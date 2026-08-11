@@ -105,11 +105,6 @@
         flex-shrink: 0; margin-top: -2px;
       }
       .fm-toast-alert .fm-alert-close-btn:hover { opacity: 1; color: var(--text-primary); }
-      [data-theme-style="retro"] .fm-toast-alert {
-        border: 2px solid var(--v2-ink); border-radius: 0; box-shadow: 4px 4px 0 0 var(--v2-ink);
-        background: var(--bg-surface-raised); font-family: var(--font-hud);
-      }
-      [data-theme-style="retro"] .fm-toast-alert .fm-alert-close-btn { color: var(--v2-ink); }
     `;
     document.head.appendChild(style);
   }

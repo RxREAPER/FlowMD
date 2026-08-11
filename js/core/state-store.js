@@ -65,6 +65,10 @@
           }
           localStorage.removeItem(oldKey);
         }
+        // Retro theme removed (2026-08-12) — any migrated retro style snaps to modern.
+        if (localStorage.getItem('flowmd_theme_style') === 'retro') {
+          localStorage.setItem('flowmd_theme_style', 'modern');
+        }
       }
 
       // v1 → v2: legacy pre-namespaced video IDs get the marrow_8:: prefix.
@@ -183,12 +187,8 @@
         localStorage.setItem(STORAGE_KEYS.THEME, 'dark');
       }
 
-      const savedThemeStyle = localStorage.getItem(STORAGE_KEYS.THEME_STYLE);
-      if (savedThemeStyle === 'modern' || savedThemeStyle === 'retro') {
-        state.themeStyle = savedThemeStyle;
-      } else {
-        state.themeStyle = 'modern';
-      }
+      // Retro theme was removed (2026-08-12) — any legacy value snaps to modern.
+      state.themeStyle = 'modern';
 
       const savedStreak = localStorage.getItem(STORAGE_KEYS.STREAK);
       if (savedStreak) state.streakData = safeParse(savedStreak, { lastStudyDate: null, currentStreak: 0 });
