@@ -145,6 +145,45 @@ async function run() {
   check('First-visit install helper banner shows on dashboard', installBanner === 1,
     installBanner ? 'banner present' : 'MISSING');
 
+  // Regression: Chrome fires beforeinstallprompt on first user engagement —
+  // often exactly while the user has the subject dropdown open. A full view
+  // re-render would destroy the open <select> (it closes before picking).
+  // The select element must survive the prompt and still be pickable.
+  {
+    const surv = await page.evaluate(() => {
+      const sel = document.getElementById('select-target-subject');
+      if (!sel) return { replaced: true, detail: 'no select' };
+      window.__selRef = sel;
+      window.dispatchEvent(new Event('beforeinstallprompt'));
+      return new Promise((resolve) => setTimeout(() => {
+        const nowSel = document.getElementById('select-target-subject');
+        resolve({
+          replaced: nowSel !== window.__selRef,
+          bannerPresent: !!document.getElementById('pwa-install-banner-card'),
+          installBtnPresent: !!document.getElementById('btn-pwa-install-now')
+        });
+      }, 400));
+    });
+    check('Install prompt does not destroy the open subject select (no full re-render)',
+      surv.replaced === false, JSON.stringify(surv));
+    check('Install banner upgrades in place (Install button appears, element survives)',
+      surv.bannerPresent === true && surv.installBtnPresent === true, JSON.stringify(surv));
+
+    // Picking a subject must not invent a pace or deadline — the site waits
+    // for real user input (no assumed 8 vids/day or auto deadline).
+    await page.locator('#select-target-subject').selectOption({ index: 1 });
+    await page.waitForTimeout(400);
+    const afterPick = await page.evaluate(() => ({
+      date: document.getElementById('input-target-date')?.value ?? null,
+      vids: document.getElementById('input-videos-per-day')?.value ?? null,
+      week: document.getElementById('input-videos-per-week')?.value ?? null,
+      badge: document.getElementById('days-remaining-badge')?.textContent ?? null
+    }));
+    check('Picking a subject waits for user input (no assumed pace/deadline)',
+      afterPick.date === '' && afterPick.vids === '' && afterPick.week === '' && afterPick.badge === 'Not set',
+      JSON.stringify(afterPick));
+  }
+
   // Curriculum view
   await clickNav(page, 'curriculum');
   const curriculumSubjects = await page.locator('.curriculum-sub-row').count();

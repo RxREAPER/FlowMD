@@ -188,16 +188,6 @@
       }
     });
 
-    document.getElementById('btn-pwa-install-now')?.addEventListener('click', async () => {
-      const outcome = await pwaInstall.requestInstall();
-      if (outcome === 'accepted') {
-        showToast('Installing FlowMD PWA...', 'rocket_launch');
-        if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('install');
-      } else if (outcome === 'unavailable') {
-        showToast('Tap Browser Menu (⋮) → "Install app"', 'info');
-      }
-    });
-
     document.getElementById('btn-copy-support-email')?.addEventListener('click', () => {
       navigator.clipboard.writeText('ezioauditore9553@gmail.com').then(() => {
         showToast('Email copied to clipboard!', 'content_copy');

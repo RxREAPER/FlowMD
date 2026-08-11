@@ -209,22 +209,6 @@
       ${renderStudyPlanConfigCard()}
     `;
 
-    document.getElementById('btn-pwa-install-now')?.addEventListener('click', async () => {
-      const outcome = await pwaInstall.requestInstall();
-      if (outcome === 'accepted') {
-        showToast('Installing FlowMD PWA...', 'rocket_launch');
-        if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('install');
-      } else if (outcome === 'unavailable') {
-        showToast('Tap Browser Menu (⋮) → "Install app"', 'info');
-      }
-    });
-
-    document.getElementById('btn-pwa-dismiss-banner')?.addEventListener('click', () => {
-      pwaInstall.dismissFirstVisitBanner();
-      showToast('Install helper dismissed.', 'info');
-      renderDashboardView(DOM, stats);
-    });
-
     document.querySelectorAll('.btn-open-queue-subject').forEach(btn => {
       btn.addEventListener('click', () => {
         state.activeSubjectId = btn.getAttribute('data-subject-id');

@@ -1,5 +1,11 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Study Plan Config: subject dropdown closes itself; picking a subject invented pace/deadline (v199)
+
+- **Bug 1 — dropdown closes before picking**: Chrome fires `beforeinstallprompt` on first user engagement, which is often exactly when the user opens the subject dropdown. The install helper's `notifyChanged()` responded by re-rendering the entire view, destroying the open `<select>` (native picker shuts instantly). `pwa-install.js` now patches only the install banner / Profile card **in place** (never a full re-render), and the Install / Dismiss buttons moved to document-level delegation so in-place swaps can't lose their handlers.
+- **Bug 2 — assumed pace/deadline returned**: after v195, picking a subject still auto-filled `8 vids/day`, `56/week`, `240/month` and a deadline via the `|| 8` fallback in `synchronizeModalPace`. The card now waits for real user input — a subject pick fills nothing; the deadline auto-syncs only once a user-entered pace (or a picked date) exists.
+- **Tests**: smoke +3 checks — the subject select survives a simulated `beforeinstallprompt` (no full re-render), the banner still upgrades in place, and picking a subject leaves pace/deadline empty with the badge at "Not set" (32 checks).
+
 ## [2026-08-11] Fix icons degrading to ligature text on every reload after the first load (v197)
 
 - **Bug**: Material Symbols icons rendered fine on the first load, then showed as raw ligature text (`local_fire_department`, `auto_stories`, …) on every subsequent reload. The service worker script is served with the site's CSP header, so its own cross-origin `fetch()` calls are subject to `connect-src` — which allowed `*.googleapis.com` but **not** `fonts.gstatic.com` / `www.gstatic.com`. Once the SW controlled the page, its font/SDK fetches were blocked (`net::ERR_FAILED`), the cache misses returned nothing, and the fonts never loaded.

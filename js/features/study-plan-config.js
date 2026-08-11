@@ -677,10 +677,22 @@
         if (badge) badge.textContent = 'Not set';
         return;
       }
-      const defaultPace = planObj.videosPerDay || 8;
-      const daysNeeded = Math.ceil(metrics.remainingVideos / defaultPace);
-      const targetDate = new Date(now.getTime() + daysNeeded * 24 * 60 * 60 * 1000);
-      if (dateInput) dateInput.value = toLocalDateKey(targetDate);
+      const existingPace = planObj.videosPerDay;
+      if (existingPace && existingPace > 0) {
+        // A real (user-entered) pace exists — keep it and auto-sync the
+        // deadline from it.
+        const daysNeeded = Math.ceil(metrics.remainingVideos / existingPace);
+        const targetDate = new Date(now.getTime() + daysNeeded * 24 * 60 * 60 * 1000);
+        if (dateInput) dateInput.value = toLocalDateKey(targetDate);
+      } else if (!dateInput || !dateInput.value) {
+        // Neither pace nor deadline is set yet — wait for the user. The site
+        // must not invent a daily/weekly/monthly pace or a deadline.
+        if (badge) badge.textContent = 'Not set';
+        if (bannerText) bannerText.textContent = 'Enter your daily pace or pick a deadline — FlowMD auto-syncs the other.';
+        return;
+      }
+      // else: the user already entered a deadline — fall through so the pace
+      // auto-syncs from that real date.
     }
 
     let targetDate = new Date(dateInput ? dateInput.value : '2026-12-31');

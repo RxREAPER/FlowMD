@@ -24,10 +24,24 @@
       (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
   } catch (_) { /* storage blocked — treated as not installed */ }
 
-  function notifyChanged() {
-    // Re-render so banners appear/disappear when install state changes.
-    if (window.FlowMD && window.FlowMD.shell && typeof window.FlowMD.shell.render === 'function') {
-      window.FlowMD.shell.render();
+  function refreshInstallUI() {
+    // NEVER re-render the whole view here. Chrome fires beforeinstallprompt
+    // on first user engagement — often exactly while the user has a native
+    // <select> dropdown open. A full shell.render() would destroy that
+    // element mid-interaction and close the picker. Only patch the install
+    // UI in place; the next view render picks up anything we didn't touch.
+    const banner = document.getElementById('pwa-install-banner-card');
+    if (banner) {
+      if (installed) {
+        banner.remove();
+      } else {
+        banner.outerHTML = renderFirstVisitBanner();
+      }
+      return;
+    }
+    const card = document.getElementById('pwa-install-profile-card');
+    if (card) {
+      card.outerHTML = `<div id="pwa-install-profile-card">${renderProfileInstallCard()}</div>`;
     }
   }
 
@@ -35,13 +49,33 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      notifyChanged();
+      refreshInstallUI();
     });
     window.addEventListener('appinstalled', () => {
       installed = true;
       deferredPrompt = null;
       try { localStorage.setItem(INSTALLED_KEY, '1'); } catch (_) {}
-      notifyChanged();
+      refreshInstallUI();
+    });
+
+    // Delegated wiring for the install buttons (dashboard banner + profile
+    // card share the same ids) so in-place HTML swaps never lose handlers.
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#btn-pwa-install-now')) {
+        requestInstall().then((outcome) => {
+          if (outcome === 'accepted') {
+            if (window.FlowMD && window.FlowMD.toast) window.FlowMD.toast.showToast('Installing FlowMD PWA...', 'rocket_launch');
+            if (window.FlowMD && window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('install');
+          } else if (outcome === 'unavailable') {
+            if (window.FlowMD && window.FlowMD.toast) window.FlowMD.toast.showToast('Tap Browser Menu (⋮) → "Install app"', 'info');
+          }
+        });
+      } else if (e.target.closest('#btn-pwa-dismiss-banner')) {
+        dismissFirstVisitBanner();
+        if (window.FlowMD && window.FlowMD.toast) window.FlowMD.toast.showToast('Install helper dismissed.', 'info');
+        const banner = document.getElementById('pwa-install-banner-card');
+        if (banner) banner.remove();
+      }
     });
   }
 
@@ -133,20 +167,23 @@
   }
 
   // Brief guide for the Profile view (always reachable, never nagging).
+  // Wrapped in a stable id so install-state changes can patch it in place
+  // without re-rendering the whole Profile view.
   function renderProfileInstallCard() {
     if (installed) {
-      return `<div class="profile-install-status installed">
+      return `<div id="pwa-install-profile-card"><div class="profile-install-status installed">
         <span class="material-symbols-outlined">check_circle</span>
         FlowMD is installed — enjoy full-screen offline access!
-      </div>`;
+      </div></div>`;
     }
     if (isInstallable()) {
-      return `
+      return `<div id="pwa-install-profile-card">
         <button class="v2-arcade-btn" id="btn-pwa-install-now" style="width: 100%;">
           <span class="material-symbols-outlined">get_app</span> Install FlowMD App
-        </button>`;
+        </button>
+      </div>`;
     }
-    return `
+    return `<div id="pwa-install-profile-card">
       <div class="pwa-install-steps">
         <div class="pwa-install-step">
           <span class="material-symbols-outlined">smartphone</span>
@@ -156,7 +193,8 @@
           <span class="material-symbols-outlined">ios_share</span>
           <div><strong>iPhone (Safari):</strong> tap <span class="pwa-install-kbd">Share</span> → <span class="pwa-install-kbd">Add to Home Screen</span></div>
         </div>
-      </div>`;
+      </div>
+    </div>`;
   }
 
   window.FlowMD.pwaInstall = {
