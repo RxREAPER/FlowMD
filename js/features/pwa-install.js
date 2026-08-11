@@ -96,7 +96,7 @@
         installed = true;
         try { localStorage.setItem(INSTALLED_KEY, '1'); } catch (_) {}
       }
-      notifyChanged();
+      refreshInstallUI();
       return choice.outcome === 'accepted' ? 'accepted' : 'dismissed';
     } catch (_) {
       return 'unavailable';

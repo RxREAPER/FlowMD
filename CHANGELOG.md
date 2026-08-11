@@ -1,5 +1,11 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Scope-leak audit — one more leftover from the module split caught (v201)
+
+- **Audited every module** (`js/features/views/*`, `js/features/*`, `js/core/*`, `app.js`, `firebase.js`, `sw.js`) for bare function calls not covered by an import, a declaration, a parameter, or a known global — the ReferenceError class that already broke the quest checkboxes.
+- **Found + fixed 1 more**: `pwa-install.js` still called `notifyChanged()` (renamed to `refreshInstallUI` in v199) after the user answers the native install prompt — every install threw a `ReferenceError`, so the banner/card never refreshed and no toast appeared after install.
+- **New permanent test** `tests/scope-leaks.mjs` wired into `npm test` (9 suites now): a char-scanner strips comments/strings/templates/regex and flags any bare call not accounted for — so this whole bug class is caught on every run, forever.
+
 ## [2026-08-11] Daily Quest checkboxes dead — scope leaks from the module split (v201)
 
 - **Bug**: clicking a Daily Quest checkbox visually toggled it but nothing registered — no completion, no toast, no progress. The change handler called `getPlanById()` and bare `render()`, which were in scope inside the old monolithic `app.js` but not in the extracted `dashboard.js` module → `ReferenceError` on every click (same class as the earlier `getScopedChapterNames` extraction miss; render-only audits never click, so it slipped through). The same leaks silently broke **Load Next Video**, **Save & Apply Plan A/B Target**, **Disable Plan B**, and **saving the profile name**.
