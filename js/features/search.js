@@ -119,7 +119,7 @@
       // Search Guide — helps users understand the search functionality
       container.innerHTML = `
         <div class="fm-command-group-header"><svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-search"/></svg> What Can You Search?</div>
-        <div style="font-family: 'Poppins', sans-serif; font-size: 0.88rem; color: var(--text-muted); padding: 8px 0 4px 4px; line-height: 1.8;">
+        <div style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.88rem; color: var(--text-muted); padding: 8px 0 4px 4px; line-height: 1.8;">
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Subjects</strong> — e.g. "anatomy", "pharmacology", "medicine"</div>
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Chapters</strong> — e.g. "cardiovascular", "neurology", "head and neck"</div>
           <div style="display: flex; gap: 6px; margin-bottom: 2px;"><span style="color: var(--accent-primary);">★</span> <strong>Video Topics</strong> — e.g. "glaucoma", "MI", "fracture", "biochemistry"</div>
@@ -134,7 +134,7 @@
 
     if (searchData.totalMatches === 0) {
       container.innerHTML = `
-        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Poppins', sans-serif; font-size: 1.1rem;">
+        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1.1rem;">
           No matching subjects, chapters, or video topics found for "${escapeHtml(q)}". Try: <br><span style="color: var(--text-primary);">anatomy, pharmacology, cardiology, biochemistry...</span>
         </div>
       `;

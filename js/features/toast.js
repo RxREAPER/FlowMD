@@ -93,7 +93,7 @@
         display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px;
         border-radius: 10px; border: 1px solid var(--border-color);
         background: var(--bg-surface-raised); color: var(--text-primary);
-        font-family: var(--font-hud), 'Inter', sans-serif; font-size: 0.85rem;
+        font-family: var(--font-hud); font-size: 0.85rem;
       }
       .fm-toast-alert .fm-alert-content { flex: 1; }
       .fm-toast-alert .fm-alert-title { font-weight: 700; margin-bottom: 4px; }
@@ -107,7 +107,7 @@
       .fm-toast-alert .fm-alert-close-btn:hover { opacity: 1; color: var(--text-primary); }
       [data-theme-style="retro"] .fm-toast-alert {
         border: 2px solid var(--v2-ink); border-radius: 0; box-shadow: 4px 4px 0 0 var(--v2-ink);
-        background: var(--bg-surface-raised); font-family: var(--font-hud), "VT323", monospace;
+        background: var(--bg-surface-raised); font-family: var(--font-hud);
       }
       [data-theme-style="retro"] .fm-toast-alert .fm-alert-close-btn { color: var(--v2-ink); }
     `;

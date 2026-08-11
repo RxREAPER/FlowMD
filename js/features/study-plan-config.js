@@ -388,7 +388,7 @@
       container.innerHTML = `
         <div class="plan-config-chips-search">
           <svg class="material-symbols-outlined" style="font-size:16px; color:var(--text-muted);"><use href="#fmd-i-search"/></svg>
-          <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:'Poppins', sans-serif; font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
+          <input type="text" id="${searchId}" placeholder="Search chapters..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; font-family:system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size:0.85rem; color:var(--text-primary);" autocomplete="off">
         </div>
         <div class="plan-config-chips-list" style="max-height:280px; overflow-y:auto;">${allChip + chapters.map(c => {
         const name = String(c.name);

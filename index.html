@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://fonts.gstatic.com https://www.gstatic.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com https://flowmd-04.firebaseapp.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://www.gstatic.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com https://flowmd-04.firebaseapp.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
   <title>FlowMD — Plan. Study. Track. Succeed.</title>
   
   <!-- PWA & Mobile Web App Meta -->
@@ -19,13 +19,10 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   
-  <!-- Google Fonts (text faces only — icons are inline SVG, no font) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&family=Pixelify+Sans:wght@600;700&family=VT323&display=swap" rel="stylesheet">
+  <!-- No Google Fonts — system font stacks + inline SVG icons (zero external font requests) -->
   
   <!-- Unified Mobile-First Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=202">
+  <link rel="stylesheet" href="style.css?v=204">
 </head>
 <body>
   
@@ -45,9 +42,9 @@
               </linearGradient>
             </defs>
             <rect x="0" y="4" width="28" height="28" rx="7" fill="url(#logo-grd)"/>
-            <text x="8" y="24" font-family="'Outfit',sans-serif" font-size="16" font-weight="800" fill="#ffffff" letter-spacing="-0.5">F</text>
-            <text x="34" y="24" font-family="'Outfit',sans-serif" font-size="18" font-weight="700" fill="currentColor" letter-spacing="-0.3">Flow</text>
-            <text x="82" y="24" font-family="'Inter',sans-serif" font-size="13" font-weight="600" fill="var(--text-muted)" letter-spacing="-0.2">MD</text>
+            <text x="8" y="24" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="16" font-weight="800" fill="#ffffff" letter-spacing="-0.5">F</text>
+            <text x="34" y="24" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="18" font-weight="700" fill="currentColor" letter-spacing="-0.3">Flow</text>
+            <text x="82" y="24" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="13" font-weight="600" fill="var(--text-muted)" letter-spacing="-0.2">MD</text>
           </svg>
         </div>
         <!-- Active Study Edition Indicator (populated by app.js) -->
@@ -244,12 +241,12 @@
       <div class="fm-feature-card" style="padding: 20px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--retro-border, #282f42); padding-bottom: 10px;">
           <svg class="material-symbols-outlined" style="color: var(--retro-cyan, #00f0ff); font-size: 24px;"><use href="#fmd-i-info"/></svg>
-          <h3 id="info-modal-title" style="color: var(--retro-gold, #ffcc00); font-family: var(--font-display), 'Pixelify Sans', monospace; font-size: 1.15rem; font-weight: 700; margin: 0;">
+          <h3 id="info-modal-title" style="color: var(--retro-gold, #ffcc00); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin: 0;">
             Explanation
           </h3>
         </div>
 
-        <div id="info-modal-body" class="fm-alert-message" style="font-family: var(--font-hud), 'VT323', monospace; font-size: 1.08rem; color: #cbd5e1; line-height: 1.5;">
+        <div id="info-modal-body" class="fm-alert-message" style="font-family: var(--font-hud); font-size: 1.08rem; color: #cbd5e1; line-height: 1.5;">
           <!-- Explanation content inserted dynamically -->
         </div>
 
@@ -265,11 +262,11 @@
     <div class="modal-card v2-pixel-card spotlight-card" style="max-width: 580px; width: 95%; max-height: 82vh; padding: 0; overflow: hidden; border: 2px solid var(--v2-ink);">
       <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 2px solid var(--v2-ink); background: var(--bg-surface);">
         <svg class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 22px;"><use href="#fmd-i-search"/></svg>
-        <input type="text" id="spotlight-search-input" placeholder="SEARCH 19 SUBJECTS, CHAPTERS, OR VIDEO TOPICS..." autocomplete="off" style="flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-family: 'Poppins', sans-serif; font-size: 1.15rem; letter-spacing: 0.04em;">
+        <input type="text" id="spotlight-search-input" placeholder="SEARCH 19 SUBJECTS, CHAPTERS, OR VIDEO TOPICS..." autocomplete="off" style="flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1.15rem; letter-spacing: 0.04em;">
         <button class="v2-arcade-btn" id="spotlight-close-btn" title="Close" style="width: 32px; height: 32px; padding: 0;"><svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-close"/></svg></button>
       </div>
       <div id="spotlight-results-container" style="padding: 16px 18px; max-height: calc(82vh - 65px); overflow-y: auto;">
-        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Poppins', sans-serif; font-size: 1.1rem;">
+        <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1.1rem;">
           Type to search across 20 MBBS subjects, chapters, and 2,000+ video topics...
         </div>
       </div>
@@ -284,33 +281,33 @@
   
 
   <!-- Application Data & Logic -->
-  <script src="firebase.js?v=202"></script>
-  <script src="data.js?v=202"></script>
-  <script src="data_marrow_6_5.js?v=202"></script>
-  <script src="js/core/namespace.js?v=202"></script>
-  <script src="js/core/constants.js?v=202"></script>
-  <script src="js/core/icons.js?v=202"></script>
-  <script src="js/core/state-store.js?v=202"></script>
-  <script src="js/core/source-data.js?v=202"></script>
-  <script src="js/core/subjects.js?v=202"></script>
-  <script src="js/core/metrics.js?v=202"></script>
-  <script src="js/core/logo.js?v=202"></script>
-  <script src="js/core/sync.js?v=202"></script>
-  <script src="js/features/toast.js?v=202"></script>
-  <script src="js/features/theme.js?v=202"></script>
-  <script src="js/features/search.js?v=202"></script>
-  <script src="js/features/sync.js?v=202"></script>
-  <script src="js/features/onboarding.js?v=202"></script>
-  <script src="js/features/study-plan-config.js?v=202"></script>
-  <script src="js/features/source-settings.js?v=202"></script>
-  <script src="js/features/charts.js?v=202"></script>
-  <script src="js/features/pwa-install.js?v=202"></script>
-  <script src="js/features/views/dashboard.js?v=202"></script>
-  <script src="js/features/views/curriculum.js?v=202"></script>
-  <script src="js/features/views/subject-detail.js?v=202"></script>
-  <script src="js/features/views/analytics.js?v=202"></script>
-  <script src="js/features/views/profile.js?v=202"></script>
-  <script src="app.js?v=202"></script>
+  <script src="firebase.js?v=204"></script>
+  <script src="data.js?v=204"></script>
+  <script src="data_marrow_6_5.js?v=204"></script>
+  <script src="js/core/namespace.js?v=204"></script>
+  <script src="js/core/constants.js?v=204"></script>
+  <script src="js/core/icons.js?v=204"></script>
+  <script src="js/core/state-store.js?v=204"></script>
+  <script src="js/core/source-data.js?v=204"></script>
+  <script src="js/core/subjects.js?v=204"></script>
+  <script src="js/core/metrics.js?v=204"></script>
+  <script src="js/core/logo.js?v=204"></script>
+  <script src="js/core/sync.js?v=204"></script>
+  <script src="js/features/toast.js?v=204"></script>
+  <script src="js/features/theme.js?v=204"></script>
+  <script src="js/features/search.js?v=204"></script>
+  <script src="js/features/sync.js?v=204"></script>
+  <script src="js/features/onboarding.js?v=204"></script>
+  <script src="js/features/study-plan-config.js?v=204"></script>
+  <script src="js/features/source-settings.js?v=204"></script>
+  <script src="js/features/charts.js?v=204"></script>
+  <script src="js/features/pwa-install.js?v=204"></script>
+  <script src="js/features/views/dashboard.js?v=204"></script>
+  <script src="js/features/views/curriculum.js?v=204"></script>
+  <script src="js/features/views/subject-detail.js?v=204"></script>
+  <script src="js/features/views/analytics.js?v=204"></script>
+  <script src="js/features/views/profile.js?v=204"></script>
+  <script src="app.js?v=204"></script>
 
 </body>
 </html>

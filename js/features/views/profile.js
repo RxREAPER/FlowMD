@@ -87,7 +87,7 @@
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Google Cloud Sync</h3>
         ${isSynced ? `
-          <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: 'Poppins', sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
             <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_done"/></svg>
             Synced as ${syncEmail}
           </div>
@@ -96,7 +96,7 @@
           </div>
           <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
         ` : `
-          <p style="font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
+          <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
           <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
             Syncs completions, streaks, plans & preferences across devices in real-time (~1s). Works offline.
           </div>
@@ -111,7 +111,7 @@
           <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-install_mobile"/></svg>
           Install App
         </h3>
-        <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
+        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
           Use FlowMD like a native app — installs to your home screen, runs full-screen and works offline.
         </p>
         ${pwaInstall ? pwaInstall.renderProfileInstallCard() : ''}
@@ -122,7 +122,7 @@
           <svg class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;"><use href="#fmd-i-support_agent"/></svg>
           <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin: 0;">Developer Support & Contact</h3>
         </div>
-        <p style="font-family: 'Poppins', sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
+        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
           Need help or have a question? Click below to reveal the developer contact email.
         </p>
         <button class="v2-arcade-btn" id="btn-show-support-email" style="height: 38px; width: 100%;">

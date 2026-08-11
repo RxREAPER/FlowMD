@@ -67,13 +67,13 @@
   --retro-card: #131722;
   --retro-border: #282f42;
 
-  --font-pixel: "Pixelify Sans", "Press Start 2P", monospace;
-  --font-mono: "VT323", "JetBrains Mono", monospace;
-  --font-body: "Inter", system-ui, sans-serif;
+  --font-pixel: "Press Start 2P", "Courier New", ui-monospace, monospace;
+  --font-mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* ========== MODERN THEME DEFAULTS (data-theme-style="modern" or unset) ========== */
-  --font-display: "Outfit", sans-serif;
-  --font-hud: "Inter", sans-serif;
+  --font-display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-hud: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --v2-ink: rgba(0, 0, 0, 0.1);
   --v2-sky-cobalt: #6c3baa;
   --v2-sunset-vermillion: #ef4444;
@@ -83,8 +83,8 @@
 }
 
 [data-theme-style="retro"], [data-theme-style="retro"] [data-theme="dark"] {
-  --font-display: "Pixelify Sans", monospace;
-  --font-hud: "VT323", monospace;
+  --font-display: "Courier New", ui-monospace, monospace;
+  --font-hud: "Courier New", ui-monospace, monospace;
   --v2-ink: #161310;
   --v2-sky-cobalt: #6c3baa;
   --v2-sunset-vermillion: #e2522e;
@@ -123,7 +123,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -209,7 +209,7 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 12px 22px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   line-height: 1;
@@ -251,7 +251,7 @@ body {
 }
 
 [data-theme-style="retro"] .v2-arcade-btn {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.02em;
@@ -282,7 +282,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -304,7 +304,7 @@ body {
 }
 
 [data-theme-style="retro"] .v2-hud-badge {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 16px;
   letter-spacing: 0.06em;
   padding: 4px 8px 3px;
@@ -430,7 +430,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 4px 14px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -543,7 +543,7 @@ body {
 }
 
 .v2-quest-title {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.92rem;
   font-weight: 500;
   color: var(--text-primary);
@@ -557,7 +557,7 @@ body {
 }
 
 .v2-quest-xp {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--success);
@@ -569,7 +569,7 @@ body {
 }
 
 [data-theme-style="retro"] .v2-quest-title {
-  font-family: var(--font-body), "Inter", sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-weight: 600;
 }
 
@@ -582,7 +582,7 @@ body {
 }
 
 [data-theme-style="retro"] .v2-quest-xp {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--success);
@@ -627,7 +627,7 @@ body {
   min-width: 0;
 }
 .v2-alert-category {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   color: var(--accent-primary);
@@ -639,7 +639,7 @@ body {
   margin-bottom: 2px;
 }
 .v2-alert-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -647,7 +647,7 @@ body {
   line-height: 1.25;
 }
 .v2-alert-body {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -693,17 +693,17 @@ body {
   border-radius: 0;
 }
 [data-theme-style="retro"] .v2-alert-category {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.05rem;
   letter-spacing: 0.08em;
   color: var(--v2-sky-cobalt);
 }
 [data-theme-style="retro"] .v2-alert-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.25rem;
 }
 [data-theme-style="retro"] .v2-alert-body {
-  font-family: var(--font-body), "Inter", sans-serif;
+  font-family: var(--font-body), sans-serif;
 }
 [data-theme-style="retro"] .v2-alert-close-btn {
   width: 26px;
@@ -946,7 +946,7 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 10px 18px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.92rem;
   line-height: 1;
@@ -977,7 +977,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1073,7 +1073,7 @@ body {
 }
 
 .modern-task-title {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.92rem;
   font-weight: 500;
   color: var(--text-primary);
@@ -1092,7 +1092,7 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.05rem;
   letter-spacing: 0.04em;
   margin-bottom: 12px;
@@ -1122,7 +1122,7 @@ body {
 
 .fm-breadcrumb-separator {
   color: var(--v2-rpg-gold, #ffd700);
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.95rem;
   opacity: 0.85;
 }
@@ -1141,7 +1141,7 @@ body {
 }
 
 .fm-badge-green {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   color: #10b981;
@@ -1168,7 +1168,7 @@ body {
 }
 
 .fm-feature-card-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -1177,7 +1177,7 @@ body {
 }
 
 .fm-feature-card-desc {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.92rem;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -1185,7 +1185,7 @@ body {
 }
 
 [data-theme-style="retro"] .fm-badge-green {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.95rem;
   font-weight: 700;
   color: #10b981;
@@ -1199,7 +1199,7 @@ body {
 
 [data-theme-style="retro"] .fm-badge-code {
   display: inline-flex;
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
   color: #9e9b97;
   background: rgba(255, 255, 255, 0.05);
@@ -1219,7 +1219,7 @@ body {
 }
 
 [data-theme-style="retro"] .fm-feature-card-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.7rem;
   font-weight: 700;
   color: #ffffff;
@@ -1229,7 +1229,7 @@ body {
 }
 
 [data-theme-style="retro"] .fm-feature-card-desc {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.15rem;
   color: #a0aec0;
   line-height: 1.55;
@@ -1244,7 +1244,7 @@ body {
 }
 
 .fm-command-group-header {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--v2-rpg-gold, #ffd700);
@@ -1274,7 +1274,7 @@ body {
 }
 
 .fm-command-label {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.98rem;
   font-weight: 700;
   color: #ffffff;
@@ -1284,7 +1284,7 @@ body {
 }
 
 .fm-command-shortcut {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.88rem;
   font-weight: 700;
   color: #10b981;
@@ -1321,7 +1321,7 @@ body {
 }
 
 .fm-alert-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   margin-bottom: 4px;
@@ -1332,7 +1332,7 @@ body {
 }
 
 .fm-alert-message {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -1415,12 +1415,12 @@ body {
    ============================================================ */
 
 [data-theme-style="retro"] .fm-breadcrumb {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
 }
 
 [data-theme-style="retro"] .fm-breadcrumb-separator {
   color: var(--v2-rpg-gold, #ffd700);
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.95rem;
 }
 
@@ -1431,7 +1431,7 @@ body {
 }
 
 [data-theme-style="retro"] .fm-command-group-header {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--v2-rpg-gold, #ffd700);
@@ -1451,14 +1451,14 @@ body {
 }
 
 [data-theme-style="retro"] .fm-command-label {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.98rem;
   font-weight: 700;
   color: #ffffff;
 }
 
 [data-theme-style="retro"] .fm-command-shortcut {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.88rem;
   font-weight: 700;
   color: #10b981;
@@ -1476,14 +1476,14 @@ body {
 }
 
 [data-theme-style="retro"] .fm-alert-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
 [data-theme-style="retro"] .fm-alert-message {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.05rem;
   color: #a0aec0;
   letter-spacing: 0.03em;
@@ -1543,19 +1543,19 @@ body {
 }
 
 [data-theme-style="retro"] .fm-pulse-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 [data-theme-style="retro"] .fm-pulse-value {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.85rem;
 }
 
 [data-theme-style="retro"] .fm-pulse-sub {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.9rem;
 }
 
@@ -1571,24 +1571,24 @@ body {
 }
 
 [data-theme-style="retro"] .fm-tile-name {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.78rem;
 }
 
 [data-theme-style="retro"] .fm-tile-telemetry {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.78rem;
 }
 
 [data-theme-style="retro"] .fm-heatmap-filter-btn {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.85rem;
   border-radius: 0;
   box-shadow: 2px 2px 0 0 #000000;
 }
 
 [data-theme-style="retro"] .fm-heatmap-telemetry-bar {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.88rem;
   border: 2px solid var(--v2-ink);
   border-radius: 0;
@@ -1605,13 +1605,13 @@ body {
 }
 
 [data-theme-style="retro"] .heatmap-filter-label {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.85rem;
   color: #94a3b8;
 }
 
 .heatmap-card-title {
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--accent-primary);
@@ -1622,7 +1622,7 @@ body {
 }
 
 [data-theme-style="retro"] .heatmap-card-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.15rem;
 }
 
@@ -1668,25 +1668,25 @@ body {
 }
 
 [data-theme-style="retro"] .hero-banner-card .fm-feature-card-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.45rem;
   letter-spacing: 0.02em;
   text-shadow: 2px 2px 0 #000000;
 }
 
 [data-theme-style="retro"] .hero-mastery-label {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.1rem;
 }
 
 [data-theme-style="retro"] .hero-mastery-value {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 2.2rem;
   color: var(--retro-gold, #ffcc00);
 }
 
 [data-theme-style="retro"] .hero-mastery-sub {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.1rem;
   color: var(--text-secondary);
 }
@@ -1702,14 +1702,14 @@ body {
 }
 
 [data-theme-style="retro"] .plan-badge {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.76rem;
   border-radius: 3px;
   box-shadow: 2px 2px 0 0 #000000;
 }
 
 [data-theme-style="retro"] .goal-plan-tab {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.92rem;
   border-radius: 0;
   border: 2px solid transparent;
@@ -1768,7 +1768,7 @@ body {
 }
 
 .fm-pulse-title {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -1777,7 +1777,7 @@ body {
 }
 
 .fm-pulse-value {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -1786,7 +1786,7 @@ body {
 }
 
 .fm-pulse-sub {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.82rem;
   color: #94a3b8;
   margin-top: 6px;
@@ -1827,7 +1827,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1835,7 +1835,7 @@ body {
 }
 
 .fm-stat-card-value {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -1844,7 +1844,7 @@ body {
 }
 
 .fm-stat-card-sub {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
   color: #94a3b8;
   letter-spacing: 0.03em;
@@ -1888,7 +1888,7 @@ body {
   justify-content: center;
   background: var(--accent-gradient);
   color: #ffffff;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1948,7 +1948,7 @@ body {
   background: var(--retro-surface, #0d1017);
   border: 2px solid var(--accent-primary, #00f0ff);
   color: var(--accent-primary, #00f0ff);
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   background-image: none;
   border-radius: 0;
   box-shadow: 2px 2px 0 0 #000000;
@@ -2107,14 +2107,14 @@ body {
   border: none;
   outline: none;
   color: var(--text-primary);
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.92rem;
   cursor: pointer;
 }
 
 .v2-subtopbar-search-box input::placeholder {
   color: var(--text-muted);
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.88rem;
 }
 
@@ -2132,13 +2132,13 @@ body {
 }
 
 [data-theme-style="retro"] .v2-subtopbar-search-box input {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.15rem;
   letter-spacing: 0.04em;
 }
 
 [data-theme-style="retro"] .v2-subtopbar-search-box input::placeholder {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.1rem;
 }
 
@@ -2279,7 +2279,7 @@ body {
 }
 
 [data-theme-style="retro"] .sync-btn {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1rem;
   border: 2px solid var(--v2-ink);
   border-radius: 0;
@@ -2307,7 +2307,7 @@ body {
   height: 32px;
   padding: 0 10px;
   cursor: pointer;
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.1rem;
   font-weight: 700;
   transition: transform 90ms ease, box-shadow 90ms ease;
@@ -2353,7 +2353,7 @@ body {
   justify-content: center;
   gap: 3px;
   color: #64748b;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, -apple-system, sans-serif;
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -2381,7 +2381,7 @@ body {
 }
 
 .nav-bar-label {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, -apple-system, sans-serif;
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -2480,7 +2480,7 @@ body {
 }
 
 .section-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -2505,7 +2505,7 @@ body {
 }
 
 .dash-welcome-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 4px;
@@ -2531,7 +2531,7 @@ body {
 }
 
 .stat-box-value {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.35rem;
   font-weight: 800;
   color: var(--accent-primary);
@@ -2827,7 +2827,7 @@ body {
 }
 
 .modal-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   display: flex;
@@ -2958,7 +2958,7 @@ body {
 }
 
 .goal-metric-value {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
   color: var(--accent-primary);
@@ -3163,7 +3163,7 @@ body {
   border-radius: 10px;
   padding: 10px 14px;
   margin-bottom: 14px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.82rem;
 }
 
@@ -3203,7 +3203,7 @@ body {
 }
 
 .heatmap-filter-label {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.78rem;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -3223,7 +3223,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   color: var(--text-secondary);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 5px 12px;
@@ -3329,7 +3329,7 @@ body {
 }
 
 .fm-tile-name {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.78rem;
   color: var(--text-primary);
@@ -3398,14 +3398,14 @@ body {
 }
 
 .fm-tile-tier-tag {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1;
 }
 
 .fm-tile-telemetry {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.8rem;
   color: var(--text-muted);
   line-height: 1;
@@ -3515,7 +3515,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -3530,7 +3530,7 @@ body {
 }
 
 .hero-mastery-value {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 2.1rem;
   font-weight: 700;
   color: var(--accent-primary);
@@ -3542,7 +3542,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.82rem;
   color: var(--text-secondary);
   margin-top: 6px;
@@ -3576,7 +3576,7 @@ body {
 }
 
 .support-email-text {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -3613,7 +3613,7 @@ body {
 }
 
 .pwa-install-title {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -3621,7 +3621,7 @@ body {
 }
 
 .pwa-install-desc {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin: 0;
@@ -3637,7 +3637,7 @@ body {
 }
 
 [data-theme-style="retro"] .pwa-install-desc {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.92rem;
 }
 
@@ -3653,7 +3653,7 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -3672,7 +3672,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background: var(--bg-surface-raised);
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -3685,7 +3685,7 @@ body {
   gap: 8px;
   padding: 12px 14px;
   border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.85rem;
 }
 
@@ -3696,7 +3696,7 @@ body {
 }
 
 [data-theme-style="retro"] .pwa-install-step {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
 }
 
@@ -3715,7 +3715,7 @@ body {
 }
 
 [data-theme-style="retro"] .support-email-text {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 1.05rem;
   color: var(--text-primary);
   letter-spacing: 0.04em;
@@ -3875,7 +3875,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -3923,20 +3923,20 @@ body {
   font-size: 0.72rem;
   padding: 3px 10px;
   border-radius: 6px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .plan-quest-subject-name {
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .plan-quest-progress {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.82rem;
   color: var(--text-muted);
   font-weight: 500;
@@ -3952,7 +3952,7 @@ body {
 }
 
 .plan-quest-target-text {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.82rem;
   color: var(--text-muted);
 }
@@ -3974,7 +3974,7 @@ body {
 }
 
 .quest-video-dur {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.88rem;
   color: var(--text-muted);
   font-weight: 600;
@@ -3985,46 +3985,46 @@ body {
 }
 
 [data-theme-style="retro"] .plan-quest-badge {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.76rem;
   border-radius: 4px;
   box-shadow: 2px 2px 0 0 #000000;
 }
 
 [data-theme-style="retro"] .plan-quest-subject-name {
-  font-family: var(--font-display), "Pixelify Sans", monospace;
+  font-family: var(--font-display), monospace;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 [data-theme-style="retro"] .plan-quest-progress {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.88rem;
 }
 
 [data-theme-style="retro"] .plan-quest-target-text {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
 }
 
 [data-theme-style="retro"] .quest-video-num {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
 }
 
 [data-theme-style="retro"] .quest-video-chapter {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.78rem;
 }
 
 [data-theme-style="retro"] .quest-video-dur {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 0.95rem;
 }
 
 .goal-plan-tab {
   transition: all 0.15s ease;
-  font-family: 'Outfit', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-weight: 600;
   cursor: pointer;
 }
@@ -4312,7 +4312,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 6px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
@@ -4417,7 +4417,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -4520,11 +4520,11 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
 }
 
 .hours-meter-nums {
-  font-family: var(--font-display), 'Inter', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.75rem;
   color: var(--text-primary);
 }
@@ -4561,7 +4561,7 @@ body {
 
 /* --- Retro theme overrides --- */
 [data-theme-style="retro"] .faculty-pill {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 15px;
   padding: 4px 10px 3px 4px;
   background-color: var(--bg-surface-raised);
@@ -4604,7 +4604,7 @@ body {
 }
 
 [data-theme-style="retro"] .faculty-card {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 14px;
   background-color: var(--bg-surface-raised);
   border: 2px solid var(--v2-ink);
@@ -4646,7 +4646,7 @@ body {
 }
 
 [data-theme-style="retro"] .hours-meter {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
 }
 
 [data-theme-style="retro"] .hm-track {
@@ -5643,7 +5643,7 @@ body {
 }
 
 .plan-config-dual-label {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -5709,14 +5709,14 @@ body {
   border-radius: 8px;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .plan-config-plan-role {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.7rem;
   color: var(--text-muted);
 }
@@ -5734,7 +5734,7 @@ body {
 }
 
 .plan-config-label {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-secondary);
@@ -5806,7 +5806,7 @@ body {
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -5827,7 +5827,7 @@ body {
   border-radius: 10px;
   background: rgba(59,130,246,0.06);
   border: 1px solid rgba(59,130,246,0.12);
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.78rem;
   color: var(--text-secondary);
   line-height: 1.4;
@@ -5847,7 +5847,7 @@ body {
 }
 
 .plan-config-chips-count {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.7rem;
   color: var(--accent-primary);
   font-weight: 700;
@@ -5876,7 +5876,7 @@ body {
 }
 
 .plan-config-pace-label {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -5884,7 +5884,7 @@ body {
 }
 
 .plan-config-pace-unit {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.65rem;
   color: var(--text-muted);
   opacity: 0.7;
@@ -5926,7 +5926,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background: var(--bg-surface);
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -5942,7 +5942,7 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.68rem;
   color: var(--text-muted);
   cursor: pointer;
@@ -5969,7 +5969,7 @@ body {
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
   transition: all 0.15s ease;
@@ -6009,7 +6009,7 @@ body {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -6028,7 +6028,7 @@ body {
 .plan-config-guide-body {
   display: none;
   margin-top: 8px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.78rem;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -6203,7 +6203,7 @@ body {
   gap: 6px;
   height: 32px;
   padding: 0 12px 0 10px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -6253,7 +6253,7 @@ body {
   gap: 6px;
   height: 30px;
   padding: 0 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -6299,7 +6299,7 @@ body {
   gap: 4px;
   height: 28px;
   padding: 0 10px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -6323,7 +6323,7 @@ body {
 }
 
 [data-theme-style="retro"] .offline-indicator {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 13px;
   letter-spacing: 0.06em;
   background-color: var(--bg-surface-raised);
@@ -6347,7 +6347,7 @@ body {
   gap: 8px;
   margin-top: 16px;
   padding: 10px 12px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--text-secondary);
@@ -6378,7 +6378,7 @@ body {
 }
 
 .profile-settings-row-label {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-secondary);
@@ -6389,7 +6389,7 @@ body {
   align-items: center;
   gap: 8px;
   margin-top: 4px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -6399,7 +6399,7 @@ body {
   margin-top: 4px;
   padding-top: 12px;
   border-top: 1px dashed var(--border-color);
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.74rem;
   line-height: 1.5;
   color: var(--text-muted);
@@ -6420,7 +6420,7 @@ body {
 
 /* --- Curriculum subject tab hours badge --- */
 .pwa-subject-tab-badge {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.6rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -6483,7 +6483,7 @@ body {
 
 /* --- Retro overrides for restored edition/source elements --- */
 [data-theme-style="retro"] .edition-badge {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 15px;
   letter-spacing: 0.06em;
   background-color: var(--bg-surface-raised);
@@ -6506,7 +6506,7 @@ body {
 }
 
 [data-theme-style="retro"] .edition-chip {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 15px;
   letter-spacing: 0.06em;
   color: var(--retro-cyan);
@@ -6522,7 +6522,7 @@ body {
 }
 
 [data-theme-style="retro"] .onboarding-hint-path {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 15px;
   background-color: var(--bg-surface-raised);
   border: 2px solid var(--v2-ink);
@@ -6536,7 +6536,7 @@ body {
 
 [data-theme-style="retro"] .profile-settings-row-label,
 [data-theme-style="retro"] .profile-settings-row-value {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
   font-size: 16px;
 }
 
@@ -6598,7 +6598,7 @@ body {
 }
 
 .anl-hero-kicker {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -6608,7 +6608,7 @@ body {
 }
 
 .anl-hero-title {
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1.35rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -6642,7 +6642,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-secondary);
@@ -6687,7 +6687,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -6711,7 +6711,7 @@ body {
 }
 
 .anl-report-focus .lbl {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -6721,7 +6721,7 @@ body {
 }
 
 .anl-report-focus .val {
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -6748,7 +6748,7 @@ body {
 }
 
 .anl-report-fact .lbl {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -6758,7 +6758,7 @@ body {
 }
 
 .anl-report-fact .val {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.95rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -6769,7 +6769,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -6794,7 +6794,7 @@ body {
   background: var(--bg-surface);
   border: 1px dashed var(--border-color);
   border-radius: 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   color: var(--text-secondary);
 }
 
@@ -6879,7 +6879,7 @@ body {
 .anl-goal-title {
   flex: 1;
   min-width: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.6rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -6891,7 +6891,7 @@ body {
 .anl-goal-badge {
   flex-shrink: 0;
   padding: 3px 8px;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.62rem;
   font-weight: 700;
   border: 1px solid var(--border-color);
@@ -6905,7 +6905,7 @@ body {
   right: 8px;
   flex-shrink: 0;
   padding: 3px 10px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.58rem;
   font-weight: 700;
   border: 1px solid var(--border-color);
@@ -6918,7 +6918,7 @@ body {
 }
 
 .anl-goal-value {
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1.6rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -6926,7 +6926,7 @@ body {
 }
 
 .anl-goal-value .unit {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -6934,7 +6934,7 @@ body {
 }
 
 .anl-goal-desc {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.74rem;
   line-height: 1.45;
   color: var(--text-muted);
@@ -6963,14 +6963,14 @@ body {
 }
 
 .anl-goal-pct {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.78rem;
   font-weight: 800;
   color: var(--tile, var(--accent-primary));
 }
 
 .anl-goal-delta {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.66rem;
   font-weight: 600;
 }
@@ -7017,7 +7017,7 @@ body {
 }
 
 .chart-kicker {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -7026,7 +7026,7 @@ body {
 }
 
 .chart-title {
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -7052,7 +7052,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-secondary);
@@ -7109,7 +7109,7 @@ body {
 
 .chart-targetlabel {
   fill: var(--accent-secondary, #a855f7);
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 10px;
   font-weight: 700;
   text-anchor: end;
@@ -7161,7 +7161,7 @@ body {
 
 .chart-val {
   fill: var(--text-primary);
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 11px;
   font-weight: 700;
   text-anchor: middle;
@@ -7169,7 +7169,7 @@ body {
 
 .chart-xlabel {
   fill: var(--text-muted);
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 10px;
   text-anchor: middle;
 }
@@ -7204,14 +7204,14 @@ body {
 }
 
 .ex-day-name {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.66rem;
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .ex-day-count {
-  font-family: var(--font-display), 'Outfit', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1.1rem;
   font-weight: 800;
   color: var(--text-primary);
@@ -7221,7 +7221,7 @@ body {
 .ex-day-tile.is-part .ex-day-count { color: var(--warning); }
 
 .ex-day-status {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.55rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -7329,7 +7329,7 @@ body {
 
 [data-theme-style="retro"] .anl-hero-kicker,
 [data-theme-style="retro"] .anl-chip {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
 }
 
 [data-theme-style="retro"] .anl-chip {
@@ -7401,7 +7401,7 @@ body {
 [data-theme-style="retro"] .anl-goal-pct,
 [data-theme-style="retro"] .ex-day-count,
 [data-theme-style="retro"] .ex-day-name {
-  font-family: var(--font-hud), "VT323", monospace;
+  font-family: var(--font-hud), monospace;
 }
 
 /* --- Onboarding Wizard + Study Source modal (onboarding-* suite) --- */
@@ -7414,7 +7414,7 @@ body {
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 16px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -7447,14 +7447,14 @@ body {
   text-align: left;
 }
 .onboarding-title {
-  font-family: var(--font-display), 'Inter', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 4px 0;
 }
 .onboarding-sub {
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.82rem;
   color: var(--text-secondary);
   margin: 0 0 8px 0;
@@ -7472,7 +7472,7 @@ body {
   width: 100%;
   padding: 14px 16px;
   text-align: left;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.9rem;
   color: var(--text-primary);
   background: var(--bg-surface-raised);
@@ -7517,14 +7517,14 @@ body {
 }
 .onboarding-option-title {
   display: block;
-  font-family: var(--font-display), 'Inter', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: 0.98rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 .onboarding-option-sub {
   display: block;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.78rem;
   color: var(--text-secondary);
   margin-top: 3px;
@@ -7539,7 +7539,7 @@ body {
   gap: 8px;
   margin-top: 12px;
   padding: 10px 12px;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.78rem;
   line-height: 1.45;
   color: var(--text-secondary);
@@ -7564,7 +7564,7 @@ body {
   width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.95rem;
   color: var(--text-primary);
   background: var(--bg-surface-raised);
@@ -7586,7 +7586,7 @@ body {
 .onboarding-theme-opt {
   padding: 12px 10px;
   text-align: center;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-secondary);
@@ -7616,7 +7616,7 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, system-ui, sans-serif;
   font-size: 0.85rem;
   line-height: 1.5;
   color: var(--text-secondary);
@@ -7628,7 +7628,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-hud), 'Inter', sans-serif;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--accent-primary);
@@ -7678,7 +7678,7 @@ body {
   box-shadow: 8px 8px 0 0 #000000;
 }
 [data-theme-style="retro"] .onboarding-title {
-  font-family: var(--font-display), 'Pixelify Sans', monospace;
+  font-family: var(--font-display), monospace;
   text-shadow: 2px 2px 0 #000000;
 }
 [data-theme-style="retro"] .onboarding-option {
@@ -7698,12 +7698,12 @@ body {
   border-radius: 0;
 }
 [data-theme-style="retro"] .onboarding-option-title {
-  font-family: var(--font-display), 'Pixelify Sans', monospace;
+  font-family: var(--font-display), monospace;
 }
 [data-theme-style="retro"] .onboarding-option-sub,
 [data-theme-style="retro"] .onboarding-sub,
 [data-theme-style="retro"] .onboarding-alert {
-  font-family: var(--font-hud), 'VT323', monospace;
+  font-family: var(--font-hud), monospace;
 }
 [data-theme-style="retro"] .onboarding-alert {
   border: 2px solid var(--v2-ink);
@@ -7722,7 +7722,7 @@ body {
   border-radius: 0;
 }
 [data-theme-style="retro"] .onboarding-step-line {
-  font-family: var(--font-hud), 'VT323', monospace;
+  font-family: var(--font-hud), monospace;
 }
 [data-theme-style="retro"] .onboarding-dot {
   border-radius: 0;
@@ -7755,7 +7755,7 @@ body {
   line-height: 1.2;
 }
 .spc-sub {
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-top: 4px;
@@ -7816,7 +7816,7 @@ body {
   border-radius: 999px;
   background: var(--accent-primary);
   color: #fff;
-  font-family: 'Poppins', sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif, sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   white-space: nowrap;

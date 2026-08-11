@@ -30,8 +30,8 @@
         </g>
 
         <g transform="translate(96, 38)">
-          <text x="0" y="0" fill="${mainColor}" font-family="'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.5">Flow</text>
-          <text x="52" y="0" fill="${accentColor}" font-family="'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5">MD</text>
+          <text x="0" y="0" fill="${mainColor}" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="26" font-weight="600" letter-spacing="-0.5">Flow</text>
+          <text x="52" y="0" fill="${accentColor}" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5">MD</text>
         </g>
 
         <g transform="translate(96, 54)">
