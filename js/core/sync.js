@@ -8,12 +8,24 @@
 
   // Fields the app knows how to consume. Anything else in a cloud doc is
   // dropped so legacy/junk fields can never corrupt in-memory state.
+  // Deliberately excluded (space): speed/subjectUrgency/dailyBatch (dead,
+  // never read), queueCompletedInBatch/queueBatchVideoIds (per-day transient,
+  // recomputed by the queue engine), lastSyncedAt (never read — updatedAt
+  // is the merge clock).
   const KNOWN_FIELDS = [
-    'completedVideos', 'speed', 'goals', 'streakData', 'personal', 'subjectUrgency',
-    'dailyBatch', 'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
-    'activeSource', 'isConfigured', 'themeStyle', 'queueCompletedInBatch',
-    'queueBatchVideoIds', 'googleDisplayName', 'googlePhotoURL',
-    'updatedAt', 'lastSyncedAt', 'lastLocalUpdate'
+    'completedVideos', 'goals', 'streakData', 'personal',
+    'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
+    'activeSource', 'isConfigured', 'themeStyle', 'googleDisplayName',
+    'googlePhotoURL', 'updatedAt', 'lastLocalUpdate'
+  ];
+
+  // Fields a plan keeps in the cloud doc. Transient daily state (the queue
+  // batch, per-day counters) is recomputed by the queue engine and never
+  // synced — it changes every session and tells another device nothing.
+  const PLAN_CLOUD_KEYS = [
+    'id', 'label', 'accentColor', 'targetSubject', 'targetDate',
+    'videosPerDay', 'videosPerWeek', 'videosPerMonth',
+    'dailyTargetHours', 'targetUnits'
   ];
 
   const KNOWN_SOURCES = ['marrow_8', 'marrow_6_5', 'prepladder_x'];
@@ -41,8 +53,15 @@
           break;
         case 'plans':
           if (Array.isArray(v) && v.length <= 4) {
-            const cleanPlans = v.filter(p => isPlainObject(p) && typeof p.id === 'string');
-            if (cleanPlans.length === v.length) out.plans = v;
+            const cleanPlans = [];
+            let ok = true;
+            for (const p of v) {
+              if (!isPlainObject(p) || typeof p.id !== 'string') { ok = false; break; }
+              const cp = {};
+              for (const k of PLAN_CLOUD_KEYS) if (p[k] !== undefined) cp[k] = p[k];
+              cleanPlans.push(cp);
+            }
+            if (ok && cleanPlans.length === v.length) out.plans = cleanPlans;
           }
           break;
         case 'dailyHistory':
@@ -50,12 +69,7 @@
         case 'goals':
         case 'personal':
         case 'streakData':
-        case 'subjectUrgency':
-        case 'dailyBatch':
           if (isPlainObject(v)) out[key] = v;
-          break;
-        case 'queueBatchVideoIds':
-          if (Array.isArray(v) && v.length <= 200) out[key] = v;
           break;
         case 'activeSource':
           if (KNOWN_SOURCES.indexOf(v) !== -1) out.activeSource = v;
@@ -68,12 +82,6 @@
           break;
         case 'isConfigured':
           if (typeof v === 'boolean') out.isConfigured = v;
-          break;
-        case 'speed':
-          if (typeof v === 'number' && v >= 0.5 && v <= 4) out.speed = v;
-          break;
-        case 'queueCompletedInBatch':
-          if (typeof v === 'number' && v >= 0 && v <= 200) out.queueCompletedInBatch = v;
           break;
         case 'googleDisplayName':
           if (typeof v === 'string' && v.length <= 200) out.googleDisplayName = v;
@@ -154,12 +162,60 @@
     return dirty;
   }
 
+  // --- Cloud-doc size control (pure helpers) ---
+
+  // Video IDs in state/localStorage carry a runtime source prefix
+  // ("marrow_8::anatomy__v1") because the same video id exists across
+  // editions. In the cloud doc that prefix is redundant — the doc already
+  // stores activeSource — so it is stripped at write time and re-added at
+  // read time. Saves ~10 bytes per completed video (up to ~16KB on the
+  // largest syllabus) and keeps the doc well under Firestore's 1 MiB limit.
+  const SOURCE_PREFIX_RE = /^[A-Za-z0-9_]+::/;
+
+  function compressCompletedVideos(map) {
+    const out = {};
+    for (const k of Object.keys(map || {})) out[k.replace(SOURCE_PREFIX_RE, '')] = map[k];
+    return out;
+  }
+
+  // Keys that already carry a prefix (legacy docs written before compression)
+  // pass through untouched; unprefixed keys get the current source prefix so
+  // they match the runtime video ids ("<activeSource>::" + data id).
+  function rehydrateCompletedVideos(map, sourceId) {
+    const prefix = (sourceId || 'marrow_8') + '::';
+    const out = {};
+    for (const k of Object.keys(map || {})) out[k.indexOf('::') === -1 ? prefix + k : k] = map[k];
+    return out;
+  }
+
+  // Daily-history maps ("YYYY-MM-DD" → count) are only consumed for the
+  // last 7/30 days (charts + aggregates) and today (per-subject queue), so
+  // entries older than the retention window are pure dead weight in the
+  // cloud doc. Keeps keys lexicographically >= cutoffKey (inclusive).
+  function pruneHistoryMaps(dailyHistory, dailyHistoryBySubject, cutoffKey) {
+    const pruneOne = (map) => {
+      const out = {};
+      for (const k of Object.keys(map || {})) if (k >= cutoffKey) out[k] = map[k];
+      return out;
+    };
+    const dh = pruneOne(dailyHistory);
+    const dhbs = {};
+    for (const subj of Object.keys(dailyHistoryBySubject || {})) {
+      dhbs[subj] = pruneOne(dailyHistoryBySubject[subj]);
+    }
+    return [dh, dhbs];
+  }
+
   window.FlowMD.sync = {
     sanitizeCloudState,
     shouldApplyCloud,
     mergeLocalWins,
     mergePlansLocalWins,
     computeDirtyFields,
-    KNOWN_FIELDS
+    compressCompletedVideos,
+    rehydrateCompletedVideos,
+    pruneHistoryMaps,
+    KNOWN_FIELDS,
+    PLAN_CLOUD_KEYS
   };
 })();

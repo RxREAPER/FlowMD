@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Firestore doc slimmed — dead, transient, and redundant data no longer synced (v202)
+
+- **Dead fields removed from the cloud doc**: `speed` (always `1.5`), `subjectUrgency` (always `{}`), `dailyBatch` (always `null`), and `lastSyncedAt` (never read — `updatedAt` is the merge clock). None existed in app state or were ever consumed; they were written as constants on every sync.
+- **Transient queue state no longer synced**: `queueBatchVideoIds` / `queueCompletedInBatch` (top-level and per-plan) plus per-plan `extraBatchesCompletedToday` / `lastBatchDate` — per-day, recomputed by the queue engine, and wrong to share across devices. Plans are now stored with only their durable fields (`id`, `label`, `accentColor`, target, paces, `targetUnits`).
+- **`completedVideos` keys compressed**: the runtime `marrow_8::` source prefix is redundant in the doc (it sits next to `activeSource`), so keys are stripped on write (`compressCompletedVideos`) and re-prefixed on read (`rehydrateCompletedVideos`) — saves ~10 bytes per video (≈16KB on the full syllabus) and keeps the doc far from Firestore's 1 MiB limit. `updateVideo` writes compressed keys too. Legacy prefixed keys pass through untouched.
+- **History pruned to 90 days**: `dailyHistory` is only read for the 7/30-day charts and `dailyHistoryBySubject` only for today's count, so entries older than 90 days were unbounded dead weight in the doc; `saveState` now prunes both maps (local + cloud stay identical).
+- **Tests**: +5 unit tests (compress/rehydrate round-trip, prune cutoff, sanitize drops dead fields + strips plan transients), +4 registry contract checks (95 total). Existing docs stay valid: old fields are dropped on read, prefixed video keys rehydrate correctly, and the whole suite is green (95/19/32/40/nav/22/7/scope/20).
+
 ## [2026-08-11] Scope-leak audit — one more leftover from the module split caught (v201)
 
 - **Audited every module** (`js/features/views/*`, `js/features/*`, `js/core/*`, `app.js`, `firebase.js`, `sw.js`) for bare function calls not covered by an import, a declaration, a parameter, or a known global — the ReferenceError class that already broke the quest checkboxes.

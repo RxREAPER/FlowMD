@@ -38,7 +38,10 @@
           // Merge cloud → local with LOCAL winning on conflicts: the device's
           // offline completions must never be clobbered by a stale cloud snapshot.
           // Cloud still fills gaps (keys absent locally). See .planning/codebase/CONCERNS.md #3.
-          state.completedVideos = { ...(clean.completedVideos || {}), ...state.completedVideos };
+          // completedVideos arrives source-prefix-compressed (see syncToCloud)
+          // and is re-prefixed with the current source before the union.
+          const cloudVideos = window.FlowMD.sync.rehydrateCompletedVideos(clean.completedVideos, state.activeSource || 'marrow_8');
+          state.completedVideos = { ...cloudVideos, ...state.completedVideos };
           state.goals = { ...(clean.goals || {}), ...state.goals };
           state.personal = { ...(clean.personal || {}), ...state.personal };
           state.dailyHistory = { ...(clean.dailyHistory || {}), ...state.dailyHistory };
@@ -48,8 +51,6 @@
           state.activeSource = clean.activeSource || state.activeSource;
           state.isConfigured = clean.isConfigured || state.isConfigured;
           state.themeStyle = clean.themeStyle || state.themeStyle;
-          state.queueCompletedInBatch = clean.queueCompletedInBatch || state.queueCompletedInBatch;
-          state.queueBatchVideoIds = clean.queueBatchVideoIds ? [...clean.queueBatchVideoIds] : state.queueBatchVideoIds;
           if (clean.streakData) state.streakData = { ...clean.streakData, ...(state.streakData || {}) };
           saveState();
         } else {
@@ -93,8 +94,10 @@
       const localUpdated = state.lastLocalUpdate || 0;
       const hasLocalDirty = state._dirtyFields && state._dirtyFields.length > 0;
 
-      // Local completions always win (they're the source of truth for offline work)
-      state.completedVideos = { ...(clean.completedVideos || {}), ...state.completedVideos };
+      // Local completions always win (they're the source of truth for offline
+      // work); cloud keys arrive compressed and are re-prefixed first.
+      const cloudVideos = window.FlowMD.sync.rehydrateCompletedVideos(clean.completedVideos, state.activeSource || 'marrow_8');
+      state.completedVideos = { ...cloudVideos, ...state.completedVideos };
 
       // For other fields, apply cloud when it is newer than local (within a
       // 5s clock-skew window) or when we have unsynced local changes; only
@@ -109,8 +112,6 @@
         state.activeSource = clean.activeSource || state.activeSource;
         state.isConfigured = clean.isConfigured || state.isConfigured;
         state.themeStyle = clean.themeStyle || state.themeStyle;
-        state.queueCompletedInBatch = clean.queueCompletedInBatch || state.queueCompletedInBatch;
-        state.queueBatchVideoIds = clean.queueBatchVideoIds ? [...clean.queueBatchVideoIds] : state.queueBatchVideoIds;
         if (clean.streakData) state.streakData = { ...clean.streakData, ...(state.streakData || {}) };
       } else {
         // Local is newer - push to cloud

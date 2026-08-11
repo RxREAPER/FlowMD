@@ -242,15 +242,20 @@
 
   // Top-level state fields that are written to Firestore (mirrors the
   // syncToCloud payload). Local-only bookkeeping (theme, isOffline, search,
-  // expandedChapters, lastLocalUpdate, _dirtyFields, _prevSyncedState) is
-  // never cloud-written — excluding it here prevents junk fields from ever
-  // being pushed by field-level updates.
+  // expandedChapters, lastLocalUpdate, _dirtyFields, _prevSyncedState) and
+  // dead/transient fields (speed, subjectUrgency, dailyBatch, queue counters)
+  // are never cloud-written — excluding them here prevents junk fields from
+  // ever being pushed by field-level updates.
   const CLOUD_STATE_FIELDS = [
-    'completedVideos', 'speed', 'goals', 'streakData', 'personal', 'subjectUrgency',
-    'dailyBatch', 'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
-    'activeSource', 'isConfigured', 'themeStyle', 'queueCompletedInBatch',
-    'queueBatchVideoIds'
+    'completedVideos', 'goals', 'streakData', 'personal',
+    'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
+    'activeSource', 'isConfigured', 'themeStyle'
   ];
+
+  // How many days of daily-history maps to keep. The charts only ever look
+  // back 7/30 days and the per-subject map only needs today, so anything
+  // older is dead weight in localStorage and the Firestore doc.
+  const HISTORY_RETENTION_DAYS = 90;
 
   // Shallow copy of just the cloud-writable fields — used as the baseline for
   // dirty-field comparison so a no-op save never schedules a cloud write.
@@ -288,6 +293,14 @@
   function saveState() {
     try {
       state.lastLocalUpdate = Date.now();
+      // Drop history older than the retention window (keeps local storage and
+      // the cloud doc minimal without touching anything the UI reads).
+      try {
+        const cutoff = toLocalDateKey(new Date(Date.now() - HISTORY_RETENTION_DAYS * 86400000));
+        const [dh, dhbs] = window.FlowMD.sync.pruneHistoryMaps(state.dailyHistory, state.dailyHistoryBySubject, cutoff);
+        state.dailyHistory = dh;
+        state.dailyHistoryBySubject = dhbs;
+      } catch (_) { /* pruning must never block a save */ }
       // Selective writes: unchanged keys are skipped so no-op saves never
       // churn localStorage or trigger storage events in other tabs.
       LOCAL_KEYS.forEach((pair) => {

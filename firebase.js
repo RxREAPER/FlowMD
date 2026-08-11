@@ -86,28 +86,35 @@
     async syncToCloud(uid, stateData, user) {
       if (!db || !uid) return;
       try {
+        // Only fields the app actually consumes, at the minimum size:
+        // completedVideos keys are source-prefix-compressed (activeSource is
+        // stored right next to them), plans drop their per-day transient
+        // queue state, and dead fields (speed, subjectUrgency, dailyBatch,
+        // lastSyncedAt, queue counters) are never written.
+        const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
+        const compress = syncApi.compressCompletedVideos || ((m) => m || {});
+        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits'];
+        const stripPlan = (p) => {
+          const cp = {};
+          planKeys.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
+          return cp;
+        };
         const payload = {
-          completedVideos: stateData.completedVideos || {},
-          speed: stateData.speed || 1.5,
+          completedVideos: compress(stateData.completedVideos || {}),
           goals: stateData.goals || {},
           streakData: stateData.streakData || {},
           personal: stateData.personal || {},
-          subjectUrgency: stateData.subjectUrgency || {},
-          dailyBatch: stateData.dailyBatch || null,
           dailyHistory: stateData.dailyHistory || {},
           dailyHistoryBySubject: stateData.dailyHistoryBySubject || {},
-          plans: stateData.plans || [],
+          plans: (stateData.plans || []).map(stripPlan),
           activePlanId: stateData.activePlanId || 'plan_a',
           activeSource: stateData.activeSource || 'marrow_8',
           isConfigured: stateData.isConfigured || false,
           themeStyle: stateData.themeStyle || 'modern',
-          queueCompletedInBatch: stateData.queueCompletedInBatch || 0,
-          queueBatchVideoIds: stateData.queueBatchVideoIds || [],
           // Google account info (for profile display)
           googleDisplayName: user?.displayName || null,
           googlePhotoURL: user?.photoURL || null,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          lastSyncedAt: firebase.firestore.FieldValue.serverTimestamp()
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         await db.collection('users').doc(uid).set(payload, { merge: true });
         console.log('Successfully synced state to Firebase Cloud.');
@@ -152,10 +159,13 @@
 
     // Mark one video completed/uncompleted via a dotted-path-free FieldPath
     // (video IDs may contain dots, so never build dot-notation strings).
+    // The key is stored source-prefix-compressed in the doc (see
+    // syncToCloud), so the runtime prefixed id is stripped before writing.
     async updateVideo(uid, videoId, done) {
       if (!db || !uid || !videoId) return;
       try {
-        const path = new firebase.firestore.FieldPath('completedVideos', videoId);
+        const key = String(videoId).replace(/^[A-Za-z0-9_]+::/, '');
+        const path = new firebase.firestore.FieldPath('completedVideos', key);
         await db.collection('users').doc(uid).update({
           [path]: !!done,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()

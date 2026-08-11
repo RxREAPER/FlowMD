@@ -69,3 +69,59 @@ test('write-loop guard: identical cloud snapshot never re-triggers a write-back'
   // …but without local dirty changes and cloud strictly older, we do NOT push
   assert.equal(sync.shouldApplyCloud(1000, 20000, false), false);
 });
+
+test('compressCompletedVideos strips the redundant source prefix from every key', () => {
+  const out = sync.compressCompletedVideos({
+    'marrow_8::anatomy__v1': true,
+    'marrow_6_5::anatomy__v2': true,
+    'anatomy__v3': true // already unprefixed — untouched
+  });
+  assert.deepEqual(toPlain(out), { 'anatomy__v1': true, 'anatomy__v2': true, 'anatomy__v3': true });
+});
+
+test('rehydrateCompletedVideos re-prefixes with the current source, legacy keys pass through', () => {
+  const out = sync.rehydrateCompletedVideos({ 'anatomy__v1': true, 'marrow_6_5::anatomy__v2': true }, 'marrow_8');
+  assert.deepEqual(toPlain(out), { 'marrow_8::anatomy__v1': true, 'marrow_6_5::anatomy__v2': true });
+});
+
+test('compress → rehydrate round-trip is lossless for same-source videos', () => {
+  const local = { 'marrow_8::anatomy__v1': true, 'marrow_8::anatomy__v2': false };
+  const cloud = sync.compressCompletedVideos(local);
+  assert.deepEqual(toPlain(sync.rehydrateCompletedVideos(cloud, 'marrow_8')), local);
+});
+
+test('pruneHistoryMaps keeps only entries on/after the cutoff (lexicographic date keys)', () => {
+  const [dh, dhbs] = sync.pruneHistoryMaps(
+    { '2026-01-01': 3, '2026-05-10': 2, '2026-05-11': 1 },
+    { anatomy: { '2026-01-01': 3, '2026-05-11': 1 }, pathology: { '2026-04-01': 5 } },
+    '2026-05-10'
+  );
+  assert.deepEqual(toPlain(dh), { '2026-05-10': 2, '2026-05-11': 1 });
+  assert.deepEqual(toPlain(dhbs), { anatomy: { '2026-05-11': 1 }, pathology: {} });
+});
+
+test('sanitizeCloudState drops dead fields and strips transient keys from plans', () => {
+  const out = sync.sanitizeCloudState({
+    speed: 1.5,
+    subjectUrgency: { anatomy: 1 },
+    dailyBatch: null,
+    queueCompletedInBatch: 3,
+    queueBatchVideoIds: ['a', 'b'],
+    lastSyncedAt: 'x',
+    completedVideos: { 'anatomy__v1': true },
+    plans: [{
+      id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8,
+      queueBatchVideoIds: ['a'], queueCompletedInBatch: 2,
+      extraBatchesCompletedToday: 1, lastBatchDate: '2026-05-11'
+    }]
+  });
+  assert.equal(out.speed, undefined);
+  assert.equal(out.subjectUrgency, undefined);
+  assert.equal(out.dailyBatch, undefined);
+  assert.equal(out.queueCompletedInBatch, undefined);
+  assert.equal(out.queueBatchVideoIds, undefined);
+  assert.equal(out.lastSyncedAt, undefined);
+  assert.deepEqual(toPlain(out.plans), [{
+    id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8
+  }]);
+});
