@@ -115,11 +115,11 @@
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
         <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-          <svg class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary);"><use href="#fmd-i-verified"/></svg>
+          <svg class="material-symbols-outlined layout-check-icon"><use href="#fmd-i-verified"/></svg>
           Device Layout Check
         </h3>
-        <div class="profile-settings-hint" id="layout-check-summary" style="font-size: 0.8rem;">Checking…</div>
-        <div class="profile-settings-hint" style="font-size: 0.72rem; margin-top: 4px;">
+        <div class="profile-settings-hint layout-check-summary-hint" id="layout-check-summary">Checking…</div>
+        <div class="profile-settings-hint layout-check-sub-hint">
           FlowMD checks this device's screen for boxes that overflow or text that gets clipped. If an issue appears here, it is reported in the browser console with details.
         </div>
       </div>

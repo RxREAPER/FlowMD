@@ -2062,6 +2062,21 @@ body {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* Device Layout Check card (Profile) */
+.layout-check-icon {
+  font-size: 18px;
+  color: var(--accent-primary);
+}
+
+.layout-check-summary-hint {
+  font-size: 0.8rem;
+}
+
+.layout-check-sub-hint {
+  font-size: 0.72rem;
+  margin-top: 4px;
+}
+
 /* Spotlight search input — never hard-clip the placeholder on narrow screens */
 #spotlight-search-input {
   min-width: 0;
