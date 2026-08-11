@@ -87,12 +87,11 @@
       if (!db || !uid) return;
       try {
         // Only fields the app actually consumes, at the minimum size:
-        // completedVideos keys are source-prefix-compressed (activeSource is
-        // stored right next to them), plans drop their per-day transient
-        // queue state, and dead fields (speed, subjectUrgency, dailyBatch,
-        // lastSyncedAt, queue counters) are never written.
+        // completedVideos stores FULL prefixed keys (both editions share video
+        // ids — compressing would collide them), plans drop their per-day
+        // transient queue state, and dead fields (speed, subjectUrgency,
+        // dailyBatch, lastSyncedAt, queue counters) are never written.
         const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
-        const compress = syncApi.compressCompletedVideos || ((m) => m || {});
         const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits'];
         const stripPlan = (p) => {
           const cp = {};
@@ -100,7 +99,7 @@
           return cp;
         };
         const payload = {
-          completedVideos: compress(stateData.completedVideos || {}),
+          completedVideos: stateData.completedVideos || {},
           goals: stateData.goals || {},
           streakData: stateData.streakData || {},
           personal: stateData.personal || {},
@@ -150,15 +149,44 @@
     async updateCloudFields(uid, fields) {
       if (!db || !uid || !fields) return;
       try {
-        const payload = Object.assign({}, fields, {
+        const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
+        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits'];
+        // plans in state carry per-day queue bookkeeping (queueBatchVideoIds,
+        // per-batch counters) — strip to the same cloud keys syncToCloud uses
+        // so field-level writes never accumulate junk in the doc.
+        let cleanFields = fields;
+        if (Array.isArray(fields.plans)) {
+          cleanFields = Object.assign({}, fields);
+          cleanFields.plans = fields.plans.map((p) => {
+            const cp = {};
+            planKeys.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
+            return cp;
+          });
+        }
+        const payload = Object.assign({}, cleanFields, {
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        // Stamp the per-field clock for every field being written so pull
-        // arbitration can tell which side last changed each field.
+        // Stamp each field's clock with a DOT-PATH merge into the existing
+        // fieldSyncTimes map. Never write `fieldSyncTimes` wholesale: that
+        // REPLACES the map and destroys every OTHER field's clock, which makes
+        // cross-device arbitration asymmetric and lets a stale device wipe a
+        // richer one on the next pull (the reported sync data-loss bug).
         const now = Date.now();
-        const fieldTimes = {};
-        Object.keys(fields).forEach((f) => { fieldTimes[f] = now; });
-        payload.fieldSyncTimes = fieldTimes;
+        Object.keys(cleanFields).forEach((f) => {
+          if (f === 'updatedAt') return;
+          payload['fieldSyncTimes.' + f] = now;
+        });
+        // completedVideos is written PER KEY via FieldPath so the write MERGES
+        // into the doc's existing map instead of replacing it. A device that
+        // hasn't pulled yet must never erase the other edition's completions
+        // from the doc (both editions share video ids, keys are prefixed).
+        delete payload.completedVideos;
+        if (cleanFields.completedVideos && typeof cleanFields.completedVideos === 'object') {
+          Object.keys(cleanFields.completedVideos).forEach((k) => {
+            payload[new firebase.firestore.FieldPath('completedVideos', k)] = !!cleanFields.completedVideos[k];
+          });
+        }
+        delete payload.fieldSyncTimes;
         await db.collection('users').doc(uid).update(payload);
       } catch (err) {
         if (err && err.code === 'not-found') {
@@ -173,15 +201,16 @@
 
     // Mark one video completed/uncompleted via a dotted-path-free FieldPath
     // (video IDs may contain dots, so never build dot-notation strings).
-    // The key is stored source-prefix-compressed in the doc (see
-    // syncToCloud), so the runtime prefixed id is stripped before writing.
+    // The key is stored WITH its source prefix (both editions share video
+    // ids — stripping would collide marrow_8 and marrow_6_5 completions).
     async updateVideo(uid, videoId, done) {
       if (!db || !uid || !videoId) return;
       try {
-        const key = String(videoId).replace(/^[A-Za-z0-9_]+::/, '');
+        const key = String(videoId);
         const path = new firebase.firestore.FieldPath('completedVideos', key);
         await db.collection('users').doc(uid).update({
           [path]: !!done,
+          'fieldSyncTimes.completedVideos': Date.now(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       } catch (err) {

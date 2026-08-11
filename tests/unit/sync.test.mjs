@@ -73,24 +73,18 @@ test('write-loop guard: equal timestamps resolve deterministically and cloud-won
   assert.equal(merged2.activePlanId, 'plan_b');
 });
 
-test('compressCompletedVideos strips the redundant source prefix from every key', () => {
-  const out = sync.compressCompletedVideos({
-    'marrow_8::anatomy__v1': true,
-    'marrow_6_5::anatomy__v2': true,
-    'anatomy__v3': true // already unprefixed — untouched
-  });
-  assert.deepEqual(toPlain(out), { 'anatomy__v1': true, 'anatomy__v2': true, 'anatomy__v3': true });
-});
-
-test('rehydrateCompletedVideos re-prefixes with the current source, legacy keys pass through', () => {
+test('rehydrateCompletedVideos passes prefixed keys through, legacy unprefixed keys get the current source prefix', () => {
   const out = sync.rehydrateCompletedVideos({ 'anatomy__v1': true, 'marrow_6_5::anatomy__v2': true }, 'marrow_8');
   assert.deepEqual(toPlain(out), { 'marrow_8::anatomy__v1': true, 'marrow_6_5::anatomy__v2': true });
 });
 
-test('compress → rehydrate round-trip is lossless for same-source videos', () => {
-  const local = { 'marrow_8::anatomy__v1': true, 'marrow_8::anatomy__v2': false };
-  const cloud = sync.compressCompletedVideos(local);
-  assert.deepEqual(toPlain(sync.rehydrateCompletedVideos(cloud, 'marrow_8')), local);
+test('cloud stores FULL prefixed keys — both editions keep their own completions (no prefix collision)', () => {
+  // Both editions share the same video id; the cloud doc must keep both.
+  const out = sync.rehydrateCompletedVideos(
+    { 'marrow_8::anatomy__v1': true, 'marrow_6_5::anatomy__v1': true },
+    'marrow_6_5' // activeSource must not re-map the marrow_8 key
+  );
+  assert.deepEqual(toPlain(out), { 'marrow_8::anatomy__v1': true, 'marrow_6_5::anatomy__v1': true });
 });
 
 test('pruneHistoryMaps keeps only entries on/after the cutoff (lexicographic date keys)', () => {
@@ -172,4 +166,64 @@ test('mergeCloudPerField: local-only fields stay, cloud-only fields arrive, no t
   );
   assert.equal(merged.activeSource, 'marrow_6_5');
   assert.deepEqual(toPlain(merged.personal), { doctorName: 'Dr. A' });
+});
+
+// --- Data-preserving guards (the reported sync-wipe bugs) ---
+
+test('mergeCloudPerField: an empty cloud copy NEVER wipes richer local data, even with a newer clock', () => {
+  const cloudTimes = { plans: 9999, goals: 9999, personal: 9999, activeSource: 9999, streakData: 9999 };
+  const local = {
+    plans: [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy', videosPerDay: 3, videosPerWeek: 21, videosPerMonth: 90, targetDate: '2027-06-30' }],
+    goals: { targetSubject: 'Anatomy', videosPerDay: 3, targetDate: '2027-06-30' },
+    personal: { doctorName: 'Dr. Faiz' },
+    activeSource: 'marrow_6_5',
+    streakData: { lastStudyDate: '2026-08-10', currentStreak: 14 }
+  };
+  const merged = sync.mergeCloudPerField(
+    { plans: [], goals: {}, personal: { doctorName: 'Dr. Aspirant' }, activeSource: 'marrow_8', streakData: {} },
+    local,
+    cloudTimes,
+    {}
+  );
+  assert.deepEqual(toPlain(merged.plans), toPlain(local.plans), 'unset plans must not wipe real plans');
+  assert.deepEqual(toPlain(merged.goals), toPlain(local.goals), 'unconfigured goals must not wipe real goals');
+  assert.equal(merged.personal.doctorName, 'Dr. Faiz', 'default profile must not wipe a real name');
+  assert.equal(merged.activeSource, 'marrow_6_5', 'default source must not wipe a chosen source');
+  assert.deepEqual(toPlain(merged.streakData), toPlain(local.streakData), 'empty streak must not wipe a real streak');
+});
+
+test('mergeCloudPerField: a real cloud copy fills an empty local device (first sync brings data in)', () => {
+  const merged = sync.mergeCloudPerField(
+    { plans: [{ id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 3 }], personal: { doctorName: 'Dr. Cloud' }, activeSource: 'marrow_6_5' },
+    { plans: [{
+      id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null,
+      videosPerWeek: null, videosPerMonth: null, targetDate: ''
+    }], personal: { doctorName: 'Dr. Aspirant' }, activeSource: 'marrow_8' },
+    { plans: 2000, personal: 2000, activeSource: 2000 },
+    {}
+  );
+  assert.equal(merged.plans[0].videosPerDay, 3, 'real cloud plans arrive on the fresh device');
+  assert.equal(merged.personal.doctorName, 'Dr. Cloud', 'real cloud profile arrives');
+  assert.equal(merged.activeSource, 'marrow_6_5', 'real cloud source arrives');
+});
+
+test('mergeCloudPerField: a future-stamped cloud clock (clock skew) cannot win over local data', () => {
+  const future = Date.now() + 3600 * 1000; // 1 hour ahead — implausible
+  const merged = sync.mergeCloudPerField(
+    { goals: { videosPerDay: 99 } },
+    { goals: { videosPerDay: 8, targetSubject: 'Anatomy' } },
+    { goals: future },
+    { goals: Date.now() }
+  );
+  assert.equal(merged.goals.videosPerDay, 8, 'skewed clock must not wipe local data');
+});
+
+test('mergeCloudPerField: newer REAL cloud edit still wins over older local edit (clock arbitration intact)', () => {
+  const merged = sync.mergeCloudPerField(
+    { plans: [{ id: 'plan_a', targetSubject: 'Medicine', videosPerDay: 10 }] },
+    { plans: [{ id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8 }] },
+    { plans: 2000 },
+    { plans: 1000 }
+  );
+  assert.equal(merged.plans[0].videosPerDay, 10, 'genuinely newer cloud edit wins');
 });

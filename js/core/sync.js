@@ -132,12 +132,74 @@
   // else resolves by per-field clock — the side that last wrote wins.
   const UNION_FIELDS = ['completedVideos'];
 
+  // How far ahead a cloud field clock may be of this device's real time before
+  // it is treated as clock skew (the other device's clock is set wrong). A
+  // future-stamped write must never be allowed to destroy local data.
+  const MAX_CLOCK_SKEW_MS = 10 * 60 * 1000;
+
+  // "Empty" means the value carries no real user data — a fresh device's
+  // defaults, an unset plan, an unconfigured goal set. An empty copy must
+  // NEVER win over a richer copy, regardless of clocks: a device that seeded
+  // or re-migrated an empty state must not wipe the other device's data.
+  function hasRealTarget(p) {
+    // ANY configured target field makes a plan real — a subject, a deadline,
+    // or any pace. (Requiring subject+pace here made legit plans look "empty"
+    // and let an empty device push [] over them.)
+    return !!p && !!(p.targetSubject || p.targetDate || p.videosPerDay || p.videosPerWeek || p.videosPerMonth);
+  }
+  function isEmptyPlans(v) {
+    if (!Array.isArray(v) || v.length === 0) return true;
+    return !v.some(hasRealTarget);
+  }
+  function isEmptyGoals(v) {
+    if (!isPlainObject(v)) return true;
+    return !(v.targetSubject || v.videosPerDay || v.videosPerWeek || v.videosPerMonth || v.targetDate);
+  }
+  function isEmptyPersonal(v) {
+    if (!isPlainObject(v) || Object.keys(v).length === 0) return true;
+    // The untouched default profile (only the placeholder doctor name) carries
+    // no real identity — treat it as empty so it can't wipe a real name.
+    const keys = Object.keys(v);
+    return keys.length === 1 && v.doctorName === 'Dr. Aspirant';
+  }
+  function isEmptyStreak(v) {
+    if (!isPlainObject(v)) return true;
+    return !v.lastStudyDate && !v.currentStreak;
+  }
+  function isEmptyValue(v) {
+    if (v == null) return true;
+    if (typeof v === 'string') return v === '';
+    if (Array.isArray(v)) return v.length === 0;
+    if (typeof v === 'object') return Object.keys(v).length === 0;
+    return false; // numbers/booleans are meaningful even when 0/false
+  }
+  function isEmptyForField(field, v) {
+    switch (field) {
+      case 'plans': return isEmptyPlans(v);
+      case 'goals': return isEmptyGoals(v);
+      case 'personal': return isEmptyPersonal(v);
+      case 'streakData': return isEmptyStreak(v);
+      default: return isEmptyValue(v);
+    }
+  }
+
   // Merge a cloud doc into local state using per-field timestamps (not the
   // whole-doc updatedAt). fieldSyncTimes maps field -> ms epoch of the last
   // time that field was written. The field with the newer timestamp wins;
   // a field with NO local timestamp loses to any cloud copy (first sync).
   // completedVideos is exempted: cloud keys that local lacks are added
   // (union, local wins conflicts) so completions from either device survive.
+  //
+  // Data-preserving guards (these run BEFORE the clock comparison):
+  //   1. An empty/partial cloud copy never replaces a non-empty local value
+  //      (and vice versa — a fresh device pulls real data in), no matter how
+  //      new its stamp looks.
+  //   2. When BOTH sides are empty, local wins (keeps the local scaffold,
+  //      e.g. the default plan, instead of an empty array).
+  //   3. The default activeSource ('marrow_8') never clobbers a deliberate
+  //      choice (and a deliberate choice never regresses to the default).
+  //   4. A cloud clock stamped more than MAX_CLOCK_SKEW_MS in the future is
+  //      clock skew — local wins instead of losing data to a wrong clock.
   function mergeCloudPerField(cloud, local, cloudSyncTimes, localSyncTimes) {
     const cloudTimes = cloudSyncTimes || {};
     const localTimes = localSyncTimes || {};
@@ -152,8 +214,28 @@
         result[field] = base;
         return;
       }
-      const cloudWins = (Number(cloudTimes[field]) || 0) > (Number(localTimes[field]) || 0);
-      if (!cloudWins) result[field] = local[field];
+      const cloudVal = cloud[field];
+      const localVal = local[field];
+      const cloudEmpty = isEmptyForField(field, cloudVal);
+      const localEmpty = isEmptyForField(field, localVal);
+      if (cloudEmpty && !localEmpty) { result[field] = localVal; return; }
+      if (!cloudEmpty && localEmpty) { result[field] = cloudVal; return; }
+      if (cloudEmpty && localEmpty) { result[field] = localVal; return; }
+      // Neither side is empty — resolve by clock.
+      if (field === 'activeSource' && cloudVal !== localVal) {
+        // A default source must never clobber a deliberate one.
+        const localDefault = localVal === 'marrow_8';
+        const cloudDefault = cloudVal === 'marrow_8';
+        if (localDefault !== cloudDefault) {
+          result[field] = localDefault ? cloudVal : localVal;
+          return;
+        }
+      }
+      const cloudT = Number(cloudTimes[field]) || 0;
+      const localT = Number(localTimes[field]) || 0;
+      if (cloudT > Date.now() + MAX_CLOCK_SKEW_MS) { result[field] = localVal; return; }
+      const cloudWins = cloudT > localT;
+      if (!cloudWins) result[field] = localVal;
     });
     return result;
   }
@@ -174,25 +256,16 @@
     return dirty;
   }
 
-  // --- Cloud-doc size control (pure helpers) ---
+  // --- Cloud-doc completedVideos format ---
 
   // Video IDs in state/localStorage carry a runtime source prefix
-  // ("marrow_8::anatomy__v1") because the same video id exists across
-  // editions. In the cloud doc that prefix is redundant — the doc already
-  // stores activeSource — so it is stripped at write time and re-added at
-  // read time. Saves ~10 bytes per completed video (up to ~16KB on the
-  // largest syllabus) and keeps the doc well under Firestore's 1 MiB limit.
-  const SOURCE_PREFIX_RE = /^[A-Za-z0-9_]+::/;
-
-  function compressCompletedVideos(map) {
-    const out = {};
-    for (const k of Object.keys(map || {})) out[k.replace(SOURCE_PREFIX_RE, '')] = map[k];
-    return out;
-  }
-
-  // Keys that already carry a prefix (legacy docs written before compression)
-  // pass through untouched; unprefixed keys get the current source prefix so
-  // they match the runtime video ids ("<activeSource>::" + data id).
+  // ("marrow_8::anatomy__v1") because the SAME video id exists across
+  // editions (both datasets share ids like anatomy__v1). The cloud doc
+  // therefore stores the FULL prefixed key: stripping the prefix would
+  // collide the two editions' completions into one key and re-prefixing
+  // with the single activeSource would misattribute the other edition.
+  // (Legacy docs written by older builds stored unprefixed keys —
+  // rehydrateCompletedVideos below best-effort prefixes those on read.)
   function rehydrateCompletedVideos(map, sourceId) {
     const prefix = (sourceId || 'marrow_8') + '::';
     const out = {};
@@ -224,11 +297,12 @@
     mergePlansLocalWins,
     mergeCloudPerField,
     computeDirtyFields,
-    compressCompletedVideos,
+    isEmptyForField,
     rehydrateCompletedVideos,
     pruneHistoryMaps,
     KNOWN_FIELDS,
     PLAN_CLOUD_KEYS,
-    UNION_FIELDS
+    UNION_FIELDS,
+    MAX_CLOCK_SKEW_MS
   };
 })();
