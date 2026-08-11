@@ -1,5 +1,12 @@
 # FlowMD — Change Log
 
+## [2026-08-11] Preparation Setup now responds to Study Plan Config goals (v207)
+
+- **Bug — Preparation Setup ignored the config**: the analytics "Preparation Setup" card read the legacy `state.goals` object, but the Study Plan Config only mirrored Plan A's subject/date/daily pace into it — weekly/monthly were never mirrored, and Plan B not at all. The card showed stale or empty values ("—") after saving goals.
+- **Fix**: the card now derives its values from `state.plans` (the real source of truth, same as Goal Pulse) — Priority Focus joins configured subjects, Daily Pace / Daily / Weekly / Monthly sum across all plans, and Target Date uses the earliest plan deadline (formatted en-GB). Goal Pulse, hero chips, and Days Left use the same plan-based clocks.
+- **Legacy hygiene**: the `state.goals` mirror now also carries weekly/monthly so the cloud field is never half-stale.
+- **New smoke regression**: configures Plan A (subject, 3 vids/day, 2027-06-30 deadline) and asserts the Preparation Setup card shows 3/21/90 vids and the target date (33/33 checks pass).
+
 ## [2026-08-11] Two-device sync proof — pull-then-push verified end-to-end, echo writes eliminated (v206)
 
 - **New two-device test suite** (`tests/unit/sync-twodevice.test.mjs`): two simulated devices run the REAL production sync modules against a shared in-memory cloud store (same contract as firebase.js — per-field clocks, compressed video keys). Four scenarios prove the sync design end-to-end:

@@ -529,10 +529,14 @@
           state.plans[0].extraBatchesCompletedToday = 0;
         }
 
-        // Keep legacy state.goals updated
+        // Keep legacy state.goals fully in sync (analytics/history reads aside,
+        // it's still a cloud field) — weekly/monthly included so it is never
+        // half-stale next to the per-plan source of truth.
         state.goals.targetSubject = state.plans[0].targetSubject;
         state.goals.targetDate = state.plans[0].targetDate;
         state.goals.videosPerDay = state.plans[0].videosPerDay;
+        state.goals.videosPerWeek = state.plans[0].videosPerWeek;
+        state.goals.videosPerMonth = state.plans[0].videosPerMonth;
 
         saveState();
         showToast('Plan A Target Configured & Saved!', 'check_circle', 'Plan A Updated');

@@ -34,8 +34,23 @@
 
     const now = new Date();
     const todayStr = todayKey();
-    const targetDateMs = state.goals.targetDate ? new Date(state.goals.targetDate).getTime() : NaN;
+    // Source of truth for targets is state.plans (the per-plan config). The
+    // legacy state.goals object only mirrors Plan A's subject/date/day and is
+    // never updated for Plan B or weekly/monthly — reading it here is exactly
+    // the bug where Preparation Setup ignored the Study Plan Config.
+    const configuredPlans = plans.filter(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
+    const priorityFocus = configuredPlans.map(p => p.targetSubject).join(' + ');
+    const earliestTargetMs = configuredPlans
+      .filter(p => p.targetDate)
+      .reduce((min, p) => {
+        const t = new Date(p.targetDate).getTime();
+        return isNaN(t) ? min : Math.min(min, t);
+      }, Infinity);
+    const targetDateMs = isFinite(earliestTargetMs) ? earliestTargetMs : NaN;
     const daysLeft = isNaN(targetDateMs) ? 0 : Math.max(1, Math.ceil((targetDateMs - now) / 86400000));
+    const targetDateLabel = isNaN(targetDateMs)
+      ? 'Not set'
+      : new Date(targetDateMs).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
     const last7Days = [];
     for (let i = 6; i >= 0; i--) {
@@ -56,9 +71,17 @@
       actual30DaysCount += dailyCounts[toLocalDateKey(d)] || 0;
     }
 
-    // Aggregate total daily target across all plans (0 when nothing configured)
+    // Aggregate total daily/weekly/monthly targets across all plans (0 when
+    // nothing configured) — these power both the Goal Pulse and the
+    // Preparation Setup card.
     let totalVidsDay = 0;
-    plans.forEach(p => { totalVidsDay += parseInt(p.videosPerDay, 10) || 0; });
+    let totalVidsWeek = 0;
+    let totalVidsMonth = 0;
+    plans.forEach(p => {
+      totalVidsDay += parseInt(p.videosPerDay, 10) || 0;
+      totalVidsWeek += parseInt(p.videosPerWeek, 10) || 0;
+      totalVidsMonth += parseInt(p.videosPerMonth, 10) || 0;
+    });
 
     const ideal7DaysTarget = totalVidsDay * 7;
     const ideal30DaysTarget = totalVidsDay * 30;
@@ -212,18 +235,18 @@
         <div class="anl-report-focus">
           <div>
             <div class="lbl">Priority Focus</div>
-            <div class="val">${state.goals.targetSubject || 'No subject set'}</div>
+            <div class="val">${priorityFocus || 'No subject set'}</div>
           </div>
           <div style="text-align:right;">
             <div class="lbl">Daily Pace</div>
-            <div class="val"><small>${state.goals.videosPerDay || '—'}</small> vids/day</div>
+            <div class="val"><small>${totalVidsDay || '—'}</small> vids/day</div>
           </div>
         </div>
         <div class="anl-report-facts">
-          <div class="anl-report-fact"><div class="lbl">Daily</div><div class="val">${state.goals.videosPerDay || '—'} vids</div></div>
-          <div class="anl-report-fact"><div class="lbl">Weekly</div><div class="val">${state.goals.videosPerWeek || '—'} vids</div></div>
-          <div class="anl-report-fact"><div class="lbl">Monthly</div><div class="val">${state.goals.videosPerMonth || '—'} vids</div></div>
-          <div class="anl-report-fact"><div class="lbl">Target Date</div><div class="val">${state.goals.targetDate || 'Not set'}</div></div>
+          <div class="anl-report-fact"><div class="lbl">Daily</div><div class="val">${totalVidsDay || '—'} vids</div></div>
+          <div class="anl-report-fact"><div class="lbl">Weekly</div><div class="val">${totalVidsWeek || '—'} vids</div></div>
+          <div class="anl-report-fact"><div class="lbl">Monthly</div><div class="val">${totalVidsMonth || '—'} vids</div></div>
+          <div class="anl-report-fact"><div class="lbl">Target Date</div><div class="val">${targetDateLabel}</div></div>
         </div>
         <button class="v2-arcade-btn" id="btn-analytics-open-goals" style="width:100%;"><svg class="material-symbols-outlined"><use href="#fmd-i-track_changes"/></svg> Synchronize Pace &amp; Goals</button>
       </div>

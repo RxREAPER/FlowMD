@@ -207,6 +207,43 @@ async function run() {
     anlText.includes('Goal Pulse') && anlText.includes('No study target set yet'),
     'empty-state CTA present');
 
+  // Regression: the Preparation Setup card must RESPOND to Study Plan Config
+  // goals. Configure Plan A (subject, pace, deadline), save, and verify the
+  // analytics card shows the saved daily/weekly/monthly targets + target date.
+  await clickNav(page, 'dashboard');
+  await page.locator('#select-target-subject').selectOption({ index: 1 });
+  await page.locator('#input-videos-per-day').fill('3');
+  await page.evaluate(() => {
+    // Set the deadline directly so the pace auto-sync listener can't overwrite it.
+    const d = document.getElementById('input-target-date');
+    if (d) d.value = '2027-06-30';
+  });
+  await page.locator('#btn-apply-goals').click();
+  await page.waitForTimeout(400);
+  const savedPlan = await page.evaluate(() => {
+    const p = window.FlowMD.store.getState().plans[0];
+    return {
+      vids: p.videosPerDay,
+      week: p.videosPerWeek,
+      month: p.videosPerMonth,
+      dateLabel: p.targetDate
+        ? new Date(p.targetDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        : null
+    };
+  });
+  await clickNav(page, 'analytics');
+  await page.waitForTimeout(300);
+  const prepText = await page.locator('#app-main').innerText();
+  const prepOk = prepText.includes('Preparation Setup') &&
+    prepText.includes(`${savedPlan.vids} vids/day`) &&
+    prepText.includes(`${savedPlan.vids} vids`) &&
+    prepText.includes(`${savedPlan.week} vids`) &&
+    prepText.includes(`${savedPlan.month} vids`) &&
+    (savedPlan.dateLabel ? prepText.includes(savedPlan.dateLabel) : true) &&
+    !prepText.includes('No study target set yet');
+  check('Preparation Setup reflects Study Plan Config goals (daily/weekly/monthly/date)',
+    prepOk, JSON.stringify({ savedPlan, sample: prepText.slice(0, 220) }));
+
   // Profile view
   await clickNav(page, 'profile');
   const profileText = await page.locator('#app-main').innerText();
