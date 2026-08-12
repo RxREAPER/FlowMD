@@ -3,7 +3,7 @@
 ## Current Phase
 - **Phase**: 7 (Production sync & rendering hardening — COMPLETE on `main`, deployed through v213)
 - **Status**: The v204–v213 series (sync data-loss fixes, pull-then-push sync, render audits, fonts/icons removal, source-switch no-wipe fix) is committed on `main` and deployed live at flowmd-04.web.app (v213). v214 (source-switch modal copy fix) is the in-flight release.
-- **Git note**: local `main` is **17 commits ahead of origin/main** (89ff79b vs 44c9708) — push to GitHub is pending; origin currently holds v206-era code.
+- **Git note**: local `main` is **19 commits ahead of origin/main** (2f84b16 vs 44c9708) — push to GitHub is pending; origin currently holds v206-era code.
 
 ## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
 - [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
@@ -71,7 +71,7 @@
 - [x] **7-Day Execution Chart reverted to line style** — reverted the pixel-terminal bar chart back to the deployed line style: smooth Catmull-Rom→cubic-bezier curve + gradient area fill (`ex-chart-area` via `linearGradient`) + solid circle nodes (r=5, `ex-chart-node`). Removed `ex-bar-track`, `ex-bar-cell`, `ex-trend-line`, `ex-trend-marker`, `ex-dot-trend`, and the re-render-at-measured-width logic. Matches deployed site (flowmd-04.web.app) exactly. Cache-busted to v161. Playwright 60/60 green, 0 console errors.
 
 ## Next
-- Push local `main` to GitHub (closes the 17-commit gap: origin/main @ 44c9708 → 89ff79b+). CI deploy has a manual `workflow_dispatch` gate — a push never auto-deploys.
+- Push local `main` to GitHub (closes the 19-commit gap: origin/main @ 44c9708 → 2f84b16+). CI deploy has a manual `workflow_dispatch` gate — a push never auto-deploys.
 - Deploy v214 to production (Firebase Hosting + firestore rules) when approved.
 
 ## Notes

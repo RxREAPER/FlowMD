@@ -6,7 +6,7 @@ A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies 
 ## Status
 - **Phase**: Production hardening (v214 in flight)
 - **Deployment**: https://flowmd-04.web.app (Firebase Hosting) — serving v213
-- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main is 17 commits behind local main (push pending)
+- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main is 19 commits behind local main (push pending)
 - **Last Deploy**: v213 (v214 pending: source-switch modal copy fix)
 
 ## Tech Stack
