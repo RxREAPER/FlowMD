@@ -1,5 +1,10 @@
 # FlowMD — Change Log
 
+## [2026-08-13] Source-switch modal copy matches reality — plans are kept, not reset (v214)
+
+- The two warning strings in the source-switch modal (`index.html`) still claimed switching "resets your current plan and progress" — the pre-v213 behavior. The modal now says switching **keeps** plans, targets and progress, completions are tracked per edition, and only the daily queue refreshes for the new syllabus. Matches the copy already used in `source-settings.js` and the v213 fix behavior.
+- Cache-busted to v214.
+
 ## [2026-08-12] Fix: switching study source no longer wipes plans, goals or quests (v213)
 
 - **Root cause found and fixed**: the source-switch handler (`source-settings.js`) reset `state.plans` to a single default Plan A and wiped `state.goals` on EVERY switch. That destroyed configured Plan A + Plan B (subjects, paces, deadlines), emptied the daily-quest list, and made analytics Preparation Setup / Goal Pulse show "Not set" — which also read as "data not syncing" on real devices. Completions themselves always survived (they're keyed per source: `marrow_8::` / `marrow_6_5::`), but the empty plan hid them.

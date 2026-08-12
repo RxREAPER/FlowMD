@@ -4,10 +4,10 @@
 A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies syllabus tracking with pixel-art aesthetics, dual-plan tracking, and Firebase cloud sync.
 
 ## Status
-- **Phase**: Active development (v2)
-- **Deployment**: https://flowmd-04.web.app (Firebase Hosting)
-- **GitHub**: https://github.com/mohammedsafi0414/FlowMD
-- **Last Deploy**: v121 (cache-bust)
+- **Phase**: Production hardening (v214 in flight)
+- **Deployment**: https://flowmd-04.web.app (Firebase Hosting) — serving v213
+- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main is 17 commits behind local main (push pending)
+- **Last Deploy**: v213 (v214 pending: source-switch modal copy fix)
 
 ## Tech Stack
 - **Language**: Vanilla JavaScript (ES5 IIFE)
@@ -17,10 +17,10 @@ A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies 
 - **PWA**: Service worker (sw.js), manifest.json
 
 ## Key Architecture
-- Single-page app: index.html → app.js (all logic), data.js (syllabus), firebase.js (cloud)
-- Dual-subject tracking (Plan A / Plan B) with per-plan queue engine
-- LocalStorage persistence with Firestore cloud sync fallback
-- Cache-busting via `?v=XXX` query params (scripts/bump-version.js)
+- Single-page app: index.html → thin app.js shell + 20 modules under `js/core/` and `js/features/` (plain IIFEs on `window.FlowMD.*`, no bundler — CSP forbids `unsafe-eval`); data.js / data_marrow_6_5.js (syllabus), firebase.js (cloud)
+- Dual-plan tracking (Plan A / Plan B) with per-plan queue engine; source switch preserves plans, completions keyed per edition
+- LocalStorage persistence with Firestore pull-then-push sync (per-field newest-wins, manual Sync Now)
+- Cache-busting via `?v=XXX` query params (scripts/bump-version.js); PWA offline via sw.js
 
 ## Domain
 - 19 MBBS subjects, ~2000+ video lectures

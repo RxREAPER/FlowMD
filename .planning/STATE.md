@@ -1,8 +1,9 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 6 (Monolith Decomposition — COMPLETE on `refactor/decompose-monolith` branch, v184)
-- **Status**: Decomposition (v178) + Phase C retro-naming cleanup & storage-key migration (v184) complete. 6 test suites (230+ assertions): modules 81, metrics 19, smoke 20, onboarding 40, navigation audit (no errors), migration 12. Branch ready for review/merge/deploy.
+- **Phase**: 7 (Production sync & rendering hardening — COMPLETE on `main`, deployed through v213)
+- **Status**: The v204–v213 series (sync data-loss fixes, pull-then-push sync, render audits, fonts/icons removal, source-switch no-wipe fix) is committed on `main` and deployed live at flowmd-04.web.app (v213). v214 (source-switch modal copy fix) is the in-flight release.
+- **Git note**: local `main` is **17 commits ahead of origin/main** (89ff79b vs 44c9708) — push to GitHub is pending; origin currently holds v206-era code.
 
 ## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
 - [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
@@ -52,18 +53,31 @@
 - [x] **Phase 3 — localStorage Schema + Day Boundary**: Schema version key with migration runner; `safeParse` guard; v1→v2 migration for video ID namespacing; UTC→local day boundary via `todayKey()`/`toLocalDateKey()` (IST-safe)
 - [x] **Phase 4 — Error Boundaries**: `safeRender` wrapper on all 5 view functions; graceful error card with "Reload App" button; exclamation icon added
 
+## Production hardening series (2026-08-11 → 2026-08-12, v204–v213, on `main`)
+- [x] **v204** Google Fonts + Material Symbols font removed — system font stacks + inline SVG sprite (zero external font requests)
+- [x] **v205/v206** Sync is pull-then-push — per-field newest-wins arbitration, no write ping-pong, two-device proof
+- [x] **v207** Analytics Preparation Setup derives from `state.plans` (responds to Study Plan Config goals)
+- [x] **v208** Sync data-loss fix — Sync Now can no longer wipe plans/goals; empty cloud docs can't clobber real data; editions keep separate completions
+- [x] **v209** Full scenario matrix; fixed in-place plan-edit loss + per-plan merge (concurrent plans both survive)
+- [x] **v210** Sync Diagnostics panel in Profile (per-field local vs cloud clocks, winner badges)
+- [x] **v211/v212** Rendering correctness — cross-viewport render audit, layout safety nets, retro theme removed, inline-style guard, on-device layout self-check
+- [x] **v213** Source switch no longer wipes plans, goals or quests — plans/targets preserved, completions per-edition
+- Full suite green (unit 104+ / smoke / render / inline-style / scope-leaks). Details in `CHANGELOG.md`.
+
 ## In Progress
-- None — all phases complete
+- **v214** — source-switch modal copy now says plans are kept (matches v213 behavior). Tests green; commit + push + deploy pending.
 
 ## Completed This Session
 - [x] **7-Day Execution Chart reverted to line style** — reverted the pixel-terminal bar chart back to the deployed line style: smooth Catmull-Rom→cubic-bezier curve + gradient area fill (`ex-chart-area` via `linearGradient`) + solid circle nodes (r=5, `ex-chart-node`). Removed `ex-bar-track`, `ex-bar-cell`, `ex-trend-line`, `ex-trend-marker`, `ex-dot-trend`, and the re-render-at-measured-width logic. Matches deployed site (flowmd-04.web.app) exactly. Cache-busted to v161. Playwright 60/60 green, 0 console errors.
 
 ## Next
-- Deploy to production when explicitly approved (CI has manual gate: `workflow_dispatch`)
+- Push local `main` to GitHub (closes the 17-commit gap: origin/main @ 44c9708 → 89ff79b+). CI deploy has a manual `workflow_dispatch` gate — a push never auto-deploys.
+- Deploy v214 to production (Firebase Hosting + firestore rules) when approved.
 
 ## Notes
-- Cache-busting version: v161 (index.html `?v=161`)
+- Cache-busting version: v214 (index.html `?v=214`); live site currently serving v213
 - Live: https://flowmd-04.web.app
 - Repo: https://github.com/mohammedsafi0414/FlowMD
-- Backup refs: `backup/pre-hardening`, `backup/pre-hardening-20260809-113936`, `backup/pre-modular-20260808-123655`
+- Worktrees: `marrow-planner/` (main), `marrow-planner-hardening/` (hardening/backend-production); `marrow-planner-main/` retired
+- Backup refs: `backup/pre-hardening`, `backup/pre-hardening-20260809-113936`, `backup/pre-modular-20260808-123655`, `backup/pre-decompose-v161`
 - git is available (2.55.0) — STATE.md previously claimed "git not on PATH"; that was incorrect

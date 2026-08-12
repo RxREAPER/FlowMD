@@ -32,7 +32,8 @@ const GLOBALS = new Set([
   'ReferenceError', 'Infinity', 'NaN', 'globalThis', 'requestIdleCallback',
   'AbortController', 'TextEncoder', 'TextDecoder', 'Intl', 'Proxy', 'Reflect',
   'Response', 'Request', 'Headers', 'caches', 'CacheStorage', 'OffscreenCanvas',
-  'requestAnimationFrame', 'cancelAnimationFrame', 'Notification', 'XPathResult'
+  'requestAnimationFrame', 'cancelAnimationFrame', 'Notification', 'XPathResult',
+  'getComputedStyle'
 ]);
 
 // Replace comments, strings, template literals (incl. nested templates and
