@@ -40,7 +40,9 @@ if (process.argv.includes('--update')) {
   process.exit(0);
 }
 
-const baseline = readFileSync(BASELINE, 'utf8').split('\n').filter(Boolean);
+// CRLF-tolerant: on Windows checkouts (core.autocrlf) the baseline arrives
+// with \r\n, but scanned styles are captured inside quotes and never carry \r.
+const baseline = readFileSync(BASELINE, 'utf8').split('\n').map((l) => l.replace(/\r$/, '')).filter(Boolean);
 const newOnes = current.filter((x) => !baseline.includes(x));
 if (newOnes.length) {
   console.log(`NEW INLINE STYLES (${newOnes.length}):\n` + newOnes.join('\n'));
