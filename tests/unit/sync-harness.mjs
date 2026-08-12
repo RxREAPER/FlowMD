@@ -156,7 +156,11 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
     state.bulkCompletedChapters = e.bulkCompletedChapters;
   };
   const state = {
-    completedVideos: {}, personal: { doctorName: 'Dr. ' + name },
+    // Production-faithful default profile: the app ships 'Dr. Aspirant' and
+    // the merge treats exactly that as EMPTY (isEmptyPersonal) — a fresh
+    // device adopts the synced real name instead of racing device defaults
+    // against each other like the old 'Dr. A'/'Dr. B' harness defaults did.
+    completedVideos: {}, personal: { doctorName: 'Dr. Aspirant' },
     streakData: {},
     activeSource: 'marrow_8', isConfigured: true,
     themeStyle: 'modern', fieldSyncTimes: {}, _dirtyFields: [],

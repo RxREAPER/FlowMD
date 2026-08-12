@@ -216,6 +216,76 @@ test('mergeCloudPerField: a real cloud copy fills an empty local device (first s
   assert.equal(merged.activeSource, 'marrow_6_5', 'real cloud source arrives');
 });
 
+test('mergeCloudPerField: a fresh device adopts the EDITION WITH DATA, not the cloud’s empty activeSource choice', () => {
+  // Cloud activeSource points at 6.5 (a data-less device switched there and
+  // was the last writer), but the user’s real data lives in Edition 8.
+  const merged = sync.mergeCloudPerField(
+    {
+      activeSource: 'marrow_6_5',
+      plans_marrow_8: [{ id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 3 }]
+    },
+    {
+      activeSource: 'marrow_8',
+      plans_marrow_8: [{ id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null, videosPerWeek: null, videosPerMonth: null, targetDate: '' }],
+      plans_marrow_6_5: [{ id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null, videosPerWeek: null, videosPerMonth: null, targetDate: '' }]
+    },
+    { activeSource: 2000, plans_marrow_8: 2000 },
+    {}
+  );
+  assert.equal(merged.activeSource, 'marrow_8', 'fresh device opens the edition that has the data, not the empty one the cloud points at');
+});
+
+test('mergeCloudPerField: fresh device redirects even when cloud and local share the default value but data sits elsewhere', () => {
+  // Cloud activeSource is the DEFAULT marrow_8 (no data there), while the
+  // user’s only data is in 6.5 — a device switched there, back, and never
+  // configured Edition 8.
+  const merged = sync.mergeCloudPerField(
+    {
+      activeSource: 'marrow_8',
+      plans_marrow_6_5: [{ id: 'plan_a', targetSubject: 'Pathology', videosPerDay: 5 }]
+    },
+    {
+      activeSource: 'marrow_8',
+      plans_marrow_8: [{ id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null, videosPerWeek: null, videosPerMonth: null, targetDate: '' }],
+      plans_marrow_6_5: [{ id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null, videosPerWeek: null, videosPerMonth: null, targetDate: '' }]
+    },
+    { activeSource: 2000, plans_marrow_6_5: 2000 },
+    {}
+  );
+  assert.equal(merged.activeSource, 'marrow_6_5', 'data edition wins over an empty default-valued cloud choice');
+});
+
+test('mergeCloudPerField: fresh device still adopts the cloud choice when THAT edition has data', () => {
+  const merged = sync.mergeCloudPerField(
+    {
+      activeSource: 'marrow_6_5',
+      plans_marrow_6_5: [{ id: 'plan_a', targetSubject: 'Pathology', videosPerDay: 5 }],
+      plans_marrow_8: [{ id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 3 }]
+    },
+    {
+      activeSource: 'marrow_8',
+      plans_marrow_8: [{ id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null, videosPerWeek: null, videosPerMonth: null, targetDate: '' }],
+      plans_marrow_6_5: [{ id: 'plan_a', label: 'Plan A', targetSubject: '', videosPerDay: null, videosPerWeek: null, videosPerMonth: null, targetDate: '' }]
+    },
+    { activeSource: 2000 },
+    {}
+  );
+  assert.equal(merged.activeSource, 'marrow_6_5', 'a data-backed deliberate cloud choice is still adopted');
+});
+
+test('mergeCloudPerField: a cloud default profile never replaces a real local doctor name', () => {
+  // The fresh device's own default ('Dr. Aspirant') is EMPTY — but so is the
+  // cloud's. A REAL local name must win over an empty cloud profile even with
+  // a newer cloud clock.
+  const merged = sync.mergeCloudPerField(
+    { personal: { doctorName: 'Dr. Aspirant' } },
+    { personal: { doctorName: 'Dr. Faiz' } },
+    { personal: 9999 },
+    {}
+  );
+  assert.equal(merged.personal.doctorName, 'Dr. Faiz', 'empty cloud profile must not wipe a real local name');
+});
+
 test('mergeCloudPerField: a future-stamped cloud clock (clock skew) cannot win over local data', () => {
   const future = Date.now() + 3600 * 1000; // 1 hour ahead — implausible
   const merged = sync.mergeCloudPerField(

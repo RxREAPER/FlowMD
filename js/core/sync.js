@@ -379,7 +379,7 @@
       const cloudT = Number(cloudTimes[field]) || 0;
       const localT = Number(localTimes[field]) || 0;
       const skewed = cloudT > Date.now() + MAX_CLOCK_SKEW_MS;
-      if (field === 'activeSource' && cloudVal !== localVal) {
+      if (field === 'activeSource') {
         // The viewing edition is a DEVICE preference: a device that already
         // has real data (any edition slice configured) keeps its own view — a
         // pull must never yank it to another edition's dataset. Only a truly
@@ -402,11 +402,50 @@
           result[field] = localVal;
           return;
         }
-        const localDefault = localVal === 'marrow_8';
-        const cloudDefault = cloudVal === 'marrow_8';
-        if (localDefault !== cloudDefault) {
-          result[field] = localDefault ? cloudVal : localVal;
-          return;
+        // A truly fresh device adopts the cloud's choice — but only when the
+        // edition it points at actually carries data. activeSource is a
+        // last-writer value: a data-less device that switched editions (or a
+        // legacy doc) can leave it pointing at an EMPTY partition, and a fresh
+        // device would then open into an empty edition while the user's data
+        // lives in the other one. Redirect to the edition that has the data —
+        // even when both sides carry the same default value (cloud = local =
+        // 'marrow_8' with the data sitting in 6.5).
+        const cloudChoiceHasData = (function () {
+          for (const src of EDITION_IDS) {
+            if (src !== cloudVal) continue;
+            for (const base of REAL_DATA_BASES) {
+              const v = cloud[base + '_' + src];
+              if (v !== undefined && !isEmptyForField(base, v)) return true;
+            }
+          }
+          return false;
+        })();
+        if (!cloudChoiceHasData) {
+          let dataEdition = null;
+          EDITION_IDS.forEach((src) => {
+            REAL_DATA_BASES.forEach((base) => {
+              if (dataEdition === null && cloud[base + '_' + src] !== undefined &&
+                  !isEmptyForField(base, cloud[base + '_' + src])) {
+                dataEdition = src;
+              }
+            });
+          });
+          if (dataEdition !== null) {
+            result[field] = dataEdition;
+            return;
+          }
+        }
+        // Different values: a default source never clobbers a deliberate
+        // choice (and vice versa). Equal values fall through to the clock
+        // resolution below — a fresh device has no local clock, so the cloud
+        // value (identical anyway) wins.
+        if (cloudVal !== localVal) {
+          const localDefault = localVal === 'marrow_8';
+          const cloudDefault = cloudVal === 'marrow_8';
+          if (localDefault !== cloudDefault) {
+            result[field] = localDefault ? cloudVal : localVal;
+            return;
+          }
         }
       }
       if (field === 'plans' || (editionFieldParts(field) || {}).base === 'plans') {

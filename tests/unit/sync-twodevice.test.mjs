@@ -255,6 +255,53 @@ test('devices on DIFFERENT editions: activeSource preference is never re-asserte
   assert.equal(B.state.activeSource, 'marrow_6_5', 'B still on Edition 6.5');
 });
 
+test('a FRESH device lands on the edition that has data (not the cloud’s empty activeSource) and adopts the real profile', async () => {
+  const uid = 'user-16';
+  const cloud = createCloudStore(uid);
+  const A = createDevice('A', cloud, uid);   // configures Edition 8 with a real name
+  const B = createDevice('B', cloud, uid);   // data-less device that switches to 6.5
+  const C = createDevice('C', cloud, uid);   // joins later — fresh
+
+  A.edit((s) => {
+    s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy', videosPerDay: 3, targetDate: '2027-06-30' }];
+    s.personal = { doctorName: 'Dr. Faiz' };
+  });
+  await A.manualSync();
+  await A.flush();
+
+  // B has NO data anywhere; it merely switches editions and syncs — its
+  // activeSource becomes the LAST writer in the doc while Edition 6.5 stays
+  // empty. This is the wart: the doc's activeSource is last-writer, not
+  // canonical.
+  B.switchSource('marrow_6_5');
+  await B.manualSync();
+  await B.flush();
+
+  const doc = cloud.getDoc();
+  assert.equal(doc.activeSource, 'marrow_6_5', 'cloud activeSource is B’s last write — an empty edition');
+  assert.equal(doc.plans_marrow_8[0].videosPerDay, 3, 'the user’s real data lives in Edition 8');
+  assert.ok(!('plans_marrow_6_5' in doc) || doc.plans_marrow_6_5.length === 0, 'Edition 6.5 is empty in the doc');
+
+  // C pulls: it must NOT inherit B’s empty-edition choice — it lands on
+  // Edition 8 where the data is, and adopts the real profile.
+  await C.manualSync();
+  await C.flush();
+
+  assert.equal(C.state.activeSource, 'marrow_8', 'fresh device opens the edition WITH data, not the empty one the doc points at');
+  assert.equal(C.state.plans[0].videosPerDay, 3, 'data arrived on C');
+  assert.equal(C.state.personal.doctorName, 'Dr. Faiz', 'fresh device adopts the real synced profile, not its own default');
+  assert.equal(A.state.activeSource, 'marrow_8', 'A kept its own edition');
+  assert.equal(B.state.activeSource, 'marrow_6_5', 'B kept its deliberate switch');
+
+  // C’s redirected view must not be re-asserted: after settling, zero writes.
+  cloud.resetWrites();
+  await A.manualSync(); await A.flush();
+  await B.manualSync(); await B.flush();
+  await C.manualSync(); await C.flush();
+  await A.flush(); await B.flush(); await C.flush();
+  assert.equal(cloud.writes.count, 0, `expected ZERO writes after the fresh-device settle, got ${cloud.writes.count}`);
+});
+
 test('device A ticks Edition 8 topics while device B is on Edition 6.5 — the shared completedVideos map stays partitioned', async () => {
   const uid = 'user-14';
   const cloud = createCloudStore(uid);
