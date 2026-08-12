@@ -1,9 +1,9 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 7 (Production sync & rendering hardening — COMPLETE on `main`, deployed through v213)
-- **Status**: The v204–v213 series (sync data-loss fixes, pull-then-push sync, render audits, fonts/icons removal, source-switch no-wipe fix) is committed on `main` and deployed live at flowmd-04.web.app (v213). v214 (source-switch modal copy fix) is the in-flight release.
-- **Git note**: local `main` is **19 commits ahead of origin/main** (2f84b16 vs 44c9708) — push to GitHub is pending; origin currently holds v206-era code.
+- **Phase**: 7 (Production sync & rendering hardening — COMPLETE on `main`, deployed through v214)
+- **Status**: The v204–v213 series (sync data-loss fixes, pull-then-push sync, render audits, fonts/icons removal, source-switch no-wipe fix) plus v214 (source-switch modal copy fix, scope-leaks + inline-styles test fixes) are committed on `main` and deployed live at flowmd-04.web.app (v214).
+- **Git note**: local `main` is in sync with origin/main (268f50a) — 19-commit gap closed.
 
 ## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
 - [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
@@ -65,17 +65,16 @@
 - Full suite green (unit 104+ / smoke / render / inline-style / scope-leaks). Details in `CHANGELOG.md`.
 
 ## In Progress
-- **v214** — source-switch modal copy now says plans are kept (matches v213 behavior). Tests green; commit + push + deploy pending.
+- None — v214 deployed. Next work is feature development on `main`.
 
 ## Completed This Session
 - [x] **7-Day Execution Chart reverted to line style** — reverted the pixel-terminal bar chart back to the deployed line style: smooth Catmull-Rom→cubic-bezier curve + gradient area fill (`ex-chart-area` via `linearGradient`) + solid circle nodes (r=5, `ex-chart-node`). Removed `ex-bar-track`, `ex-bar-cell`, `ex-trend-line`, `ex-trend-marker`, `ex-dot-trend`, and the re-render-at-measured-width logic. Matches deployed site (flowmd-04.web.app) exactly. Cache-busted to v161. Playwright 60/60 green, 0 console errors.
 
 ## Next
-- Push local `main` to GitHub (closes the 19-commit gap: origin/main @ 44c9708 → 2f84b16+). CI deploy has a manual `workflow_dispatch` gate — a push never auto-deploys.
-- Deploy v214 to production (Firebase Hosting + firestore rules) when approved.
+- Feature development on `main`. Deploys are manual (`npm run deploy:firebase` or CI `workflow_dispatch`).
 
 ## Notes
-- Cache-busting version: v214 (index.html `?v=214`); live site currently serving v213
+- Cache-busting version: v214 (index.html `?v=214`); live site serving v214
 - Live: https://flowmd-04.web.app
 - Repo: https://github.com/mohammedsafi0414/FlowMD
 - Worktrees: `marrow-planner/` (main), `marrow-planner-hardening/` (hardening/backend-production); `marrow-planner-main/` retired

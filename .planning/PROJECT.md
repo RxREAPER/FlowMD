@@ -4,10 +4,10 @@
 A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies syllabus tracking with pixel-art aesthetics, dual-plan tracking, and Firebase cloud sync.
 
 ## Status
-- **Phase**: Production hardening (v214 in flight)
-- **Deployment**: https://flowmd-04.web.app (Firebase Hosting) — serving v213
-- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main is 19 commits behind local main (push pending)
-- **Last Deploy**: v213 (v214 pending: source-switch modal copy fix)
+- **Phase**: Production hardening (v214 deployed)
+- **Deployment**: https://flowmd-04.web.app (Firebase Hosting) — serving v214
+- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main in sync (268f50a)
+- **Last Deploy**: v214 (source-switch modal copy fix, scope-leaks + inline-styles test fixes)
 
 ## Tech Stack
 - **Language**: Vanilla JavaScript (ES5 IIFE)
