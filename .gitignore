@@ -23,6 +23,10 @@ Thumbs.db
 # Archived dev artifacts (kept out of repo + hosting; recoverable via git history)
 _archive/
 tests/screenshots/
+
+# Old code backups and internal dev planning docs (previously tracked, now ignored)
+backup/
+docs/superpowers/
 flowmd_clean_extracted.png
 flowmd_extracted_clean_logo.png
 flowmd_extracted_clean_logo.svg

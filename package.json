@@ -5,6 +5,7 @@
   "description": "FlowMD — Plan. Study. Track. Succeed. (NEET-PG Study Planner)",
   "scripts": {
     "version:bump": "node scripts/bump-version.js",
+    "dev": "node serve.cjs",
     "test": "node tests/modules.mjs && node tests/metrics.mjs && node tests/smoke.mjs && node tests/onboarding.mjs && node tests/navigation.mjs && node tests/migration.mjs && node tests/offline.mjs && node tests/render.mjs && node tests/inline-styles.mjs && node tests/scope-leaks.mjs && node --test \"tests/unit/*.test.mjs\"",
     "deploy:firebase": "firebase deploy --only hosting,firestore:rules",
     "deploy": "npm run version:bump && git add index.html sw.js js/core/constants.js && git commit -m \"chore: bump cache version\" && git push && npm run deploy:firebase",

@@ -31,8 +31,10 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install chromium
 
+      # Smoke + onboarding cover the live UI; the unit glob runs the FULL sync/
+      # store/quest suite (two-device harness, zero-write settles, queue engine).
       - name: Run tests
-        run: node tests/smoke.mjs && node tests/onboarding.mjs && node --test tests/unit/sync.test.mjs tests/unit/store.test.mjs
+        run: node tests/smoke.mjs && node tests/onboarding.mjs && node --test tests/unit/*.test.mjs
 
   # Manual-deploy gate: only fired from the Actions tab ("Run workflow"),
   # so a push to main or a pull request never auto-deploys to the live site.
