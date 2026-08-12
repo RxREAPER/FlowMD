@@ -1,10 +1,10 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 8 (Per-edition state partitions — IN PROGRESS on branch `feat/per-edition-state`, not yet deployed)
-- **Status**: v215 implements per-edition state. Each edition (`marrow_8` / `marrow_6_5`) now owns its own plans, goals, daily history (Goal Pulse / analytics graphs), per-subject counts, active plan and bulk-completed chapters via `state.editions` partitions (localStorage schema v3→v4). Cloud fields are edition-suffixed (`plans_marrow_8`, …) with independent per-field clocks; legacy flat cloud docs rehydrate into the edition they name. Source-switch modal shows a per-edition config summary. v214 (modal copy) and the v204–v213 hardening series are deployed live at flowmd-04.web.app (v214).
-- **Next**: deploy v215 after branch review (`npm run deploy:firebase`), then verify the live source-switch flow on both editions.
-- **Git note**: branch `feat/per-edition-state` off `main` (f0d9c09); `main` is in sync with origin/main.
+- **Phase**: 8 (Per-edition state partitions — COMPLETE on `main`, deployed through v215)
+- **Status**: v215 (per-edition state) is merged to `main` and deployed live at flowmd-04.web.app. Each edition (`marrow_8` / `marrow_6_5`) now owns its own plans, goals, daily history (Goal Pulse / analytics graphs), per-subject counts, active plan and bulk-completed chapters via `state.editions` partitions (localStorage schema v3→v4). Cloud fields are edition-suffixed (`plans_marrow_8`, …) with independent per-field clocks; legacy flat cloud docs rehydrate into the edition they name. Source-switch modal shows a per-edition config summary. Verified live: switching 8 ↔ 6.5 keeps each edition's plan and renders its own daily quests (3/day Anatomy vs 5/day Pathology) after reload.
+- **Next**: feature development (per-edition Goal Pulse indicator on dashboard; real-device cross-edition sync test).
+- **Git note**: `main` at 703052b (v215) — push to origin pending.
 
 ## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
 - [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
