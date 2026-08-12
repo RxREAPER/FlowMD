@@ -1,5 +1,15 @@
 # FlowMD — Change Log
 
+## [2026-08-13] Per-edition state partitions — each edition owns its plans, goals, quests & analytics (v215)
+
+- **The real fix for "switching edition changes nothing":** previously the app had ONE global `state` object — only `completedVideos` was actually per-edition (video IDs are prefixed `marrow_8::` / `marrow_6_5::`). Plans, goals, daily history (graph + goal pulse), per-subject counts, active plan and bulk-completed chapters were shared, so switching editions changed only the dataset and the checkmarks; daily quests, targets, deadlines and every graph looked identical.
+- **Now** `state.editions = { marrow_8: {...}, marrow_6_5: {...} }` — each edition owns its own plans, goals, daily history (Goal Pulse / analytics graphs), per-subject history, active plan and bulk-completed chapters. The existing top-level fields stay as the live working copy of the ACTIVE edition (views unchanged); every `saveState()` flushes live → active slice; `switchSource()` swaps slices with zero data loss. A never-configured edition starts unset (the app waits for input, matching its no-assumed-goals philosophy); streak stays global.
+- **Cloud sync is now per-edition.** Firestore fields are suffixed (`plans_marrow_8`, `plans_marrow_6_5`, `dailyHistory_marrow_8`, …) with their own per-field clocks, reusing the existing arbitration machinery — two devices on different editions can never clobber each other, and devices converge per-edition. Legacy flat cloud docs (pre-v215) are rehydrated into the edition they name on first read; localStorage schema migrated v3→v4 (existing data folds into the active edition, other edition unset).
+- **Bonus bug fixed:** `bulkCompletedChapters` was keyed `subjectId::chapterName` with no source prefix — bulk-completing a chapter in Edition 8 marked it done in Edition 6.5. It's now inside the per-edition partition (isolated) and syncs as `bulkCompletedChapters_*`.
+- **Source-switch modal** now shows a one-line config summary per edition (e.g. "Marrow 8 — Anatomy · 3/day · by 2027-06-30", "Marrow 6.5 — Not set yet") so the user sees the two partitions before switching.
+- **New tests:** F1–F4 in the sync matrix (cross-edition independence, switch preservation, plans never merge across editions, bulk-completion isolation), updated smoke/migration/metrics/navigation for the v4 schema and per-edition switch. Full suite green (104+19+45+40+23+7+44 checks, 57/57 unit tests).
+- Cache-busted to v215.
+
 ## [2026-08-13] Source-switch modal copy matches reality — plans are kept, not reset (v214)
 
 - The two warning strings in the source-switch modal (`index.html`) still claimed switching "resets your current plan and progress" — the pre-v213 behavior. The modal now says switching **keeps** plans, targets and progress, completions are tracked per edition, and only the daily queue refreshes for the new syllabus. Matches the copy already used in `source-settings.js` and the v213 fix behavior.

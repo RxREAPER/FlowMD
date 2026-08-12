@@ -91,10 +91,59 @@
         }
       }
 
+      // v3 → v4: the flat per-edition fields (flowmd_plans_v2, flowmd_goals,
+      // flowmd_daily_history, ...) become one partition per edition. The
+      // existing values belong to the ACTIVE edition; the other edition starts
+      // with an unset slice (no assumed goals — the site waits for input).
+      // loadState() reads flowmd_editions_v4 going forward.
+      if (currentVersion < 4) {
+        const savedActive = localStorage.getItem('flowmd_active_source');
+        const active = STUDY_SOURCES.some(s => s.id === savedActive) ? savedActive : 'marrow_8';
+        const editions = {};
+        const build = (src) => {
+          const slice = defaultEditionSlice();
+          if (src === active) {
+            const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
+            if (savedPlans) {
+              const parsed = safeParse(savedPlans, []);
+              if (Array.isArray(parsed) && parsed.length > 0) slice.plans = parsed;
+            }
+            const savedGoals = localStorage.getItem(STORAGE_KEYS.GOALS);
+            if (savedGoals) slice.goals = { ...DEFAULT_GOALS, ...safeParse(savedGoals, {}) };
+            const savedHistory = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY);
+            if (savedHistory) slice.dailyHistory = safeParse(savedHistory, {});
+            const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
+            if (savedHistBySubject) slice.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
+            const savedBulk = localStorage.getItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS);
+            if (savedBulk) slice.bulkCompletedChapters = safeParse(savedBulk, {});
+            // activePlanId was never persisted locally — default it.
+          }
+          return slice;
+        };
+        STUDY_SOURCES.forEach((s) => { if (s.id !== 'prepladder_x') editions[s.id] = build(s.id); });
+        localStorage.setItem(STORAGE_KEYS.EDITIONS, JSON.stringify(editions));
+      }
+
       localStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, String(SCHEMA_VERSION));
     } catch (e) {
       console.warn('Schema migration failed:', e);
     }
+  }
+
+  // One durable slice per study edition. Each owns its own plans, goals
+  // (legacy mirror), daily history (charts / goal pulse), per-subject daily
+  // counts, active plan and bulk-completed chapters — so switching editions
+  // switches the ENTIRE planning/analytics context, and the two partitions
+  // sync independently (suffixed cloud fields with their own clocks).
+  function defaultEditionSlice() {
+    return {
+      plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)],
+      goals: { ...DEFAULT_GOALS },
+      dailyHistory: {},
+      dailyHistoryBySubject: {},
+      activePlanId: 'plan_a',
+      bulkCompletedChapters: {}
+    };
   }
 
   // --- App State (single global mutable object) ---
@@ -103,6 +152,11 @@
     activeSubjectId: 'anatomy',
     completedVideos: {},
     expandedChapters: {},
+    // LIVE WORKING COPY of editions[activeSource]: views, the queue engine
+    // and analytics read/write these top-level fields exactly as before;
+    // saveState() flushes them into the active edition's slice. On a source
+    // switch the live fields are re-pointed at the other edition's slice, so
+    // no view code needs to know about editions.
     goals: { ...DEFAULT_GOALS },
     personal: { ...DEFAULT_PERSONAL },
     theme: 'dark',
@@ -120,8 +174,62 @@
     activePlanId: 'plan_a',
     dailyHistoryBySubject: {},
     // Bulk Chapter Completion (excluded from analytics)
-    bulkCompletedChapters: {}
+    bulkCompletedChapters: {},
+    // Per-edition durable partitions (source of truth for everything above).
+    editions: {
+      marrow_8: defaultEditionSlice(),
+      marrow_6_5: defaultEditionSlice()
+    }
   };
+
+  // Copy the live working fields into the active edition's durable slice.
+  // Runs at the START of every saveState so in-place mutations (plans[0].x = y,
+  // dailyHistory[day]++, bulkCompletedChapters[k] = true) always land in the
+  // right partition before persistence and cloud dirty-tracking.
+  function flushLiveToEdition() {
+    const src = state.activeSource || 'marrow_8';
+    if (!state.editions || !state.editions[src]) {
+      if (!state.editions) state.editions = {};
+      state.editions[src] = defaultEditionSlice();
+    }
+    const e = state.editions[src];
+    e.plans = state.plans;
+    e.goals = state.goals;
+    e.dailyHistory = state.dailyHistory;
+    e.dailyHistoryBySubject = state.dailyHistoryBySubject;
+    e.activePlanId = state.activePlanId;
+    e.bulkCompletedChapters = state.bulkCompletedChapters;
+  }
+
+  // Point the live working fields at an edition's durable slice (source
+  // switch + load). After this, every view reads that edition's data.
+  function loadEditionIntoLive(src) {
+    if (!state.editions || !state.editions[src]) {
+      if (!state.editions) state.editions = {};
+      state.editions[src] = defaultEditionSlice();
+    }
+    const e = state.editions[src];
+    state.plans = e.plans;
+    state.goals = e.goals;
+    state.dailyHistory = e.dailyHistory;
+    state.dailyHistoryBySubject = e.dailyHistoryBySubject;
+    state.activePlanId = e.activePlanId;
+    state.bulkCompletedChapters = e.bulkCompletedChapters;
+  }
+
+  // Switch the active edition: flush the current live fields into the old
+  // slice, point activeSource at the new edition, and load its slice as the
+  // live view. Per-day queue bookkeeping resets so the daily quests
+  // regenerate from the new edition's dataset.
+  function switchSource(src) {
+    const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
+    if (!syncApi.EDITION_IDS || syncApi.EDITION_IDS.indexOf(src) === -1) return false;
+    flushLiveToEdition();
+    state.activeSource = src;
+    loadEditionIntoLive(src);
+    saveState();
+    return true;
+  }
 
   function getState() {
     return state;
@@ -216,24 +324,56 @@
       const savedConfigured = localStorage.getItem('flowmd_is_configured');
       if (savedConfigured === 'true') state.isConfigured = true;
 
-      // --- Dual-Subject Tracking v2: load plans ---
-      const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
-      if (savedPlans) {
-        const parsed = safeParse(savedPlans, []);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          state.plans = parsed;
+      // --- Per-edition partitions (v4): load the durable slices, then point
+      // the live working fields at the active edition. Legacy v3 flat data
+      // was folded into editions[activeSource] by migrateStateSchema. ---
+      const savedEditions = localStorage.getItem(STORAGE_KEYS.EDITIONS);
+      if (savedEditions) {
+        const parsed = safeParse(savedEditions, null);
+        if (parsed && typeof parsed === 'object') {
+          state.editions = parsed;
+          // Fill any missing edition slices (e.g. a doc written before the
+          // second edition existed) with unset defaults.
+          STUDY_SOURCES.forEach((s) => {
+            if (s.id === 'prepladder_x') return;
+            if (!state.editions[s.id] || typeof state.editions[s.id] !== 'object') {
+              state.editions[s.id] = defaultEditionSlice();
+            }
+          });
         }
       } else {
-        // Migrate legacy single-subject state to Plan A
-        migrateStateToPlans();
+        // Legacy v3 (or older): load the flat fields into the ACTIVE edition's
+        // slice (migrateStateSchema wrote flowmd_editions_v4, but a profile
+        // that never saved after migrating still has flat keys only).
+        const src = state.activeSource;
+        if (!state.editions) state.editions = {};
+        if (!state.editions[src]) state.editions[src] = defaultEditionSlice();
+        const e = state.editions[src];
+        const savedPlans = localStorage.getItem(STORAGE_KEYS.PLANS);
+        if (savedPlans) {
+          const parsed = safeParse(savedPlans, []);
+          if (Array.isArray(parsed) && parsed.length > 0) e.plans = parsed;
+        } else {
+          migrateStateToPlans();
+          e.plans = state.plans;
+        }
+        const savedGoals = localStorage.getItem(STORAGE_KEYS.GOALS);
+        if (savedGoals) e.goals = { ...DEFAULT_GOALS, ...safeParse(savedGoals, {}) };
+        const savedHistory = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY);
+        if (savedHistory) e.dailyHistory = safeParse(savedHistory, {});
+        const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
+        if (savedHistBySubject) e.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
+        const savedBulkChapters = localStorage.getItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS);
+        if (savedBulkChapters) e.bulkCompletedChapters = safeParse(savedBulkChapters, {});
+        // Ensure the second edition exists.
+        STUDY_SOURCES.forEach((s) => {
+          if (s.id === 'prepladder_x' || s.id === src) return;
+          if (!state.editions[s.id]) state.editions[s.id] = defaultEditionSlice();
+        });
       }
 
-      const savedHistBySubject = localStorage.getItem(STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT);
-      if (savedHistBySubject) state.dailyHistoryBySubject = safeParse(savedHistBySubject, {});
-
-      // --- Bulk Chapter Completion ---
-      const savedBulkChapters = localStorage.getItem(STORAGE_KEYS.BULK_COMPLETED_CHAPTERS);
-      if (savedBulkChapters) state.bulkCompletedChapters = safeParse(savedBulkChapters, {});
+      // Point the live working fields at the active edition's slice.
+      loadEditionIntoLive(state.activeSource);
 
     } catch (e) {
       console.warn('Error loading state:', e);
@@ -241,21 +381,38 @@
   }
 
   // Top-level state fields that are written to Firestore (mirrors the
-  // syncToCloud payload). Local-only bookkeeping (theme, isOffline, search,
-  // expandedChapters, lastLocalUpdate, _dirtyFields, _prevSyncedState) and
-  // dead/transient fields (speed, subjectUrgency, dailyBatch, queue counters)
-  // are never cloud-written — excluding them here prevents junk fields from
-  // ever being pushed by field-level updates.
-  const CLOUD_STATE_FIELDS = [
-    'completedVideos', 'goals', 'streakData', 'personal',
-    'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
-    'activeSource', 'isConfigured', 'themeStyle'
-  ];
+  // syncToCloud payload). Per-edition fields appear SUFFIXED (plans_marrow_8,
+  // dailyHistory_marrow_6_5, ...) so each edition has its own clock and
+  // arbitrates independently. Local-only bookkeeping (theme, isOffline,
+  // search, expandedChapters, lastLocalUpdate, _dirtyFields, _prevSyncedState)
+  // and dead/transient fields (speed, subjectUrgency, dailyBatch, queue
+  // counters) are never cloud-written — excluding them here prevents junk
+  // fields from ever being pushed by field-level updates.
+  const CLOUD_STATE_FIELDS = (function () {
+    const names = ['completedVideos', 'streakData', 'personal', 'activeSource', 'isConfigured', 'themeStyle'];
+    const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
+    const ed = syncApi.EDITION_IDS || ['marrow_8', 'marrow_6_5'];
+    const bases = syncApi.EDITION_BASE_FIELDS || ['plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject', 'activePlanId', 'bulkCompletedChapters'];
+    ed.forEach((src) => { bases.forEach((b) => { names.push(b + '_' + src); }); });
+    return names;
+  })();
 
   // How many days of daily-history maps to keep. The charts only ever look
   // back 7/30 days and the per-subject map only needs today, so anything
   // older is dead weight in localStorage and the Firestore doc.
   const HISTORY_RETENTION_DAYS = 90;
+
+  // Read one cloud-writable field from state — global fields come from the
+  // top level, suffixed per-edition fields from the edition's durable slice.
+  function readCloudField(st, fieldName) {
+    const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
+    const edPart = syncApi.editionFieldParts ? syncApi.editionFieldParts(fieldName) : null;
+    if (edPart) {
+      const e = (st.editions && st.editions[edPart.src]) || {};
+      return e[edPart.base];
+    }
+    return st[fieldName];
+  }
 
   // Snapshot of just the cloud-writable fields — used as the baseline for
   // dirty-field comparison so a no-op save never schedules a cloud write.
@@ -266,11 +423,12 @@
   function snapshotCloudState(st) {
     const snap = {};
     CLOUD_STATE_FIELDS.forEach(f => {
-      if (st[f] === undefined) return;
+      const v = readCloudField(st, f);
+      if (v === undefined) return;
       try {
-        snap[f] = JSON.parse(JSON.stringify(st[f]));
+        snap[f] = JSON.parse(JSON.stringify(v));
       } catch (e) {
-        snap[f] = st[f];
+        snap[f] = v;
       }
     });
     return snap;
@@ -279,6 +437,9 @@
   // localStorage keys written by saveState, with value getters. Used both for
   // selective writes (unchanged keys are skipped) and to detect completedVideos
   // changes, which drive the memoized syllabus-stats revision counter.
+  // Legacy FLAT keys (plans, goals, daily_history, ...) stay as mirrors of the
+  // ACTIVE edition so older readers keep working; the editions key is the
+  // durable per-edition store.
   const LOCAL_KEYS = [
     [STORAGE_KEYS.COMPLETED_VIDEOS, () => JSON.stringify(state.completedVideos)],
     [STORAGE_KEYS.GOALS, () => JSON.stringify(state.goals)],
@@ -294,6 +455,7 @@
     [STORAGE_KEYS.PLANS, () => JSON.stringify(state.plans || [])],
     [STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, () => JSON.stringify(state.dailyHistoryBySubject || {})],
     [STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, () => JSON.stringify(state.bulkCompletedChapters || {})],
+    [STORAGE_KEYS.EDITIONS, () => JSON.stringify(state.editions || {})],
     [STORAGE_KEYS.SCHEMA_VERSION, () => String(SCHEMA_VERSION)]
   ];
 
@@ -303,6 +465,11 @@
   let cloudSyncTimeout = null;
   function saveState() {
     try {
+      // Flush the live working fields into the ACTIVE edition's durable slice
+      // BEFORE anything else — persistence and cloud dirty-tracking then see
+      // the per-edition truth, and a source switch never loses an in-place
+      // mutation made since the last save.
+      flushLiveToEdition();
       state.lastLocalUpdate = Date.now();
       // Drop history older than the retention window (keeps local storage and
       // the cloud doc minimal without touching anything the UI reads).
@@ -357,7 +524,7 @@
             // fields local actually changed since its last write go up.
             const localT = Number((state.fieldSyncTimes || {})[f]) || 0;
             const cloudT = Number((state._cloudSyncTimes || {})[f]) || 0;
-            if (localT >= cloudT) fields[f] = state[f];
+            if (localT >= cloudT) fields[f] = readCloudField(state, f);
           });
           if (Object.keys(fields).length === 0) {
             state._prevSyncedState = snapshot;
@@ -474,6 +641,10 @@
     markStudyActivity,
     getStudyStreak,
     mergePlansLocalWins,
-    snapshotCloudState
+    snapshotCloudState,
+    flushLiveToEdition,
+    loadEditionIntoLive,
+    switchSource,
+    defaultEditionSlice
   };
 })();

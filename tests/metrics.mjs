@@ -42,7 +42,11 @@ function check(name, ok, detail = '') {
 }
 
 // Seed a deterministic profile: Plan A on Anatomy, 8/day, one video completed.
+// Schema version 3 is deliberate: it makes the v3→v4 migration fold these flat
+// keys into the flowmd_editions_v4 partition on reload, exactly like a real
+// pre-v4 profile.
 const SEED = {
+  'flowmd_schema_version': '3',
   'flowmd_is_configured': 'true',
   'flowmd_tutorial_seen': 'true',
   'flowmd_active_source': 'marrow_8',

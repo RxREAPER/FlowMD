@@ -98,15 +98,15 @@
           planKeys.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
           return cp;
         };
+        // Per-edition fields are stored SUFFIXED (plans_marrow_8, plans_marrow_6_5,
+        // ...) so each edition has its own clock and syncs independently.
+        const edIds = (syncApi.EDITION_IDS) || ['marrow_8', 'marrow_6_5'];
+        const edBases = (syncApi.EDITION_BASE_FIELDS) || ['plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject', 'activePlanId', 'bulkCompletedChapters'];
+        const editions = stateData.editions || {};
         const payload = {
           completedVideos: stateData.completedVideos || {},
-          goals: stateData.goals || {},
           streakData: stateData.streakData || {},
           personal: stateData.personal || {},
-          dailyHistory: stateData.dailyHistory || {},
-          dailyHistoryBySubject: stateData.dailyHistoryBySubject || {},
-          plans: (stateData.plans || []).map(stripPlan),
-          activePlanId: stateData.activePlanId || 'plan_a',
           activeSource: stateData.activeSource || 'marrow_8',
           isConfigured: stateData.isConfigured || false,
           themeStyle: stateData.themeStyle || 'modern',
@@ -115,6 +115,16 @@
           googlePhotoURL: user?.photoURL || null,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
+        edIds.forEach((src) => {
+          const e = editions[src] || {};
+          edBases.forEach((base) => {
+            if (base === 'plans') {
+              payload[base + '_' + src] = (e.plans || []).map(stripPlan);
+            } else if (e[base] !== undefined) {
+              payload[base + '_' + src] = e[base];
+            }
+          });
+        });
         // Per-field sync clock for pull arbitration: each written field maps
         // to the client time of its last write. mergeCloudPerField compares
         // these (not the whole-doc updatedAt) so stale fields from one device
@@ -153,14 +163,20 @@
         const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits'];
         // plans in state carry per-day queue bookkeeping (queueBatchVideoIds,
         // per-batch counters) — strip to the same cloud keys syncToCloud uses
-        // so field-level writes never accumulate junk in the doc.
+        // so field-level writes never accumulate junk in the doc. Applies to
+        // every per-edition plans_X key (and the legacy flat plans).
         let cleanFields = fields;
-        if (Array.isArray(fields.plans)) {
+        const plansKeys = Object.keys(fields).filter((k) => k === 'plans' || k.indexOf('_plans') === k.length - '_plans'.length || /^plans_/.test(k));
+        if (plansKeys.length > 0) {
           cleanFields = Object.assign({}, fields);
-          cleanFields.plans = fields.plans.map((p) => {
-            const cp = {};
-            planKeys.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
-            return cp;
+          plansKeys.forEach((k) => {
+            if (Array.isArray(fields[k])) {
+              cleanFields[k] = fields[k].map((p) => {
+                const cp = {};
+                planKeys.forEach((kk) => { if (p && p[kk] !== undefined) cp[kk] = p[kk]; });
+                return cp;
+              });
+            }
           });
         }
         const payload = Object.assign({}, cleanFields, {

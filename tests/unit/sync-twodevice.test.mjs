@@ -25,13 +25,13 @@ test('two devices editing DIFFERENT fields: both edits survive a round of syncs'
   await A.flush();
 
   const cloudDoc = cloud.getDoc();
-  if (!cloudDoc.plans || !cloudDoc.plans[0] || !cloudDoc.goals || !cloudDoc.goals.videosPerDay) {
-    console.log('DEBUG1 cloud:', JSON.stringify({ goals: cloudDoc.goals, plans: cloudDoc.plans, fst: cloudDoc.fieldSyncTimes }));
+  if (!cloudDoc.plans_marrow_8 || !cloudDoc.plans_marrow_8[0] || !cloudDoc.goals_marrow_8 || !cloudDoc.goals_marrow_8.videosPerDay) {
+    console.log('DEBUG1 cloud:', JSON.stringify({ goals: cloudDoc.goals_marrow_8, plans: cloudDoc.plans_marrow_8, fst: cloudDoc.fieldSyncTimes }));
     console.log('DEBUG1 A:', JSON.stringify({ goals: A.state.goals, plans: A.state.plans }), 'B:', JSON.stringify({ goals: B.state.goals, plans: B.state.plans }));
     console.log('DEBUG1 writes:', cloud.writes.count);
   }
-  assert.equal(cloudDoc.goals.videosPerDay, 12, 'A’s goals must reach the cloud');
-  assert.equal(cloudDoc.plans[0].videosPerDay, 9, 'B’s plan must reach the cloud');
+  assert.equal(cloudDoc.goals_marrow_8.videosPerDay, 12, 'A’s goals must reach the cloud (suffixed per-edition field)');
+  assert.equal(cloudDoc.plans_marrow_8[0].videosPerDay, 9, 'B’s plan must reach the cloud');
   assert.equal(A.state.plans[0].videosPerDay, 9, 'B’s plan must arrive on A after A pulls');
   assert.equal(B.state.goals.videosPerDay, 12, 'A’s goals must arrive on B after B pulls');
 });
@@ -57,7 +57,7 @@ test('two devices editing the SAME field: the newer edit wins, the older is not 
   await A.flush();
 
   const cloudDoc = cloud.getDoc();
-  assert.equal(cloudDoc.activePlanId, 'plan_c', 'newer edit (B) wins in the cloud');
+  assert.equal(cloudDoc.activePlanId_marrow_8, 'plan_c', 'newer edit (B) wins in the cloud');
   assert.equal(A.state.activePlanId, 'plan_c', 'newer edit propagates to A');
 });
 
@@ -120,7 +120,7 @@ test('no write ping-pong: writes stop after both devices settle (no echo writes)
   assert.equal(cloud.writes.count, 0, `expected ZERO writes after settling, got ${cloud.writes.count}`);
   assert.deepEqual(toPlain(A.state.goals), { videosPerDay: 10 });
   assert.deepEqual(toPlain(A.state.plans), [{ id: 'plan_a', videosPerDay: 7 }]);
-  assert.deepEqual(toPlain(cloud.getDoc().plans), [{ id: 'plan_a', videosPerDay: 7 }]);
+  assert.deepEqual(toPlain(cloud.getDoc().plans_marrow_8), [{ id: 'plan_a', videosPerDay: 7 }]);
 });
 
 test('an EMPTY cloud doc never wipes a device with real data (the reported sync-wipe bug)', async () => {
@@ -157,7 +157,7 @@ test('an EMPTY cloud doc never wipes a device with real data (the reported sync-
   assert.equal(B.state.goals.videosPerDay, 3, 'B keeps its goals');
   assert.equal(B.state.personal.doctorName, 'Dr. Faiz', 'B keeps its doctor name');
   assert.equal(B.state.activeSource, 'marrow_6_5', 'B keeps its chosen source');
-  assert.equal(cloudDoc.plans[0].videosPerDay, 3, 'B fixes the cloud plans');
+  assert.equal(cloudDoc.plans_marrow_6_5[0].videosPerDay, 3, 'B fixes the cloud plans (its active edition)');
   assert.equal(cloudDoc.personal.doctorName, 'Dr. Faiz', 'B fixes the cloud profile');
   assert.equal(cloudDoc.activeSource, 'marrow_6_5', 'B fixes the cloud source');
 });

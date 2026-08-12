@@ -4,10 +4,11 @@
 A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies syllabus tracking with pixel-art aesthetics, dual-plan tracking, and Firebase cloud sync.
 
 ## Status
-- **Phase**: Production hardening (v214 deployed)
+- **Phase**: Per-edition state partitions (v215 on branch `feat/per-edition-state`, not yet deployed)
 - **Deployment**: https://flowmd-04.web.app (Firebase Hosting) — serving v214
-- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main in sync (268f50a)
+- **GitHub**: https://github.com/mohammedsafi0414/FlowMD — origin/main in sync
 - **Last Deploy**: v214 (source-switch modal copy fix, scope-leaks + inline-styles test fixes)
+- **Next**: review + deploy v215 (per-edition plans/goals/quests/analytics, suffixed cloud fields, v3→v4 storage migration)
 
 ## Tech Stack
 - **Language**: Vanilla JavaScript (ES5 IIFE)
@@ -18,7 +19,7 @@ A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies 
 
 ## Key Architecture
 - Single-page app: index.html → thin app.js shell + 20 modules under `js/core/` and `js/features/` (plain IIFEs on `window.FlowMD.*`, no bundler — CSP forbids `unsafe-eval`); data.js / data_marrow_6_5.js (syllabus), firebase.js (cloud)
-- Dual-plan tracking (Plan A / Plan B) with per-plan queue engine; source switch preserves plans, completions keyed per edition
+- Dual-plan tracking (Plan A / Plan B) with per-plan queue engine; per-edition state partitions (v215): each edition owns plans, goals, daily history, per-subject counts, active plan and bulk-completed chapters; cloud fields suffixed per edition with independent clocks; completions keyed per edition
 - LocalStorage persistence with Firestore pull-then-push sync (per-field newest-wins, manual Sync Now)
 - Cache-busting via `?v=XXX` query params (scripts/bump-version.js); PWA offline via sw.js
 

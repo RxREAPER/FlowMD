@@ -342,9 +342,9 @@ async function run() {
     await dismissOverlays(page);
   }
 
-  // Source switch preserves plans, goals and per-source completions
-  // (regression: the switch used to reset plans to a single default Plan A,
-  // wiping Plan B, paces/deadlines and the quest list).
+  // Source switch swaps per-edition partitions (v4): Edition 8 keeps its
+  // plans + completions, Edition 6.5 is a fresh unset partition, and each
+  // edition's plans come back intact when you switch back.
   {
     await page.evaluate(() => {
       const st = window.FlowMD.store.getState();
@@ -367,7 +367,30 @@ async function run() {
       if (save) save.click();
     });
     await page.waitForTimeout(400);
-    const preserved = await page.evaluate(() => {
+    const switched = await page.evaluate(() => {
+      const st = window.FlowMD.store.getState();
+      return {
+        source: st.activeSource,
+        planCount: st.plans.length,
+        planB: st.plans.some(p => p.id === 'plan_b'),
+        planADay: st.plans[0] && st.plans[0].videosPerDay,
+        completed: Object.keys(st.completedVideos).length
+      };
+    });
+    check('Source switch loads a fresh unset Edition 6.5 partition',
+      switched.source === 'marrow_6_5' && switched.planCount === 1 && !switched.planB && !switched.planADay && switched.completed === 2,
+      JSON.stringify(switched));
+    // Switch back — Edition 8's plans must come back intact.
+    await page.evaluate(() => { window.FlowMD.sourceSettings.openSourceSettingsModal(); });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+      const opt = document.querySelector('.onboarding-option[data-src="marrow_8"]');
+      if (opt) opt.click();
+      const save = document.querySelector('#scs-save');
+      if (save) save.click();
+    });
+    await page.waitForTimeout(400);
+    const restored = await page.evaluate(() => {
       const st = window.FlowMD.store.getState();
       return {
         source: st.activeSource,
@@ -378,19 +401,9 @@ async function run() {
         completed: Object.keys(st.completedVideos).length
       };
     });
-    check('Source switch preserves plans + per-source completions',
-      preserved.source === 'marrow_6_5' && preserved.planCount === 2 && preserved.planB && preserved.planADay === 3 && preserved.planADate === '2027-06-30' && preserved.completed === 2,
-      JSON.stringify(preserved));
-    // Switch back so the rest of the flow runs on the default edition.
-    await page.evaluate(() => { window.FlowMD.sourceSettings.openSourceSettingsModal(); });
-    await page.waitForTimeout(300);
-    await page.evaluate(() => {
-      const opt = document.querySelector('.onboarding-option[data-src="marrow_8"]');
-      if (opt) opt.click();
-      const save = document.querySelector('#scs-save');
-      if (save) save.click();
-    });
-    await page.waitForTimeout(400);
+    check('Source switch back restores Edition 8 plans + completions',
+      restored.source === 'marrow_8' && restored.planCount === 2 && restored.planB && restored.planADay === 3 && restored.planADate === '2027-06-30' && restored.completed === 2,
+      JSON.stringify(restored));
   }
 
   // Toast system

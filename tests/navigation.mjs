@@ -33,6 +33,9 @@ async function run() {
     // Rich profile: a configured Plan A on Anatomy plus one completed video.
     // Exercises the plan-quest dashboard path (catches missing imports that
     // only fire when a plan exists — see the getScopedChapterNames fix).
+    // v3 schema: reload runs the v3→v4 migration, folding these flat keys
+    // into the flowmd_editions_v4 partition (mirrors a real pre-v4 profile).
+    localStorage.setItem('flowmd_schema_version', '3');
     localStorage.setItem('flowmd_is_configured', 'true');
     localStorage.setItem('flowmd_tutorial_seen', 'true');
     localStorage.setItem('flowmd_active_source', 'marrow_8');

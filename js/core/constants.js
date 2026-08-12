@@ -43,11 +43,13 @@ const FLOWMD_ICONS = {
 
   // --- LocalStorage Schema Version (bump when stored shapes change;
   // loadState() runs migrations for older versions) ---
-  const SCHEMA_VERSION = 3;
+  // v4: per-edition state partitions (each edition owns its own plans,
+  // goals, daily history, active plan and bulk completions).
+  const SCHEMA_VERSION = 4;
 
   // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
   // used for dynamic script injection so lazy-loaded data files bust the cache) ---
-  const APP_VERSION = '214';
+  const APP_VERSION = '215';
 
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
@@ -67,7 +69,9 @@ const FLOWMD_ICONS = {
     // Dual-Subject Tracking v2
     PLANS: 'flowmd_plans_v2',
     DAILY_HISTORY_BY_SUBJECT: 'flowmd_daily_history_by_subject',
-    BULK_COMPLETED_CHAPTERS: 'flowmd_bulk_completed_chapters'
+    BULK_COMPLETED_CHAPTERS: 'flowmd_bulk_completed_chapters',
+    // Per-edition partitions (v4+): { marrow_8: {...}, marrow_6_5: {...} }
+    EDITIONS: 'flowmd_editions_v4'
   };
 
   // --- Study Sources ---

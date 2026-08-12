@@ -25,7 +25,7 @@ test('A1 sign-in with no cloud doc seeds it with the local state', async () => {
 
   const doc = cloud.getDoc();
   assert.ok(doc, 'doc was created');
-  assert.equal(doc.goals.videosPerDay, 12, 'local goals seeded');
+  assert.equal(doc.goals_marrow_8.videosPerDay, 12, 'local goals seeded (per-edition suffixed field)');
   assert.equal(doc.personal.doctorName, 'Dr. A', 'local profile seeded');
   assert.equal(A.state.personal.isSynced, true, 'profile marked synced');
   assert.equal(A.state.personal.syncEmail, 'a@x.com', 'sync email recorded');
@@ -76,7 +76,9 @@ test('A3 legacy cloud doc (no fieldSyncTimes, unprefixed video keys) migrates on
   assert.equal(B.state.goals.videosPerDay, 10, 'legacy goals arrive');
   assert.equal(B.state.personal.doctorName, 'Dr. Legacy', 'legacy profile arrives (default profile is empty)');
   assert.equal(B.state.activeSource, 'marrow_6_5', 'legacy source arrives (default never beats a choice)');
-  assert.equal(B.state.completedVideos['marrow_8::anatomy__v1'], true, 'legacy unprefixed key re-prefixed with the device source');
+  // The legacy doc names marrow_6_5 as its active edition — the unprefixed
+  // key re-prefixes into THAT edition (not the fresh device's default).
+  assert.equal(B.state.completedVideos['marrow_6_5::anatomy__v1'], true, 'legacy unprefixed key re-prefixed into the legacy doc’s edition');
 });
 
 // ── B. Plans — per-plan merge ─────────────────────────────────────────────
@@ -107,7 +109,7 @@ test('B1 concurrent plans: A adds Plan B while B edits Plan A — both survive, 
   assert.equal(planOf(B.state.plans, 'plan_b').videosPerDay, 5, 'cloud plan_b arrives on B — never lost');
   assert.equal(planOf(A.state.plans, 'plan_a').videosPerDay, 10, 'B’s edit propagates to A');
   assert.equal(planOf(A.state.plans, 'plan_b').videosPerDay, 5, 'A keeps its own plan_b');
-  const cloudPlans = cloud.getDoc().plans;
+  const cloudPlans = cloud.getDoc().plans_marrow_8;
   assert.equal(planOf(cloudPlans, 'plan_a').videosPerDay, 10, 'cloud converges to B’s edit');
   assert.equal(planOf(cloudPlans, 'plan_b').videosPerDay, 5, 'cloud keeps plan_b');
 });
@@ -130,7 +132,7 @@ test('B2 same-plan edit propagates to the other device', async () => {
   await A.flush();
 
   assert.equal(A.state.plans[0].videosPerDay, 10, 'same-plan edit reaches A');
-  assert.equal(cloud.getDoc().plans[0].videosPerDay, 10, 'cloud reflects the newer edit');
+  assert.equal(cloud.getDoc().plans_marrow_8[0].videosPerDay, 10, 'cloud reflects the newer edit');
 });
 
 // ── C. completedVideos ────────────────────────────────────────────────────
@@ -205,7 +207,7 @@ test('D1 edits made offline converge when the device comes back online', async (
   await B.flush();
 
   assert.equal(B.state.goals.videosPerDay, 6, 'B pulled A’s goals after coming online');
-  assert.equal(cloud.getDoc().plans[0].videosPerDay, 4, 'B’s offline edit reached the cloud');
+  assert.equal(cloud.getDoc().plans_marrow_8[0].videosPerDay, 4, 'B’s offline edit reached the cloud');
 
   await A.manualSync();
   await A.flush();
@@ -242,8 +244,8 @@ test('E1 three devices converge on one doc without losing anyone’s data', asyn
     assert.equal(dev.state.personal.doctorName, 'Dr. Cee', `${name} has C’s profile`);
   }
   const doc = cloud.getDoc();
-  assert.equal(doc.goals.videosPerDay, 12, 'cloud has A’s goals');
-  assert.equal(doc.plans[0].videosPerDay, 7, 'cloud has B’s plan');
+  assert.equal(doc.goals_marrow_8.videosPerDay, 12, 'cloud has A’s goals');
+  assert.equal(doc.plans_marrow_8[0].videosPerDay, 7, 'cloud has B’s plan');
   assert.equal(doc.personal.doctorName, 'Dr. Cee', 'cloud has C’s profile');
 
   // And once converged, more syncs produce zero writes (no echo).
@@ -253,4 +255,94 @@ test('E1 three devices converge on one doc without losing anyone’s data', asyn
   await C.manualSync(); await C.flush();
   await A.flush(); await B.flush(); await C.flush();
   assert.equal(cloud.writes.count, 0, `no writes after three devices converge, got ${cloud.writes.count}`);
+});
+
+// ── F. Per-edition partitions (v4) ────────────────────────────────────────
+
+test('F1 cross-edition independence: editing Edition 8 never touches Edition 6.5 (or vice versa)', async () => {
+  const cloud = createCloudStore(uid(10));
+  const A = createDevice('A', cloud, uid(10)); // works on Edition 8
+  const B = createDevice('B', cloud, uid(10)); // works on Edition 6.5
+
+  // A configures Edition 8; B configures Edition 6.5 — same user, two devices.
+  A.edit((s) => { s.goals = { videosPerDay: 12, targetSubject: 'Anatomy' }; });
+  await A.manualSync(); await A.flush();
+
+  B.switchSource('marrow_6_5');
+  B.edit((s) => { s.goals = { videosPerDay: 5, targetSubject: 'Pathology' }; });
+  await B.manualSync(); await B.flush();
+
+  // Each device pulls the OTHER edition's data without clobbering its own.
+  await A.manualSync(); await A.flush();
+  await B.manualSync(); await B.flush();
+
+  const doc = cloud.getDoc();
+  assert.equal(doc.goals_marrow_8.videosPerDay, 12, 'Edition 8 goals intact in the cloud');
+  assert.equal(doc.goals_marrow_6_5.videosPerDay, 5, 'Edition 6.5 goals intact in the cloud');
+  assert.equal(A.state.goals.videosPerDay, 12, 'A still shows its Edition 8 goals');
+  assert.equal(B.state.goals.videosPerDay, 5, 'B still shows its Edition 6.5 goals');
+});
+
+test('F2 switching editions preserves each edition’s plans, goals and history', async () => {
+  const cloud = createCloudStore(uid(11));
+  const A = createDevice('A', cloud, uid(11));
+
+  // Configure Edition 8, switch to 6.5 (fresh — unset), then back to 8.
+  A.edit((s) => {
+    s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy', videosPerDay: 8 }];
+    s.goals = { targetSubject: 'Anatomy', videosPerDay: 8 };
+  });
+  A.switchSource('marrow_6_5');
+  assert.deepEqual(toPlain(A.state.plans), [], 'Edition 6.5 starts unset (no assumed goals)');
+  assert.deepEqual(toPlain(A.state.goals), {}, 'Edition 6.5 goals unset');
+
+  A.edit((s) => {
+    s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Pathology', videosPerDay: 5 }];
+    s.goals = { targetSubject: 'Pathology', videosPerDay: 5 };
+  });
+  A.switchSource('marrow_8');
+  assert.equal(A.state.plans[0].videosPerDay, 8, 'Edition 8 plans preserved after switching away and back');
+  assert.equal(A.state.goals.targetSubject, 'Anatomy', 'Edition 8 goals preserved');
+
+  A.switchSource('marrow_6_5');
+  assert.equal(A.state.plans[0].videosPerDay, 5, 'Edition 6.5 plans still there on return');
+  assert.equal(A.state.goals.targetSubject, 'Pathology', 'Edition 6.5 goals still there on return');
+});
+
+test('F3 cross-edition plans sync independently: plans_marrow_8 and plans_marrow_6_5 never merge with each other', async () => {
+  const cloud = createCloudStore(uid(12));
+  const A = createDevice('A', cloud, uid(12));
+  const B = createDevice('B', cloud, uid(12));
+
+  // A (Edition 8) and B (Edition 6.5) both edit plans named plan_a with
+  // DIFFERENT paces — each edition must keep its own value.
+  A.edit((s) => { s.plans = [{ id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8 }]; });
+  await A.manualSync(); await A.flush();
+
+  B.switchSource('marrow_6_5');
+  B.edit((s) => { s.plans = [{ id: 'plan_a', targetSubject: 'Pathology', videosPerDay: 5 }]; });
+  await B.manualSync(); await B.flush();
+
+  await A.manualSync(); await A.flush();
+  await B.manualSync(); await B.flush();
+
+  const doc = cloud.getDoc();
+  assert.equal(doc.plans_marrow_8[0].videosPerDay, 8, 'Edition 8 plan pace untouched');
+  assert.equal(doc.plans_marrow_6_5[0].videosPerDay, 5, 'Edition 6.5 plan pace untouched');
+  assert.equal(A.state.plans[0].videosPerDay, 8, 'A keeps its Edition 8 pace');
+  assert.equal(B.state.plans[0].videosPerDay, 5, 'B keeps its Edition 6.5 pace');
+});
+
+test('F4 bulk chapter completion is per-edition: completing in Edition 8 does not mark it done in Edition 6.5', async () => {
+  const cloud = createCloudStore(uid(13));
+  const A = createDevice('A', cloud, uid(13));
+
+  A.edit((s) => { s.bulkCompletedChapters = { 'anatomy__ch1': true }; });
+  A.switchSource('marrow_6_5');
+  assert.deepEqual(toPlain(A.state.bulkCompletedChapters), {}, 'Edition 6.5 has its own (empty) bulk map — no cross-edition leak');
+
+  await A.manualSync(); await A.flush();
+  const doc = cloud.getDoc();
+  assert.equal(doc.bulkCompletedChapters_marrow_8['anatomy__ch1'], true, 'Edition 8 bulk completion synced');
+  assert.deepEqual(doc.bulkCompletedChapters_marrow_6_5, {}, 'Edition 6.5 bulk map stays independent');
 });

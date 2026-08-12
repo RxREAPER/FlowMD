@@ -6,18 +6,88 @@
 (function () {
   'use strict';
 
+  // Per-edition state: each available study edition owns its own plans,
+  // goals, daily history (charts/goal pulse), per-subject history, active
+  // plan and bulk-completed chapters. The cloud doc stores these as
+  // SUFFIXED fields (plans_marrow_8, plans_marrow_6_5, ...) so each edition
+  // gets its own per-field clock and merges/arbitrates independently — two
+  // devices working on different editions can never clobber each other.
+  const EDITION_IDS = ['marrow_8', 'marrow_6_5'];
+  const EDITION_BASE_FIELDS = [
+    'plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject',
+    'activePlanId', 'bulkCompletedChapters'
+  ];
+
+  // 'plans_marrow_8' -> { base: 'plans', src: 'marrow_8' }, else null.
+  function editionFieldParts(fieldName) {
+    if (typeof fieldName !== 'string') return null;
+    for (const src of EDITION_IDS) {
+      const suffix = '_' + src;
+      if (fieldName.length > suffix.length && fieldName.slice(-suffix.length) === suffix) {
+        const base = fieldName.slice(0, -suffix.length);
+        if (EDITION_BASE_FIELDS.indexOf(base) !== -1) return { base, src };
+      }
+    }
+    return null;
+  }
+
+  // All cloud field names: global fields + every edition's suffixed fields.
+  function cloudFieldNames() {
+    const names = GLOBAL_CLOUD_FIELDS.slice();
+    EDITION_IDS.forEach((src) => {
+      EDITION_BASE_FIELDS.forEach((base) => { names.push(base + '_' + src); });
+    });
+    return names;
+  }
+
+  // Project LOCAL state into the cloud-doc shape: global fields from the top
+  // level, per-edition fields SUFFIXED from their durable slices. The merge
+  // and arbitration compare this view against the cloud doc, so each edition's
+  // fields carry their own suffixed clock and can never clobber the other.
+  function localCloudView(st) {
+    const view = {};
+    GLOBAL_CLOUD_FIELDS.forEach((f) => {
+      if (st[f] !== undefined) view[f] = st[f];
+    });
+    EDITION_IDS.forEach((src) => {
+      const e = (st.editions && st.editions[src]) || {};
+      EDITION_BASE_FIELDS.forEach((base) => {
+        if (e[base] !== undefined) view[base + '_' + src] = e[base];
+      });
+    });
+    return view;
+  }
+
+  // Fields shared across editions (identity, streak, completions, active
+  // source pointer). completedVideos stays one map — video keys are already
+  // per-edition (marrow_8:: / marrow_6_5:: prefix), so it needs no suffix.
+  const GLOBAL_CLOUD_FIELDS = [
+    'completedVideos', 'streakData', 'personal', 'activeSource',
+    'isConfigured', 'themeStyle'
+  ];
+
   // Fields the app knows how to consume. Anything else in a cloud doc is
   // dropped so legacy/junk fields can never corrupt in-memory state.
   // Deliberately excluded (space): speed/subjectUrgency/dailyBatch (dead,
   // never read), queueCompletedInBatch/queueBatchVideoIds (per-day transient,
   // recomputed by the queue engine), lastSyncedAt (never read — updatedAt
-  // is the merge clock).
-  const KNOWN_FIELDS = [
-    'completedVideos', 'goals', 'streakData', 'personal',
-    'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
-    'activeSource', 'isConfigured', 'themeStyle', 'googleDisplayName',
-    'googlePhotoURL', 'updatedAt', 'lastLocalUpdate', 'fieldSyncTimes'
-  ];
+  // is the merge clock). Legacy FLAT per-edition field names (plans, goals,
+  // dailyHistory, ...) are kept so pre-v215 cloud docs still parse; they are
+  // mapped into the suffixed fields by rehydrateLegacyEditionFields.
+  const KNOWN_FIELDS = (function () {
+    const names = [
+      'completedVideos', 'streakData', 'personal', 'activeSource',
+      'isConfigured', 'themeStyle', 'googleDisplayName', 'googlePhotoURL',
+      'updatedAt', 'lastLocalUpdate', 'fieldSyncTimes',
+      // legacy flat per-edition fields (pre-v215 docs)
+      'plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject',
+      'activePlanId', 'bulkCompletedChapters'
+    ];
+    EDITION_IDS.forEach((src) => {
+      EDITION_BASE_FIELDS.forEach((base) => { names.push(base + '_' + src); });
+    });
+    return names;
+  })();
 
   // Fields a plan keeps in the cloud doc. Transient daily state (the queue
   // batch, per-day counters) is recomputed by the queue engine and never
@@ -39,6 +109,15 @@
     for (const key of Object.keys(raw)) {
       if (KNOWN_FIELDS.indexOf(key) === -1) continue; // drop unknown fields
       const v = raw[key];
+      // Suffixed per-edition fields (plans_marrow_8, dailyHistory_marrow_6_5,
+      // ...) are validated by their BASE field type, written under the suffixed
+      // key so each edition keeps its own entry.
+      const edPart = editionFieldParts(key);
+      if (edPart) {
+        const cleaned = sanitizeFieldValue(edPart.base, v);
+        if (cleaned !== undefined) out[key] = cleaned;
+        continue;
+      }
       switch (key) {
         case 'completedVideos':
           if (isPlainObject(v)) {
@@ -52,30 +131,21 @@
           }
           break;
         case 'plans':
-          if (Array.isArray(v) && v.length <= 4) {
-            const cleanPlans = [];
-            let ok = true;
-            for (const p of v) {
-              if (!isPlainObject(p) || typeof p.id !== 'string') { ok = false; break; }
-              const cp = {};
-              for (const k of PLAN_CLOUD_KEYS) if (p[k] !== undefined) cp[k] = p[k];
-              cleanPlans.push(cp);
-            }
-            if (ok && cleanPlans.length === v.length) out.plans = cleanPlans;
-          }
-          break;
+        case 'goals':
         case 'dailyHistory':
         case 'dailyHistoryBySubject':
-        case 'goals':
-        case 'personal':
-        case 'streakData':
-          if (isPlainObject(v)) out[key] = v;
+        case 'activePlanId':
+        case 'bulkCompletedChapters':
+          // Legacy FLAT per-edition fields (pre-v215 docs). Kept so old docs
+          // parse; rehydrateLegacyEditionFields maps them into the suffixed
+          // fields on read. Never written by this build.
+          {
+            const cleaned = sanitizeFieldValue(key, v);
+            if (cleaned !== undefined) out[key] = cleaned;
+          }
           break;
         case 'activeSource':
           if (KNOWN_SOURCES.indexOf(v) !== -1) out.activeSource = v;
-          break;
-        case 'activePlanId':
-          if (typeof v === 'string' && v.length <= 64) out.activePlanId = v;
           break;
         case 'themeStyle':
           out.themeStyle = 'modern'; // retro theme removed — always normalize
@@ -94,6 +164,56 @@
       }
     }
     return out;
+  }
+
+  // Validate + clean one field VALUE by its base type (used for both suffixed
+  // per-edition fields and the legacy flat names). Returns undefined when the
+  // value is malformed (dropped), else the cleaned value.
+  function sanitizeFieldValue(base, v) {
+    switch (base) {
+      case 'plans':
+        if (Array.isArray(v) && v.length <= 4) {
+          const cleanPlans = [];
+          let ok = true;
+          for (const p of v) {
+            if (!isPlainObject(p) || typeof p.id !== 'string') { ok = false; break; }
+            const cp = {};
+            for (const k of PLAN_CLOUD_KEYS) if (p[k] !== undefined) cp[k] = p[k];
+            cleanPlans.push(cp);
+          }
+          if (ok && cleanPlans.length === v.length) return cleanPlans;
+        }
+        return undefined;
+      case 'activePlanId':
+        if (typeof v === 'string' && v.length <= 64) return v;
+        return undefined;
+      case 'goals':
+      case 'dailyHistory':
+      case 'dailyHistoryBySubject':
+      case 'bulkCompletedChapters':
+        return isPlainObject(v) ? v : undefined;
+      default:
+        return v;
+    }
+  }
+
+  // Legacy cloud docs (pre-v215) stored the per-edition fields FLAT (plans,
+  // goals, dailyHistory, ...). On read, map them into the suffixed field for
+  // the device's ACTIVE edition so old data lands in the right partition, and
+  // drop the flat keys (this build never writes them).
+  function rehydrateLegacyEditionFields(clean, activeSource) {
+    if (!isPlainObject(clean)) return clean;
+    const src = EDITION_IDS.indexOf(activeSource) !== -1 ? activeSource : 'marrow_8';
+    EDITION_BASE_FIELDS.forEach((base) => {
+      const suffixed = base + '_' + src;
+      // Only map when the suffixed key is absent — a suffixed value already
+      // present (this build) always wins over the legacy flat copy.
+      if (clean[base] !== undefined && clean[suffixed] === undefined) {
+        clean[suffixed] = clean[base];
+      }
+      delete clean[base];
+    });
+    return clean;
   }
 
   // Local-wins merge. completedVideos is ALWAYS a union with local winning
@@ -198,7 +318,11 @@
     return false; // numbers/booleans are meaningful even when 0/false
   }
   function isEmptyForField(field, v) {
-    switch (field) {
+    // Suffixed per-edition fields (plans_marrow_8, goals_marrow_6_5) are
+    // judged by their base type — an unset plan in Edition 6.5 must count
+    // as empty exactly like an unset plan anywhere else.
+    const base = (editionFieldParts(field) || {}).base || field;
+    switch (base) {
       case 'plans': return isEmptyPlans(v);
       case 'goals': return isEmptyGoals(v);
       case 'personal': return isEmptyPersonal(v);
@@ -250,7 +374,28 @@
       const localT = Number(localTimes[field]) || 0;
       const skewed = cloudT > Date.now() + MAX_CLOCK_SKEW_MS;
       if (field === 'activeSource' && cloudVal !== localVal) {
-        // A default source must never clobber a deliberate one.
+        // The viewing edition is a DEVICE preference: a device that already
+        // has real data (any edition slice configured) keeps its own view — a
+        // pull must never yank it to another edition's dataset. Only a truly
+        // fresh device (no real data in ANY edition) adopts the cloud's
+        // choice, and a default source still never clobbers a deliberate one.
+        let localHasRealData = false;
+        // activePlanId is excluded: a fresh device's scaffold always carries
+        // 'plan_a', so it can't signal real per-edition configuration. The
+        // other bases judge via isEmptyForField (the default plan has no real
+        // target, DEFAULT_GOALS is all-empty, history maps start {}).
+        const REAL_DATA_BASES = ['plans', 'goals', 'dailyHistory',
+          'dailyHistoryBySubject', 'bulkCompletedChapters'];
+        EDITION_IDS.forEach((src) => {
+          REAL_DATA_BASES.forEach((base) => {
+            const v = local[base + '_' + src];
+            if (v !== undefined && !isEmptyForField(base, v)) localHasRealData = true;
+          });
+        });
+        if (localHasRealData) {
+          result[field] = localVal;
+          return;
+        }
         const localDefault = localVal === 'marrow_8';
         const cloudDefault = cloudVal === 'marrow_8';
         if (localDefault !== cloudDefault) {
@@ -258,9 +403,10 @@
           return;
         }
       }
-      if (field === 'plans') {
-        // Per-plan-id merge: no plan is ever lost; the side with the newer
-        // field clock wins the values of shared plan ids.
+      if (field === 'plans' || (editionFieldParts(field) || {}).base === 'plans') {
+        // Per-plan-id merge (flat legacy field or any suffixed per-edition
+        // plans_X): no plan is ever lost; the side with the newer field clock
+        // wins the values of shared plan ids.
         result[field] = mergePlansByClock(cloudVal, localVal, !skewed && cloudT > localT);
         return;
       }
@@ -291,16 +437,26 @@
 
   // Fields shown in the sync-diagnostics table, in display order. Transient
   // and bookkeeping fields are excluded — only fields a device arbitrates.
-  const DIAG_FIELDS = [
-    'completedVideos', 'plans', 'activePlanId', 'goals', 'personal',
-    'streakData', 'activeSource', 'themeStyle', 'isConfigured',
-    'dailyHistory', 'dailyHistoryBySubject', 'googleDisplayName'
-  ];
+  // Per-edition fields appear once per edition (suffixed) so the panel shows
+  // both partitions, each with its own clock/verdict.
+  const DIAG_FIELDS = (function () {
+    const names = ['completedVideos'];
+    EDITION_IDS.forEach((src) => {
+      EDITION_BASE_FIELDS.forEach((base) => { names.push(base + '_' + src); });
+    });
+    names.push('personal', 'streakData', 'activeSource', 'themeStyle',
+      'isConfigured', 'googleDisplayName');
+    return names;
+  })();
 
   // Compact human-readable summary of a field's value for the diagnostics row.
   function fieldSummary(field, value) {
     if (value === undefined || value === null) return '—';
-    switch (field) {
+    // Suffixed per-edition fields summarize by their base type; the edition
+    // shows in the field label (plans_marrow_8 → "Plans · Edition 8").
+    const edPart = editionFieldParts(field);
+    const base = edPart ? edPart.base : field;
+    switch (base) {
       case 'completedVideos':
         return Object.keys(value).length > 0 ? Object.keys(value).length + ' completed' : 'none';
       case 'plans':
@@ -328,6 +484,8 @@
         return typeof value === 'object' ? Object.keys(value).length + ' day(s)' : '—';
       case 'dailyHistoryBySubject':
         return typeof value === 'object' ? Object.keys(value).length + ' subject(s)' : '—';
+      case 'bulkCompletedChapters':
+        return typeof value === 'object' ? Object.keys(value).length + ' chapter(s)' : '—';
       case 'googleDisplayName': return String(value);
       default: return '—';
     }
@@ -434,6 +592,7 @@
 
   window.FlowMD.sync = {
     sanitizeCloudState,
+    sanitizeFieldValue,
     mergeLocalWins,
     mergePlansLocalWins,
     mergePlansByClock,
@@ -441,13 +600,20 @@
     computeDirtyFields,
     isEmptyForField,
     rehydrateCompletedVideos,
+    rehydrateLegacyEditionFields,
     pruneHistoryMaps,
     computeFieldArbitration,
     buildSyncDiagnostics,
+    editionFieldParts,
+    cloudFieldNames,
+    localCloudView,
     DIAG_FIELDS,
     KNOWN_FIELDS,
     PLAN_CLOUD_KEYS,
     UNION_FIELDS,
+    EDITION_IDS,
+    EDITION_BASE_FIELDS,
+    GLOBAL_CLOUD_FIELDS,
     MAX_CLOCK_SKEW_MS
   };
 })();

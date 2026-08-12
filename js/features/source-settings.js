@@ -9,9 +9,9 @@
 (function () {
   'use strict';
 
-  const { getState, saveState } = window.FlowMD.store;
+  const { getState, switchSource } = window.FlowMD.store;
   const { SOURCE_DATA, getSourceLabel } = window.FlowMD.sourceData;
-  const { STUDY_SOURCES, DEFAULT_PLAN, PLAN_A_ACCENT, DEFAULT_GOALS } = window.FlowMD.constants;
+  const { STUDY_SOURCES, escapeHtml } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { updateTopbarSource } = window.FlowMD.theme;
 
@@ -71,9 +71,23 @@
           ${getSourceLabel(current)} is an upcoming feature. Its syllabus data will be available in a future update.
         </div>
 
-        <div class="onboarding-alert" style="border-color: var(--warning); background: var(--warning-bg); color: var(--warning);">
-          <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-warning"/></svg>
-          Switching source keeps your plans, targets &amp; goals — each edition tracks its own completions separately.
+        <div style="display:flex; flex-direction:column; gap:6px; margin:4px 0 12px 0; padding:10px 12px; background:var(--bg-surface-raised); border:1px solid var(--border, rgba(255,255,255,0.08)); border-radius:10px;">
+          ${STUDY_SOURCES.filter(s => s.available).map(s => {
+            const e = state.editions && state.editions[s.id];
+            const plan = e && e.plans && e.plans[0];
+            const cfg = plan && (plan.targetSubject || plan.targetDate || plan.videosPerDay)
+              ? escapeHtml(String(plan.targetSubject || '—')) + ' · ' + (plan.videosPerDay ? plan.videosPerDay + '/day' : '—') + (plan.targetDate ? ' · by ' + escapeHtml(String(plan.targetDate)) : '')
+              : 'Not set yet — configure this edition separately';
+            return `<div style="display:flex; justify-content:space-between; gap:10px; font-size:0.8rem; color:var(--text-secondary);">
+              <span style="font-weight:700; color:var(--text-primary); white-space:nowrap;">${s.label}</span>
+              <span style="text-align:right; overflow:hidden; text-overflow:ellipsis;">${cfg}</span>
+            </div>`;
+          }).join('')}
+        </div>
+
+        <div class="onboarding-alert" style="border-color: var(--info, var(--accent-primary)); background: var(--info-bg, rgba(14,165,233,0.1)); color: var(--text-secondary);">
+          <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-info"/></svg>
+          Each edition keeps its own plans, goals, daily quests &amp; analytics. Completions are tracked per edition.
         </div>
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
@@ -106,31 +120,22 @@
 
     modal.querySelector('#scs-save').addEventListener('click', () => {
       if (selected === current) { close(); return; }
-      const prevSource = current;
-      state.activeSource = selected;
-      if (!STUDY_SOURCES.find(s => s.id === state.activeSource)?.available) {
+      if (!STUDY_SOURCES.find(s => s.id === selected)?.available) {
         // Only allow if dataset exists; otherwise reject with toast.
         const hasData = SOURCE_DATA && SOURCE_DATA[selected] && SOURCE_DATA[selected].length > 0;
         if (!hasData) {
-          state.activeSource = prevSource;
           showToast(getSourceLabel(selected) + ' syllabus is not available yet.', 'error', 'Source Unavailable');
           return;
         }
       }
-      // Keep the user's plans & goals across a source switch. The subjects
-      // are largely shared between editions and completions are keyed per
-      // source (marrow_8:: / marrow_6_5::), so quests, targets and analytics
-      // keep working after the switch — only the derived per-day queue state
-      // resets so it regenerates from the new edition's dataset. This stops
-      // the reported data loss: configured Plan A / Plan B, paces, deadlines
-      // and checkmarks used to vanish on every source change.
-      state.plans = (state.plans && state.plans.length
-        ? state.plans
-        : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)]
-      ).map((p) => Object.assign({}, p, { queueBatchVideoIds: [], queueCompletedInBatch: 0 }));
-      saveState();
+      // Per-edition partitions: switching points the live working fields at
+      // the other edition's OWN plans / goals / history. Each edition keeps
+      // its own subject, deadline, paces, daily quests, goal pulse and graphs
+      // (completions were already keyed per source). A never-configured
+      // edition starts unset — the app waits for the user to fill it in.
+      switchSource(selected);
       close();
-      showToast(`Switched to ${getSourceLabel(selected)}.`, 'check_circle', 'Study Source Updated');
+      showToast(`Switched to ${getSourceLabel(selected)} — this edition has its own plan, goals & analytics.`, 'check_circle', 'Study Source Updated');
       updateTopbarSource();
       if (window.FlowMD.shell) window.FlowMD.shell.render();
     });

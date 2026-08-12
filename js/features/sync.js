@@ -118,17 +118,25 @@
     });
   }
 
-  // Read the cloud doc, drop unknown/malformed fields, and re-prefix legacy
-  // unprefixed video keys. Returns the sanitized cloud field set (raw — NOT
-  // merged) or null when there is no doc. Never writes.
+  // Read the cloud doc, drop unknown/malformed fields, re-prefix legacy
+  // unprefixed video keys, and map legacy FLAT per-edition fields into the
+  // suffixed fields for the device's active edition. Returns the sanitized
+  // cloud field set (raw — NOT merged) or null when there is no doc. Never
+  // writes.
   async function fetchCloudState(uid) {
     try {
       const cloudState = await window.FirebaseSync.loadFromCloud(uid);
       if (!cloudState) return null;
       const clean = window.FlowMD.sync.sanitizeCloudState(cloudState);
+      // Legacy cloud docs (pre-v215) carry FLAT per-edition fields and record
+      // which edition was active. Map those flat values into the edition the
+      // doc itself names (falling back to this device's active edition), so
+      // legacy data lands in the right partition BEFORE the merge runs.
+      const legacySrc = clean.activeSource || state.activeSource || 'marrow_8';
       clean.completedVideos = window.FlowMD.sync.rehydrateCompletedVideos(
-        clean.completedVideos, state.activeSource || 'marrow_8'
+        clean.completedVideos, legacySrc
       );
+      window.FlowMD.sync.rehydrateLegacyEditionFields(clean, legacySrc);
       return clean;
     } catch (e) {
       console.warn('pullFromCloud error:', e);
@@ -143,12 +151,30 @@
   async function pullFromCloud(uid) {
     const clean = await fetchCloudState(uid);
     if (!clean) return null;
+    // Merge against the SUFFIXED local view (global fields from the top level,
+    // per-edition fields from their durable slices) so the arbitration keys
+    // match the cloud doc shape — each edition's fields keep their own clock.
+    const localView = window.FlowMD.sync.localCloudView(state);
     return window.FlowMD.sync.mergeCloudPerField(
-      clean, state, clean.fieldSyncTimes, state.fieldSyncTimes || {}
+      clean, localView, clean.fieldSyncTimes, state.fieldSyncTimes || {}
     );
   }
 
+  // Read one cloud-writable field from state — global fields come from the
+  // top level, suffixed per-edition fields from the edition's durable slice.
+  function readCloudField(st, fieldName) {
+    const edPart = window.FlowMD.sync.editionFieldParts ? window.FlowMD.sync.editionFieldParts(fieldName) : null;
+    if (edPart) {
+      const e = (st.editions && st.editions[edPart.src]) || {};
+      return e[edPart.base];
+    }
+    return st[fieldName];
+  }
+
   // Copy the merged cloud result onto live state (only keys the app knows).
+  // Suffixed per-edition fields land in the matching edition's durable slice;
+  // the active edition's slice is then re-pointed as the live view so views
+  // reflect the merged cloud data immediately.
   function applyMergedState(merged) {
     const cloudTimes = Object.assign({}, merged.fieldSyncTimes || {});
     const localTimes = Object.assign({}, state.fieldSyncTimes || {});
@@ -157,7 +183,14 @@
     const now = Date.now();
     Object.keys(merged).forEach((field) => {
       if (field === 'fieldSyncTimes' || field === 'updatedAt' || field === 'lastLocalUpdate') return;
-      if (state[field] !== undefined) state[field] = merged[field];
+      const edPart = window.FlowMD.sync.editionFieldParts ? window.FlowMD.sync.editionFieldParts(field) : null;
+      if (edPart) {
+        if (!state.editions) state.editions = {};
+        if (!state.editions[edPart.src]) state.editions[edPart.src] = window.FlowMD.store.defaultEditionSlice ? window.FlowMD.store.defaultEditionSlice() : {};
+        state.editions[edPart.src][edPart.base] = merged[field];
+      } else if (state[field] !== undefined) {
+        state[field] = merged[field];
+      }
       // Reconcile the local clock per field: cloud-won fields adopt the cloud
       // timestamp (so a later auto-push won't rewrite them); local-won fields
       // keep a timestamp newer than cloud (so a later push still sends them).
@@ -167,6 +200,8 @@
       if (!state.fieldSyncTimes) state.fieldSyncTimes = {};
       state.fieldSyncTimes[field] = cloudWon ? cloudT : Math.max(localT, now);
     });
+    // Re-point the live working fields at the (possibly merged) active slice.
+    if (window.FlowMD.store.loadEditionIntoLive) window.FlowMD.store.loadEditionIntoLive(state.activeSource || 'marrow_8');
     state.lastPullAt = now;
     // Advance the push baseline to the merged state: fields pulled from the
     // cloud are now "already synced", so a later saveState only flags NEW local
@@ -174,19 +209,19 @@
     // just-pulled fields (echo) — the exact ping-pong we removed the listener
     // to kill. Local-won fields are re-stamped below so they still push.
     try {
-      const CLOUD_FIELDS = ['completedVideos', 'goals', 'streakData', 'personal',
-        'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
-        'activeSource', 'isConfigured', 'themeStyle'];
+      const CLOUD_FIELDS = window.FlowMD.sync.cloudFieldNames ? window.FlowMD.sync.cloudFieldNames() :
+        ['completedVideos', 'streakData', 'personal', 'activeSource', 'isConfigured', 'themeStyle'];
       // DEEP copy: the baseline must never share references with live state,
       // or in-place edits (state.plans[0].x = y) compare identical and are
       // never flagged dirty — silently lost for the cloud.
       const base = {};
       CLOUD_FIELDS.forEach((f) => {
-        if (state[f] === undefined) return;
+        const v = readCloudField(state, f);
+        if (v === undefined) return;
         try {
-          base[f] = JSON.parse(JSON.stringify(state[f]));
+          base[f] = JSON.parse(JSON.stringify(v));
         } catch (_) {
-          base[f] = state[f];
+          base[f] = v;
         }
       });
       state._prevSyncedState = base;
@@ -212,13 +247,15 @@
       // pulled fields (stamped by applyMergedState), which would look like
       // local edits and echo back to the cloud.
       const beforeTimes = Object.assign({}, state.fieldSyncTimes || {});
-      // Pre-pull local field references, used to report which fields the
+      // Pre-pull local cloud-view snapshot, used to report which fields the
       // merge actually changed (the "pulled" list in the diagnostics panel).
-      const beforeLocal = Object.assign({}, state);
+      // Same suffixed shape as the cloud doc, so the comparison keys match.
+      const beforeCloud = window.FlowMD.sync.localCloudView(state);
       const clean = await fetchCloudState(uid);
       if (clean) {
+        const localView = window.FlowMD.sync.localCloudView(state);
         const merged = window.FlowMD.sync.mergeCloudPerField(
-          clean, state, clean.fieldSyncTimes, state.fieldSyncTimes || {}
+          clean, localView, clean.fieldSyncTimes, state.fieldSyncTimes || {}
         );
         applyMergedState(merged);
         const BOOKKEEPING = ['fieldSyncTimes', 'lastPullAt', 'lastLocalUpdate',
@@ -227,21 +264,27 @@
         const UNION = window.FlowMD.sync.UNION_FIELDS || ['completedVideos'];
         const isEmptyFor = window.FlowMD.sync.isEmptyForField || (() => false);
         const pushed = {};
-        Object.keys(state).forEach((f) => {
+        // Iterate the CLOUD field names (global + suffixed per-edition), not
+        // Object.keys(state) — suffixed fields live inside state.editions and
+        // are read via readCloudField.
+        const cloudFieldList = window.FlowMD.sync.cloudFieldNames ? window.FlowMD.sync.cloudFieldNames() : [];
+        cloudFieldList.forEach((f) => {
           if (BOOKKEEPING.indexOf(f) !== -1) return;
           const hasCloud = Object.prototype.hasOwnProperty.call(clean, f);
           const cloudVal = hasCloud ? clean[f] : undefined;
+          const localVal = readCloudField(state, f);
+          if (localVal === undefined) return;
           // Already identical to the cloud copy → nothing to write (this is
           // what stops cloud-won fields from echoing back).
-          if (hasCloud && JSON.stringify(state[f]) === JSON.stringify(cloudVal)) return;
+          if (hasCloud && JSON.stringify(localVal) === JSON.stringify(cloudVal)) return;
           if (UNION.indexOf(f) !== -1) {
-            pushed[f] = state[f]; // union of both sides — always safe to write
+            pushed[f] = localVal; // union of both sides — always safe to write
             return;
           }
           const localT = Number(beforeTimes[f]) || 0;
           const cloudT = Number(cloudTimes[f]) || 0;
           const localOwns = !hasCloud || isEmptyFor(f, cloudVal) || localT > cloudT;
-          if (localOwns) pushed[f] = state[f];
+          if (localOwns) pushed[f] = localVal;
         });
         if (Object.keys(pushed).length > 0) {
           await window.FirebaseSync.updateCloudFields(uid, pushed);
@@ -253,7 +296,8 @@
             : 'In sync — nothing to push',
           pushed: Object.keys(pushed),
           pulled: Object.keys(merged).filter((f) =>
-            BOOKKEEPING.indexOf(f) === -1 && merged[f] !== beforeLocal[f]
+            BOOKKEEPING.indexOf(f) === -1 &&
+            JSON.stringify(merged[f]) !== JSON.stringify(beforeCloud[f])
           )
         });
       } else {

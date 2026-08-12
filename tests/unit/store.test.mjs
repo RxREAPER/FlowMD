@@ -4,7 +4,9 @@ import { createFlowMDSandbox } from './harness.mjs';
 
 const toPlain = (v) => JSON.parse(JSON.stringify(v));
 
-const STORE = ['namespace', 'constants', 'state-store'];
+// state-store reads window.FlowMD.sync (edition field names) at init, so the
+// sync core must load first — same order as the production index.html.
+const STORE = ['namespace', 'constants', 'sync', 'state-store'];
 
 test('safeParse returns fallback for corrupt JSON, parses valid JSON', () => {
   const { FlowMD } = createFlowMDSandbox({ modules: STORE });
@@ -57,7 +59,7 @@ test('saveState selective writes: unchanged state writes nothing after the first
   const { FlowMD, setItemCalls } = createFlowMDSandbox({ modules: STORE });
   const st = FlowMD.store.getState();
   FlowMD.store.saveState();
-  assert.equal(setItemCalls.length, 15, 'first save writes every key');
+  assert.equal(setItemCalls.length, 16, 'first save writes every key (incl. editions partition)');
   setItemCalls.length = 0;
   FlowMD.store.saveState();
   assert.equal(setItemCalls.length, 0, 'no-op save writes nothing');

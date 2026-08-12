@@ -44,24 +44,30 @@ export function createCloudStore(uid) {
       return store[_uid] ? JSON.parse(JSON.stringify(store[_uid])) : null;
     },
 
-    // Mirrors firebase.js syncToCloud: full doc + per-field clock.
+    // Mirrors firebase.js syncToCloud: full doc + per-field clock. Per-edition
+    // fields are stored SUFFIXED (plans_marrow_8, plans_marrow_6_5, ...) so
+    // each edition has its own clock.
     async syncToCloud(_uid, stateData) {
       if (this.offline) throw new Error('offline');
       const now = Date.now();
       const fieldSyncTimes = {};
+      const edIds = ['marrow_8', 'marrow_6_5'];
+      const edBases = ['plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject', 'activePlanId', 'bulkCompletedChapters'];
+      const editions = stateData.editions || {};
       const payload = {
         completedVideos: stateData.completedVideos || {},
-        goals: stateData.goals || {},
         streakData: stateData.streakData || {},
         personal: stateData.personal || {},
-        dailyHistory: stateData.dailyHistory || {},
-        dailyHistoryBySubject: stateData.dailyHistoryBySubject || {},
-        plans: stateData.plans || [],
-        activePlanId: stateData.activePlanId || 'plan_a',
         activeSource: stateData.activeSource || 'marrow_8',
         isConfigured: !!stateData.isConfigured,
         themeStyle: stateData.themeStyle || 'modern'
       };
+      edIds.forEach((src) => {
+        const e = editions[src] || {};
+        edBases.forEach((base) => {
+          if (e[base] !== undefined) payload[base + '_' + src] = JSON.parse(JSON.stringify(e[base]));
+        });
+      });
       Object.keys(payload).forEach((f) => { fieldSyncTimes[f] = now; });
       payload.fieldSyncTimes = fieldSyncTimes;
       payload.updatedAt = now;
@@ -101,23 +107,60 @@ export function createCloudStore(uid) {
 //    and a stub toast/shell. Manual sync runs the REAL pull-then-push code. ──
 export function createDevice(name, cloudApi, uid, opts = {}) {
   const window = { FlowMD: {} };
+  const defaultSlice = () => ({
+    plans: [], goals: {}, dailyHistory: {}, dailyHistoryBySubject: {},
+    activePlanId: 'plan_a', bulkCompletedChapters: {}
+  });
+  // Mirrors state-store.js: point the live working fields at an edition's
+  // durable slice (pulls land in editions, then views read the live fields).
+  const loadEditionIntoLive = (src) => {
+    if (!state.editions || !state.editions[src]) {
+      if (!state.editions) state.editions = {};
+      state.editions[src] = defaultSlice();
+    }
+    const e = state.editions[src];
+    state.plans = e.plans;
+    state.goals = e.goals;
+    state.dailyHistory = e.dailyHistory;
+    state.dailyHistoryBySubject = e.dailyHistoryBySubject;
+    state.activePlanId = e.activePlanId;
+    state.bulkCompletedChapters = e.bulkCompletedChapters;
+  };
   const state = {
-    completedVideos: {}, goals: {}, plans: [], personal: { doctorName: 'Dr. ' + name },
-    dailyHistory: {}, dailyHistoryBySubject: {}, streakData: {},
-    activeSource: 'marrow_8', activePlanId: 'plan_a', isConfigured: true,
-    themeStyle: 'modern', fieldSyncTimes: {}, _dirtyFields: []
+    completedVideos: {}, personal: { doctorName: 'Dr. ' + name },
+    streakData: {},
+    activeSource: 'marrow_8', isConfigured: true,
+    themeStyle: 'modern', fieldSyncTimes: {}, _dirtyFields: [],
+    // LIVE WORKING COPY (mirrors state-store): views read these top-level
+    // fields; saveState flushes them into editions[activeSource].
+    goals: {}, plans: [], dailyHistory: {}, dailyHistoryBySubject: {},
+    activePlanId: 'plan_a', bulkCompletedChapters: {},
+    editions: { marrow_8: defaultSlice(), marrow_6_5: defaultSlice() }
+  };
+  // Same flush rule as state-store: live working fields → active edition slice.
+  const flushLiveToEdition = () => {
+    const src = state.activeSource || 'marrow_8';
+    if (!state.editions[src]) state.editions[src] = defaultSlice();
+    const e = state.editions[src];
+    e.plans = state.plans; e.goals = state.goals;
+    e.dailyHistory = state.dailyHistory; e.dailyHistoryBySubject = state.dailyHistoryBySubject;
+    e.activePlanId = state.activePlanId; e.bulkCompletedChapters = state.bulkCompletedChapters;
   };
   // Like the real app, the device starts with its own state already considered
   // synced — a no-op save never pushes (prevents the first save from marking
   // every field dirty and rewriting the whole doc).
   const initialBaseline = () => {
+    flushLiveToEdition();
     const b = {};
-    ['completedVideos', 'goals', 'streakData', 'personal', 'dailyHistory',
-      'dailyHistoryBySubject', 'plans', 'activePlanId', 'activeSource',
+    ['completedVideos', 'streakData', 'personal', 'activeSource',
       'isConfigured', 'themeStyle'].forEach((f) => {
-      // DEEP copy — mirrors the fixed state-store/applyMergedState baselines
-      // (shared references made in-place edits invisible to dirty detection).
       if (state[f] !== undefined) b[f] = JSON.parse(JSON.stringify(state[f]));
+    });
+    ['marrow_8', 'marrow_6_5'].forEach((src) => {
+      ['plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject', 'activePlanId', 'bulkCompletedChapters'].forEach((base) => {
+        const e = state.editions[src];
+        if (e && e[base] !== undefined) b[base + '_' + src] = JSON.parse(JSON.stringify(e[base]));
+      });
     });
     return b;
   };
@@ -125,16 +168,35 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
   let localSnapshot = null;
   let cloudSyncTimeout = null;
 
-  // Mirrors state-store.js CLOUD_STATE_FIELDS: only these are ever considered
-  // for a cloud push — bookkeeping never leaves the device.
-  const CLOUD_FIELDS = ['completedVideos', 'goals', 'streakData', 'personal',
-    'dailyHistory', 'dailyHistoryBySubject', 'plans', 'activePlanId',
-    'activeSource', 'isConfigured', 'themeStyle'];
+  // Mirrors state-store.js CLOUD_STATE_FIELDS: global fields + suffixed
+  // per-edition fields. Only these are ever considered for a cloud push.
+  const CLOUD_FIELDS = ['completedVideos', 'streakData', 'personal', 'activeSource',
+    'isConfigured', 'themeStyle'];
+  ['marrow_8', 'marrow_6_5'].forEach((src) => {
+    ['plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject', 'activePlanId', 'bulkCompletedChapters'].forEach((base) => {
+      CLOUD_FIELDS.push(base + '_' + src);
+    });
+  });
+  const readCloud = (st, f) => {
+    for (const src of ['marrow_8', 'marrow_6_5']) {
+      const suffix = '_' + src;
+      if (f.length > suffix.length && f.slice(-suffix.length) === suffix) {
+        const base = f.slice(0, -suffix.length);
+        if (['plans', 'goals', 'dailyHistory', 'dailyHistoryBySubject', 'activePlanId', 'bulkCompletedChapters'].includes(base)) {
+          const e = (st.editions && st.editions[src]) || {};
+          return e[base];
+        }
+      }
+    }
+    return st[f];
+  };
   const snapshotCloud = (st) => {
+    flushLiveToEdition();
     const snap = {};
     CLOUD_FIELDS.forEach((f) => {
-      if (st[f] === undefined) return;
-      snap[f] = JSON.parse(JSON.stringify(st[f]));
+      const v = readCloud(st, f);
+      if (v === undefined) return;
+      snap[f] = JSON.parse(JSON.stringify(v));
     });
     return snap;
   };
@@ -144,6 +206,11 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
   // changed fields through the mock cloud — same contract as state-store.js.
   const storeStub = {
     getState: () => state,
+    // Mirror state-store.js exports used by applyMergedState: after a pull,
+    // the merged suffixed fields land in editions and the live view is
+    // re-pointed at the active slice.
+    loadEditionIntoLive,
+    defaultEditionSlice: defaultSlice,
     saveState: () => {
       state.lastLocalUpdate = Date.now();
       state._dirtyFields = window.FlowMD.sync.computeDirtyFields(state._prevSyncedState, snapshotCloud(state));
@@ -163,7 +230,7 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
           // field the cloud already has newer (e.g. just pulled from cloud).
           const localT = Number((state.fieldSyncTimes || {})[f]) || 0;
           const cloudT = Number((state._cloudSyncTimes || {})[f]) || 0;
-          if (localT >= cloudT) fields[f] = state[f];
+          if (localT >= cloudT) fields[f] = readCloud(state, f);
         });
         if (Object.keys(fields).length === 0) {
           state._prevSyncedState = prePush;
@@ -242,6 +309,15 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
       return flush();
     },
     edit,
+    // Mirrors state-store.js switchSource: flush the current live fields
+    // into the old edition, point activeSource at the new one, and load its
+    // slice as the live view (per-day queue bookkeeping is out of scope here).
+    switchSource: (src) => {
+      flushLiveToEdition();
+      state.activeSource = src;
+      loadEditionIntoLive(src);
+      storeStub.saveState();
+    },
     flush
   };
 }

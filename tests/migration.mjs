@@ -104,7 +104,7 @@ function seedModern(page) {
     localStorage.clear();
     for (const [k, v] of Object.entries(common)) localStorage.setItem(k, v);
     for (const [oldKey, v] of Object.entries(legacy)) localStorage.setItem(renames[oldKey], v);
-    localStorage.setItem('flowmd_schema_version', '3');
+    localStorage.setItem('flowmd_schema_version', '4');
   }, [LEGACY_VALUES, KEY_RENAMES, COMMON_KEYS]);
 }
 
@@ -157,8 +157,13 @@ async function run() {
   check('Theme carried over', migrated.values['flowmd_theme'] === 'dark',
     String(migrated.values['flowmd_theme']));
 
-  // (d) schema version is 3
-  check('flowmd_schema_version = 3', migrated.version === '3', String(migrated.version));
+  // (d) schema version is 4 (v3 → v4 folds the flat per-edition fields into
+  // the flowmd_editions_v4 partition for the active edition)
+  check('flowmd_schema_version = 4', migrated.version === '4', String(migrated.version));
+  check('Per-edition partition created with the active edition’s data',
+    /Anatomy/.test(migrated.values['flowmd_editions_v4'] || '') &&
+    /marrow_8/.test(migrated.values['flowmd_editions_v4'] || ''),
+    String(migrated.values['flowmd_editions_v4']).slice(0, 80));
 
   // --- Run B: fresh v3 profile seeded directly → parity baseline ---
   await seedModern(page);
@@ -209,7 +214,7 @@ async function run() {
   check('v1 profile: keys renamed to flowmd_*', v1LegacyLeft.length === 0, v1LegacyLeft.join(', ') || 'none left');
   check('v1 profile: video IDs got the marrow_8:: prefix',
     !!v1Videos['marrow_8::anatomy__v1'] && !('anatomy__v1' in v1Videos), JSON.stringify(v1Videos));
-  check('v1 profile: schema version = 3', v1.version === '3', String(v1.version));
+  check('v1 profile: schema version = 4', v1.version === '4', String(v1.version));
 
   // --- Run D: both old and new keys present → new wins, old removed; a
   // second load is a no-op (idempotent). ---
@@ -236,7 +241,7 @@ async function run() {
   await page.waitForTimeout(800);
   const again = await snapshot(page);
   check('Migration is idempotent on second load',
-    again.version === '3' && again.values['flowmd_theme'] === 'light' &&
+    again.version === '4' && again.values['flowmd_theme'] === 'light' &&
     !again.keys.some((k) => k.startsWith('marrow_planner_')),
     `version=${again.version}`);
 
@@ -255,7 +260,7 @@ async function run() {
   await page.waitForTimeout(800);
   const corrupt = await snapshot(page);
   check('Corrupt JSON: no page errors', pageErrors.length === 0, pageErrors.slice(0, 3).join(' | ').slice(0, 200));
-  check('Corrupt JSON: schema version = 3', corrupt.version === '3', String(corrupt.version));
+  check('Corrupt JSON: schema version = 4', corrupt.version === '4', String(corrupt.version));
   check('Corrupt JSON: dashboard still renders', corrupt.main.length > 100, String(corrupt.main.length));
 
   await browser.close();

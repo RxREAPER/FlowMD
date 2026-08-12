@@ -1,9 +1,10 @@
 # FlowMD — Project State
 
 ## Current Phase
-- **Phase**: 7 (Production sync & rendering hardening — COMPLETE on `main`, deployed through v214)
-- **Status**: The v204–v213 series (sync data-loss fixes, pull-then-push sync, render audits, fonts/icons removal, source-switch no-wipe fix) plus v214 (source-switch modal copy fix, scope-leaks + inline-styles test fixes) are committed on `main` and deployed live at flowmd-04.web.app (v214).
-- **Git note**: local `main` is in sync with origin/main (268f50a) — 19-commit gap closed.
+- **Phase**: 8 (Per-edition state partitions — IN PROGRESS on branch `feat/per-edition-state`, not yet deployed)
+- **Status**: v215 implements per-edition state. Each edition (`marrow_8` / `marrow_6_5`) now owns its own plans, goals, daily history (Goal Pulse / analytics graphs), per-subject counts, active plan and bulk-completed chapters via `state.editions` partitions (localStorage schema v3→v4). Cloud fields are edition-suffixed (`plans_marrow_8`, …) with independent per-field clocks; legacy flat cloud docs rehydrate into the edition they name. Source-switch modal shows a per-edition config summary. v214 (modal copy) and the v204–v213 hardening series are deployed live at flowmd-04.web.app (v214).
+- **Next**: deploy v215 after branch review (`npm run deploy:firebase`), then verify the live source-switch flow on both editions.
+- **Git note**: branch `feat/per-edition-state` off `main` (f0d9c09); `main` is in sync with origin/main.
 
 ## Phase C: Legacy retro naming cleanup (2026-08-10, v179–v184)
 - [x] `pxl-*` classes → `fm-*`, `PXL_ICONS` → `FLOWMD_ICONS`, PXLKIT comments → FlowMD (v179, 347 occurrences)
