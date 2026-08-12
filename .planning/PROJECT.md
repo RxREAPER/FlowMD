@@ -9,6 +9,7 @@ A retro RPG-styled study planner for NEET-PG medical exam preparation. Gamifies 
 - **GitHub**: https://github.com/mohammedsafi0414/FlowMD — main at v215, push pending
 - **Last Deploy**: v215 (per-edition state partitions: plans/goals/quests/analytics per edition, suffixed cloud fields, v3→v4 storage migration, bulk-completion isolation)
 - **Next**: feature development (per-edition Goal Pulse indicator; real-device cross-edition sync test)
+- **Hotfix**: firestore.rules repaired + deployed (v215 suffixed per-edition schema; legacy flat fields demoted to optional). Cloud sync had been silently denied for all writes since v207 — caught via the emulator rules test (`npm run test:rules`).
 
 ## Tech Stack
 - **Language**: Vanilla JavaScript (ES5 IIFE)

@@ -9,7 +9,8 @@
     "deploy:firebase": "firebase deploy --only hosting,firestore:rules",
     "deploy": "npm run version:bump && git add index.html sw.js js/core/constants.js && git commit -m \"chore: bump cache version\" && git push && npm run deploy:firebase",
     "deploy:quick": "npm run version:bump && npm run deploy:firebase",
-    "deploy:all": "npm run version:bump && firebase deploy"
+    "deploy:all": "npm run version:bump && firebase deploy",
+    "test:rules": "node scripts/run-rules-test.js"
   },
   "dependencies": {
     "pngjs": "^7.0.0",

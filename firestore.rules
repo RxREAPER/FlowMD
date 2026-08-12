@@ -13,14 +13,39 @@ service cloud.firestore {
     // merges over them — an allow-list would brick those users. Unknown
     // fields are instead stripped client-side by sanitizeCloudState()
     // before every write (Task A1), and type/size caps below bound abuse.
+    //
+    // Since v215 the per-edition fields are SUFFIXED (plans_marrow_8,
+    // dailyHistory_marrow_6_5, ...) and the legacy FLAT fields (plans,
+    // goals, dailyHistory, queueBatchVideoIds, ...) are no longer written —
+    // so no flat field may be REQUIRED here. Each edition's suffixed fields
+    // are type/size-checked when present, and legacy flat fields are kept
+    // as OPTIONAL guards so pre-v215 docs keep validating.
     function validWrite() {
       let d = request.resource.data;
       return
+        // Always written by every client build.
         d.completedVideos is map && d.completedVideos.size() <= 20000 &&
-        d.plans is list && d.plans.size() <= 4 &&
-        d.dailyHistory is map && d.dailyHistory.size() <= 4000 &&
-        d.dailyHistoryBySubject is map && d.dailyHistoryBySubject.size() <= 40 &&
-        d.queueBatchVideoIds is list && d.queueBatchVideoIds.size() <= 200 &&
+        (!('activeSource' in d) || d.activeSource in ['marrow_8', 'marrow_6_5', 'prepladder_x']) &&
+        (!('themeStyle' in d) || d.themeStyle in ['modern', 'retro']) &&
+        (!('isConfigured' in d) || d.isConfigured is bool) &&
+        // Per-edition suffixed fields (v215+): bound each edition separately
+        // so one edition can never smuggle in oversized data.
+        editionListValid(d, 'plans', 4) &&
+        editionListValid(d, 'queueBatchVideoIds', 200) &&
+        editionMapValid(d, 'goals', 200) &&
+        editionMapValid(d, 'dailyHistory', 4000) &&
+        editionMapValid(d, 'dailyHistoryBySubject', 40) &&
+        editionMapValid(d, 'bulkCompletedChapters', 5000) &&
+        editionStringValid(d, 'activePlanId', 64) &&
+        // Legacy FLAT fields — optional guards only (pre-v215 docs).
+        (!('plans' in d) || (d.plans is list && d.plans.size() <= 4)) &&
+        (!('goals' in d) || (d.goals is map && d.goals.size() <= 200)) &&
+        (!('dailyHistory' in d) || (d.dailyHistory is map && d.dailyHistory.size() <= 4000)) &&
+        (!('dailyHistoryBySubject' in d) || (d.dailyHistoryBySubject is map && d.dailyHistoryBySubject.size() <= 40)) &&
+        (!('activePlanId' in d) || (d.activePlanId is string && d.activePlanId.size() <= 64)) &&
+        (!('queueBatchVideoIds' in d) || (d.queueBatchVideoIds is list && d.queueBatchVideoIds.size() <= 200)) &&
+        (!('queueCompletedInBatch' in d) || (d.queueCompletedInBatch is int && d.queueCompletedInBatch >= 0 && d.queueCompletedInBatch <= 200)) &&
+        (!('speed' in d) || (d.speed is number && d.speed >= 0.5 && d.speed <= 4)) &&
         // NOTE: googleDisplayName / googlePhotoURL are deliberately NOT
         // type-checked here. The live client writes user?.photoURL || null, and
         // Firestore rules have no null literal — checking them would reject
@@ -28,12 +53,25 @@ service cloud.firestore {
         // (no in-app fix possible = bricked sync). The client sanitizer already
         // caps their length (Task A1), and Firestore's hard 1 MiB document
         // ceiling still bounds abuse.
-        (!('activePlanId' in d) || (d.activePlanId is string && d.activePlanId.size() <= 64)) &&
-        (!('activeSource' in d) || d.activeSource in ['marrow_8', 'marrow_6_5', 'prepladder_x']) &&
-        (!('themeStyle' in d) || d.themeStyle in ['modern', 'retro']) &&
-        (!('isConfigured' in d) || d.isConfigured is bool) &&
-        (!('speed' in d) || (d.speed is number && d.speed >= 0.5 && d.speed <= 4)) &&
-        (!('queueCompletedInBatch' in d) || (d.queueCompletedInBatch is int && d.queueCompletedInBatch >= 0 && d.queueCompletedInBatch <= 200));
+        (!('fieldSyncTimes' in d) || d.fieldSyncTimes is map);
+    }
+
+    // Per-edition suffixed fields come in pairs (marrow_8 / marrow_6_5).
+    // Firestore rules have no loops, so each edition is checked explicitly.
+    function editionListValid(d, base, cap) {
+      return
+        (!(base + '_marrow_8' in d) || (d[base + '_marrow_8'] is list && d[base + '_marrow_8'].size() <= cap)) &&
+        (!(base + '_marrow_6_5' in d) || (d[base + '_marrow_6_5'] is list && d[base + '_marrow_6_5'].size() <= cap));
+    }
+    function editionMapValid(d, base, cap) {
+      return
+        (!(base + '_marrow_8' in d) || (d[base + '_marrow_8'] is map && d[base + '_marrow_8'].size() <= cap)) &&
+        (!(base + '_marrow_6_5' in d) || (d[base + '_marrow_6_5'] is map && d[base + '_marrow_6_5'].size() <= cap));
+    }
+    function editionStringValid(d, base, cap) {
+      return
+        (!(base + '_marrow_8' in d) || (d[base + '_marrow_8'] is string && d[base + '_marrow_8'].size() <= cap)) &&
+        (!(base + '_marrow_6_5' in d) || (d[base + '_marrow_6_5'] is string && d[base + '_marrow_6_5'].size() <= cap));
     }
 
     match /users/{userId} {

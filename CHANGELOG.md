@@ -1,5 +1,15 @@
 # FlowMD — Change Log
 
+## [2026-08-13] Firestore rules fixed — cloud sync was silently denied for every write since v207 (hotfix, no version bump)
+
+- **Critical bug found during the emulator test build-out**: `firestore.rules` still REQUIRED the legacy FLAT fields (`d.plans is list`, `d.dailyHistory is map`, `d.dailyHistoryBySubject is map`, `d.queueBatchVideoIds is list`, ...) — but no payload since v207 (`efcc654`, "slim the Firestore doc") writes `queueBatchVideoIds`, and v215's per-edition fields are SUFFIXED (`plans_marrow_8`, `dailyHistory_marrow_6_5`, ...) with no flat equivalents at all. Every `syncToCloud` / `updateCloudFields` write therefore evaluated `validWrite()` to false and was rejected with PERMISSION_DENIED — **cloud backup/restore was silently broken for all users since the v207-era slim** (loads still worked, so the app appeared fine).
+- **Root cause of the blind spot**: `tests/rules-test.mjs` validates the rules against the Firestore emulator, which needs Java — a JVM was never on this machine, so the suite never ran and the drift went unnoticed.
+- **Fixed**: `validWrite()` now checks the v215 schema — per-edition SUFFIXED fields (`plans_*`, `goals_*`, `dailyHistory_*`, `dailyHistoryBySubject_*`, `activePlanId_*`, `bulkCompletedChapters_*`) with per-edition type/size caps, `activeSource`/`themeStyle`/`isConfigured`/`completedVideos` unchanged, and the legacy FLAT fields demoted to OPTIONAL guards so pre-v215 docs keep validating. No flat field is required anymore.
+- **Verified against the emulator** (13/13 checks): v215 self-write allowed, legacy flat-field docs still create/update, oversized per-edition plans denied, unknown source denied, cross-user denied, self-delete allowed. Proof-of-bug: the OLD rules reject the exact v215 payload (PERMISSION_DENIED), the new rules accept it.
+- **Live-verified against production**: a v215-shaped document was written to a real throwaway user's Firestore doc under the deployed rules — accepted (previously denied). The throwaway doc is harmless test data (plan_a / one completion); can be cleaned from the Firebase console.
+- **Tooling**: `npm run test:rules` boots the Firestore emulator and runs the rules test; it auto-locates the workspace JRE (`.tools/jdk-*`) or falls back to JAVA_HOME. `@firebase/rules-unit-testing` was already a devDependency (now actually installed).
+- Deployed to production via `firebase deploy --only firestore:rules` (no app code change, no version bump).
+
 ## [2026-08-13] Per-edition state partitions — each edition owns its plans, goals, quests & analytics (v215)
 
 - **The real fix for "switching edition changes nothing":** previously the app had ONE global `state` object — only `completedVideos` was actually per-edition (video IDs are prefixed `marrow_8::` / `marrow_6_5::`). Plans, goals, daily history (graph + goal pulse), per-subject counts, active plan and bulk-completed chapters were shared, so switching editions changed only the dataset and the checkmarks; daily quests, targets, deadlines and every graph looked identical.
