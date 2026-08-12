@@ -1,9 +1,11 @@
-// Shared harness for the two-device sync tests (sync-twodevice.test.mjs and
-// sync-matrix.test.mjs). Runs the REAL js/core/sync.js + js/features/sync.js
-// modules in a sandboxed window with a stub store that mirrors state-store.js
-// dirty-field semantics, against an in-memory Firestore mock that mirrors
-// firebase.js write semantics (per-field clocks merged into fieldSyncTimes,
-// per-key completedVideos merges, offline/error behavior).
+// Shared harness for the two-device sync tests (sync-twodevice.test.mjs,
+// sync-matrix.test.mjs and sync-quest.test.mjs). Runs the REAL js/core/sync.js
+// + js/features/sync.js modules in a sandboxed window with a stub store that
+// mirrors state-store.js dirty-field semantics, against an in-memory Firestore
+// mock that mirrors firebase.js write semantics (per-field clocks merged into
+// fieldSyncTimes, per-key completedVideos merges, offline/error behavior).
+// Optionally also loads the REAL source-data/subjects/metrics modules (queue
+// engine) with stub datasets so daily-quest batch behavior can be tested.
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
@@ -21,6 +23,21 @@ export const toPlain = (v) => JSON.parse(JSON.stringify(v));
 export function createCloudStore(uid) {
   const store = { [uid]: null };
   const writes = { count: 0 };
+
+  // Mirrors production firebase.js: plans reach the cloud STRIPPED to the
+  // synced keys. queueBatchVideoIds (the daily-quest batch) IS synced so
+  // every device shows the same quest; only per-day transient bookkeeping
+  // (queueCompletedInBatch, extraBatchesCompletedToday, lastBatchDate) is
+  // device-local — recomputed by the queue engine per day.
+  const PLAN_KEYS = ['id', 'label', 'accentColor', 'targetSubject', 'targetDate',
+    'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits',
+    'queueBatchVideoIds'];
+  const stripPlan = (p) => {
+    const cp = {};
+    PLAN_KEYS.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
+    return cp;
+  };
+
   const cloudApi = {
     writes,
     currentUser: { uid },        // signed-in user after auth
@@ -65,7 +82,10 @@ export function createCloudStore(uid) {
       edIds.forEach((src) => {
         const e = editions[src] || {};
         edBases.forEach((base) => {
-          if (e[base] !== undefined) payload[base + '_' + src] = JSON.parse(JSON.stringify(e[base]));
+          if (e[base] === undefined) return;
+          payload[base + '_' + src] = base === 'plans'
+            ? JSON.parse(JSON.stringify((e.plans || []).map(stripPlan)))
+            : JSON.parse(JSON.stringify(e[base]));
         });
       });
       Object.keys(payload).forEach((f) => { fieldSyncTimes[f] = now; });
@@ -81,18 +101,27 @@ export function createCloudStore(uid) {
     async updateCloudFields(_uid, fields) {
       if (this.offline) throw new Error('offline');
       if (!store[_uid]) { writes.count++; return; }
+      // Mirror firebase.js updateCloudFields: strip device-local queue
+      // bookkeeping from any plan field before it reaches the doc.
+      const plansKeys = Object.keys(fields).filter((k) =>
+        k === 'plans' || k.indexOf('plans_') === 0 || k.slice(-'_plans'.length) === '_plans'
+      );
+      const cleanFields = plansKeys.length > 0 ? Object.assign({}, fields) : fields;
+      plansKeys.forEach((k) => {
+        if (Array.isArray(fields[k])) cleanFields[k] = fields[k].map(stripPlan);
+      });
       const now = Date.now();
       if (!store[_uid].fieldSyncTimes) store[_uid].fieldSyncTimes = {};
-      Object.keys(fields).forEach((f) => { store[_uid].fieldSyncTimes[f] = now; });
-      Object.keys(fields).forEach((f) => {
+      Object.keys(cleanFields).forEach((f) => { store[_uid].fieldSyncTimes[f] = now; });
+      Object.keys(cleanFields).forEach((f) => {
         if (f === 'completedVideos') {
           // Per-key merge (mirrors the real FieldPath writes): a partial map
           // must never erase keys already in the doc (cross-edition safety).
           store[_uid].completedVideos = Object.assign(
-            {}, store[_uid].completedVideos || {}, fields[f]
+            {}, store[_uid].completedVideos || {}, cleanFields[f]
           );
         } else {
-          store[_uid][f] = JSON.parse(JSON.stringify(fields[f]));
+          store[_uid][f] = JSON.parse(JSON.stringify(cleanFields[f]));
         }
       });
       store[_uid].updatedAt = now;
@@ -266,9 +295,16 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
     return true;
   };
 
+  // Optional stub datasets (plain, pre-prefix video ids). source-data.js
+  // qualifies them with the edition prefix exactly like the real data files,
+  // so the queue engine sees real marrow_8::/marrow_6_5:: keys.
+  const dataset = opts.dataset || { marrow_8: [], marrow_6_5: [] };
+
   const sandbox = {
     window, console, Date, JSON, Math, String, parseInt, Promise,
     setTimeout, clearTimeout, setInterval, clearInterval,
+    syllabusData: dataset.marrow_8,
+    syllabusData65: dataset.marrow_6_5,
     localStorage: {
       getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {}
     }
@@ -276,6 +312,13 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
   vm.createContext(sandbox);
   vm.runInContext(read('js/core/namespace.js'), sandbox, { filename: 'namespace.js' });
   vm.runInContext(read('js/core/constants.js'), sandbox, { filename: 'constants.js' });
+  // Real queue engine: source-data (dataset registry), subjects (metadata),
+  // metrics (daily-quest queue engine). The queue tests exercise the ACTUAL
+  // getTodayQueueForPlan batch logic against the sync layer.
+  vm.runInContext(read('js/core/source-data.js'), sandbox, { filename: 'core/source-data.js' });
+  window.FlowMD.sourceData.initSourceData();
+  vm.runInContext(read('js/core/subjects.js'), sandbox, { filename: 'core/subjects.js' });
+  vm.runInContext(read('js/core/metrics.js'), sandbox, { filename: 'core/metrics.js' });
   vm.runInContext(read('js/core/sync.js'), sandbox, { filename: 'core/sync.js' });
   vm.runInContext(read('js/features/sync.js'), sandbox, { filename: 'features/sync.js' });
 
@@ -309,6 +352,24 @@ export function createDevice(name, cloudApi, uid, opts = {}) {
       return flush();
     },
     edit,
+    // Ticks a video exactly like the app's checkbox handler: write
+    // completedVideos, then saveState (stamps the field clock + schedules the
+    // debounced auto-push). The sync layer only ever sees completedVideos.
+    tick: (vidId) => { state.completedVideos[vidId] = true; storeStub.saveState(); },
+    untick: (vidId) => { delete state.completedVideos[vidId]; storeStub.saveState(); },
+    // Renders the daily quest with the REAL queue engine (getAllPlanQueues →
+    // getTodayQueueForPlan): returns the batch video ids and per-video ticked
+    // status exactly as the dashboard would draw them.
+    renderQuest: () => {
+      const queues = window.FlowMD.metrics.getAllPlanQueues();
+      const q = queues[0] || {};
+      return {
+        planId: q.planId,
+        batch: (q.videos || []).map(v => v.id),
+        checked: (q.videos || []).map(v => !!state.completedVideos[v.id]),
+        queueCompletedInBatch: q.queueCompletedInBatch
+      };
+    },
     // Mirrors state-store.js switchSource: flush the current live fields
     // into the old edition, point activeSource at the new one, and load its
     // slice as the live view (per-day queue bookkeeping is out of scope here).

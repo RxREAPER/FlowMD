@@ -35,9 +35,27 @@
         </div>
       </div>
 
-      <div class="curriculum-notice" style="margin: 8px 0 16px 0; padding: 10px 12px; background: var(--bg-surface-raised); border: 1px solid var(--border-color); border-radius: 8px; font-family: var(--font-hud); font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px;">
-        <svg class="material-symbols-outlined" style="font-size: 18px; color: var(--accent-primary); flex-shrink: 0; margin-top: 1px;"><use href="#fmd-i-info"/></svg>
-        <span>Note: Individual video checkboxes → reflected in Analytics (7-day chart, weekly pace, daily counts). Chapter "Select All" checkbox → marks videos complete but excluded from Analytics, so you can mark previously completed chapters as a whole without distorting your analytics.</span>
+      <div class="curriculum-legend">
+        <div class="curriculum-legend-head">
+          <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
+          <span>How completion is counted</span>
+        </div>
+        <div class="curriculum-legend-row">
+          <span class="curriculum-legend-icon curriculum-legend-icon-count"><svg class="material-symbols-outlined"><use href="#fmd-i-check_box"/></svg></span>
+          <div class="curriculum-legend-text">
+            <div class="curriculum-legend-title">Individual video tick</div>
+            <div class="curriculum-legend-sub">Reflected in Analytics — 7-day chart, weekly pace &amp; daily counts.</div>
+          </div>
+          <span class="v2-hud-badge curriculum-legend-badge curriculum-legend-badge-count">Counts</span>
+        </div>
+        <div class="curriculum-legend-row">
+          <span class="curriculum-legend-icon curriculum-legend-icon-skip"><svg class="material-symbols-outlined"><use href="#fmd-i-select_all"/></svg></span>
+          <div class="curriculum-legend-text">
+            <div class="curriculum-legend-title">Chapter &ldquo;Select All&rdquo;</div>
+            <div class="curriculum-legend-sub">Marks the whole chapter complete but stays out of Analytics — tick previously finished chapters without skewing your stats.</div>
+          </div>
+          <span class="v2-hud-badge curriculum-legend-badge curriculum-legend-badge-skip">Excluded</span>
+        </div>
       </div>
 
       ${filteredSubjects.map(sub => `

@@ -208,3 +208,119 @@ test('cross-edition completions survive: marrow_8 and marrow_6_5 share video ids
   assert.equal(cloudCv['marrow_8::anatomy__v1'], true, 'cloud keeps the edition-8 key prefixed');
   assert.equal(cloudCv['marrow_6_5::anatomy__v1'], true, 'cloud keeps the edition-6.5 key prefixed');
 });
+
+test('devices on DIFFERENT editions: activeSource preference is never re-asserted — zero writes after settling', async () => {
+  const uid = 'user-15';
+  const cloud = createCloudStore(uid);
+  const A = createDevice('A', cloud, uid);   // stays on Edition 8
+  const B = createDevice('B', cloud, uid);   // switches to Edition 6.5
+  B.switchSource('marrow_6_5');
+
+  // Both devices configure REAL plans in their own edition partitions — so
+  // each has real data and the merge keeps each device on its own edition.
+  A.edit((s) => { s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy', videosPerDay: 8, targetDate: '2027-06-30' }]; });
+  B.edit((s) => { s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Pathology', videosPerDay: 5, targetDate: '2027-08-30' }]; });
+
+  // Settle: A seeds, B pulls (keeps its 6.5 view), both round-trip a few times.
+  await A.manualSync();
+  await A.flush();
+  await B.manualSync();
+  await B.flush();
+  await A.manualSync();
+  await A.flush();
+  await B.manualSync();
+  await B.flush();
+
+  // Each device keeps its own view, and the cloud holds both editions’ plans.
+  assert.equal(A.state.activeSource, 'marrow_8', 'A stays on Edition 8');
+  assert.equal(B.state.activeSource, 'marrow_6_5', 'B stays on Edition 6.5');
+  assert.equal(cloud.getDoc().plans_marrow_8[0].videosPerDay, 8, 'Edition 8 plan in the doc');
+  assert.equal(cloud.getDoc().plans_marrow_6_5[0].videosPerDay, 5, 'Edition 6.5 plan in the doc');
+
+  // Previously each device re-asserted its activeSource to the doc every
+  // couple of rounds (the preference-keep merged the LOCAL value but bumped
+  // the local clock past the cloud’s, so the next sync’s push guard fired).
+  // With the clock pin, repeated syncs are pure reads: ZERO writes.
+  cloud.resetWrites();
+  for (let i = 0; i < 3; i++) {
+    await A.manualSync();
+    await A.flush();
+    await B.manualSync();
+    await B.flush();
+  }
+  await A.flush();
+  await B.flush();
+  assert.equal(cloud.writes.count, 0, `expected ZERO writes after settling on different editions, got ${cloud.writes.count}`);
+  assert.equal(A.state.activeSource, 'marrow_8', 'A still on Edition 8');
+  assert.equal(B.state.activeSource, 'marrow_6_5', 'B still on Edition 6.5');
+});
+
+test('device A ticks Edition 8 topics while device B is on Edition 6.5 — the shared completedVideos map stays partitioned', async () => {
+  const uid = 'user-14';
+  const cloud = createCloudStore(uid);
+  const A = createDevice('A', cloud, uid);   // works on Edition 8 (default)
+  const B = createDevice('B', cloud, uid);   // works on Edition 6.5
+  B.switchSource('marrow_6_5');
+
+  // Each device configures its OWN edition's plan (independent partitions).
+  A.edit((s) => { s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy', videosPerDay: 8, targetDate: '2027-06-30' }]; });
+  B.edit((s) => { s.plans = [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Pathology', videosPerDay: 5, targetDate: '2027-08-30' }]; });
+
+  // A ticks Edition 8 videos; B ticks Edition 6.5 videos — INCLUDING the same
+  // base video id (anatomy__v1 exists in both editions' datasets). The keys
+  // are prefixed per edition, so both must survive in the ONE shared map.
+  A.tick('marrow_8::anatomy__v1');
+  A.tick('marrow_8::anatomy__v3');
+  B.tick('marrow_6_5::anatomy__v1');
+  B.tick('marrow_6_5::anatomy__v2');
+
+  // Full round trip: A seeds, B pulls+pushes, both settle.
+  await A.manualSync();
+  await A.flush();
+  await B.manualSync();
+  await B.flush();
+  await A.manualSync();
+  await A.flush();
+  await B.manualSync();
+  await B.flush();
+  await A.manualSync();
+  await A.flush();
+
+  const doc = cloud.getDoc();
+  // The single shared completedVideos map holds ALL four ticks, correctly
+  // prefixed per edition — no collision, no overwrite, no misattribution.
+  assert.deepEqual(
+    Object.keys(doc.completedVideos).sort(),
+    ['marrow_6_5::anatomy__v1', 'marrow_6_5::anatomy__v2', 'marrow_8::anatomy__v1', 'marrow_8::anatomy__v3'],
+    'cloud holds every tick, partitioned by edition prefix'
+  );
+  assert.equal(doc.completedVideos['marrow_8::anatomy__v1'], true, 'edition-8 key survives');
+  assert.equal(doc.completedVideos['marrow_6_5::anatomy__v1'], true, 'edition-6.5 key with the SAME base id survives');
+  // Per-edition plan partitions stay independent.
+  assert.equal(doc.plans_marrow_8[0].videosPerDay, 8, 'Edition 8 plan untouched by B’s 6.5 ticks');
+  assert.equal(doc.plans_marrow_6_5[0].videosPerDay, 5, 'Edition 6.5 plan untouched by A’s 8 ticks');
+
+  // Both devices converge on the union of both editions' completions...
+  assert.equal(A.state.completedVideos['marrow_6_5::anatomy__v2'], true, 'B’s 6.5 tick arrives on A');
+  assert.equal(B.state.completedVideos['marrow_8::anatomy__v3'], true, 'A’s edition-8 tick arrives on B');
+  // ...and each still owns its own edition view (active source is a device
+  // preference; a pull never yanks a configured device to another edition).
+  assert.equal(A.state.activeSource, 'marrow_8', 'A stays on Edition 8');
+  assert.equal(B.state.activeSource, 'marrow_6_5', 'B stays on Edition 6.5');
+  assert.equal(A.state.plans[0].videosPerDay, 8, 'A still sees its Edition 8 plan');
+  assert.equal(B.state.plans[0].videosPerDay, 5, 'B still sees its Edition 6.5 plan');
+
+  // A further settle round must never lose/resurrect a tick — the partitioned
+  // map is byte-identical.
+  const before = JSON.stringify(doc.completedVideos);
+  await A.manualSync();
+  await A.flush();
+  await B.manualSync();
+  await B.flush();
+  assert.equal(JSON.stringify(cloud.getDoc().completedVideos), before, 'partitioned map unchanged after settling');
+  // NOTE: no strict zero-write assertion here — the devices ticked, so each
+  // manualSync’s diff-based completedVideos union push still writes when its
+  // keys differ from the cloud copy. That is a real (idempotent) write, not an
+  // echo; the activeSource preference echo is gone (see the dedicated
+  // zero-write test above) and the plans/queue-batch echo is gone too.
+});

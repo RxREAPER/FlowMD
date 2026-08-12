@@ -158,7 +158,16 @@
 
     const existingBatchVideos = allSubjectVideos.filter(v => plan.queueBatchVideoIds.includes(v.id));
 
-    if (existingBatchVideos.length === 0 || existingBatchVideos.length !== targetBatchSize) {
+    // The queue batch is a SYNCED plan key: every device of a user shares the
+    // same batch, so it is the source of truth for what today's quest shows.
+    // Regenerate only when the batch is empty (never materialized / explicitly
+    // reset) or LARGER than the target (stale — e.g. the daily pace dropped, or
+    // another device is in extra mode and its 1-at-a-time batch won the merge).
+    // A batch SMALLER than this device's target is never regrown: it may be a
+    // valid extra-mode batch from another device, and regrowing it would flip
+    // the batch back and forth between devices on every render+sync (a write
+    // ping-pong — the exact behavior the shared-batch change must not cause).
+    if (existingBatchVideos.length === 0 || existingBatchVideos.length > targetBatchSize) {
       const uncompletedCandidates = allSubjectVideos.filter(v => !state.completedVideos[v.id]);
       const newBatch = uncompletedCandidates.slice(0, targetBatchSize);
       plan.queueBatchVideoIds = newBatch.map(v => v.id);

@@ -9,7 +9,6 @@ const MODULE_FILES = {
   namespace: 'js/core/namespace.js',
   constants: 'js/core/constants.js',
   sync: 'js/core/sync.js',
-  'layout-check': 'js/core/layout-check.js',
   'state-store': 'js/core/state-store.js',
   'source-data': 'js/core/source-data.js'
 };

@@ -88,11 +88,14 @@
       try {
         // Only fields the app actually consumes, at the minimum size:
         // completedVideos stores FULL prefixed keys (both editions share video
-        // ids — compressing would collide them), plans drop their per-day
-        // transient queue state, and dead fields (speed, subjectUrgency,
-        // dailyBatch, lastSyncedAt, queue counters) are never written.
+        // ids — compressing would collide them), and plans carry their synced
+        // durable keys INCLUDING the daily-quest batch (queueBatchVideoIds) so
+        // every device shows the same quest; only per-day transient counters
+        // (queueCompletedInBatch, extraBatchesCompletedToday, lastBatchDate)
+        // and dead fields (speed, subjectUrgency, dailyBatch, lastSyncedAt)
+        // are never written.
         const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
-        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits'];
+        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds'];
         const stripPlan = (p) => {
           const cp = {};
           planKeys.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
@@ -160,11 +163,13 @@
       if (!db || !uid || !fields) return;
       try {
         const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
-        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits'];
-        // plans in state carry per-day queue bookkeeping (queueBatchVideoIds,
-        // per-batch counters) — strip to the same cloud keys syncToCloud uses
-        // so field-level writes never accumulate junk in the doc. Applies to
-        // every per-edition plans_X key (and the legacy flat plans).
+        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds'];
+        // plans in state carry per-day queue bookkeeping (per-batch counters,
+        // extraBatchesCompletedToday, lastBatchDate) — strip to the same cloud
+        // keys syncToCloud uses so field-level writes never accumulate junk in
+        // the doc. queueBatchVideoIds (the daily-quest batch) IS a synced key
+        // and travels with the plan. Applies to every per-edition plans_X key
+        // (and the legacy flat plans).
         let cleanFields = fields;
         const plansKeys = Object.keys(fields).filter((k) => k === 'plans' || k.indexOf('_plans') === k.length - '_plans'.length || /^plans_/.test(k));
         if (plansKeys.length > 0) {

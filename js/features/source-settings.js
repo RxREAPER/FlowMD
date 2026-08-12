@@ -74,10 +74,24 @@
         <div style="display:flex; flex-direction:column; gap:6px; margin:4px 0 12px 0; padding:10px 12px; background:var(--bg-surface-raised); border:1px solid var(--border, rgba(255,255,255,0.08)); border-radius:10px;">
           ${STUDY_SOURCES.filter(s => s.available).map(s => {
             const e = state.editions && state.editions[s.id];
-            const plan = e && e.plans && e.plans[0];
-            const cfg = plan && (plan.targetSubject || plan.targetDate || plan.videosPerDay)
-              ? escapeHtml(String(plan.targetSubject || '—')) + ' · ' + (plan.videosPerDay ? plan.videosPerDay + '/day' : '—') + (plan.targetDate ? ' · by ' + escapeHtml(String(plan.targetDate)) : '')
-              : 'Not set yet — configure this edition separately';
+            const plans = (e && Array.isArray(e.plans)) ? e.plans : [];
+            // Summarise EVERY configured plan (Plan A + Plan B) so a dual-track
+            // user sees both subjects, the combined daily pace and the earliest
+            // deadline — not just Plan A.
+            const configured = plans.filter(p => p && (p.targetSubject || p.targetDate || p.videosPerDay));
+            let cfg;
+            if (configured.length === 0) {
+              cfg = 'Not set yet — configure this edition separately';
+            } else {
+              const subjects = configured.map(p => escapeHtml(String(p.targetSubject || p.label || ''))).filter(Boolean);
+              const pace = configured.reduce((sum, p) => sum + (Number(p.videosPerDay) || 0), 0);
+              const dates = configured.map(p => p.targetDate).filter(Boolean).sort();
+              const parts = [];
+              if (subjects.length) parts.push(subjects.join(' + '));
+              if (pace > 0) parts.push(pace + '/day');
+              if (dates.length) parts.push('by ' + escapeHtml(String(dates[0])));
+              cfg = parts.join(' · ');
+            }
             return `<div style="display:flex; justify-content:space-between; gap:10px; font-size:0.8rem; color:var(--text-secondary);">
               <span style="font-weight:700; color:var(--text-primary); white-space:nowrap;">${s.label}</span>
               <span style="text-align:right; overflow:hidden; text-overflow:ellipsis;">${cfg}</span>

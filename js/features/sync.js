@@ -198,7 +198,17 @@
       const localT = Number(localTimes[field]) || 0;
       const cloudWon = cloudT > localT && UNION.indexOf(field) === -1;
       if (!state.fieldSyncTimes) state.fieldSyncTimes = {};
-      state.fieldSyncTimes[field] = cloudWon ? cloudT : Math.max(localT, now);
+      // activeSource is a per-device VIEW preference, never a shared value: a
+      // configured device keeps its own edition (the localHasRealData guard in
+      // the merge), so when the cloud clock is at least as new the local clock
+      // must pin AT the cloud's level — bumping it to `now` (as below) made the
+      // next sync's push guard (localT > cloudT) fire and re-assert the
+      // preference to the doc every couple of rounds (~1 write per 2 syncs). A
+      // genuine local source switch still has localT > cloudT and flows through
+      // the normal branch, so real switches keep syncing.
+      state.fieldSyncTimes[field] = (field === 'activeSource' && cloudT >= localT)
+        ? cloudT
+        : (cloudWon ? cloudT : Math.max(localT, now));
     });
     // Re-point the live working fields at the (possibly merged) active slice.
     if (window.FlowMD.store.loadEditionIntoLive) window.FlowMD.store.loadEditionIntoLive(state.activeSource || 'marrow_8');
@@ -264,6 +274,28 @@
         const UNION = window.FlowMD.sync.UNION_FIELDS || ['completedVideos'];
         const isEmptyFor = window.FlowMD.sync.isEmptyForField || (() => false);
         const pushed = {};
+        // Per-edition plans fields (and the legacy flat 'plans') reach the doc
+        // STRIPPED to PLAN_CLOUD_KEYS, while the local plan also carries per-day
+        // transient counters (lastBatchDate, extraBatchesCompletedToday,
+        // queueCompletedInBatch) the cloud copy never has. Comparing the full
+        // local plan to the stripped cloud copy would always look "different"
+        // and re-push the identical stripped plan whenever the local clock
+        // edges past the cloud's (the plans write echo). Compare the CLOUD
+        // shape of the local value instead — a plan whose durable keys match
+        // is already in sync, no matter the counters or clocks.
+        const PLAN_CLOUD_KEYS = (window.FlowMD.sync && window.FlowMD.sync.PLAN_CLOUD_KEYS) || [];
+        const stripPlans = (plans) => {
+          if (!Array.isArray(plans)) return plans;
+          return plans.map((p) => {
+            const cp = {};
+            PLAN_CLOUD_KEYS.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
+            return cp;
+          });
+        };
+        const plansFieldOf = (fn) => {
+          const ed = window.FlowMD.sync.editionFieldParts ? window.FlowMD.sync.editionFieldParts(fn) : null;
+          return fn === 'plans' || (ed && ed.base === 'plans');
+        };
         // Iterate the CLOUD field names (global + suffixed per-edition), not
         // Object.keys(state) — suffixed fields live inside state.editions and
         // are read via readCloudField.
@@ -274,17 +306,31 @@
           const cloudVal = hasCloud ? clean[f] : undefined;
           const localVal = readCloudField(state, f);
           if (localVal === undefined) return;
+          const comparable = plansFieldOf(f) ? stripPlans(localVal) : localVal;
           // Already identical to the cloud copy → nothing to write (this is
           // what stops cloud-won fields from echoing back).
-          if (hasCloud && JSON.stringify(localVal) === JSON.stringify(cloudVal)) return;
+          if (hasCloud && JSON.stringify(comparable) === JSON.stringify(cloudVal)) return;
           if (UNION.indexOf(f) !== -1) {
-            pushed[f] = localVal; // union of both sides — always safe to write
+            // Union fields are merged PER KEY on write (FieldPath writes in
+            // firebase.js), so only the keys this device actually changes
+            // relative to the just-pulled cloud copy need to go up — local
+            // keys the cloud already stores identically must not be rewritten
+            // on every sync (that write echo is what the per-key merge was
+            // designed to make harmless; skipping it makes settled devices
+            // truly write-quiescent). Cloud-only keys are never touched.
+            const cloudMap = hasCloud ? (cloudVal || {}) : {};
+            const localMap = localVal || {};
+            const diff = {};
+            Object.keys(localMap).forEach((k) => {
+              if (cloudMap[k] !== localMap[k]) diff[k] = localMap[k];
+            });
+            if (Object.keys(diff).length > 0) pushed[f] = diff;
             return;
           }
           const localT = Number(beforeTimes[f]) || 0;
           const cloudT = Number(cloudTimes[f]) || 0;
           const localOwns = !hasCloud || isEmptyFor(f, cloudVal) || localT > cloudT;
-          if (localOwns) pushed[f] = localVal;
+          if (localOwns) pushed[f] = comparable;
         });
         if (Object.keys(pushed).length > 0) {
           await window.FirebaseSync.updateCloudFields(uid, pushed);

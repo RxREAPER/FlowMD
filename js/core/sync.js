@@ -69,11 +69,13 @@
   // Fields the app knows how to consume. Anything else in a cloud doc is
   // dropped so legacy/junk fields can never corrupt in-memory state.
   // Deliberately excluded (space): speed/subjectUrgency/dailyBatch (dead,
-  // never read), queueCompletedInBatch/queueBatchVideoIds (per-day transient,
-  // recomputed by the queue engine), lastSyncedAt (never read — updatedAt
-  // is the merge clock). Legacy FLAT per-edition field names (plans, goals,
-  // dailyHistory, ...) are kept so pre-v215 cloud docs still parse; they are
-  // mapped into the suffixed fields by rehydrateLegacyEditionFields.
+  // never read), queueCompletedInBatch/extraBatchesCompletedToday/lastBatchDate
+  // (per-day transient, recomputed by the queue engine — the queue batch
+  // itself, queueBatchVideoIds, lives INSIDE plans and IS synced), lastSyncedAt
+  // (never read — updatedAt is the merge clock). Legacy FLAT per-edition
+  // field names (plans, goals, dailyHistory, ...) are kept so pre-v215 cloud
+  // docs still parse; they are mapped into the suffixed fields by
+  // rehydrateLegacyEditionFields.
   const KNOWN_FIELDS = (function () {
     const names = [
       'completedVideos', 'streakData', 'personal', 'activeSource',
@@ -89,13 +91,17 @@
     return names;
   })();
 
-  // Fields a plan keeps in the cloud doc. Transient daily state (the queue
-  // batch, per-day counters) is recomputed by the queue engine and never
-  // synced — it changes every session and tells another device nothing.
+  // Fields a plan keeps in the cloud doc. queueBatchVideoIds (the current
+  // daily-quest batch) IS synced so every device of a user shows the exact
+  // same videos — a fresh device pulls the batch instead of computing the
+  // next N uncompleted videos. Only the per-day transient counters stay
+  // device-local (queueCompletedInBatch, extraBatchesCompletedToday,
+  // lastBatchDate): they are recomputed by the queue engine per day and
+  // telling another device about them changes nothing.
   const PLAN_CLOUD_KEYS = [
     'id', 'label', 'accentColor', 'targetSubject', 'targetDate',
     'videosPerDay', 'videosPerWeek', 'videosPerMonth',
-    'dailyTargetHours', 'targetUnits'
+    'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds'
   ];
 
   const KNOWN_SOURCES = ['marrow_8', 'marrow_6_5', 'prepladder_x'];

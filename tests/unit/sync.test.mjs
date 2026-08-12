@@ -102,7 +102,7 @@ test('pruneHistoryMaps keeps only entries on/after the cutoff (lexicographic dat
   assert.deepEqual(toPlain(dhbs), { anatomy: { '2026-05-11': 1 }, pathology: {} });
 });
 
-test('sanitizeCloudState drops dead fields and strips transient keys from plans', () => {
+test('sanitizeCloudState drops dead fields and keeps only durable plan keys (incl. the quest batch)', () => {
   const out = sync.sanitizeCloudState({
     speed: 1.5,
     subjectUrgency: { anatomy: 1 },
@@ -113,7 +113,8 @@ test('sanitizeCloudState drops dead fields and strips transient keys from plans'
     completedVideos: { 'anatomy__v1': true },
     plans: [{
       id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8,
-      queueBatchVideoIds: ['a'], queueCompletedInBatch: 2,
+      queueBatchVideoIds: ['marrow_8::anatomy__v1', 'marrow_8::anatomy__v2'],
+      queueCompletedInBatch: 2,
       extraBatchesCompletedToday: 1, lastBatchDate: '2026-05-11'
     }]
   });
@@ -121,11 +122,14 @@ test('sanitizeCloudState drops dead fields and strips transient keys from plans'
   assert.equal(out.subjectUrgency, undefined);
   assert.equal(out.dailyBatch, undefined);
   assert.equal(out.queueCompletedInBatch, undefined);
+  // Top-level queueBatchVideoIds is a legacy FLAT field — dropped. The batch
+  // lives INSIDE each plan and IS a synced key, so it survives sanitation.
   assert.equal(out.queueBatchVideoIds, undefined);
   assert.equal(out.lastSyncedAt, undefined);
   assert.deepEqual(toPlain(out.plans), [{
-    id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8
-  }]);
+    id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8,
+    queueBatchVideoIds: ['marrow_8::anatomy__v1', 'marrow_8::anatomy__v2']
+  }], 'quest batch is a synced plan key; per-day counters stay device-local');
 });
 
 // --- mergeCloudPerField: per-field newest-wins arbitration (manual sync) ---

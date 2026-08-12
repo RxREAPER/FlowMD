@@ -2062,19 +2062,105 @@ body {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Device Layout Check card (Profile) */
-.layout-check-icon {
-  font-size: 18px;
-  color: var(--accent-primary);
+/* Curriculum completion legend — how video ticks vs chapter Select All count */
+.curriculum-legend {
+  margin: 8px 0 16px 0;
+  padding: 12px 14px;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
 }
 
-.layout-check-summary-hint {
-  font-size: 0.8rem;
-}
-
-.layout-check-sub-hint {
+.curriculum-legend-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-hud), sans-serif;
   font-size: 0.72rem;
-  margin-top: 4px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  margin-bottom: 10px;
+}
+
+.curriculum-legend-head .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.curriculum-legend-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.curriculum-legend-row + .curriculum-legend-row {
+  margin-top: 6px;
+}
+
+.curriculum-legend-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.curriculum-legend-icon-count {
+  background: rgba(16, 185, 129, 0.14);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.curriculum-legend-icon-skip {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.curriculum-legend-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.curriculum-legend-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.curriculum-legend-sub {
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.curriculum-legend-badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
+.curriculum-legend-badge-count {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.curriculum-legend-badge-skip {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning);
+  border-color: rgba(245, 158, 11, 0.3);
 }
 
 /* Spotlight search input — never hard-clip the placeholder on narrow screens */
@@ -5454,113 +5540,35 @@ body {
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
-/* --- Sync Diagnostics panel (Profile) --- */
-.sync-diag {
-  margin-top: 12px;
-  margin-bottom: 12px;
-  padding: 12px;
-  border: 1px dashed var(--border-color);
-  border-radius: 10px;
+/* --- Sync status line (Profile — simple last-sync summary) --- */
+.sync-basic-status {
+  margin: 2px 0 10px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   background: rgba(127, 127, 127, 0.06);
-}
-
-.sync-diag-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.sync-diag-title {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.sync-diag-status {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
   color: var(--text-secondary);
-  margin-bottom: 4px;
-  line-height: 1.4;
-  word-break: break-word;
 }
 
-.sync-diag-ok { color: var(--success); }
-.sync-diag-fail { color: var(--danger); }
-.sync-diag-warn { color: #f59e0b; }
-
-.sync-diag-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
-  font-size: 0.7rem;
-  margin-top: 6px;
+.sync-basic-status-ok {
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.08);
 }
 
-.sync-diag-table th {
-  text-align: left;
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 4px 6px;
-  border-bottom: 1px solid var(--border-color);
+.sync-basic-status-fail {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
 }
 
-.sync-diag-table td {
-  padding: 5px 6px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid rgba(127, 127, 127, 0.12);
-  vertical-align: top;
-  white-space: nowrap;
-}
-
-.sync-diag-table td.sync-diag-field {
-  color: var(--text-primary);
-  font-weight: 600;
-  white-space: normal;
-  max-width: 120px;
-}
-
-.sync-diag-val {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.64rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.sync-diag-empty {
-  text-align: center;
-  color: var(--text-muted);
-  padding: 10px 6px !important;
-}
-
-.sync-diag-badge {
-  display: inline-block;
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-
-.sync-diag-local { background: rgba(34, 197, 94, 0.18); color: #34d399; }
-.sync-diag-cloud { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
-.sync-diag-tie { background: rgba(99, 102, 241, 0.18); color: #a5b4fc; }
-.sync-diag-union { background: rgba(34, 211, 238, 0.18); color: #67e8f9; }
-.sync-diag-none { background: rgba(127, 127, 127, 0.15); color: var(--text-muted); }
-
-.sync-diag-legend {
-  margin-top: 8px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.64rem;
-  line-height: 1.5;
-  color: var(--text-muted);
+.sync-basic-status-warn {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.08);
 }
 
 /* --- Curriculum subject tab hours badge --- */

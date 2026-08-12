@@ -253,60 +253,32 @@ async function run() {
   check('Profile shows brief Install App guide', profileHasInstallGuide,
     profileHasInstallGuide ? 'install card present' : 'install card MISSING');
 
-  // Sync Diagnostics panel: inject a fake signed-in cloud (no network), render
-  // the profile, and verify the panel shows per-field local-vs-cloud clocks,
-  // winner badges and the last-sync status.
+  // Simple sync status: signed in with a recorded last-sync result → Profile
+  // shows a basic "Last synced …" line (the per-field diagnostics table is gone).
   {
-    const diag = await page.evaluate(() => {
-      const now = Date.now();
+    await page.evaluate(() => {
       const st = window.FlowMD.store.getState();
       st.personal.isSynced = true;
       st.personal.syncEmail = 'diag@test.dev';
-      st.fieldSyncTimes = { plans: now, goals: now - 5000, personal: now - 60000 };
+      st.syncDiagnostics = {
+        lastSync: { at: Date.now() - 120000, status: 'success', message: 'In sync — nothing to push', pushed: [], pulled: [] }
+      };
       window.FirebaseSync = window.FirebaseSync || {};
       window.FirebaseSync.currentUser = { uid: 'diag-user' };
-      window.FirebaseSync.loadFromCloud = async () => ({
-        plans: [{ id: 'plan_a', label: 'Plan A', targetSubject: 'Anatomy' }],
-        goals: { targetSubject: 'Anatomy', videosPerDay: 3 },
-        personal: { doctorName: 'Dr. Cloud' },
-        activeSource: 'marrow_8',
-        fieldSyncTimes: { plans: now - 20000, goals: now - 10000, personal: now - 1000 }
-      });
+      window.FirebaseSync.loadFromCloud = async () => ({});
       window.FirebaseSync.updateCloudFields = async () => {};
       window.FirebaseSync.syncToCloud = async () => {};
       window.FlowMD.shell.render();
-      return new Promise((resolve) => setTimeout(resolve, 400));
+      return new Promise((resolve) => setTimeout(resolve, 300));
     });
-    const diagText = await page.locator('#sync-diagnostics-panel').innerText().catch(() => '');
-    check('Sync Diagnostics panel renders when signed in',
-      diagText.includes('Sync Diagnostics') && diagText.length > 40,
-      diagText.slice(0, 120));
-    check('Sync Diagnostics shows LOCAL winner (newer local clock)', diagText.includes('LOCAL'),
-      'plans row should be LOCAL');
-    check('Sync Diagnostics shows CLOUD winner (newer cloud clock)', diagText.includes('CLOUD'),
-      'personal row should be CLOUD');
-    check('Sync Diagnostics shows field values (Plan A + Dr. Cloud)',
-      diagText.includes('Plan A') && diagText.includes('Dr. Cloud'),
-      diagText.slice(0, 200));
-    // Refresh button re-fetches and keeps the panel alive
-    const refreshBtn = await page.locator('#btn-refresh-sync-diag').count();
-    check('Sync Diagnostics has a working Refresh button', refreshBtn === 1, `found ${refreshBtn}`);
-
-    // Device layout self-check row (populated from the last in-browser run).
-    const layoutDiag = await page.evaluate(() => {
-      if (window.FlowMD.layoutCheck && window.FlowMD.layoutCheck.runLayoutCheck) {
-        window.FlowMD.layoutCheck.runLayoutCheck();
-      }
-      if (window.FlowMD.shell) window.FlowMD.shell.render();
-      const last = window.FlowMD.layoutCheck && window.FlowMD.layoutCheck.getLastReport
-        ? window.FlowMD.layoutCheck.getLastReport()
-        : null;
-      return JSON.stringify({ has: !!last, clean: last ? last.clean : null, issues: last ? last.issues : null });
-    });
-    await page.waitForTimeout(250);
-    const layoutRow = await page.locator('#layout-check-summary').innerText().catch(() => '');
-    check('Profile shows Device Layout Check row and clean state',
-      layoutRow.includes('No issues') && layoutDiag.includes('"clean":true'), `${layoutRow.slice(0, 40)} | diag=${layoutDiag.slice(0, 80)}`);
+    const syncStatus = await page.locator('#sync-basic-status').innerText().catch(() => '');
+    check('Profile shows a simple last-sync status when signed in',
+      syncStatus.includes('Last synced') && syncStatus.includes('backed up'),
+      syncStatus.slice(0, 120));
+    check('Per-field Sync Diagnostics table removed from Profile',
+      await page.locator('#sync-diagnostics-panel, .sync-diag').count() === 0);
+    check('Device Layout Check card removed from Profile',
+      (await page.locator('#app-main').innerText()).includes('Device Layout Check') === false);
   }
 
   // Search modal
@@ -358,6 +330,18 @@ async function run() {
       st.completedVideos['marrow_6_5::anatomy__v1'] = true;
       window.FlowMD.store.saveState();
     });
+    // The per-edition config summary must show BOTH plans (Plan A + Plan B)
+    // combined as "Subject A + Subject B", not just Plan A.
+    await page.evaluate(() => { window.FlowMD.sourceSettings.openSourceSettingsModal(); });
+    await page.waitForTimeout(300);
+    const modalText = await page.evaluate(() => {
+      const m = Array.from(document.querySelectorAll('div')).find(el => el.style.position === 'fixed' && el.style.zIndex === '99999');
+      return m ? m.innerText : '';
+    });
+    check('Source modal summary shows Plan A + Plan B combined (Anatomy + Physiology)',
+      modalText.includes('Anatomy + Physiology'),
+      modalText.slice(0, 200));
+    await dismissOverlays(page);
     await page.evaluate(() => { window.FlowMD.sourceSettings.openSourceSettingsModal(); });
     await page.waitForTimeout(300);
     await page.evaluate(() => {
