@@ -1,6 +1,4 @@
-# FlowMD — Gamified NEET-PG Study Planner
-
-> A retro-arcade, offline-first PWA that turns a 2000+ video NEET-PG syllabus into daily quests, streaks, and progress you can actually see.
+# FlowMD — An ADvanced NEET-PG Study Planner
 
 **Live app:** [flowmd-04.web.app](https://flowmd-04.web.app) · **Report an issue:** [GitHub Issues](https://github.com/mohammedsafi0414/FlowMD/issues)
 
@@ -19,7 +17,6 @@ FlowMD is a study planner for medical students preparing for **NEET-PG**. Instea
 - **Daily quests** — every morning the app picks today's batch of videos from your plan. Tick them off like a to-do list, complete your target, and unlock **extra videos** when you overachieve.
 - **Per-edition partitions** — Marrow Edition 8 and Edition 6.5 are fully separate workspaces: separate plans, goals, quests, analytics, and completions. Switch anytime; nothing bleeds across.
 - **Identical across all your devices** — the daily quest batch is part of the synced plan, so your phone and tablet show the *exact same videos*, even a brand-new device that has never opened the app.
-- **Gamification** — pixel-art arcade theme, study streaks, "Level Up" progress bars, HP-bar mastery meters, and congrats cards.
 - **Offline-first PWA** — installs to the home screen, precaches the whole syllabus, and works with no signal. Completions made offline sync when you're back.
 - **Firebase sync that doesn't fight itself** — pull-then-push with per-field clocks, per-edition suffixed fields, and a write-quiescent merge: two devices editing at once converge without clobbering each other or echoing writes forever.
 - **Analytics** — 7/30-day charts, per-subject daily counts, syllabus mastery, deadline countdown, and ETA math that re-derives your pace from real progress.
@@ -130,4 +127,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) — conventions, test expectations, and t
 
 ## License
 
-[MIT](LICENSE) © Mohammed Faiz
+[MIT](LICENSE) © Mohammed Safi-Ur-Rehman
