@@ -1,10 +1,13 @@
-/* Minimal static file server for local preview. Usage: node serve.cjs [port] */
+/* Minimal static file server for local preview.
+ * Usage: node serve.cjs [port]
+ * Port resolution: $PORT (Freebuff injects this for previews) > CLI arg > 8140.
+ * Binds 0.0.0.0 so containerized previews can reach it. */
 const { createServer } = require('node:http');
 const { readFile } = require('node:fs/promises');
 const { extname, join, normalize } = require('node:path');
 
 const root = process.cwd();
-const port = Number(process.argv[2]) || 8140;
+const port = Number(process.env.PORT) || Number(process.argv[2]) || 8140;
 
 const mime = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
@@ -24,4 +27,4 @@ const server = createServer(async (req, res) => {
   } catch (e) { res.writeHead(404); res.end('Not found'); }
 });
 
-server.listen(port, '127.0.0.1', () => console.log(`Serving ${root} at http://127.0.0.1:${port}`));
+server.listen(port, '0.0.0.0', () => console.log(`Serving ${root} at http://0.0.0.0:${port}`));
