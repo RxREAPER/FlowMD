@@ -24,12 +24,49 @@
   let onboardingName = '';
   let onboardingSeeded = false;
 
+  // The sign-in button uses the REDIRECT flow, which navigates the whole page
+  // through the Firebase auth handler and back. Persist the wizard's in-progress
+  // state first so the round-trip lands the user back on the same step instead
+  // of restarting the wizard from zero.
+  const ONBOARDING_PENDING_KEY = 'flowmd_onboarding_pending';
+
+  function persistOnboardingForRedirect() {
+    try {
+      localStorage.setItem(ONBOARDING_PENDING_KEY, JSON.stringify({
+        step: onboardingStep,
+        source: onboardingSource,
+        theme: onboardingTheme,
+        name: onboardingName
+      }));
+    } catch (e) { /* persistence must never block sign-in */ }
+  }
+
+  // Restore a pending wizard (once) after a redirect round-trip; clears the key.
+  function restorePendingOnboarding() {
+    try {
+      const raw = localStorage.getItem(ONBOARDING_PENDING_KEY);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (p && typeof p === 'object') {
+          if (typeof p.step === 'number') onboardingStep = Math.max(0, Math.min(2, p.step));
+          if (p.source && STUDY_SOURCES.some(s => s.id === p.source)) onboardingSource = p.source;
+          if (p.theme === 'dark' || p.theme === 'light') onboardingTheme = p.theme;
+          if (typeof p.name === 'string') onboardingName = p.name;
+        }
+      }
+    } catch (e) { /* corrupt pending state is discarded */ }
+    try { localStorage.removeItem(ONBOARDING_PENDING_KEY); } catch (e) {}
+  }
+
   function renderOnboardingWizard(step) {
     onboardingStep = Math.max(0, Math.min(2, step || 0));
     if (!onboardingSeeded) {
       onboardingSeeded = true;
       if (state.personal && state.personal.doctorName) onboardingName = state.personal.doctorName;
     }
+    // A pending redirect return overrides the seeded defaults (the user's typed
+    // name/theme/source from just before the sign-in click must win).
+    restorePendingOnboarding();
     const total = 3;
     const dots = [0, 1, 2].map(i =>
       `<span class="onboarding-dot ${i === onboardingStep ? 'active' : ''} ${i < onboardingStep ? 'done' : ''}"></span>`
@@ -179,20 +216,21 @@
       });
     }
 
-    // Sign-in button
+    // Sign-in button. signInWithRedirect navigates this window away, so after
+    // it resolves the wizard is left on the "Redirecting…" state until the
+    // auth handler returns us (restorePendingOnboarding then resumes the wizard).
     const signinBtn = document.getElementById('onboarding-signin');
     if (signinBtn) {
       signinBtn.addEventListener('click', async () => {
         if (!window.FirebaseSync) return;
+        persistOnboardingForRedirect();
         signinBtn.disabled = true;
-        signinBtn.innerHTML = '<svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-sync"/></svg> Signing in...';
+        signinBtn.innerHTML = '<svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-sync"/></svg> Redirecting to Google...';
         try {
           await window.FirebaseSync.signInWithGoogle();
-          showToast('Signed in successfully!', 'check_circle');
-          if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('step');
-          renderOnboardingWizard(onboardingStep + 1);
         } catch (e) {
-          showToast('Sign-in failed: ' + e.message, 'error');
+          showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
+          try { localStorage.removeItem(ONBOARDING_PENDING_KEY); } catch (err) {}
           signinBtn.disabled = false;
           signinBtn.innerHTML = '<svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-cloud_sync"/></svg> Sign in with Google';
         }

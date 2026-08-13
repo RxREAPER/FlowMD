@@ -66,13 +66,31 @@
       });
     },
 
-    // Sign in with Google Popup
+    // Sign in with Google. Uses the REDIRECT flow (signInWithRedirect): popup
+    // sign-in is unreliable inside installed PWAs — browsers close/block the
+    // popup mid-handshake (auth/popup-closed-by-user), which made "Sign-in
+    // failed" the norm on installed devices. Redirect navigates the current
+    // window through the auth handler and back; the pending result is picked
+    // up on the next boot via resolveRedirectResult().
     async signInWithGoogle() {
       if (!auth) throw new Error("Firebase not initialized");
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
-      const result = await auth.signInWithPopup(provider);
-      return result.user;
+      await auth.signInWithRedirect(provider);
+    },
+
+    // Completes a pending sign-in after the redirect round-trip. Returns the
+    // signed-in user, or null when no redirect sign-in is pending. Rejects
+    // with the REAL Firebase error so callers can surface it (the old popup
+    // errors were swallowed in the UI).
+    async resolveRedirectResult() {
+      if (!auth) return null;
+      try {
+        const result = await auth.getRedirectResult();
+        return result && result.user ? result.user : null;
+      } catch (e) {
+        throw e;
+      }
     },
 
     // Sign out
