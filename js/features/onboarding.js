@@ -30,6 +30,11 @@
   // of restarting the wizard from zero.
   const ONBOARDING_PENDING_KEY = 'flowmd_onboarding_pending';
 
+  // True once a pending redirect state has been applied. Boot can render the
+  // wizard more than once (lazy data load, auth listener), and the second
+  // render passes step 0 — without this flag it would clobber the restored step.
+  let pendingRestored = false;
+
   function persistOnboardingForRedirect() {
     try {
       localStorage.setItem(ONBOARDING_PENDING_KEY, JSON.stringify({
@@ -41,7 +46,9 @@
     } catch (e) { /* persistence must never block sign-in */ }
   }
 
-  // Restore a pending wizard (once) after a redirect round-trip; clears the key.
+  // Apply a pending wizard state after a redirect round-trip. The key is kept
+  // (not consumed) until the user actually acts, so any boot-time re-render
+  // re-applies the same restored step instead of falling back to step 1.
   function restorePendingOnboarding() {
     try {
       const raw = localStorage.getItem(ONBOARDING_PENDING_KEY);
@@ -52,14 +59,23 @@
           if (p.source && STUDY_SOURCES.some(s => s.id === p.source)) onboardingSource = p.source;
           if (p.theme === 'dark' || p.theme === 'light') onboardingTheme = p.theme;
           if (typeof p.name === 'string') onboardingName = p.name;
+          pendingRestored = true;
         }
       }
     } catch (e) { /* corrupt pending state is discarded */ }
+  }
+
+  // Once the user navigates the wizard (next/back/skip) or finishes it, the
+  // pending state is spent: clear the key and let explicit steps take over.
+  function clearPendingOnboarding() {
+    pendingRestored = false;
     try { localStorage.removeItem(ONBOARDING_PENDING_KEY); } catch (e) {}
   }
 
   function renderOnboardingWizard(step) {
-    onboardingStep = Math.max(0, Math.min(2, step || 0));
+    // While a restored pending state is in effect, ignore the caller's step
+    // (boot passes 0) so the resumed step survives boot-time re-renders.
+    if (!pendingRestored) onboardingStep = Math.max(0, Math.min(2, step || 0));
     if (!onboardingSeeded) {
       onboardingSeeded = true;
       if (state.personal && state.personal.doctorName) onboardingName = state.personal.doctorName;
@@ -188,6 +204,7 @@
       if (onboardingStep === 0) backBtn.style.visibility = 'hidden';
       backBtn.addEventListener('click', () => {
         if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('prev');
+        clearPendingOnboarding();
         renderOnboardingWizard(onboardingStep - 1);
       });
     }
@@ -211,6 +228,7 @@
           finishOnboarding();
         } else {
           if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('step');
+          clearPendingOnboarding();
           renderOnboardingWizard(onboardingStep + 1);
         }
       });
@@ -230,7 +248,7 @@
           await window.FirebaseSync.signInWithGoogle();
         } catch (e) {
           showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
-          try { localStorage.removeItem(ONBOARDING_PENDING_KEY); } catch (err) {}
+          clearPendingOnboarding();
           signinBtn.disabled = false;
           signinBtn.innerHTML = '<svg class="material-symbols-outlined" style="margin-right:8px;"><use href="#fmd-i-cloud_sync"/></svg> Sign in with Google';
         }
@@ -242,12 +260,14 @@
     if (skipSigninBtn) {
       skipSigninBtn.addEventListener('click', () => {
         if (window.FlowMD.shell) window.FlowMD.shell.triggerHaptic('step');
+        clearPendingOnboarding();
         renderOnboardingWizard(onboardingStep + 1);
       });
     }
   }
 
   function finishOnboarding() {
+    clearPendingOnboarding();
     state.isConfigured = true;
     state.activeSource = onboardingSource;
     state.personal.doctorName = onboardingName || state.personal.doctorName || 'Dr. Aspirant';
