@@ -169,10 +169,15 @@
 
     document.getElementById('btn-signin-google')?.addEventListener('click', async () => {
       if (window.FirebaseSync) {
+        const btn = document.getElementById('btn-signin-google');
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
         try {
+          // signInWithRedirect navigates the whole window to Google and back;
+          // this resolves once the redirect has been initiated.
           await window.FirebaseSync.signInWithGoogle();
         } catch (e) {
-          showToast('Sign in failed.', 'error');
+          showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
+          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
         }
       }
     });
@@ -297,9 +302,11 @@
       closeBottomSheet();
       if (window.FirebaseSync) {
         try {
+          // Redirect flow: the window navigates to Google and back; the
+          // pending result is resolved on the next boot.
           await window.FirebaseSync.signInWithGoogle();
         } catch (e) {
-          showToast('Sign in failed.', 'error');
+          showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
         }
       }
     });

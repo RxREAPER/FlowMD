@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-14] Google sign-in fixed for installed PWAs — popup → redirect flow (v219)
+
+- **Root cause (confirmed by live reproduction):** sign-in used `signInWithPopup`, which browsers close/block inside installed standalone PWAs mid-handshake → `auth/popup-closed-by-user` → the generic "Sign in failed." toast. On the web the popup sometimes survived the race, which is why retries occasionally worked.
+- **Fix:** `firebase.js` now uses `signInWithRedirect` + `getRedirectResult()` resolved on every boot (`js/features/sync.js`), so sign-in works reliably in standalone/installed contexts. Onboarding persists its wizard state across the redirect round-trip and resumes where it left off.
+- **Fix:** `sw.js` serves the Firebase SDKs NETWORK-first (the precached opaque copy is now only the offline fallback) — previously the auth SDK was always served from a stale cache copy, even online.
+- **Fix:** sign-in errors are no longer swallowed — `profile.js` shows the real Firebase message, and the button disables during the redirect.
+- Cache-busted to v219.
+
 ## [2026-08-14] Fresh devices land where the data is — data-aware activeSource adoption + production-faithful profile defaults (v218)
 
 - **A fresh device no longer opens into an empty edition.** The cloud `activeSource` is a last-writer value: a data-less device that merely switched editions could leave it pointing at an EMPTY partition, and a brand-new device would then pull the app onto that empty edition while the user's real plans/goals/history sit in the other one. The merge (`js/core/sync.js`) now redirects a fresh device to the edition that actually carries data when the cloud's choice is empty-of-data — including the case where cloud and local both carry the default `marrow_8` — while a deliberate, data-backed cloud choice (and any device's own configured view) is still respected. It stays write-quiescent: the redirected view is never re-asserted.

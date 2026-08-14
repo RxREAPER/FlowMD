@@ -64,6 +64,16 @@
     if (!window.FirebaseSync) return;
     let cloudUnsub = null;
 
+    // Complete a pending redirect sign-in (signInWithRedirect sent us through
+    // the auth handler and back). Failures are toasted with the REAL Firebase
+    // message instead of being swallowed. onAuthChange below then picks up the
+    // signed-in user and pulls the cloud state.
+    if (window.FirebaseSync.resolveRedirectResult) {
+      window.FirebaseSync.resolveRedirectResult().catch((e) => {
+        showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
+      });
+    }
+
     window.FirebaseSync.onAuthChange(async (user) => {
       if (user) {
         showToast(`Signed in as ${user.email}`, 'account_circle');
