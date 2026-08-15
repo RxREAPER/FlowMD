@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.flowmd.app",
+      "sha256_cert_fingerprints": [
+        "75:FE:52:E5:34:01:D8:4A:36:8E:39:C4:3F:E8:A8:FC:13:A9:65:3C:0E:4E:92:CF:8B:52:38:42:6C:BC:BF:11"
+      ]
+    }
+  }
+]

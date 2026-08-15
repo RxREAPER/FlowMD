@@ -1,5 +1,10 @@
 # FlowMD — Change Log
 
+## [2026-08-15] TWA Android shell: assetlinks + offline-first closed-beta copy (v227)
+
+- **Digital Asset Links for the Android TWA:** the site now serves `/.well-known/assetlinks.json` (hosting rewrite → `assetlinks.json` at the root, dodging the `**/.*` deploy ignore) tying `com.flowmd.app` + the release signing cert to flowmd-04.web.app. This is the trust handshake that lets the TWA APK run full-screen without a URL bar.
+- **Landing page Android section updated** for the TWA — positioned as an *optional early beta* (moved below About, out of the nav), not a main feature: the web app stays the primary experience. The APK is a full-Chrome shell, so offline-first works inside it and every web deploy reaches phones automatically — no reinstall, ever.
+
 ## [2026-08-15] Capacitor-native Android shell + landing closed-beta section (v226)
 
 - **The install helper now recognizes the Capacitor Android shell.** Inside the APK, the WebView never fires `beforeinstallprompt` and never reports `display-mode: standalone`, so the app previously thought it wasn't installed and popped the "Add to Home Screen" modal on first open. The app now treats a Capacitor runtime (`window.Capacitor.isNativePlatform()`) as installed: the first-visit modal and install banner never show, and Profile displays the installed state.
