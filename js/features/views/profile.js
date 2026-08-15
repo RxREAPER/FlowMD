@@ -159,6 +159,11 @@
             </button>
           </div>
         </div>
+        <div style="display: flex; gap: 18px; margin-top: 16px; flex-wrap: wrap; font-size: 0.82rem;">
+          <a href="privacy.html" style="color: var(--accent-primary);">Privacy Policy</a>
+          <a href="terms.html" style="color: var(--accent-primary);">Terms of Use</a>
+          <a href="https://github.com/mohammedsafi0414/FlowMD" rel="noopener noreferrer" style="color: var(--accent-primary);">Source Code</a>
+        </div>
       </div>
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 24px;">

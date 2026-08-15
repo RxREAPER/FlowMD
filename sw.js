@@ -39,6 +39,7 @@ const ASSETS = [
   './manifest.json',
   './offline.html',
   './privacy.html',
+  './terms.html',
   './assets/icon-192.png',
   './assets/icon-512.png',
   ...DATA_FILES
