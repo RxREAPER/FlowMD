@@ -1,6 +1,6 @@
 /* ============================================================
-   FLOWMD V2 — MARROW EDITION 8 OFFICIAL SYLLABUS DATASET
-   Rebuilt from marrow_edition8_readable_curriculum.md (20 subjects incl. Revision Videos)
+   FLOWMD V2 — NEET-PG SYLLABUS DATASET (EDITION 8 STRUCTURE)
+   Subjects, chapters and topics for the NEET-PG syllabus.
    ============================================================ */
 
 const syllabusData = [
