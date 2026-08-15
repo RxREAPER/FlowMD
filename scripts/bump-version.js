@@ -68,4 +68,17 @@ availableDataFiles.forEach(rel => {
   console.log(`${rel}: bumped to v${newVersion}`);
 });
 
+// ── 4b. Bump ?v= in the landing page (immutable 1-year cache safety: the
+// landing's css/js/favicon are served immutable, so every deploy must bump
+// their version tags or returning visitors keep stale assets for a year). ──
+const landingPath = path.join(root, 'landing', 'index.html');
+if (fs.existsSync(landingPath)) {
+  let landingHtml = fs.readFileSync(landingPath, 'utf-8');
+  if (/\?v=[\d.]+/.test(landingHtml)) {
+    landingHtml = landingHtml.replace(/(\?v=)([\d.]+)/g, (_, prefix) => `${prefix}${newVersion}`);
+    fs.writeFileSync(landingPath, landingHtml, 'utf-8');
+    console.log(`landing/index.html: bumped to v${newVersion}`);
+  }
+}
+
 console.log(`Cache-busting version bumped to v${newVersion}`);

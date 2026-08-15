@@ -89,8 +89,36 @@
         const result = await auth.getRedirectResult();
         return result && result.user ? result.user : null;
       } catch (e) {
+        // A rejected redirect result usually means a STALE pending redirect
+        // left behind by an earlier interrupted attempt (e.g. the old popup
+        // era, or a redirect whose return navigation was cancelled). That
+        // stale state makes every later attempt fail on boot. Signing out
+        // clears it so the next attempt starts clean.
+        try { await auth.signOut(); } catch (_) { /* best effort */ }
         throw e;
       }
+    },
+
+    // Map a Firebase Auth error to a human-readable, actionable message.
+    // Returns { code, message }; falls back to the raw error for unknown
+    // codes. The code (e.g. "auth/operation-not-allowed") is kept visible so
+    // the exact failure can be reported back for diagnosis.
+    authErrorInfo(e) {
+      const raw = (e && (e.code || e.message)) || String(e);
+      const m = String(raw).match(/auth\/([a-z-]+)/);
+      const code = m ? 'auth/' + m[1] : raw;
+      const messages = {
+        'auth/operation-not-allowed': "Google sign-in isn't enabled for this project — enable it in Firebase console → Authentication → Sign-in method → Google.",
+        'auth/unauthorized-domain': "This domain isn't authorized for sign-in — add it in Firebase console → Authentication → Settings → Authorized domains.",
+        'auth/redirect-cancelled-by-user': 'The sign-in window was closed before it finished — tap Sign in with Google again and don\'t interrupt it.',
+        'auth/popup-closed-by-user': 'The sign-in popup was closed before it finished — try again.',
+        'auth/account-exists-with-different-credential': 'An account with this email already exists using a different sign-in method.',
+        'auth/network-request-failed': 'Network error during sign-in — check your connection and try again.',
+        'auth/internal-error': 'Sign-in hit an internal error — fully close the app and try again.',
+        'auth/redirect-operation-pending': 'A previous sign-in is still finishing — wait a moment and try again.',
+        'auth/web-storage-unsupported': 'This browser blocks the storage sign-in needs — use a normal browser tab or update the app.'
+      };
+      return { code, message: messages[code] || String(raw) };
     },
 
     // Sign out

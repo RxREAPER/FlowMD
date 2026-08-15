@@ -1,11 +1,17 @@
 /* ============================================================
    FlowMD Features — Profile View
    Renders the Account & Profile view (doctor name, study source,
-   Google Cloud Sync, support, data reset) plus the profile bottom
-   sheet controller opened from the topbar avatar.
+   data safety, backup export/import, install, support, data
+   reset) plus the profile bottom sheet controller opened from
+   the topbar avatar.
 
-   Extracted verbatim from app.js (2026-08-10); signature adapted
-   to receive the shell DOM cache (renderProfileView(dom, stats),
+   Cloud-sync UI was removed for the offline-first launch; the
+   sync stack is preserved dormant in the repo (see
+   plan/feature-offline-first-launch-1.md). Backup lives in
+   js/features/backup.js and is wired here.
+
+   Extracted from app.js (2026-08-10); signature adapted to
+   receive the shell DOM cache (renderProfileView(dom, stats),
    openProfileBottomSheet(dom)). The bottom-sheet elements
    (bottomSheetOverlay/bottomSheetContent) live in the static DOM
    cache built once by the shell at init.
@@ -27,12 +33,10 @@
   // Shell DOM cache — set on every render via the dispatcher.
   let DOM = {};
 
-  // --- View 6: Profile View (simplified) ---
+  // --- View 6: Profile View ---
   function renderProfileView(dom, stats) {
     DOM = dom;
     const docName = state.personal.doctorName || 'Dr. Aspirant';
-    const isSynced = state.personal.isSynced;
-    const syncEmail = state.personal.syncEmail || '';
 
     DOM.appMain.innerHTML = `
       <div class="fm-breadcrumb">
@@ -84,30 +88,45 @@
         <div class="profile-settings-hint">Switching source changes the syllabus, targets &amp; focus chapters shown in the app.</div>
       </div>
 
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px; border-left: 4px solid #f59e0b;">
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <svg class="material-symbols-outlined" style="color: #f59e0b; font-size: 20px;"><use href="#fmd-i-phone_iphone"/></svg>
+          Your data lives on this device
+        </h3>
+        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+          Progress is stored only on this device — no account, nothing uploaded.
+          Clearing browser data or uninstalling the app erases it, so export a backup below.
+        </p>
+      </div>
+
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
-        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Google Cloud Sync</h3>
-        ${isSynced ? `
-          <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1.05rem; margin-bottom: 12px;">
-            <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_done"/></svg>
-            Synced as ${syncEmail}
-          </div>
-          <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Changes on this device save automatically; press Sync Now to pull changes made on your other devices and push yours. Works offline.
-          </div>
-          <button class="v2-arcade-btn" id="btn-sync-now" style="width: 100%; margin-bottom: 8px;">
-            <svg class="material-symbols-outlined"><use href="#fmd-i-sync"/></svg> Sync Now
-          </button>
-          <div id="sync-basic-status" class="sync-basic-status"></div>
-          <button class="v2-arcade-btn" id="btn-signout-google" style="width: 100%; background: var(--danger);">Sign Out of Cloud Sync</button>
-        ` : `
-          <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Sign in with Google to backup your progress.</p>
-          <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">
-            Backs up completions, streaks, plans &amp; preferences; press Sync Now to share changes across devices.
-          </div>
-          <button class="v2-arcade-btn" id="btn-signin-google" style="width: 100%;">
-            <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_sync"/></svg> Sign In with Google
-          </button>
-        `}
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-backup"/></svg>
+          Backup
+        </h3>
+        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
+          Save your progress to a file and restore it on a new device. Backups stay importable across future app versions.
+        </p>
+        ${state.lastBackupAt ? `
+          <div class="profile-settings-hint" style="margin-bottom: 12px; font-size: 0.8rem;">Last backup: ${fmtClock(state.lastBackupAt)}</div>
+        ` : ''}
+        <button class="v2-arcade-btn" id="btn-export-backup" style="width: 100%; margin-bottom: 8px;">
+          <svg class="material-symbols-outlined"><use href="#fmd-i-download"/></svg> Export Backup
+        </button>
+        <button class="v2-arcade-btn" id="btn-import-backup" style="width: 100%;">
+          <svg class="material-symbols-outlined"><use href="#fmd-i-upload"/></svg> Import Backup
+        </button>
+        <input type="file" id="backup-file-input" accept="application/json,.json" style="display: none;">
+      </div>
+
+      <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
+        <h3 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-cloud_sync"/></svg>
+          Cloud Sync
+        </h3>
+        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+          Cloud sync is coming soon. For now, move between devices with Export / Import above.
+        </p>
       </div>
 
       <div class="v2-pixel-card" style="padding: 18px; margin-bottom: 16px;">
@@ -167,33 +186,34 @@
 
     document.getElementById('btn-change-source')?.addEventListener('click', openSourceSettingsModal);
 
-    document.getElementById('btn-signin-google')?.addEventListener('click', async () => {
-      if (window.FirebaseSync) {
-        const btn = document.getElementById('btn-signin-google');
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
-        try {
-          // signInWithRedirect navigates the whole window to Google and back;
-          // this resolves once the redirect has been initiated.
-          await window.FirebaseSync.signInWithGoogle();
-        } catch (e) {
-          showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
-          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    document.getElementById('btn-export-backup')?.addEventListener('click', async () => {
+      if (window.FlowMD.backup && window.FlowMD.backup.exportBackup) {
+        const ok = await window.FlowMD.backup.exportBackup();
+        if (ok) {
+          state.lastBackupAt = Date.now();
+          saveState();
+          showToast('Backup exported!', 'check_circle');
         }
       }
     });
 
-    document.getElementById('btn-sync-now')?.addEventListener('click', async () => {
-      if (window.FlowMD.sync && window.FlowMD.sync.manualSync) {
-        await window.FlowMD.sync.manualSync();
-      }
+    document.getElementById('btn-import-backup')?.addEventListener('click', () => {
+      document.getElementById('backup-file-input')?.click();
     });
 
-    document.getElementById('btn-signout-google')?.addEventListener('click', async () => {
-      if (window.FirebaseSync) {
-        await window.FirebaseSync.signOutUser();
-        showToast('Signed out.', 'info');
-        renderProfileView(DOM, stats);
+    document.getElementById('backup-file-input')?.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (window.FlowMD.backup && window.FlowMD.backup.importBackup) {
+        const result = await window.FlowMD.backup.importBackup(file);
+        if (result && result.ok) {
+          showToast(result.message || 'Backup restored!', 'check_circle');
+          if (window.FlowMD.shell) window.FlowMD.shell.render();
+        } else {
+          showToast((result && result.error) || 'Import failed.', 'error');
+        }
       }
+      e.target.value = '';
     });
 
     document.getElementById('btn-show-support-email')?.addEventListener('click', () => {
@@ -208,14 +228,9 @@
         showToast('Email copied to clipboard!', 'content_copy');
       });
     });
-
-    // Show the simple last-sync status line (kept basic — no per-field details).
-    if (isSynced) renderSyncBasicStatus();
   }
 
-  // --- Sync status line ---
-  // A single, human-readable last-sync summary — no per-field clocks or
-  // winner badges (diagnostics was too technical for everyday users).
+  // --- Human-readable clock for the last-backup line ---
   function fmtClock(ms) {
     if (!ms) return 'never';
     const diff = Date.now() - ms;
@@ -227,36 +242,10 @@
       ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  function renderSyncBasicStatus() {
-    const el = document.getElementById('sync-basic-status');
-    if (!el) return;
-    const d = state.syncDiagnostics || {};
-    const ls = d.lastSync;
-    el.className = 'sync-basic-status';
-    if (!ls) {
-      el.textContent = 'Not synced yet — press Sync Now to back up this device.';
-      return;
-    }
-    if (ls.status === 'failed') {
-      el.textContent = 'Last sync failed ' + fmtClock(ls.at) + ' — ' + (ls.error || 'check your connection and try again.');
-      el.classList.add('sync-basic-status-fail');
-      return;
-    }
-    el.textContent = 'Last synced ' + fmtClock(ls.at) + ' — everything is backed up.';
-    el.classList.add('sync-basic-status-ok');
-    if (d.autoPush && d.autoPush.ok === false && d.autoPush.error) {
-      el.textContent += ' Auto-save had an issue — press Sync Now.';
-      el.classList.remove('sync-basic-status-ok');
-      el.classList.add('sync-basic-status-warn');
-    }
-  }
-
   // --- Profile Bottom Sheet Controller ---
   function openProfileBottomSheet(dom) {
     DOM = dom;
     const docName = state.personal.doctorName || 'Dr. Aspirant';
-    const isSynced = state.personal.isSynced;
-    const syncEmail = state.personal.syncEmail || '';
     const initials = (docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase();
 
     DOM.bottomSheetContent.innerHTML = `
@@ -274,15 +263,6 @@
         <button class="v2-arcade-btn" id="bs-btn-view-goals" style="width: 100%; justify-content: flex-start;">
           <svg class="material-symbols-outlined"><use href="#fmd-i-tune"/></svg> Synchronize Pace & Goals
         </button>
-        ${isSynced ? `
-          <button class="v2-arcade-btn" id="bs-btn-logout" style="width: 100%; justify-content: flex-start; background: var(--danger);">
-            <svg class="material-symbols-outlined"><use href="#fmd-i-logout"/></svg> Sign Out (${escapeHtml(syncEmail)})
-          </button>
-        ` : `
-          <button class="v2-arcade-btn" id="bs-btn-login" style="width: 100%; justify-content: flex-start;">
-            <svg class="material-symbols-outlined"><use href="#fmd-i-cloud_sync"/></svg> Sign In with Google
-          </button>
-        `}
       </div>
     `;
 
@@ -296,28 +276,6 @@
     document.getElementById('bs-btn-view-goals')?.addEventListener('click', () => {
       closeBottomSheet();
       focusStudyPlanConfig();
-    });
-
-    document.getElementById('bs-btn-login')?.addEventListener('click', async () => {
-      closeBottomSheet();
-      if (window.FirebaseSync) {
-        try {
-          // Redirect flow: the window navigates to Google and back; the
-          // pending result is resolved on the next boot.
-          await window.FirebaseSync.signInWithGoogle();
-        } catch (e) {
-          showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
-        }
-      }
-    });
-
-    document.getElementById('bs-btn-logout')?.addEventListener('click', async () => {
-      closeBottomSheet();
-      if (window.FirebaseSync) {
-        await window.FirebaseSync.signOutUser();
-        showToast('Signed out.', 'info');
-        if (window.FlowMD.shell) window.FlowMD.shell.render();
-      }
     });
   }
 

@@ -13,7 +13,6 @@ const ASSETS = [
   './index.html',
   './style.css',
   './app.js',
-  './firebase.js',
   './js/core/namespace.js',
   './js/core/constants.js',
   './js/core/icons.js',
@@ -22,12 +21,11 @@ const ASSETS = [
   './js/core/metrics.js',
   './js/core/subjects.js',
   './js/core/logo.js',
-  './js/core/sync.js',
   './js/features/toast.js',
   './js/features/theme.js',
   './js/features/search.js',
-  './js/features/sync.js',
   './js/features/onboarding.js',
+  './js/features/backup.js',
   './js/features/pwa-install.js',
   './js/features/study-plan-config.js',
   './js/features/source-settings.js',
@@ -44,14 +42,6 @@ const ASSETS = [
   './assets/icon-192.png',
   './assets/icon-512.png',
   ...DATA_FILES
-];
-
-// Firebase SDKs (cross-origin) - precached at install
-const FIREBASE_SDKS = [
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js',
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js',
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js'
 ];
 
 // Cache key: origin + pathname (query stripped) - matches the runtime
@@ -71,21 +61,6 @@ self.addEventListener('install', (event) => {
       // Same-origin shell + data files. (addAll rejects on opaque cross-origin
       // responses, which is why those are cached individually below.)
       await cache.addAll(ASSETS).catch(e => console.log('Cache add failed', e));
-
-      const jobs = [];
-
-      // Firebase SDKs: opaque (no-cors) responses are cacheable, so auth and
-      // Firestore work on the first offline visit too.
-      FIREBASE_SDKS.forEach((url) => {
-        jobs.push(
-          withTimeout(
-            fetch(url, { mode: 'no-cors' }).then((res) => cache.put(url, res)).catch(() => {}),
-            15000
-          )
-        );
-      });
-
-      return Promise.all(jobs);
     })
   );
   self.skipWaiting();
@@ -107,23 +82,6 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   const cacheKey = url.origin + url.pathname;
   const isNavigate = request.mode === 'navigate';
-  const isFirebaseSDK = FIREBASE_SDKS.some(sdk => request.url.startsWith(sdk));
-
-  // Firebase SDKs: NETWORK-first. Serving the auth SDK from a stale opaque
-  // cache copy while online broke popup sign-in handshakes on installed PWAs;
-  // the precached copy is now only the offline fallback.
-  if (isFirebaseSDK) {
-    event.respondWith(
-      fetch(request)
-        .then((networkResponse) => {
-          const copy = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          return networkResponse;
-        })
-        .catch(() => caches.match(request))
-    );
-    return;
-  }
 
   // Navigations: network-first, offline falls back to the cached app shell
   // (full offline app), with offline.html as a last resort. The query string

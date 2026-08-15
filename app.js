@@ -18,8 +18,7 @@
   const {
     getState,
     loadState,
-    saveState,
-    snapshotCloudState
+    saveState
   } = window.FlowMD.store;
 
   const { showToast } = window.FlowMD.toast;
@@ -40,8 +39,6 @@
     renderSpotlightResults
   } = window.FlowMD.search;
 
-  const { initFirebaseSync, manualSync } = window.FlowMD.sync;
-
   const { openSourceSettingsModal } = window.FlowMD.sourceSettings;
 
   const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
@@ -56,13 +53,6 @@
   function init() {
     initSourceData();
     loadState();
-    // Baseline for field-level cloud writes: only changes made after load are
-    // ever pushed, so a fresh sign-in doesn't re-upload the whole state.
-    state._prevSyncedState = snapshotCloudState(state);
-    state._dirtyFields = [];
-    if (window.FirebaseSync) {
-      window.FirebaseSync.stateProvider = () => state;
-    }
     // Lazy-load the active syllabus if it isn't part of the initial page load
     // (e.g., a returning marrow_6_5 user whose data file is no longer eager).
     if (window.FlowMD.sourceData && window.FlowMD.sourceData.loadSourceScript) {
@@ -77,7 +67,6 @@
     applyTheme(state.theme);
     if (window.FlowMD.icons) window.FlowMD.icons.ensureSprite();
     bindEvents();
-    initFirebaseSync();
     initServiceWorker();
     if (window.FlowMD.pwaInstall) window.FlowMD.pwaInstall.init();
     render();
@@ -105,7 +94,6 @@
     DOM.brandHomeLink = document.getElementById('brand-home-link');
     DOM.topbarSourceBadge = document.getElementById('topbar-source-badge');
     DOM.topbarSourceBadgeText = document.querySelector('.edition-badge-text');
-    DOM.manualSyncBtn = document.getElementById('manual-sync-btn');
   }
 
   // --- Interactive Info Popover Helper ---
@@ -199,10 +187,6 @@
           openSourceSettingsModal();
         }
       });
-    }
-
-    if (DOM.manualSyncBtn) {
-      DOM.manualSyncBtn.addEventListener('click', manualSync);
     }
 
     // Delegated click for any in-view edition chip → source settings dialog
@@ -302,9 +286,6 @@
     DOM.navItems.forEach(item => {
       item.classList.toggle('active', item.getAttribute('data-view') === viewName);
     });
-    if (window.FirebaseSync && window.FirebaseSync.trackEvent) {
-      window.FirebaseSync.trackEvent('screen_view', { screen_name: viewName });
-    }
     render();
     resetPageScrollTop();
   }

@@ -1,5 +1,5 @@
 /* ============================================================
-   FlowMD Onboarding Wizard E2E — verifies the 3-step first-run
+   FlowMD Onboarding Wizard E2E — verifies the 2-step first-run
    wizard end-to-end (source, name/theme+sign-in, summary).
 
    Usage: node tests/onboarding.mjs [port]
@@ -93,7 +93,7 @@ async function run() {
     check('Wizard shows on first run (no config)',
       (await page.locator('.onboarding-card').count()) > 0);
     check('Wizard step 1 label correct',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 2'));
     check('Dashboard is gated while unconfigured',
       (await page.locator('#study-plan-config').count()) === 0);
 
@@ -130,7 +130,7 @@ async function run() {
     await page.locator('#onboarding-next').click();
     await page.waitForTimeout(250);
     check('Step 2 label correct',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
     check('Name input rendered', (await page.locator('#onboarding-name').count()) === 1);
     check('Theme grid renders 2 options',
       (await page.locator('.onboarding-theme-opt').count()) === 2);
@@ -151,38 +151,33 @@ async function run() {
     await page.locator('#onboarding-back').click();
     await page.waitForTimeout(250);
     check('Back returns to step 1',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 2'));
     check('Source choice retained after back',
       await hasClass(page, '.onboarding-option[data-source="marrow_6_5"]', 'checked'));
 
     await page.locator('#onboarding-next').click();
     await page.waitForTimeout(250);
     check('Forward returns to step 2',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
 
-    // Step 2 — name + theme + sign-in (skip sign-in)
-    check('Sign in button rendered on step 2', (await page.locator('#onboarding-signin').count()) === 1);
-    check('Skip button rendered on step 2', (await page.locator('#onboarding-skip-signin').count()) === 1);
+    // Step 2 — name + theme + summary (no sign-in step in offline-first)
+    check('No sign-in button on step 2', (await page.locator('#onboarding-signin').count()) === 0);
+    check('No skip-sign-in button on step 2', (await page.locator('#onboarding-skip-signin').count()) === 0);
 
-    // Skip sign-in
-    await page.locator('#onboarding-skip-signin').click();
-    await page.waitForTimeout(250);
-
-    // Step 3 — summary + finish
-    check('Step 3 label correct',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 3 OF 3'));
-    check('Step 3 shows "all set" summary',
+    check('Step 2 summary label correct',
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
+    check('Step 2 shows "all set" summary',
       /You're all set/.test(await page.locator('.onboarding-card').innerText()));
-    check('Step 3 summary echoes chosen source',
+    check('Step 2 summary echoes chosen source',
       (await page.locator('.onboarding-card').innerText()).includes('Marrow Edition 6.5'));
-    check('Step 3 summary echoes chosen theme',
+    check('Step 2 summary echoes chosen theme',
       (await page.locator('.onboarding-card').innerText()).includes('Light Mode'));
-    check('Step 3 renders 3 guide items',
+    check('Step 2 renders 3 guide items',
       (await page.locator('.onboarding-guide-item').count()) === 3);
-    check('Step 3 includes Cloud Sync features list',
-      (await page.locator('.onboarding-card').innerText()).includes('Cloud Sync'));
+    check('Step 2 notes device-local storage',
+      (await page.locator('.onboarding-card').innerText()).includes('saved on this device'));
 
-    await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step3-light.png') });
+    await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step2-light.png') });
 
     await page.locator('#onboarding-next').click();
     await page.waitForTimeout(600);
