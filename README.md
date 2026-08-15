@@ -125,7 +125,7 @@ Local alternative: `npm run deploy:firebase` (requires `firebase login`).
 
 ## Data & Attribution
 
-The syllabus dataset (subjects, chapters, video titles) is derived from **Marrow** course content. FlowMD is an independent study tool built for personal use; it is not affiliated with or endorsed by Marrow. Please respect Marrow's terms of service when using the data.
+The syllabus dataset (subjects, chapters, video titles) mirrors the public NEET-PG syllabus structure. FlowMD is an independent, unofficial study tool; it is not affiliated with, endorsed by, or sponsored by Marrow or any coaching brand. All trademarks belong to their respective owners.
 
 ## Security
 
