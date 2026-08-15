@@ -68,7 +68,8 @@ const EXPECTED = {
   charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap'],
   pwaInstall: ['init', 'isInstalled', 'isInstallable', 'getPrompt', 'requestInstall',
                'shouldShowFirstVisitBanner', 'dismissFirstVisitBanner',
-               'renderFirstVisitBanner', 'renderProfileInstallCard'],
+               'renderFirstVisitBanner', 'renderProfileInstallCard',
+               'maybeShowFirstVisitModal', 'showInstallModal', 'hideInstallModal'],
   views: ['renderDashboardView', 'renderCurriculumView', 'renderSubjectDetailView', 'renderAnalyticsView', 'renderProfileView', 'openProfileBottomSheet', 'closeBottomSheet']
 };
 

@@ -188,6 +188,15 @@ async function run() {
     const pageErrors = [];
     page.on('pageerror', (err) => pageErrors.push(String(err)));
     await boot(page);
+    // The first-visit install modal auto-shows on boot. Dismiss it through the
+    // app API (sets the dismiss flag) so it can't re-show on the dashboard
+    // audit and skew reachability probes or block interactions.
+    await page.evaluate(() => {
+      if (window.FlowMD.pwaInstall) {
+        window.FlowMD.pwaInstall.dismissFirstVisitBanner();
+        window.FlowMD.pwaInstall.hideInstallModal();
+      }
+    });
 
     check(`${vp.name}: app boots`, await page.evaluate(() => !!document.querySelector('.android-bottom-nav')));
 

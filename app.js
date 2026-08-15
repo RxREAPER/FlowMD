@@ -316,7 +316,14 @@
     updateTopbarSource();
     const stats = getSyllabusStats();
 
-    if (state.currentView === 'dashboard') safeRender(() => renderDashboardView(DOM, stats), 'dashboard', stats);
+    if (state.currentView === 'dashboard') {
+      safeRender(() => renderDashboardView(DOM, stats), 'dashboard', stats);
+      // First-visit install modal — only after onboarding completes, so it
+      // never pops over the wizard (auto-shown once per tab session).
+      if (state.isConfigured && window.FlowMD.pwaInstall && window.FlowMD.pwaInstall.maybeShowFirstVisitModal) {
+        window.FlowMD.pwaInstall.maybeShowFirstVisitModal();
+      }
+    }
     else if (state.currentView === 'curriculum') safeRender(() => renderCurriculumView(DOM, stats), 'curriculum', stats);
     else if (state.currentView === 'subject_detail') safeRender(() => renderSubjectDetailView(DOM, stats), 'subject_detail', stats);
     else if (state.currentView === 'analytics') safeRender(() => renderAnalyticsView(DOM, stats), 'analytics', stats);

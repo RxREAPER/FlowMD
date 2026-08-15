@@ -140,10 +140,10 @@ async function run() {
     configValues.subject === '' && configValues.vids === '' && configValues.date === '',
     JSON.stringify(configValues));
 
-  // First-visit PWA install helper (fresh profile → not installed, not dismissed)
-  const installBanner = await page.locator('#pwa-install-banner-card').count();
-  check('First-visit install helper banner shows on dashboard', installBanner === 1,
-    installBanner ? 'banner present' : 'MISSING');
+  // First-visit PWA install modal (fresh profile → not installed, not dismissed)
+  const installModal = await page.locator('#pwa-install-modal-overlay.active').count();
+  check('First-visit install modal auto-shows on dashboard', installModal === 1,
+    installModal ? 'modal present' : 'MISSING');
 
   // Regression: Chrome fires beforeinstallprompt on first user engagement —
   // often exactly while the user has the subject dropdown open. A full view
@@ -159,15 +159,18 @@ async function run() {
         const nowSel = document.getElementById('select-target-subject');
         resolve({
           replaced: nowSel !== window.__selRef,
-          bannerPresent: !!document.getElementById('pwa-install-banner-card'),
+          modalPresent: !!document.getElementById('pwa-install-modal-overlay'),
           installBtnPresent: !!document.getElementById('btn-pwa-install-now')
         });
       }, 400));
     });
     check('Install prompt does not destroy the open subject select (no full re-render)',
       surv.replaced === false, JSON.stringify(surv));
-    check('Install banner upgrades in place (Install button appears, element survives)',
-      surv.bannerPresent === true && surv.installBtnPresent === true, JSON.stringify(surv));
+    check('Install modal upgrades in place (Install button appears, overlay survives)',
+      surv.modalPresent === true && surv.installBtnPresent === true, JSON.stringify(surv));
+
+    // Close the install modal so later real clicks are not intercepted.
+    await dismissOverlays(page);
 
     // Picking a subject must not invent a pace or deadline — the site waits
     // for real user input (no assumed 8 vids/day or auto deadline).
@@ -407,6 +410,8 @@ async function run() {
     });
     await page65.reload();
     await page65.waitForLoadState('networkidle');
+    // Drop the first-visit install modal (fresh context) so the nav click lands.
+    await dismissOverlays(page65);
     await clickNav(page65, 'curriculum');
     // Wait for the async data load + re-render (not a fixed timeout).
     await page65.waitForFunction(
@@ -482,6 +487,8 @@ async function run() {
     });
     await page.reload();
     await page.waitForLoadState('networkidle');
+    // Drop the first-visit install modal (fresh context) before the real click.
+    await dismissOverlays(page);
     await page.locator('#btn-toggle-search').click();
     await page.waitForTimeout(300);
     const ph = await page.evaluate(() => {

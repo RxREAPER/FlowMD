@@ -3004,6 +3004,63 @@ body {
   line-height: 1.4;
 }
 
+/* Profile legal links (privacy / terms / source) */
+.profile-legal-links {
+  display: flex;
+  gap: 18px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+}
+.profile-legal-links a {
+  color: var(--accent-primary);
+}
+
+/* PWA install modal (auto-shown on first visits) */
+.pwa-install-modal-card {
+  text-align: center;
+}
+.pwa-install-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.pwa-install-modal-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  border-radius: 16px;
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+.pwa-install-modal-icon .material-symbols-outlined {
+  font-size: 28px;
+  color: var(--accent-primary);
+}
+.pwa-install-modal-body .pwa-install-title {
+  margin-bottom: 6px;
+}
+.pwa-install-modal-body .pwa-install-desc {
+  margin-bottom: 14px;
+}
+.pwa-install-modal-actions {
+  justify-content: center;
+  margin-top: 8px;
+}
+.pwa-install-modal-card .pwa-install-steps {
+  text-align: left;
+}
+
 /* PWA install helper — step-by-step guide + profile status */
 .pwa-install-steps {
   display: flex;

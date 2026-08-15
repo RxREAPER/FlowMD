@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-08-15] First-visit install modal — auto-shown install popup (v224)
+
+- **The first-visit install helper is now a modal popup.** On the first dashboard render after onboarding, an overlay auto-shows (once per tab session) with a native **Install** button when the browser is installable (Android Chrome / desktop, via the captured `beforeinstallprompt`) or step-by-step **Add to Home Screen** help (iOS Safari / non-installable). It never pops over the onboarding wizard, shows at most once per tab session (sessionStorage), and stays dismissed permanently once the user dismisses it or installs (localStorage). Clicking the backdrop also dismisses.
+- **In-place upgrade preserved:** when `beforeinstallprompt` fires mid-session (e.g., while the user has the subject dropdown open), the open modal patches to the installable variant instead of re-rendering the view — the open `<select>` survives (existing regression guard).
+- The old inline dashboard banner card is removed; Profile keeps the brief install guide + button.
+- Profile legal links moved to a `.profile-legal-links` CSS class (inline-styles test).
+- Tests: smoke asserts the modal auto-shows and upgrades in place; render/navigation dismiss it through the app API before interaction. Cache-busted to v224.
+
 ## [2026-08-14] Google sign-in fixed for installed PWAs — popup → redirect flow (v219)
 
 - **Root cause (confirmed by live reproduction):** sign-in used `signInWithPopup`, which browsers close/block inside installed standalone PWAs mid-handshake → `auth/popup-closed-by-user` → the generic "Sign in failed." toast. On the web the popup sometimes survived the race, which is why retries occasionally worked.

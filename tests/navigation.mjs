@@ -51,6 +51,15 @@ async function run() {
   await page.reload();
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(800);
+  // Dismiss the first-visit install modal through the app API (sets the
+  // dismiss flag) so it can't re-show on the next dashboard render and
+  // intercept nav clicks.
+  await page.evaluate(() => {
+    if (window.FlowMD.pwaInstall) {
+      window.FlowMD.pwaInstall.dismissFirstVisitBanner();
+      window.FlowMD.pwaInstall.hideInstallModal();
+    }
+  });
 
   for (const view of ['dashboard', 'curriculum', 'analytics', 'goals', 'profile']) {
     const btn = page.locator(`.android-nav-item[data-view="${view}"]`);
@@ -65,6 +74,10 @@ async function run() {
   const questChk = page.locator('.queue-chk').first();
   if (await questChk.count()) {
     const vidId = await questChk.getAttribute('data-video-id');
+    // The quest list can sit behind the fixed bottom nav at scroll-top; center
+    // it in the viewport so the click lands on the label, not the nav.
+    await questChk.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {});
+    await page.waitForTimeout(150);
     await page.locator('.v2-pixel-checkbox-label').first().click({ force: true }).catch((e) => errors.push('[assert] quest checkbox click failed: ' + e.message));
     await page.waitForTimeout(700);
     const registered = await page.evaluate((id) => {

@@ -17,7 +17,6 @@
   const { renderEditionChip } = window.FlowMD.theme;
   const { renderStudyPlanConfigCard, initStudyPlanConfig, focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { renderOnboardingWizard } = window.FlowMD.onboarding;
-  const pwaInstall = window.FlowMD.pwaInstall;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -171,8 +170,7 @@
         </div>
       </div>
 
-      <!-- PWA Install Helper (first visits: install CTA or add-to-home-screen help) -->
-      ${pwaInstall && pwaInstall.shouldShowFirstVisitBanner() ? pwaInstall.renderFirstVisitBanner() : ''}
+      <!-- PWA install modal auto-shows here via pwaInstall.maybeShowFirstVisitModal() (app.js) -->
 
       <!-- All-Quests-Done Banner -->
       ${allQuestsDone ? `
