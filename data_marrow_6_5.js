@@ -1,6 +1,6 @@
 /* ============================================================
-   FLOWMD V2 — MARROW OFFICIAL APP SCREENSHOT TAXONOMY DATASET (CORRECTED)
-   Rebuilt directly from official Marrow screenshot OCR sources with 100% precision
+   FLOWMD V2 — NEET-PG SYLLABUS DATASET (EDITION 6.5 STRUCTURE)
+   Subjects, chapters and topics for the NEET-PG syllabus.
    Total: 20 subjects | 143 chapters | 1593 videos
    ============================================================ */
 
