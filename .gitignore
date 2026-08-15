@@ -35,3 +35,7 @@ flowmd_mark.png
 # One-off debug scripts (never committed)
 check_char.js
 fix_breadcrumb*.js
+
+# Local dev tooling (bundled node, Chromium, debug scripts)
+.tools/
+.pw-browsers/

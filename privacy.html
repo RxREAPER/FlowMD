@@ -47,37 +47,40 @@
 
     <div class="card">
       <h2>1. What data is stored</h2>
-      <p>When you sign in with Google and enable Cloud Sync, the app stores the following in Firebase (Google Cloud, US regions):</p>
+      <p>FlowMD is <strong>offline-first</strong>: your study progress is stored <strong>only on your device</strong> in the browser's local storage. Nothing is uploaded to any server, and no account is required.</p>
       <ul>
-        <li>Your Google email address, display name, and profile photo (used to identify you in the Profile view).</li>
-        <li>Your study progress: completed videos, daily study history, streaks, plans and targets, and app preferences (theme, study source).</li>
-        <li>Local-only data that never leaves your device: your offline queue and UI state stored in your browser's local storage.</li>
+        <li>Completed videos, daily study history, streaks, plans and targets, and app preferences (theme, study source).</li>
+        <li>All of it stays in your browser's local storage on this device.</li>
       </ul>
-      <p>All data lives under a document scoped to your Firebase account UID. No other user can read or write it, and no third party has access.</p>
     </div>
 
     <div class="card">
       <h2>2. Why it is stored</h2>
-      <p>The data exists only to sync your study progress across your devices and to show you accurate analytics and streaks. It is not sold, shared, or used for advertising.</p>
+      <p>The data exists only to run the app locally and show you accurate analytics and streaks. It is not sold, shared, uploaded, or used for advertising. FlowMD makes no analytics or tracking network calls.</p>
     </div>
 
     <div class="card">
       <h2>3. How long it is kept</h2>
-      <p>Your data is kept for as long as your account exists and you keep using Cloud Sync. Local-only data persists in your browser until you clear it or reset app data.</p>
+      <p>Your data persists on the device until you clear your browser data, uninstall the app, or reset app data from Profile. Because storage is device-local, clearing browser data or uninstalling <strong>erases your progress</strong> — export a backup first.</p>
     </div>
 
     <div class="card">
       <h2>4. Export your data</h2>
-      <p>You can download a JSON copy of everything stored for your account at any time: open the app, go to <strong>Profile → Danger Zone → Export My Data</strong>.</p>
+      <p>You can download a JSON backup of everything at any time: open the app, go to <strong>Profile → Backup → Export Backup</strong>. The file is yours to keep, and it stays importable across future app versions. Move between devices by importing it on the new one.</p>
     </div>
 
     <div class="card">
-      <h2>5. Delete your data &amp; account</h2>
-      <p>You can permanently erase your account and all synced data at any time: open the app, go to <strong>Profile → Danger Zone → Delete My Data &amp; Account</strong>. This deletes your Firestore document and your Firebase authentication account, and clears local data on that device. This action cannot be undone.</p>
+      <h2>5. Delete your data</h2>
+      <p>You can erase all data at any time: open the app, go to <strong>Profile → Data Management → Reset All App Data</strong>, or clear this site's browser data. This action cannot be undone.</p>
     </div>
 
     <div class="card">
-      <h2>6. Contact</h2>
+      <h2>6. Cloud sync (roadmap)</h2>
+      <p>Cloud sync is on the roadmap as an optional feature. If and when it ships, this page will be updated to describe what it stores; until then, no data leaves your device.</p>
+    </div>
+
+    <div class="card">
+      <h2>7. Contact</h2>
       <p>Questions about this policy or your data? Contact the developer at <a href="mailto:ezioauditore9553@gmail.com">ezioauditore9553@gmail.com</a>.</p>
     </div>
 

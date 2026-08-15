@@ -1,5 +1,13 @@
 {
   "projects": {
     "default": "flowmd-04"
+  },
+  "targets": {
+    "flowmd-04": {
+      "hosting": {
+        "app": ["flowmd-04"],
+        "landing": ["flowmd-landing"]
+      }
+    }
   }
 }

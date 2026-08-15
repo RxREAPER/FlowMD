@@ -253,30 +253,23 @@ async function run() {
   check('Profile shows brief Install App guide', profileHasInstallGuide,
     profileHasInstallGuide ? 'install card present' : 'install card MISSING');
 
-  // Simple sync status: signed in with a recorded last-sync result → Profile
-  // shows a basic "Last synced …" line (the per-field diagnostics table is gone).
+  // Offline-first Profile: cloud-sync UI replaced by data-safety + Backup cards.
   {
     await page.evaluate(() => {
       const st = window.FlowMD.store.getState();
-      st.personal.isSynced = true;
-      st.personal.syncEmail = 'diag@test.dev';
-      st.syncDiagnostics = {
-        lastSync: { at: Date.now() - 120000, status: 'success', message: 'In sync — nothing to push', pushed: [], pulled: [] }
-      };
-      window.FirebaseSync = window.FirebaseSync || {};
-      window.FirebaseSync.currentUser = { uid: 'diag-user' };
-      window.FirebaseSync.loadFromCloud = async () => ({});
-      window.FirebaseSync.updateCloudFields = async () => {};
-      window.FirebaseSync.syncToCloud = async () => {};
+      st.lastBackupAt = Date.now() - 120000;
       window.FlowMD.shell.render();
       return new Promise((resolve) => setTimeout(resolve, 300));
     });
-    const syncStatus = await page.locator('#sync-basic-status').innerText().catch(() => '');
-    check('Profile shows a simple last-sync status when signed in',
-      syncStatus.includes('Last synced') && syncStatus.includes('backed up'),
-      syncStatus.slice(0, 120));
-    check('Per-field Sync Diagnostics table removed from Profile',
-      await page.locator('#sync-diagnostics-panel, .sync-diag').count() === 0);
+    const profileText = await page.locator('#app-main').innerText();
+    check('Profile shows device-local data-safety card',
+      profileText.includes('data lives on this device') || profileText.includes('lives on this device'),
+      profileText.slice(0, 160));
+    check('Profile shows Cloud Sync coming soon', profileText.includes('coming soon'), 'cloud sync masked');
+    check('Backup Export button present', await page.locator('#btn-export-backup').count() === 1);
+    check('Backup Import button present', await page.locator('#btn-import-backup').count() === 1);
+    check('No Google sign-in button on Profile', await page.locator('#btn-signin-google').count() === 0);
+    check('No manual sync button', await page.locator('#btn-sync-now, #manual-sync-btn').count() === 0);
     check('Device Layout Check card removed from Profile',
       (await page.locator('#app-main').innerText()).includes('Device Layout Check') === false);
   }

@@ -70,7 +70,11 @@
     // signed-in user and pulls the cloud state.
     if (window.FirebaseSync.resolveRedirectResult) {
       window.FirebaseSync.resolveRedirectResult().catch((e) => {
-        showToast('Sign-in failed: ' + ((e && e.message) || String(e)), 'error');
+        const info = window.FirebaseSync.authErrorInfo
+          ? window.FirebaseSync.authErrorInfo(e)
+          : { message: (e && e.message) || String(e) };
+        console.error('[FlowMD] Sign-in redirect failed:', e && e.code ? e.code : '', e && e.message ? e.message : e);
+        showToast('Sign-in failed: ' + info.message, 'error');
       });
     }
 

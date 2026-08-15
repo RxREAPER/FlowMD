@@ -222,8 +222,10 @@
   // live view. Per-day queue bookkeeping resets so the daily quests
   // regenerate from the new edition's dataset.
   function switchSource(src) {
-    const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
-    if (!syncApi.EDITION_IDS || syncApi.EDITION_IDS.indexOf(src) === -1) return false;
+    // Validate against the declared study sources (works with or without the
+    // dormant sync module loaded). Only available sources are switchable.
+    const valid = STUDY_SOURCES.some(s => s.id === src && s.available);
+    if (!valid) return false;
     flushLiveToEdition();
     state.activeSource = src;
     loadEditionIntoLive(src);
@@ -475,7 +477,21 @@
       // the cloud doc minimal without touching anything the UI reads).
       try {
         const cutoff = toLocalDateKey(new Date(Date.now() - HISTORY_RETENTION_DAYS * 86400000));
-        const [dh, dhbs] = window.FlowMD.sync.pruneHistoryMaps(state.dailyHistory, state.dailyHistoryBySubject, cutoff);
+        // pruneHistoryMaps lives in the dormant sync module; fall back to an
+        // inline prune so retention works even with sync unloaded.
+        const pruneMap = (map) => {
+          const out = {};
+          for (const k of Object.keys(map || {})) if (k >= cutoff) out[k] = map[k];
+          return out;
+        };
+        let dh, dhbs;
+        if (window.FlowMD.sync && window.FlowMD.sync.pruneHistoryMaps) {
+          [dh, dhbs] = window.FlowMD.sync.pruneHistoryMaps(state.dailyHistory, state.dailyHistoryBySubject, cutoff);
+        } else {
+          dh = pruneMap(state.dailyHistory);
+          dhbs = {};
+          for (const subj of Object.keys(state.dailyHistoryBySubject || {})) dhbs[subj] = pruneMap(state.dailyHistoryBySubject[subj]);
+        }
         state.dailyHistory = dh;
         state.dailyHistoryBySubject = dhbs;
       } catch (_) { /* pruning must never block a save */ }

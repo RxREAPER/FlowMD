@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://www.gstatic.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com wss://*.firebaseio.com; frame-src https://accounts.google.com https://apis.google.com https://flowmd-04.firebaseapp.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self';">
   <title>FlowMD — Plan. Study. Track. Succeed.</title>
   
   <!-- PWA & Mobile Web App Meta -->
@@ -76,10 +76,7 @@
           </div>
         </div>
 
-        <!-- Manual Sync Button (shown when signed in) -->
-        <button class="sync-btn" id="manual-sync-btn" title="Sync Now" style="display: none;" aria-label="Sync with cloud">
-          <svg class="material-symbols-outlined" style="font-size: 20px;"><use href="#fmd-i-sync"/></svg>
-        </button>
+
       </div>
     </header>
 
@@ -273,15 +270,7 @@
     </div>
   </div>
 
-  <!-- Firebase Scripts (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-  
-
   <!-- Application Data & Logic -->
-  <script src="firebase.js?v=220"></script>
   <script src="data.js?v=220"></script>
   <script src="data_marrow_6_5.js?v=220"></script>
   <script src="js/core/namespace.js?v=220"></script>
@@ -292,12 +281,11 @@
   <script src="js/core/subjects.js?v=220"></script>
   <script src="js/core/metrics.js?v=220"></script>
   <script src="js/core/logo.js?v=220"></script>
-  <script src="js/core/sync.js?v=220"></script>
   <script src="js/features/toast.js?v=220"></script>
   <script src="js/features/theme.js?v=220"></script>
   <script src="js/features/search.js?v=220"></script>
-  <script src="js/features/sync.js?v=220"></script>
   <script src="js/features/onboarding.js?v=220"></script>
+  <script src="js/features/backup.js?v=220"></script>
   <script src="js/features/study-plan-config.js?v=220"></script>
   <script src="js/features/source-settings.js?v=220"></script>
   <script src="js/features/charts.js?v=220"></script>
