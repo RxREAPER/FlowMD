@@ -24,8 +24,14 @@
   let modalShownThisSession = false;
 
   try {
-    installed = localStorage.getItem(INSTALLED_KEY) === '1' ||
-      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+    installed = !!(
+      // Native Capacitor shell (Android APK): the WebView never fires
+      // beforeinstallprompt and never reports display-mode standalone,
+      // but the app IS installed — suppress the install helper entirely.
+      (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) ||
+      localStorage.getItem(INSTALLED_KEY) === '1' ||
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+    );
   } catch (_) { /* storage blocked — treated as not installed */ }
 
   function refreshInstallUI() {

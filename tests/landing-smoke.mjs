@@ -91,7 +91,7 @@ async function run() {
   // --- Features / FAQ / CTA ---
   check('Exactly 6 feature blocks', await page.locator('#features .feature-block').count() === 6);
   check('Backup feature block present', (await page.locator('#features .feature-copy h3').allTextContents()).includes('Export & backup'));
-  check('Exactly 7 FAQ items', await page.locator('#faq details').count() === 7);
+  check('Exactly 8 FAQ items', await page.locator('#faq details').count() === 8);
   await page.locator('#faq details summary').first().click();
   await page.waitForTimeout(200);
   check('FAQ toggles open', await page.locator('#faq details').first().getAttribute('open') !== null);
@@ -100,7 +100,7 @@ async function run() {
     && heroCtas[0] === 'https://flowmd-04.web.app/?ref=install'
     && heroCtas[1] === 'https://flowmd-04.web.app', heroCtas.join(' | '));
   check('Nav CTA points at the app', await page.locator('.nav-cta').getAttribute('href') === 'https://flowmd-04.web.app');
-  check('Device-local data notice present', (await page.locator('.beta-data-note').textContent()).includes('stored on this device'));
+  check('Device-local data notice present', (await page.locator('.beta-data-note').first().textContent()).includes('stored on this device'));
   check('PWA install note present', (await page.locator('.hero-install-note').textContent()).includes('Install'));
   check('Roadmap line in footer', (await page.locator('.footer-legal').textContent()).includes('on the roadmap'));
 

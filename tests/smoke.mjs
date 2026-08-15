@@ -145,6 +145,37 @@ async function run() {
   check('First-visit install modal auto-shows on dashboard', installModal === 1,
     installModal ? 'modal present' : 'MISSING');
 
+  // Capacitor native shell (Android APK): the WebView never fires
+  // beforeinstallprompt and never reports display-mode standalone, so the
+  // app must treat the shell as installed and suppress the modal entirely.
+  {
+    const ctxCap = await browser.newContext();
+    const pageCap = await ctxCap.newPage();
+    await pageCap.addInitScript(() => {
+      window.Capacitor = { isNativePlatform: () => true };
+    });
+    await pageCap.goto(`${BASE}/`);
+    await pageCap.evaluate(() => {
+      localStorage.setItem('flowmd_is_configured', 'true');
+      localStorage.setItem('flowmd_tutorial_seen', 'true');
+    });
+    await pageCap.reload();
+    await pageCap.waitForLoadState('networkidle');
+    await pageCap.waitForTimeout(400);
+    const capState = await pageCap.evaluate(() => ({
+      installed: window.FlowMD.pwaInstall.isInstalled(),
+      modal: !!document.getElementById('pwa-install-modal-overlay')
+    }));
+    check('Capacitor shell is treated as installed', capState.installed === true, JSON.stringify(capState));
+    check('Install modal suppressed inside Capacitor shell', capState.modal === false, JSON.stringify(capState));
+    await clickNav(pageCap, 'profile');
+    await pageCap.waitForTimeout(400);
+    const capProfile = await pageCap.locator('#app-main').innerText();
+    check('Profile shows installed state inside Capacitor shell',
+      capProfile.includes('FlowMD is installed'), capProfile.slice(0, 160));
+    await ctxCap.close();
+  }
+
   // Regression: Chrome fires beforeinstallprompt on first user engagement —
   // often exactly while the user has the subject dropdown open. A full view
   // re-render would destroy the open <select> (it closes before picking).

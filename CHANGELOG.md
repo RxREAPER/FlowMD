@@ -1,5 +1,11 @@
 # FlowMD — Change Log
 
+## [2026-08-15] Capacitor-native Android shell + landing closed-beta section (v226)
+
+- **The install helper now recognizes the Capacitor Android shell.** Inside the APK, the WebView never fires `beforeinstallprompt` and never reports `display-mode: standalone`, so the app previously thought it wasn't installed and popped the "Add to Home Screen" modal on first open. The app now treats a Capacitor runtime (`window.Capacitor.isNativePlatform()`) as installed: the first-visit modal and install banner never show, and Profile displays the installed state.
+- **Landing page: new "Android — closed beta" section** advertising the native Android APK. Request access via a direct email link to the developer (opt-in, manual invite — the APK isn't on any store), plus a new FAQ entry covering the Android app and how updates reach the APK automatically.
+- Tests: smoke asserts a Capacitor-simulated shell reports installed, suppresses the install modal, and shows the installed state in Profile; landing-smoke updated for the new section.
+
 ## [2026-08-15] First-visit install modal — auto-shown install popup (v224)
 
 - **The first-visit install helper is now a modal popup.** On the first dashboard render after onboarding, an overlay auto-shows (once per tab session) with a native **Install** button when the browser is installable (Android Chrome / desktop, via the captured `beforeinstallprompt`) or step-by-step **Add to Home Screen** help (iOS Safari / non-installable). It never pops over the onboarding wizard, shows at most once per tab session (sessionStorage), and stays dismissed permanently once the user dismisses it or installs (localStorage). Clicking the backdrop also dismisses.
