@@ -38,11 +38,12 @@ jobs:
       - name: Run tests
         run: node tests/smoke.mjs && node tests/onboarding.mjs && node tests/backup.mjs && node tests/landing-smoke.mjs && node --test tests/unit/*.test.mjs
 
-  # Manual-deploy gate: only fired from the Actions tab ("Run workflow"),
-  # so a push to main or a pull request never auto-deploys to the live site.
+  # Auto-deploy gate: runs on every push to main (i.e. every PR merge) and on
+  # manual "Run workflow" from the Actions tab. Never runs for pull_request
+  # events, so a PR alone never deploys to the live site.
   deploy:
     needs: test
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'pull_request'
     # The version-bump step pushes back to main; the default GITHUB_TOKEN is
     # read-only, so it needs contents: write or the push fails with a 403.
     permissions:
