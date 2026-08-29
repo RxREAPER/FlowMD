@@ -128,7 +128,7 @@ function renderFacultyCard(faculty, subjectId) {
           const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
           const subjectId = subObj.id;
           const chapterName = chap.name;
-          const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName);
+          const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName) || (chap.videos && chap.videos.length > 0 && chap.videos.every(v => !!state.completedVideos[v.id]));
           const bulkKey = getBulkChapterKey(subjectId, chapterName);
           const chapMins = (chap.videos || []).reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0); const chapHours = (chapMins / 60).toFixed(1);
           return `
