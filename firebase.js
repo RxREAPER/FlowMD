@@ -7,8 +7,6 @@
     storageBucket: "flowmd-04.firebasestorage.app",
     messagingSenderId: "386076412890",
     appId: "1:386076412890:web:3ddbaf1091a16a584b4ee3",
-    // TODO: Replace with your GA4 Measurement ID from Firebase Console →
-    // Project Settings → Analytics → Data Streams → Web stream
     measurementId: "G-Y676DGJH2M"
   };
 
@@ -30,9 +28,7 @@
     });
   }
 
-  // Google Analytics (measurementId lives in firebaseConfig once initialized).
-  // Skipped while offline: the beacon fetch would fail and log a console error
-  // on every offline visit (the SDKs are precached now, so they load offline).
+  // Google Analytics (measurementId in firebaseConfig).
   let analytics = null;
   if (typeof firebase !== 'undefined' && firebase.analytics) {
     try {
