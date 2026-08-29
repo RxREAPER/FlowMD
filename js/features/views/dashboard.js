@@ -107,7 +107,7 @@
           ` : (queue.allSubjectDone ? `
             <div class="congrats-card-pop" style="text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:8px;">
               ${FLOWMD_ICONS.trophy}
-              <span>All planned ${queue.subjectName} videos completed! <svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-celebration"/></svg></span>
+              <span>${queue.subjectName} — all topics completed! <svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-celebration"/></svg></span>
             </div>
           ` : `
             <div style="display:flex; flex-direction:column; gap: 2px;">
