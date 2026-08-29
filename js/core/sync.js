@@ -95,13 +95,13 @@
   // daily-quest batch) IS synced so every device of a user shows the exact
   // same videos — a fresh device pulls the batch instead of computing the
   // next N uncompleted videos. Only the per-day transient counters stay
-  // device-local (queueCompletedInBatch, extraBatchesCompletedToday,
-  // lastBatchDate): they are recomputed by the queue engine per day and
-  // telling another device about them changes nothing.
+  // device-local (queueCompletedInBatch, extraBatchesCompletedToday):
+  // they are recomputed by the queue engine per day and
+  // telling another device about them changes nothing. lastBatchDate IS synced so a fresh device knows whether to keep or regenerate the batch.
   const PLAN_CLOUD_KEYS = [
     'id', 'label', 'accentColor', 'targetSubject', 'targetDate',
     'videosPerDay', 'videosPerWeek', 'videosPerMonth',
-    'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds'
+    'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds', 'lastBatchDate'
   ];
 
   const KNOWN_SOURCES = ['marrow_8', 'marrow_6_5', 'prepladder_x'];

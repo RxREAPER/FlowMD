@@ -142,7 +142,7 @@
         // and dead fields (speed, subjectUrgency, dailyBatch, lastSyncedAt)
         // are never written.
         const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
-        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds'];
+        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds', 'lastBatchDate'];
         const stripPlan = (p) => {
           const cp = {};
           planKeys.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });
@@ -210,7 +210,7 @@
       if (!db || !uid || !fields) return;
       try {
         const syncApi = (window.FlowMD && window.FlowMD.sync) || {};
-        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds'];
+        const planKeys = syncApi.PLAN_CLOUD_KEYS || ['id', 'label', 'accentColor', 'targetSubject', 'targetDate', 'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits', 'queueBatchVideoIds', 'lastBatchDate'];
         // plans in state carry per-day queue bookkeeping (per-batch counters,
         // extraBatchesCompletedToday, lastBatchDate) — strip to the same cloud
         // keys syncToCloud uses so field-level writes never accumulate junk in

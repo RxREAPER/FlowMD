@@ -128,8 +128,9 @@ test('sanitizeCloudState drops dead fields and keeps only durable plan keys (inc
   assert.equal(out.lastSyncedAt, undefined);
   assert.deepEqual(toPlain(out.plans), [{
     id: 'plan_a', targetSubject: 'Anatomy', videosPerDay: 8,
-    queueBatchVideoIds: ['marrow_8::anatomy__v1', 'marrow_8::anatomy__v2']
-  }], 'quest batch is a synced plan key; per-day counters stay device-local');
+    queueBatchVideoIds: ['marrow_8::anatomy__v1', 'marrow_8::anatomy__v2'],
+    lastBatchDate: '2026-05-11'
+  }], 'quest batch is a synced plan key; lastBatchDate is synced too');
 });
 
 // --- mergeCloudPerField: per-field newest-wins arbitration (manual sync) ---

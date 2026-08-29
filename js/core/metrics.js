@@ -148,6 +148,7 @@
     if (plan.lastBatchDate !== todayStr) {
       plan.lastBatchDate = todayStr;
       plan.extraBatchesCompletedToday = 0;
+      plan.queueBatchVideoIds = [];
     }
 
     if (!Array.isArray(plan.queueBatchVideoIds)) plan.queueBatchVideoIds = [];
@@ -185,7 +186,7 @@
     const isDailyTargetAchieved = todaysQueueVideos.length > 0 && todaysQueueVideos.every(v => !!state.completedVideos[v.id]);
     // Daily target is considered met when total completed >= baseTargetPace
     const isDailyTargetMet = totalCompletedToday >= baseTargetPace;
-    const allDone = todaysQueueVideos.length === 0;
+    const allDone = allSubjectVideos.length > 0 && allSubjectVideos.every(v => !!state.completedVideos[v.id]);
 
     return {
       planId: plan.id,

@@ -290,6 +290,19 @@
 
     document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
     document.getElementById('btn-analytics-set-target')?.addEventListener('click', focusStudyPlanConfig);
+
+    // Heatmap tier filter buttons (mirrors dashboard.js handlers)
+    document.querySelectorAll('.fm-heatmap-filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.fm-heatmap-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.fm-heatmap-tile').forEach(tile => {
+          tile.style.display = (filter === 'all' || tile.getAttribute('data-tier') === filter) ? 'flex' : 'none';
+        });
+      });
+    });
   }
 
   // --- View 5: Synchronized Targets & Goals View ---

@@ -31,7 +31,7 @@ export function createCloudStore(uid) {
   // device-local — recomputed by the queue engine per day.
   const PLAN_KEYS = ['id', 'label', 'accentColor', 'targetSubject', 'targetDate',
     'videosPerDay', 'videosPerWeek', 'videosPerMonth', 'dailyTargetHours', 'targetUnits',
-    'queueBatchVideoIds'];
+    'queueBatchVideoIds', 'lastBatchDate'];
   const stripPlan = (p) => {
     const cp = {};
     PLAN_KEYS.forEach((k) => { if (p && p[k] !== undefined) cp[k] = p[k]; });

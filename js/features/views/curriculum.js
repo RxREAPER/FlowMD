@@ -65,7 +65,7 @@
               <span class="subject-icon-medium" style="display:inline-flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</span>
               <div style="min-width: 0;">
                 <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
-                <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS</div>
+                <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.totalVideos} VIDEOS • ${sub.totalHours}h</div>
               </div>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">

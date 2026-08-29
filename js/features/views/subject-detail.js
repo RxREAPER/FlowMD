@@ -111,6 +111,7 @@ function renderFacultyCard(faculty, subjectId) {
           const chapterName = chap.name;
           const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName);
           const bulkKey = getBulkChapterKey(subjectId, chapterName);
+          const chapHours = (chap.videos || []).reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0).toFixed(1);
           return `
             <div class="accordion-header ${state.expandedChapters[chap.name] === true ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;${dimStyle}">
               <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
@@ -118,7 +119,7 @@ function renderFacultyCard(faculty, subjectId) {
                   <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
                   ${window.FlowMD.icons.renderIcon(isBulkCompleted ? 'check_box' : 'check_box_outline_blank', '', 'font-size: 18px; color: ' + (isBulkCompleted ? 'var(--success)' : 'var(--text-muted)'))}
                 </label>
-                <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos)</div>
+                <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos • ${chapHours}h)</div>
               </div>
               <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
             </div>
