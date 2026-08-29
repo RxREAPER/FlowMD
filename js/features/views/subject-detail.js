@@ -86,6 +86,25 @@ function renderFacultyCard(faculty, subjectId) {
             <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done</div>
           </div>
         </div>
+        <!-- Sub-Subject Analytics -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; padding: 12px; background: var(--bg-surface-raised); border-radius: 12px; border: 1px solid var(--border-color);">
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Completed</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--success);">${subObj.completedVideos}/${subObj.totalVideos}</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">videos</div>
+          </div>
+          <div style="text-align:center;border-left:1px solid var(--border-color);border-right:1px solid var(--border-color);">
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Hours</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--accent-primary);">${subObj.completedHours}/${subObj.totalHours}</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">hours</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Mastery</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:${subObj.percentage >= 75 ? "var(--success)" : subObj.percentage >= 50 ? "var(--info)" : subObj.percentage >= 25 ? "var(--warning)" : "var(--danger)"};">${subObj.percentage}%</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${subObj.percentage >= 75 ? "Mastered" : subObj.percentage >= 50 ? "Advanced" : subObj.percentage >= 25 ? "In Progress" : "Critical"}</div>
+          </div>
+        </div>
+
 
         ${hasFocusScope ? `
           <div class="pwa-focus-banner">

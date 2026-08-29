@@ -149,7 +149,7 @@
              ` : ''}
             <span class="v2-hud-badge" style="margin-left:auto;"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-local_fire_department"/></svg> ${streakCount} day streak</span>
           </div>
-          <h1 class="fm-feature-card-title">Welcome back, ${escapeHtml(docName)}!</h1>
+          <h1 class="fm-feature-card-title">${Object.keys(state.completedVideos).length === 0 ? "Welcome" : "Welcome back"}, ${escapeHtml(docName)}!</h1>
           <p class="fm-feature-card-desc">
             ${hasDualPlans ? `Tracking ${plans.map(p => p.targetSubject || 'No subject set').join(' + ')}` : `${plans[0]?.targetSubject || 'No subject set'}`} — ${stats.percentage}% Mastered
           </p>
