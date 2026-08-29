@@ -36,7 +36,7 @@ const mime = {
 // service worker script inherits the site CSP, so its cross-origin fetch()
 // calls to *.gstatic.com are blocked unless connect-src allows them. Without
 // these headers the test env would never exercise that restriction.
-const CSP_HEADER = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self';";
+const CSP_HEADER = "default-src 'self'; script-src 'self' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://firebaseinstallations.googleapis.com https://firestore.googleapis.com https://www.google-analytics.com https://analytics.google.com https://firebase-analytics.com https://www.gstatic.com; frame-src 'self' https://flowmd-04.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'self'; worker-src 'self';";
 
 const server = createServer(async (req, res) => {
   try {
@@ -152,14 +152,14 @@ async function run() {
     `svg=${offlineIcon.isSvg} w=${offlineIcon.width} h=${offlineIcon.height} lig="${offlineIcon.ligatureText}" use=${offlineIcon.hasUse} sprite=${offlineIcon.spriteResolves}`);
   check('Offline: no page errors', errors.length === 0, errors.slice(0, 3).join(' | ').slice(0, 200));
 
-  // 4. Confirm the precache is Firebase-free (offline-first: no cross-origin
-  //    SDKs are cached, and the shell itself is fully cached for offline).
-  check('Offline: precache contains no Firebase SDKs', await page.evaluate(async () => {
+  // 4. Confirm Firebase SDKs are precached (analytics/auth/firestore work
+  //    offline after first visit).
+  check('Offline: Firebase SDKs are precached', await page.evaluate(async () => {
     const keys = await caches.keys();
     const cache = await caches.open(keys.find((k) => k.startsWith('marrow-planner-pwa')) || keys[0]);
     const reqs = await cache.keys();
-    return !reqs.some((r) => r.url.includes('gstatic.com/firebasejs'));
-  }), 'no gstatic firebasejs entries in precache');
+    return reqs.some((r) => r.url.includes('gstatic.com/firebasejs'));
+  }), 'gstatic firebasejs entries in precache');
   check('Offline: app shell precached', await page.evaluate(async () => {
     const keys = await caches.keys();
     const cache = await caches.open(keys.find((k) => k.startsWith('marrow-planner-pwa')) || keys[0]);

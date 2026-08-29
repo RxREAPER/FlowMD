@@ -181,6 +181,7 @@ function renderFacultyCard(faculty, subjectId) {
         const [subjectId, chapterName] = bulkKey.split('::');
         const videoIds = getChapterVideoIds(subjectId, chapterName);
 
+        const scrollY = DOM.appMain.scrollTop || window.scrollY;
         if (e.target.checked) {
           // Bulk complete: mark all videos in chapter as completed
           videoIds.forEach(vidId => { state.completedVideos[vidId] = true; });
@@ -194,11 +195,13 @@ function renderFacultyCard(faculty, subjectId) {
         }
         saveState();
         renderSubjectDetailView(DOM, getSyllabusStats());
+        DOM.appMain.scrollTop = scrollY;
       });
     });
 
     document.querySelectorAll('.react-task-checkbox').forEach(chk => {
       chk.addEventListener('change', (e) => {
+        const scrollY = DOM.appMain.scrollTop || window.scrollY;
         const vidId = e.target.getAttribute('data-video-id');
         if (e.target.checked) {
           state.completedVideos[vidId] = true;
@@ -210,6 +213,7 @@ function renderFacultyCard(faculty, subjectId) {
         }
         saveState();
         renderSubjectDetailView(DOM, getSyllabusStats());
+        DOM.appMain.scrollTop = scrollY;
       });
     });
   }

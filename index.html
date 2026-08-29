@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self' https://firebaseinstallations.googleapis.com https://firestore.googleapis.com https://www.google-analytics.com https://analytics.google.com https://firebase-analytics.com https://www.gstatic.com; frame-src 'self' https://flowmd-04.firebaseapp.com https://accounts.google.com https://apis.google.com; object-src 'none'; base-uri 'self'; worker-src 'self';">
   <title>FlowMD — Plan. Study. Track. Succeed.</title>
   
   <!-- PWA & Mobile Web App Meta -->
@@ -269,6 +269,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Firebase SDK (compat) — loaded from gstatic CDN; precached by sw.js -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
   <!-- Application Data & Logic -->
   <script src="data.js?v=227"></script>
