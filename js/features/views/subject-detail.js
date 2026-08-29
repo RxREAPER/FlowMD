@@ -111,7 +111,7 @@ function renderFacultyCard(faculty, subjectId) {
           const chapterName = chap.name;
           const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName);
           const bulkKey = getBulkChapterKey(subjectId, chapterName);
-          const chapHours = (chap.videos || []).reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0).toFixed(1);
+          const chapMins = (chap.videos || []).reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0); const chapHours = (chapMins / 60).toFixed(1);
           return `
             <div class="accordion-header ${state.expandedChapters[chap.name] === true ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;${dimStyle}">
               <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
