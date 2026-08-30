@@ -126,7 +126,7 @@
 
                 <!-- Tier Badge -->
                 <div class="fm-tile-bottom">
-                  <span class="fm-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(0)}%</span>
+                  <span class="fm-tile-tier-tag" style="color: ${tierColor};">${sub.percentage.toFixed(1)}%</span>
                   <span class="fm-tile-telemetry">${sub.completedVideos}/${sub.totalVideos}</span>
                 </div>
               </div>

@@ -708,7 +708,7 @@
     let days = Math.max(1, Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24)));
 
     if (source === 'dailyVids') {
-      const userVids = Math.max(1, parseInt(vidsInput ? vidsInput.value : 1) || 1);
+      const userVids = Math.max(1, parseInt(vidsInput ? vidsInput.value : 1, 10) || 1);
       days = Math.ceil(metrics.remainingVideos / userVids);
       targetDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
       if (dateInput) dateInput.value = toLocalDateKey(targetDate);

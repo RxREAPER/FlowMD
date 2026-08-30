@@ -83,7 +83,7 @@
     function renderPlanQuestBlock(plan, queue) {
       const planColor = plan.accentColor || PLAN_A_ACCENT;
       const todayDoneForPlan = queue.totalCompletedToday || 0;
-      const dailyPctPlan = Math.min(100, Math.round((todayDoneForPlan / queue.baseTargetPace) * 100));
+      const dailyPctPlan = queue.baseTargetPace > 0 ? Math.min(100, Math.round((todayDoneForPlan / queue.baseTargetPace) * 100)) : 0;
       const scopedNames = getScopedChapterNames(plan);
 
       return `

@@ -137,7 +137,7 @@
       </div>
     `;
 
-    const todayPct = Math.min(100, Math.round((todayDone / totalVidsDay) * 100));
+    const todayPct = totalVidsDay > 0 ? Math.min(100, Math.round((todayDone / totalVidsDay) * 100)) : 0;
     const todayMet = todayDone >= totalVidsDay;
     const todayTile = goalTile({
       color: '#0ea5e9',

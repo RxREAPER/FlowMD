@@ -51,7 +51,7 @@
   }
 
   function calculateFinishETA(metrics, dailyPace) {
-    const pace = Math.max(1, parseInt(dailyPace) || 1);
+    const pace = Math.max(1, parseInt(dailyPace, 10) || 1);
     const remVids = metrics.remainingVideos;
     const daysNeeded = Math.ceil(remVids / pace);
     const finishDate = new Date(Date.now() + daysNeeded * 24 * 60 * 60 * 1000);
@@ -82,10 +82,10 @@
       name: (videos && videos[0]) ? videos[0].subjectName : '',
       totalVideos,
       completedVideos: completedVideosCount,
-      remainingVideos: Math.max(1, totalVideos - completedVideosCount),
+      remainingVideos: Math.max(0, totalVideos - completedVideosCount),
       totalHours: (totalDurationMins / 60).toFixed(1),
       completedHours: (completedDurationMins / 60).toFixed(1),
-      remainingHours: Math.max(0.1, (totalDurationMins - completedDurationMins) / 60)
+      remainingHours: Math.max(0, (totalDurationMins - completedDurationMins) / 60)
     };
   }
 
@@ -132,7 +132,7 @@
   // --- Per-Plan Queue Engine ---
   function getTodayQueueForPlan(plan) {
     const targetSub = plan.targetSubject || '';
-    const baseTargetPace = Math.max(1, parseInt(plan.videosPerDay) || 1);
+    const baseTargetPace = Math.max(1, parseInt(plan.videosPerDay, 10) || 1);
     const dataset = getDataset();
 
     const allSubjectVideos = getPlanScopeVideos(plan);
