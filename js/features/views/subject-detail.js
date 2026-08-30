@@ -24,6 +24,28 @@
   // Shell DOM cache — set on every render via the dispatcher.
   let DOM = {};
 
+  // --- Scroll-position save/restore helpers ---
+  // The scroll container varies by context:
+  //   • PWA/standalone: .pwa-curriculum-scroll (overflow-y:auto + explicit height)
+  //   • normal browser: window (page body scrolls; .app-main has no overflow)
+  // DOM.appMain is NEVER the scroll container, so reading its scrollTop is always 0.
+  function getScrollContainer() {
+    const pwaScroll = DOM.appMain && DOM.appMain.querySelector('.pwa-curriculum-scroll');
+    // If pwaScroll has a constrained height (standalone mode), it is the real
+    // scroll container.  Otherwise the page body scrolls.
+    if (pwaScroll && pwaScroll.scrollHeight > pwaScroll.clientHeight) return pwaScroll;
+    return null; // fall back to window
+  }
+  function saveScroll() {
+    const el = getScrollContainer();
+    return el ? el.scrollTop : (window.scrollY || window.pageYOffset || 0);
+  }
+  function restoreScroll(pos) {
+    const el = getScrollContainer();
+    if (el) { el.scrollTop = pos; }
+    else { window.scrollTo(0, pos); }
+  }
+
   // Lazy shell bridge (app.js loads last; call sites stay valid in any context).
   function shellSwitchView(viewName) {
     if (window.FlowMD.shell) window.FlowMD.shell.switchView(viewName);
@@ -173,6 +195,7 @@ function renderFacultyCard(faculty, subjectId) {
     document.querySelector('.nav-bc-curriculum')?.addEventListener('click', () => shellSwitchView('curriculum'));
 
     document.getElementById('btn-toggle-all-chapters')?.addEventListener('click', () => {
+      const scrollY = saveScroll();
       const isAnyExpanded = Object.values(state.expandedChapters).some(v => v === true);
       const newExpandedState = !isAnyExpanded;
       if (subObj.raw.chapters) {
@@ -181,15 +204,18 @@ function renderFacultyCard(faculty, subjectId) {
         });
       }
       renderSubjectDetailView(DOM, stats);
+      restoreScroll(scrollY);
     });
 
     document.querySelectorAll('.accordion-header').forEach(hdr => {
       hdr.addEventListener('click', (e) => {
         // Don't toggle accordion if clicking on the bulk chapter checkbox
         if (e.target.closest('.bulk-chapter-checkbox-label')) return;
+        const scrollY = saveScroll();
         const chapName = hdr.getAttribute('data-chap-name');
         state.expandedChapters[chapName] = !state.expandedChapters[chapName];
         renderSubjectDetailView(DOM, stats);
+        restoreScroll(scrollY);
       });
     });
 
@@ -201,7 +227,7 @@ function renderFacultyCard(faculty, subjectId) {
         const [subjectId, chapterName] = bulkKey.split('::');
         const videoIds = getChapterVideoIds(subjectId, chapterName);
 
-        const scrollY = DOM.appMain.scrollTop || window.scrollY;
+        const scrollY = saveScroll();
         if (e.target.checked) {
           // Bulk complete: mark all videos in chapter as completed
           videoIds.forEach(vidId => { state.completedVideos[vidId] = true; });
@@ -215,13 +241,13 @@ function renderFacultyCard(faculty, subjectId) {
         }
         saveState();
         renderSubjectDetailView(DOM, getSyllabusStats());
-        DOM.appMain.scrollTop = scrollY;
+        restoreScroll(scrollY);
       });
     });
 
     document.querySelectorAll('.react-task-checkbox').forEach(chk => {
       chk.addEventListener('change', (e) => {
-        const scrollY = DOM.appMain.scrollTop || window.scrollY;
+        const scrollY = saveScroll();
         const vidId = e.target.getAttribute('data-video-id');
         if (e.target.checked) {
           state.completedVideos[vidId] = true;
@@ -233,7 +259,7 @@ function renderFacultyCard(faculty, subjectId) {
         }
         saveState();
         renderSubjectDetailView(DOM, getSyllabusStats());
-        DOM.appMain.scrollTop = scrollY;
+        restoreScroll(scrollY);
       });
     });
   }
