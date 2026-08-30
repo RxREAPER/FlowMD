@@ -24,26 +24,139 @@
   // Shell DOM cache — set on every render via the dispatcher.
   let DOM = {};
 
-  // --- Scroll-position save/restore helpers ---
-  // The scroll container varies by context:
-  //   • PWA/standalone: .pwa-curriculum-scroll (overflow-y:auto + explicit height)
-  //   • normal browser: window (page body scrolls; .app-main has no overflow)
-  // DOM.appMain is NEVER the scroll container, so reading its scrollTop is always 0.
-  function getScrollContainer() {
-    const pwaScroll = DOM.appMain && DOM.appMain.querySelector('.pwa-curriculum-scroll');
-    // If pwaScroll has a constrained height (standalone mode), it is the real
-    // scroll container.  Otherwise the page body scrolls.
-    if (pwaScroll && pwaScroll.scrollHeight > pwaScroll.clientHeight) return pwaScroll;
-    return null; // fall back to window
+  // --- Lightweight per-subject stats (avoids full getSyllabusStats recompute) ---
+  // Recounts only the active subject's completed/total videos + hours.
+  function getSubjectQuickStats(subjectId) {
+    const dataset = getDataset();
+    const sub = dataset && dataset.find(s => s.id === subjectId);
+    if (!sub) return null;
+    let total = 0, completed = 0, totalMins = 0, completedMins = 0;
+    (sub.chapters || []).forEach(chap => {
+      (chap.videos || []).forEach(v => {
+        total++;
+        const mins = (v.durationMins || 0) + (v.durationSecs || 0) / 60;
+        totalMins += mins;
+        if (state.completedVideos[v.id]) {
+          completed++;
+          completedMins += mins;
+        }
+      });
+    });
+    return {
+      completedVideos: completed,
+      totalVideos: total,
+      completedHours: (completedMins / 60).toFixed(1),
+      totalHours: (totalMins / 60).toFixed(1),
+      percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+    };
   }
-  function saveScroll() {
-    const el = getScrollContainer();
-    return el ? el.scrollTop : (window.scrollY || window.pageYOffset || 0);
+  // Lazy bridge to getDataset (set by metrics.js on window.FlowMD)
+  function getDataset() {
+    return window.FlowMD.sourceData && window.FlowMD.sourceData.getDataset
+      ? window.FlowMD.sourceData.getDataset()
+      : [];
   }
-  function restoreScroll(pos) {
-    const el = getScrollContainer();
-    if (el) { el.scrollTop = pos; }
-    else { window.scrollTo(0, pos); }
+
+  // --- Targeted DOM updates (no innerHTML rebuild, scroll is never lost) ---
+
+  // Update the 3-stat bar (Completed / Hours / Mastery) in the subject header.
+  function updateHeaderStats() {
+    const qs = getSubjectQuickStats(state.activeSubjectId);
+    if (!qs) return;
+    const bar = DOM.appMain.querySelector('.pwa-subject-detail-header');
+    if (!bar) return;
+    const grid = bar.nextElementSibling; // the stat grid div
+    if (!grid || !grid.style.gridTemplateColumns) return; // safety: skip if not the stat grid
+    const cells = grid.children;
+    if (cells.length < 3) return;
+    // Completed cell
+    const compNum = cells[0].querySelector('[style*="font-display"]');
+    if (compNum) compNum.textContent = qs.completedVideos + '/' + qs.totalVideos;
+    // Hours cell
+    const hrsNum = cells[1].querySelector('[style*="font-display"]');
+    if (hrsNum) hrsNum.textContent = qs.completedHours + '/' + qs.totalHours;
+    // Mastery cell
+    const pct = qs.percentage;
+    const pctColor = pct >= 75 ? 'var(--success)' : pct >= 50 ? 'var(--info)' : pct >= 25 ? 'var(--warning)' : 'var(--danger)';
+    const masNum = cells[2].querySelector('[style*="font-display"]');
+    if (masNum) { masNum.textContent = pct + '%'; masNum.style.color = pctColor; }
+    const masLabel = cells[2].querySelectorAll('div');
+    if (masLabel.length >= 3) masLabel[2].textContent = pct >= 75 ? 'Mastered' : pct >= 50 ? 'Advanced' : pct >= 25 ? 'In Progress' : 'Critical';
+    // Subject meta line ("X Chapters • Y Videos • Z% done")
+    const meta = DOM.appMain.querySelector('.pwa-subject-detail-meta');
+    if (meta) {
+      const chapCount = (meta.textContent.match(/\d+(?=\s*Chapters)/) || [0])[0];
+      meta.textContent = chapCount + ' Chapters \u2022 ' + qs.totalVideos + ' Videos \u2022 ' + qs.percentage + '% done';
+    }
+  }
+
+  // Toggle the expand/collapse button label after a chapter state change.
+  function updateToggleAllBtn() {
+    const btn = DOM.appMain.querySelector('#btn-toggle-all-chapters span');
+    if (!btn) return;
+    const anyExpanded = Object.values(state.expandedChapters).some(v => v === true);
+    btn.textContent = anyExpanded ? 'Collapse All' : 'Expand All';
+  }
+
+  // Update the bulk-chapter checkbox icon + video row completed states
+  // for a single chapter, WITHOUT rebuilding the DOM.
+  function updateChapterDOM(chapterName, subjectId) {
+    const bulkKey = getBulkChapterKey(subjectId, chapterName);
+    const isBulk = isChapterBulkCompleted(subjectId, chapterName);
+    // Find the chapter's header element
+    const header = DOM.appMain.querySelector(
+      '.accordion-header[data-chap-name="' + chapterName + '"]'
+    );
+    if (!header) return;
+    // Update the bulk checkbox checked state
+    const bulkCb = header.querySelector('.bulk-chapter-checkbox');
+    if (bulkCb) bulkCb.checked = isBulk;
+    // Update the icon (re-render the icon SVG)
+    const iconLabel = header.querySelector('.bulk-chapter-checkbox-label');
+    if (iconLabel && window.FlowMD.icons) {
+      const svgEl = iconLabel.querySelector('svg, .material-symbols-outlined');
+      if (svgEl) {
+        const newSvg = window.FlowMD.icons.renderIcon(
+          isBulk ? 'check_box' : 'check_box_outline_blank',
+          '',
+          'font-size: 18px; color: ' + (isBulk ? 'var(--success)' : 'var(--text-muted)')
+        );
+        svgEl.outerHTML = newSvg;
+      }
+    }
+    // Update individual video rows in this chapter's accordion body
+    const body = header.nextElementSibling;
+    if (!body) return;
+    (body.querySelectorAll('.react-task-checkbox') || []).forEach(cb => {
+      const vidId = cb.getAttribute('data-video-id');
+      if (!vidId) return;
+      const isChecked = !!state.completedVideos[vidId];
+      cb.checked = isChecked;
+      const row = cb.closest('.v2-quest-row');
+      if (row) row.classList.toggle('completed', isChecked);
+    });
+  }
+
+  // Update a single video checkbox row + cascade bulk checkbox.
+  function updateVideoRow(vidId, isChecked, subjectId, chapterName) {
+    const cb = DOM.appMain.querySelector('.react-task-checkbox[data-video-id="' + vidId + '"]');
+    if (cb) {
+      cb.checked = isChecked;
+      const row = cb.closest('.v2-quest-row');
+      if (row) row.classList.toggle('completed', isChecked);
+    }
+    // Recalculate whether bulk checkbox should be checked
+    const videoIds = getChapterVideoIds(subjectId, chapterName);
+    const allDone = videoIds.length > 0 && videoIds.every(id => !!state.completedVideos[id]);
+    const bulkKey = getBulkChapterKey(subjectId, chapterName);
+    if (allDone && !isChapterBulkCompleted(subjectId, chapterName)) {
+      // All individual videos completed — auto-check bulk
+      state.bulkCompletedChapters[bulkKey] = true;
+    } else if (!allDone && isChapterBulkCompleted(subjectId, chapterName)) {
+      // Not all done — un-check bulk
+      delete state.bulkCompletedChapters[bulkKey];
+    }
+    updateChapterDOM(chapterName, subjectId);
   }
 
   // Lazy shell bridge (app.js loads last; call sites stay valid in any context).
@@ -195,7 +308,6 @@ function renderFacultyCard(faculty, subjectId) {
     document.querySelector('.nav-bc-curriculum')?.addEventListener('click', () => shellSwitchView('curriculum'));
 
     document.getElementById('btn-toggle-all-chapters')?.addEventListener('click', () => {
-      const scrollY = saveScroll();
       const isAnyExpanded = Object.values(state.expandedChapters).some(v => v === true);
       const newExpandedState = !isAnyExpanded;
       if (subObj.raw.chapters) {
@@ -203,19 +315,24 @@ function renderFacultyCard(faculty, subjectId) {
           state.expandedChapters[chap.name] = newExpandedState;
         });
       }
-      renderSubjectDetailView(DOM, stats);
-      restoreScroll(scrollY);
+      // Targeted: toggle .active on every accordion header + body in-place.
+      DOM.appMain.querySelectorAll('.accordion-header').forEach(h => h.classList.toggle('active', newExpandedState));
+      DOM.appMain.querySelectorAll('.accordion-body').forEach(b => b.classList.toggle('active', newExpandedState));
+      updateToggleAllBtn();
     });
 
     document.querySelectorAll('.accordion-header').forEach(hdr => {
       hdr.addEventListener('click', (e) => {
         // Don't toggle accordion if clicking on the bulk chapter checkbox
         if (e.target.closest('.bulk-chapter-checkbox-label')) return;
-        const scrollY = saveScroll();
         const chapName = hdr.getAttribute('data-chap-name');
         state.expandedChapters[chapName] = !state.expandedChapters[chapName];
-        renderSubjectDetailView(DOM, stats);
-        restoreScroll(scrollY);
+        // Targeted: toggle .active on just this header + its body.
+        const isActive = state.expandedChapters[chapName];
+        hdr.classList.toggle('active', isActive);
+        const body = hdr.nextElementSibling;
+        if (body && body.classList.contains('accordion-body')) body.classList.toggle('active', isActive);
+        updateToggleAllBtn();
       });
     });
 
@@ -227,29 +344,29 @@ function renderFacultyCard(faculty, subjectId) {
         const [subjectId, chapterName] = bulkKey.split('::');
         const videoIds = getChapterVideoIds(subjectId, chapterName);
 
-        const scrollY = saveScroll();
         if (e.target.checked) {
-          // Bulk complete: mark all videos in chapter as completed
           videoIds.forEach(vidId => { state.completedVideos[vidId] = true; });
           state.bulkCompletedChapters[bulkKey] = true;
           showToast(`Chapter "${chapterName}" marked complete (excluded from analytics)`, 'check_box');
         } else {
-          // Bulk uncomplete: unmark all videos in chapter
+
           videoIds.forEach(vidId => { delete state.completedVideos[vidId]; });
           delete state.bulkCompletedChapters[bulkKey];
           showToast(`Chapter "${chapterName}" unmarked`, 'check_box_outline_blank');
         }
         saveState();
-        renderSubjectDetailView(DOM, getSyllabusStats());
-        restoreScroll(scrollY);
+        // Targeted: update chapter rows + header stats in-place.
+        updateChapterDOM(chapterName, subjectId);
+        updateHeaderStats();
       });
     });
 
     document.querySelectorAll('.react-task-checkbox').forEach(chk => {
       chk.addEventListener('change', (e) => {
-        const scrollY = saveScroll();
         const vidId = e.target.getAttribute('data-video-id');
-        if (e.target.checked) {
+        if (!vidId) return;
+        const isChecked = e.target.checked;
+        if (isChecked) {
           state.completedVideos[vidId] = true;
           markStudyActivity(true);
           showToast('Marked as Completed!', 'check_circle');
@@ -258,8 +375,11 @@ function renderFacultyCard(faculty, subjectId) {
           markStudyActivity(false);
         }
         saveState();
-        renderSubjectDetailView(DOM, getSyllabusStats());
-        restoreScroll(scrollY);
+        // Targeted: update this row + cascade bulk checkbox + header stats.
+        updateVideoRow(vidId, isChecked, subObj.id, subObj.raw.chapters ? (
+          subObj.raw.chapters.find(ch => (ch.videos || []).some(v => v.id === vidId)) || {}
+        ).name : null);
+        updateHeaderStats();
       });
     });
   }
