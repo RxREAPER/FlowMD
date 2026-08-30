@@ -54,7 +54,7 @@ const FLOWMD_ICONS = {
 
   // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
   // used for dynamic script injection so lazy-loaded data files bust the cache) ---
-  const APP_VERSION = '243';
+  const APP_VERSION = '244';
 
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
