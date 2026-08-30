@@ -7,6 +7,36 @@
 (function () {
   'use strict';
 
+
+  function initThemeToggle() {
+    var toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+
+    // Default to light mode; check localStorage for preference
+    var stored = localStorage.getItem('flowmd-landing-theme');
+    var isDark = stored === 'dark';
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = '☀️';
+      toggle.setAttribute('aria-label', 'Toggle light mode');
+    }
+
+    toggle.addEventListener('click', function () {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        toggle.textContent = '🌙';
+        toggle.setAttribute('aria-label', 'Toggle dark mode');
+        localStorage.setItem('flowmd-landing-theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        toggle.textContent = '☀️';
+        toggle.setAttribute('aria-label', 'Toggle light mode');
+        localStorage.setItem('flowmd-landing-theme', 'dark');
+      }
+    });
+  }
+
   function initCarousel() {
     var carousel = document.getElementById('hero-carousel');
     if (!carousel) return;
@@ -108,10 +138,12 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
+      initThemeToggle();
       initCarousel();
       initNavToggle();
     });
   } else {
+    initThemeToggle();
     initCarousel();
     initNavToggle();
   }
