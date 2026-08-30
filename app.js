@@ -13,7 +13,7 @@
   const {
     FLOWMD_ICONS,
     escapeHtml,
-    questDateKey
+    todayKey
   } = window.FlowMD.constants;
 
   const {
@@ -355,9 +355,9 @@
   // --- Quest Day-Change Detection ---
   // Re-render when the user returns to the app and the quest date has
   // rolled past the 5 AM boundary (new daily quest batch needed).
-  let lastQuestDate = questDateKey();
+  let lastQuestDate = todayKey();
   function checkQuestDayChange() {
-    const today = questDateKey();
+    const today = todayKey();
     if (today !== lastQuestDate) {
       lastQuestDate = today;
       render();

@@ -12,7 +12,7 @@
   const { getState, getStudyStreak, markStudyActivity, saveState } = window.FlowMD.store;
   const { getPlanScopeVideos, getScopedChapterNames } = window.FlowMD.sourceData;
   const { getAllPlanQueues, getPlanById } = window.FlowMD.metrics;
-  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, questDateKey } = window.FlowMD.constants;
+  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { renderEditionChip } = window.FlowMD.theme;
   const { renderStudyPlanConfigCard, initStudyPlanConfig, focusStudyPlanConfig } = window.FlowMD.planConfig;
@@ -71,7 +71,7 @@
     const allQueues = getAllPlanQueues();
     const streakCount = getStudyStreak();
 
-    const todayStr = questDateKey();
+    const todayStr = todayKey();
     const todayCompletedCount = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
 
     let totalVidsDay = 0;

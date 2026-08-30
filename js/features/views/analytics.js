@@ -15,13 +15,13 @@
   const { renderExecutionChart, renderPixelSubjectHeatmap } = window.FlowMD.charts;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { showToast } = window.FlowMD.toast;
-  const { escapeHtml, questDateKey, DEFAULT_PLAN, PLAN_A_ACCENT, toLocalDateKey } = window.FlowMD.constants;
+  const { escapeHtml, todayKey, DEFAULT_PLAN, PLAN_A_ACCENT, toLocalDateKey } = window.FlowMD.constants;
 
-  // Quest-shifted date key for a given Date: subtracts 5 hours so
-  // dailyHistory lookups match markStudyActivity()'s 5 AM boundary.
-  function questKeyFromDate(d) {
+  // Shift any date by the 5-hour day boundary for dailyHistory lookups
+  function dateKey(d) {
     return toLocalDateKey(new Date(d.getTime() - 5 * 3600000));
   }
+
   const { renderEditionChip } = window.FlowMD.theme;
 
   // Same live object reference app.js uses — mutations are in-place.
@@ -39,7 +39,7 @@
     const hasTarget = plans.some(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
 
     const now = new Date();
-    const todayStr = questDateKey();
+    const todayStr = todayKey();
     // Source of truth for targets is state.plans (the per-plan config). The
     // legacy state.goals object only mirrors Plan A's subject/date/day and is
     // never updated for Plan B or weekly/monthly — reading it here is exactly
@@ -61,9 +61,9 @@
     const last7Days = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const dateKey = questKeyFromDate(d);
+      const dk = dateKey(d);
       const label = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-      last7Days.push({ dateKey, label });
+      last7Days.push({ dateKey: dk, label });
     }
 
     // Get daily counts excluding bulk completed chapters
@@ -74,7 +74,7 @@
     let actual30DaysCount = 0;
     for (let i = 29; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      actual30DaysCount += dailyCounts[questKeyFromDate(d)] || 0;
+      actual30DaysCount += dailyCounts[dateKey(d)] || 0;
     }
 
     // Aggregate total daily/weekly/monthly targets across all plans (0 when

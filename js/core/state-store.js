@@ -18,7 +18,7 @@
     DEFAULT_PLAN,
     PLAN_A_ACCENT,
     STUDY_SOURCES,
-    questDateKey,
+    todayKey,
     toLocalDateKey
   } = window.FlowMD.constants;
 
@@ -586,7 +586,7 @@
   }
 
   function markStudyActivity(isAdding = true, subjectId = null) {
-    const todayStr = questDateKey();
+    const todayStr = todayKey();
     if (!state.streakData) state.streakData = { lastStudyDate: null, currentStreak: 0 };
     if (!state.dailyHistory) state.dailyHistory = {};
     if (!state.dailyHistoryBySubject) state.dailyHistoryBySubject = {};

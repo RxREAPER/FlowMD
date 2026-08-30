@@ -62,18 +62,18 @@ console.log('  Setup result:', JSON.stringify(setup));
 check('Plan A configured with Anatomy', setup.planTarget === 'Anatomy');
 check('Queue generated with 3 videos', setup.batchCount === 3, `got ${setup.batchCount}`);
 
-// ─── Test 1: questDateKey sanity ────────────────────────────
-console.log('\n🔹 Test 1: questDateKey() sanity');
+// ─── Test 1: todayKey sanity ────────────────────────────
+console.log('\n🔹 Test 1: todayKey() sanity');
 const t1 = await page.evaluate(() => {
   const c = window.FlowMD.constants;
   return {
-    hasFunc: typeof c.questDateKey === 'function',
-    quest: c.questDateKey(),
+    hasFunc: typeof c.todayKey === 'function',
+    quest: c.todayKey(),
     today: c.todayKey(),
-    validFormat: /^\d{4}-\d{2}-\d{2}$/.test(c.questDateKey()),
+    validFormat: /^\d{4}-\d{2}-\d{2}$/.test(c.todayKey()),
   };
 });
-check('questDateKey is a function', t1.hasFunc);
+check('todayKey is a function', t1.hasFunc);
 check('Returns YYYY-MM-DD format', t1.validFormat);
 
 // ─── Test 2: 5 AM boundary ──────────────────────────────────
@@ -195,28 +195,28 @@ check('lastBatchDate updated to today', t7.lastBatchDate !== '2025-06-15', `stil
 check('Batch regenerated with 3 videos', t7.batchCount === 3, `count: ${t7.batchCount}`);
 
 // ─── Test 8: Streak tracking uses quest date ─────────────────
-console.log('\n🔹 Test 8: Streak aligns with questDateKey');
+console.log('\n🔹 Test 8: Streak aligns with todayKey');
 const t8 = await page.evaluate(() => {
   window.FlowMD.store.markStudyActivity(true, 'anatomy');
   const state = window.FlowMD.store.getState();
   return {
     lastStudyDate: state.streakData.lastStudyDate,
-    questDate: window.FlowMD.constants.questDateKey(),
+    questDate: window.FlowMD.constants.todayKey(),
     streak: state.streakData.currentStreak,
   };
 });
-check('lastStudyDate matches questDateKey()', t8.lastStudyDate === t8.questDate,
+check('lastStudyDate matches todayKey()', t8.lastStudyDate === t8.questDate,
   `streak: ${t8.lastStudyDate}, quest: ${t8.questDate}`);
 check('Streak is >= 1', t8.streak >= 1, `streak: ${t8.streak}`);
 
 // ─── Test 9: Analytics date consistency ──────────────────────
 console.log('\n🔹 Test 9: Analytics uses quest date for daily counts');
 const t9 = await page.evaluate(() => {
-  const { questDateKey, todayKey } = window.FlowMD.constants;
+  const { todayKey } = window.FlowMD.constants;
   const state = window.FlowMD.store.getState();
 
-  // Record activity under questDateKey
-  const questDate = questDateKey();
+  // Record activity under todayKey
+  const questDate = todayKey();
   const today = todayKey();
   const counts = window.FlowMD.sourceData.getDailyCountsExcludingBulk();
   const questCount = counts[questDate] || 0;
@@ -226,7 +226,7 @@ const t9 = await page.evaluate(() => {
   window.FlowMD.shell.switchView('analytics');
   window.FlowMD.shell.render();
 
-  // The analytics view should use questDateKey for its "today" display
+  // The analytics view should use todayKey for its "today" display
   // Check by reading the Goal Pulse tile text
   const analyticsText = document.body.innerText;
 
@@ -241,7 +241,7 @@ const t9 = await page.evaluate(() => {
     analyticsHasMonthly: analyticsText.includes('Monthly Goal'),
   };
 });
-check('questDateKey and todayKey produce same date (after 5 AM)', t9.datesMatch,
+check('todayKey and todayKey produce same date (after 5 AM)', t9.datesMatch,
   `quest: ${t9.questDate}, today: ${t9.todayDate}`);
 check('Analytics has Goal Pulse section', t9.analyticsHasGoalPulse);
 check('Analytics has Weekly Goal', t9.analyticsHasWeekly);
@@ -250,9 +250,9 @@ check('Analytics has Monthly Goal', t9.analyticsHasMonthly);
 // ─── Test 10: Analytics reads dailyHistory with quest date key ─
 console.log('\n🔹 Test 10: Analytics daily count uses quest date key');
 const t10 = await page.evaluate(() => {
-  const { questDateKey, toLocalDateKey } = window.FlowMD.constants;
+  const { todayKey, toLocalDateKey } = window.FlowMD.constants;
   const counts = window.FlowMD.sourceData.getDailyCountsExcludingBulk();
-  const questDate = questDateKey();
+  const questDate = todayKey();
 
   // Simulate markStudyActivity under quest date
   const state = window.FlowMD.store.getState();
@@ -265,7 +265,7 @@ const t10 = await page.evaluate(() => {
   const questCount = countsAfter[questDate] || 0;
 
   // Verify the 7-day chart would use quest-shifted keys
-  // by checking that questKeyFromDate matches questDateKey for today
+  // by checking that questKeyFromDate matches todayKey for today
   const now = new Date();
   const questKeyToday = toLocalDateKey(new Date(now.getTime() - 5 * 3600000));
 
@@ -276,8 +276,8 @@ const t10 = await page.evaluate(() => {
     keysMatch: questKeyToday === questDate,
   };
 });
-check('dailyHistory stores under questDateKey', t10.questCount >= 5, `count: ${t10.questCount}`);
-check('questKeyFromDate(now) matches questDateKey()', t10.keysMatch,
+check('dailyHistory stores under todayKey', t10.questCount >= 5, `count: ${t10.questCount}`);
+check('questKeyFromDate(now) matches todayKey()', t10.keysMatch,
   `questKey: ${t10.questKeyToday}, questDate: ${t10.questDate}`);
 
 // ─── Test 11: Navigate back to dashboard — quests still work ─
