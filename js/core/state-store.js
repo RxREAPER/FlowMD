@@ -19,6 +19,7 @@
     PLAN_A_ACCENT,
     STUDY_SOURCES,
     todayKey,
+    questDateKey,
     toLocalDateKey
   } = window.FlowMD.constants;
 
@@ -586,7 +587,7 @@
   }
 
   function markStudyActivity(isAdding = true, subjectId = null) {
-    const todayStr = todayKey();
+    const todayStr = questDateKey();
     if (!state.streakData) state.streakData = { lastStudyDate: null, currentStreak: 0 };
     if (!state.dailyHistory) state.dailyHistory = {};
     if (!state.dailyHistoryBySubject) state.dailyHistoryBySubject = {};
@@ -613,7 +614,8 @@
 
     if (isAdding) {
       if (state.streakData.lastStudyDate !== todayStr) {
-        const yesterday = toLocalDateKey(new Date(Date.now() - 86400000));
+        // Yesterday relative to the 5 AM quest boundary
+        const yesterday = toLocalDateKey(new Date(Date.now() - 5 * 3600000 - 86400000));
         if (state.streakData.lastStudyDate === yesterday) {
           state.streakData.currentStreak = (state.streakData.currentStreak || 0) + 1;
         } else {

@@ -34,6 +34,13 @@
     return toLocalDateKey(new Date());
   }
 
+  // Quest day boundary: 5 AM instead of midnight.
+  // At 3 AM Aug 31 → returns "2026-08-30" (still "yesterday" for quests)
+  // At 5:01 AM Aug 31 → returns "2026-08-31" (new quest day)
+  function questDateKey() {
+    return toLocalDateKey(new Date(Date.now() - 5 * 3600000));
+  }
+
   // --- Shared SVG Icon Set (FlowMD) ---
 const FLOWMD_ICONS = {
     trophy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M2 5h4v2H2zM18 5h4v2h-4zM5 3h14v3c0 4-3 6-7 6s-7-2-7-6V3zm7 7c2.5 0 4-1.6 4-4H8c0 2.4 1.5 4 4 4zm-1 4h2v3h2v2h-6v-2h2v-3z"/></svg>',
@@ -224,6 +231,7 @@ const FLOWMD_ICONS = {
     escapeAttr,
     toLocalDateKey,
     todayKey,
+    questDateKey,
     SCHEMA_VERSION,
     APP_VERSION,
     STORAGE_KEYS,

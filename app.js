@@ -12,7 +12,8 @@
   // dependencies from window.FlowMD.* directly (decomposition, 2026-08).
   const {
     FLOWMD_ICONS,
-    escapeHtml
+    escapeHtml,
+    questDateKey
   } = window.FlowMD.constants;
 
   const {
@@ -350,6 +351,23 @@
     openInfoModal,
     closeInfoModal
   };
+
+  // --- Quest Day-Change Detection ---
+  // Re-render when the user returns to the app and the quest date has
+  // rolled past the 5 AM boundary (new daily quest batch needed).
+  let lastQuestDate = questDateKey();
+  function checkQuestDayChange() {
+    const today = questDateKey();
+    if (today !== lastQuestDate) {
+      lastQuestDate = today;
+      render();
+    }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') checkQuestDayChange();
+  });
+  // Fallback: some browsers throttle visibilitychange when tab is backgrounded.
+  setInterval(checkQuestDayChange, 60000);
 
   // --- Run Initialization ---
   if (document.readyState === 'loading') {

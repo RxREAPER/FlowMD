@@ -10,7 +10,7 @@
 
   const { getState, saveState } = window.FlowMD.store;
   const { getDataset, getPlanScopeVideos } = window.FlowMD.sourceData;
-  const { todayKey, DEFAULT_PLAN, PLAN_A_ACCENT } = window.FlowMD.constants;
+  const { todayKey, questDateKey, DEFAULT_PLAN, PLAN_A_ACCENT } = window.FlowMD.constants;
   const {
     getSubjectIconSrc,
     getSubjectSvgIcon,
@@ -144,7 +144,7 @@
       if (subjectObj) subjectName = subjectObj.subject;
     }
 
-    const todayStr = todayKey();
+    const todayStr = questDateKey();
     if (plan.lastBatchDate !== todayStr) {
       plan.lastBatchDate = todayStr;
       plan.extraBatchesCompletedToday = 0;
