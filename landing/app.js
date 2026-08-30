@@ -9,31 +9,33 @@
 
 
   function initThemeToggle() {
-    var toggle = document.getElementById('theme-toggle');
-    if (!toggle) return;
+    var switchEl = document.getElementById('theme-switch');
+    if (!switchEl) return;
+    var btns = switchEl.querySelectorAll('.theme-btn');
 
-    // Default to light mode; check localStorage for preference
+    // Default to light; check localStorage
     var stored = localStorage.getItem('flowmd-landing-theme');
     var isDark = stored === 'dark';
-    if (isDark) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      toggle.textContent = '☀️';
-      toggle.setAttribute('aria-label', 'Toggle light mode');
-    }
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
 
-    toggle.addEventListener('click', function () {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        toggle.textContent = '🌙';
-        toggle.setAttribute('aria-label', 'Toggle dark mode');
-        localStorage.setItem('flowmd-landing-theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        toggle.textContent = '☀️';
-        toggle.setAttribute('aria-label', 'Toggle light mode');
-        localStorage.setItem('flowmd-landing-theme', 'dark');
-      }
+    // Set initial active state
+    btns.forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-theme') === (isDark ? 'dark' : 'light'));
+    });
+
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var theme = btn.getAttribute('data-theme');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('flowmd-landing-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('flowmd-landing-theme', 'light');
+        }
+        btns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
     });
   }
 
