@@ -12,7 +12,7 @@
   const { getState, getStudyStreak, markStudyActivity, saveState } = window.FlowMD.store;
   const { getPlanScopeVideos, getScopedChapterNames } = window.FlowMD.sourceData;
   const { getAllPlanQueues, getPlanById } = window.FlowMD.metrics;
-  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey, questDateKey } = window.FlowMD.constants;
+  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, questDateKey } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { renderEditionChip } = window.FlowMD.theme;
   const { renderStudyPlanConfigCard, initStudyPlanConfig, focusStudyPlanConfig } = window.FlowMD.planConfig;
@@ -23,6 +23,41 @@
 
   // Shell DOM cache — set on every render via the dispatcher.
   let DOM = {};
+
+  // --- Targeted quest checkbox update (no innerHTML rebuild, scroll preserved) ---
+  function updateQuestAfterCheck() {
+    const freshQueues = getAllPlanQueues();
+    // Update each plan block's progress text
+    document.querySelectorAll('.plan-quest-block').forEach((block, idx) => {
+      const q = freshQueues[idx];
+      if (!q) return;
+      const pct = Math.min(100, Math.round((q.totalCompletedToday / q.baseTargetPace) * 100));
+      const progressEl = block.querySelector('.plan-quest-progress');
+      if (progressEl) progressEl.textContent = q.totalCompletedToday + '/' + q.baseTargetPace + ' • ' + pct + '%';
+    });
+    // Update hero streak
+    const streakBadge = document.querySelector('.v2-hud-badge:last-child');
+    if (streakBadge && streakBadge.textContent.includes('streak')) {
+      streakBadge.innerHTML = '<svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-local_fire_department"/></svg> ' + getStudyStreak() + ' day streak';
+    }
+    // Show/hide all-quests-done banner
+    const allDone = freshQueues.every(q => q.isDailyTargetMet);
+    const banner = document.querySelector('.all-quests-banner');
+    if (allDone && !banner) { window.FlowMD.shell.render(); return; }
+    else if (!allDone && banner) banner.remove();
+    // Update each row's completed class
+    freshQueues.forEach(q => {
+      q.videos.forEach(v => {
+        const cb = document.querySelector('.queue-chk[data-video-id="' + v.id + '"]');
+        if (cb) {
+          const isChecked = !!state.completedVideos[v.id];
+          cb.checked = isChecked;
+          const row = cb.closest('.v2-quest-row');
+          if (row) row.classList.toggle('completed', isChecked);
+        }
+      });
+    });
+  }
 
   function renderDashboardView(dom, stats) {
     DOM = dom;
@@ -263,7 +298,7 @@
           markStudyActivity(false, subjectId);
         }
         saveState();
-        if (window.FlowMD.shell) window.FlowMD.shell.render();
+        updateQuestAfterCheck();
       });
     });
 

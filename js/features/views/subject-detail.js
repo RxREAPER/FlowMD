@@ -139,6 +139,7 @@
 
   // Update a single video checkbox row + cascade bulk checkbox.
   function updateVideoRow(vidId, isChecked, subjectId, chapterName) {
+    if (!chapterName) return; // can't cascade bulk checkbox without knowing the chapter
     const cb = DOM.appMain.querySelector('.react-task-checkbox[data-video-id="' + vidId + '"]');
     if (cb) {
       cb.checked = isChecked;

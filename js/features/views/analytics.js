@@ -15,7 +15,7 @@
   const { renderExecutionChart, renderPixelSubjectHeatmap } = window.FlowMD.charts;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { showToast } = window.FlowMD.toast;
-  const { escapeHtml, todayKey, questDateKey, DEFAULT_PLAN, PLAN_A_ACCENT, toLocalDateKey } = window.FlowMD.constants;
+  const { escapeHtml, questDateKey, DEFAULT_PLAN, PLAN_A_ACCENT, toLocalDateKey } = window.FlowMD.constants;
 
   // Quest-shifted date key for a given Date: subtracts 5 hours so
   // dailyHistory lookups match markStudyActivity()'s 5 AM boundary.

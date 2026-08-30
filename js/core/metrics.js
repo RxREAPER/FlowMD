@@ -10,7 +10,7 @@
 
   const { getState, saveState } = window.FlowMD.store;
   const { getDataset, getPlanScopeVideos } = window.FlowMD.sourceData;
-  const { todayKey, questDateKey, DEFAULT_PLAN, PLAN_A_ACCENT } = window.FlowMD.constants;
+  const { questDateKey, DEFAULT_PLAN, PLAN_A_ACCENT } = window.FlowMD.constants;
   const {
     getSubjectIconSrc,
     getSubjectSvgIcon,

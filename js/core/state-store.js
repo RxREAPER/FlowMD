@@ -18,7 +18,6 @@
     DEFAULT_PLAN,
     PLAN_A_ACCENT,
     STUDY_SOURCES,
-    todayKey,
     questDateKey,
     toLocalDateKey
   } = window.FlowMD.constants;
