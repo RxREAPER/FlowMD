@@ -68,6 +68,7 @@
     applyTheme(state.theme);
     if (window.FlowMD.icons) window.FlowMD.icons.ensureSprite();
     bindEvents();
+    initQbBanner();
     initServiceWorker();
     if (window.FlowMD.pwaInstall) window.FlowMD.pwaInstall.init();
     render();
@@ -368,6 +369,33 @@
   });
   // Fallback: some browsers throttle visibilitychange when tab is backgrounded.
   setInterval(checkQuestDayChange, 60000);
+
+  // --- Q-bank Update Banner: collapsible toggle with persisted state ---
+  const QB_BANNER_STORAGE_KEY = 'flowmd.qbBannerCollapsed';
+
+  function initQbBanner() {
+    const banner = document.getElementById('qb-update-banner');
+    if (!banner) return;
+
+    // Restore persisted collapse state (default: expanded)
+    let collapsed = false;
+    try {
+      collapsed = localStorage.getItem(QB_BANNER_STORAGE_KEY) === '1';
+    } catch (e) { /* storage unavailable (private mode) — stay expanded */ }
+    if (collapsed) banner.classList.add('is-collapsed');
+
+    const toggle = document.getElementById('qb-banner-toggle');
+    if (!toggle) return;
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+
+    toggle.addEventListener('click', () => {
+      const nowCollapsed = banner.classList.toggle('is-collapsed');
+      toggle.setAttribute('aria-expanded', String(!nowCollapsed));
+      try {
+        localStorage.setItem(QB_BANNER_STORAGE_KEY, nowCollapsed ? '1' : '0');
+      } catch (e) { /* non-fatal */ }
+    });
+  }
 
   // --- Run Initialization ---
   if (document.readyState === 'loading') {

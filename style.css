@@ -18,6 +18,161 @@
 }
 
 /* --- CSS Tokens & Theme Palette --- */
+
+/* ============================================================
+   Q-banks Coming Soon — Collapsible Update Banner
+   Announces the upcoming Q-bank (MCQ tracking) feature at the
+   top of the app shell. Collapse state persisted in localStorage
+   by app.js (key: flowmd.qbBannerCollapsed).
+   ============================================================ */
+.qb-banner {
+  margin: 10px 14px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: linear-gradient(135deg, rgba(108, 59, 170, 0.16) 0%, rgba(139, 92, 246, 0.08) 100%);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.qb-banner-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.qb-banner-toggle:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: -2px;
+}
+
+.qb-banner-chevrons {
+  display: grid;
+  line-height: 0;
+  color: var(--accent-secondary);
+  flex-shrink: 0;
+}
+
+.qb-banner-chevrons .qb-chevron {
+  grid-area: 1 / 1;
+  font-size: 20px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Expanded: up-chevron visible, down-chevron hidden */
+.qb-banner:not(.is-collapsed) .qb-chevron-up { opacity: 1; transform: none; }
+.qb-banner:not(.is-collapsed) .qb-chevron-down { opacity: 0; transform: rotate(180deg); }
+
+/* Collapsed: swap */
+.qb-banner.is-collapsed .qb-chevron-up { opacity: 0; transform: rotate(180deg); }
+.qb-banner.is-collapsed .qb-chevron-down { opacity: 1; transform: none; }
+
+.qb-banner-pill {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.qb-banner-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.qb-banner-summary {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Narrow screens: drop the one-line summary from the header row */
+@media (max-width: 520px) {
+  .qb-banner-summary { display: none; }
+  .qb-banner-title { flex: 1; }
+}
+
+.qb-banner-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.qb-banner.is-collapsed .qb-banner-body {
+  grid-template-rows: 0fr;
+}
+
+.qb-banner-body-inner {
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 14px;
+  transition: padding 0.25s ease;
+}
+
+.qb-banner:not(.is-collapsed) .qb-banner-body-inner {
+  padding: 0 14px 12px;
+}
+
+.qb-banner-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.qb-banner-text b {
+  color: var(--text-primary);
+}
+
+.qb-banner-status {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--success-bg);
+  color: var(--success);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.qb-banner-status .material-symbols-outlined {
+  font-size: 13px;
+}
+
+/* Light theme tweaks */
+[data-theme="light"] .qb-banner {
+  background: linear-gradient(135deg, rgba(108, 59, 170, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
+  border-color: rgba(108, 59, 170, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qb-banner-body,
+  .qb-banner-body-inner,
+  .qb-banner-chevrons .qb-chevron {
+    transition: none;
+  }
+}
 :root, [data-theme="dark"] {
   --bg-app: #0b0f19;
   --bg-surface: #111827;
