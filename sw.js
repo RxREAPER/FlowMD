@@ -9,10 +9,10 @@ const DATA_FILES = [
 // DATA_FILES_END
 
 const FIREBASE_SDK = [
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js',
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js',
-  'https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js'
+  'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js',
+  'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js',
+  'https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics-compat.js'
 ];
 
 const ASSETS = [
