@@ -370,17 +370,23 @@
   // Fallback: some browsers throttle visibilitychange when tab is backgrounded.
   setInterval(checkQuestDayChange, 60000);
 
-  // --- Q-bank Update Banner: collapsible toggle with persisted state ---
+  // --- Q-bank Update Banner: collapsible toggle with persisted state + permanent dismiss ---
   const QB_BANNER_STORAGE_KEY = 'flowmd.qbBannerCollapsed';
+  const QB_BANNER_DISMISS_KEY = 'flowmd.qbBannerDismissed';
 
   function initQbBanner() {
     const banner = document.getElementById('qb-update-banner');
     if (!banner) return;
 
-    // Restore persisted collapse state (default: expanded)
+    // Restore persisted collapse state (default: expanded). A dismissed
+    // banner is permanently hidden — it must never nag users again.
     let collapsed = false;
     try {
       collapsed = localStorage.getItem(QB_BANNER_STORAGE_KEY) === '1';
+      if (localStorage.getItem(QB_BANNER_DISMISS_KEY) === '1') {
+        banner.hidden = true;
+        return;
+      }
     } catch (e) { /* storage unavailable (private mode) — stay expanded */ }
     if (collapsed) banner.classList.add('is-collapsed');
 
@@ -393,6 +399,15 @@
       toggle.setAttribute('aria-expanded', String(!nowCollapsed));
       try {
         localStorage.setItem(QB_BANNER_STORAGE_KEY, nowCollapsed ? '1' : '0');
+      } catch (e) { /* non-fatal */ }
+    });
+
+    const dismiss = document.getElementById('qb-banner-dismiss');
+    if (!dismiss) return;
+    dismiss.addEventListener('click', () => {
+      banner.hidden = true;
+      try {
+        localStorage.setItem(QB_BANNER_DISMISS_KEY, '1');
       } catch (e) { /* non-fatal */ }
     });
   }

@@ -22,10 +22,12 @@
 /* ============================================================
    Q-banks Coming Soon — Collapsible Update Banner
    Announces the upcoming Q-bank (MCQ tracking) feature at the
-   top of the app shell. Collapse state persisted in localStorage
-   by app.js (key: flowmd.qbBannerCollapsed).
+   top of the app shell. Collapse and permanent-dismiss (✕) state
+   persisted in localStorage by app.js (keys: flowmd.qbBannerCollapsed,
+   flowmd.qbBannerDismissed).
    ============================================================ */
 .qb-banner {
+  position: relative;
   margin: 10px 14px 0;
   border-radius: var(--radius-md);
   border: 1px solid rgba(139, 92, 246, 0.35);
@@ -34,12 +36,14 @@
   overflow: hidden;
 }
 
+.qb-banner[hidden] { display: none; }
+
 .qb-banner-toggle {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 44px 12px 14px; /* right padding leaves room for the ✕ button */
   background: transparent;
   border: none;
   cursor: pointer;
@@ -47,31 +51,39 @@
   color: var(--text-primary);
 }
 
-.qb-banner-toggle:focus-visible {
+.qb-banner-toggle:focus-visible,
+.qb-banner-dismiss:focus-visible {
   outline: 2px solid var(--accent-secondary);
   outline-offset: -2px;
 }
 
-.qb-banner-chevrons {
-  display: grid;
-  line-height: 0;
-  color: var(--accent-secondary);
-  flex-shrink: 0;
+/* ✕ permanent-dismiss button (top-right corner) */
+.qb-banner-dismiss {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.qb-banner-chevrons .qb-chevron {
-  grid-area: 1 / 1;
-  font-size: 20px;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+.qb-banner-dismiss:hover {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--text-primary);
 }
 
-/* Expanded: up-chevron visible, down-chevron hidden */
-.qb-banner:not(.is-collapsed) .qb-chevron-up { opacity: 1; transform: none; }
-.qb-banner:not(.is-collapsed) .qb-chevron-down { opacity: 0; transform: rotate(180deg); }
-
-/* Collapsed: swap */
-.qb-banner.is-collapsed .qb-chevron-up { opacity: 0; transform: rotate(180deg); }
-.qb-banner.is-collapsed .qb-chevron-down { opacity: 1; transform: none; }
+.qb-banner-dismiss .material-symbols-outlined {
+  font-size: 18px;
+}
 
 .qb-banner-pill {
   flex-shrink: 0;
@@ -92,21 +104,6 @@
   white-space: nowrap;
 }
 
-.qb-banner-summary {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-
-/* Narrow screens: drop the one-line summary from the header row */
-@media (max-width: 520px) {
-  .qb-banner-summary { display: none; }
-  .qb-banner-title { flex: 1; }
-}
-
 .qb-banner-body {
   display: grid;
   grid-template-rows: 1fr;
@@ -119,9 +116,6 @@
 
 .qb-banner-body-inner {
   overflow: hidden;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
   padding: 0 14px;
   transition: padding 0.25s ease;
 }
@@ -142,24 +136,6 @@
   color: var(--text-primary);
 }
 
-.qb-banner-status {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  background: var(--success-bg);
-  color: var(--success);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-
-.qb-banner-status .material-symbols-outlined {
-  font-size: 13px;
-}
-
 /* Light theme tweaks */
 [data-theme="light"] .qb-banner {
   background: linear-gradient(135deg, rgba(108, 59, 170, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
@@ -169,7 +145,7 @@
 @media (prefers-reduced-motion: reduce) {
   .qb-banner-body,
   .qb-banner-body-inner,
-  .qb-banner-chevrons .qb-chevron {
+  .qb-banner-dismiss {
     transition: none;
   }
 }
