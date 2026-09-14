@@ -59,6 +59,62 @@ a:hover { color: #6d28d9; }
   border-radius: 4px;
 }
 
+/* ---------- Update banner (Q-banks announcement) ---------- */
+.update-banner {
+  background: var(--accent-grad);
+  color: #ffffff;
+}
+
+.update-banner-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  text-align: center;
+}
+
+.update-banner-tag {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+}
+
+.update-banner-text {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.update-banner-link {
+  flex-shrink: 0;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.update-banner-link:hover { color: #ffffff; opacity: 0.85; }
+
+.update-banner-link:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (max-width: 390px) {
+  .update-banner-inner { padding: 10px 16px; }
+  .update-banner-text { font-size: 0.84rem; }
+}
+
 /* ---------- Nav ---------- */
 .site-header {
   position: sticky;
