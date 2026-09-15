@@ -58,6 +58,19 @@ constantsVersionText = constantsVersionText.replace(
 fs.writeFileSync(constantsPath, constantsVersionText, 'utf-8');
 console.log(`constants.js: APP_VERSION bumped to v${newVersion}`);
 
+// ── 3d. Bump ?v= in manifest.json and sw.js precache URLs (icons live under
+// assets/** which is served immutable for 1 year, so their version tags must
+// move every deploy or installed PWAs keep showing stale icons). ──
+for (const rel of ['manifest.json', 'sw.js']) {
+  const abs = path.join(root, rel);
+  if (!fs.existsSync(abs)) continue;
+  let content = fs.readFileSync(abs, 'utf-8');
+  if (!/\?v=[\d.]+/.test(content)) continue;
+  content = content.replace(/(\?v=)([\d.]+)/g, (_, prefix) => `${prefix}${newVersion}`);
+  fs.writeFileSync(abs, content, 'utf-8');
+  console.log(`${rel}: ?v= bumped to v${newVersion}`);
+}
+
 // ── 4. Bump ?v= in any data files that already have version tags ──────────────
 availableDataFiles.forEach(rel => {
   const abs = path.join(root, rel.replace(/^\.\//, ''));
