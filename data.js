@@ -6932,9 +6932,9 @@ const syllabusData = [
         ]
       },
       {
-        "name": "CARDIOLOGY & ECG",
-        "modules": 25,
-        "hours": 23.3,
+        "name": "CARDIOLOGY",
+        "modules": 14,
+        "hours": 10.8,
         "videos": [
           {
             "id": "medicine__v52",
@@ -7033,7 +7033,14 @@ const syllabusData = [
             "title": "Jugular Venous Pulse (JVP)",
             "durationMins": 33,
             "durationSecs": 0
-          },
+          }
+        ]
+      },
+      {
+        "name": "ECG",
+        "modules": 11,
+        "hours": 12.5,
+        "videos": [
           {
             "id": "medicine__v66",
             "videoNumber": "#66",
