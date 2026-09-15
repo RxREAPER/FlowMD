@@ -173,10 +173,11 @@
   }
 }
 :root, [data-theme="dark"] {
-  --bg-app: #0b0f19;
-  --bg-surface: #111827;
-  --bg-surface-hover: #1f2937;
-  --bg-surface-raised: #1e293b;
+  --bg-app: #000000;
+  --bg-backdrop: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-surface-hover: #141414;
+  --bg-surface-raised: #101010;
   --border-color: #1f293d;
   --border-subtle: #2d3748;
   
@@ -257,6 +258,7 @@ input, select, textarea {
 
 [data-theme="light"] {
   --bg-app: #f8fafc;
+  --bg-backdrop: #060911;
   --bg-surface: #ffffff;
   --bg-surface-hover: #f1f5f9;
   --bg-surface-raised: #ffffff;
@@ -1520,7 +1522,7 @@ body {
   z-index: 1000;
   height: 76px;
   box-sizing: border-box;
-  background-color: rgba(11, 15, 25, 0.92);
+  background-color: rgba(0, 0, 0, 0.92);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
@@ -2476,7 +2478,7 @@ body {
 
 /* --- Refined Goals UI & Target Banners --- */
 .goal-hero-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+  background: #0a0a0a;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 20px;
@@ -3306,7 +3308,7 @@ body {
    ============================================================ */
 @media (min-width: 768px) {
   body {
-    background-color: #060911;
+    background-color: var(--bg-backdrop);
   }
   
   .app-container {

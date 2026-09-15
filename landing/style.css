@@ -1,7 +1,7 @@
 /* ============================================================
    FlowMD Landing — Styles
    Calm, TimyLabs-shaped formatting on FlowMD's modern dark
-   identity (background #0b0f19, accent gradient #6c3baa → #8b5cf6).
+   identity (background #000000, accent gradient #6c3baa → #8b5cf6).
    No external fonts, no remote requests (system stacks only).
    ============================================================ */
 
@@ -33,10 +33,10 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0b0f19;
-  --surface: #111827;
-  --surface-2: #0f1522;
-  --surface-hover: #1f2937;
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #070707;
+  --surface-hover: #141414;
   --border: #1f293d;
   --text: #f8fafc;
   --text-2: #94a3b8;
@@ -330,7 +330,7 @@ a:hover { color: #6d28d9; }
 .phone-frame {
   width: min(280px, 72vw);
   flex-shrink: 0;
-  background: #0b0f19;
+  background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 34px;
   padding: 10px;
