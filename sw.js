@@ -27,7 +27,6 @@ const ASSETS = [
   './js/core/source-data.js',
   './js/core/metrics.js',
   './js/core/subjects.js',
-  './js/core/logo.js',
   './js/features/toast.js',
   './js/features/theme.js',
   './js/features/search.js',
@@ -49,6 +48,8 @@ const ASSETS = [
   './terms.html',
   './assets/icon-192.png',
   './assets/icon-512.png',
+  './assets/fonts/inter-variable-latin.woff2',
+  './assets/fonts/inter-variable-latin-italic.woff2',
   ...DATA_FILES
 ];
 
