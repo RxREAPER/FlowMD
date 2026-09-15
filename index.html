@@ -17,12 +17,13 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-TileColor" content="#0b0f19">
   <link rel="icon" type="image/svg+xml" href="icon.svg">
-  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   
   <!-- No Google Fonts — system font stacks + inline SVG icons (zero external font requests) -->
   
   <!-- Unified Mobile-First Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=251">
+  <link rel="stylesheet" href="style.css?v=252">
 </head>
 <body>
   
@@ -34,18 +35,8 @@
       <!-- Left: SVG Logo -->
       <div class="topbar-left">
         <div id="brand-home-link" class="topbar-brand" title="FlowMD Home">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 36" class="flowmd-topbar-logo" aria-label="FlowMD">
-            <defs>
-              <linearGradient id="logo-grd" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#6c3baa"/>
-                <stop offset="100%" stop-color="#8b5cf6"/>
-              </linearGradient>
-            </defs>
-            <rect x="0" y="4" width="28" height="28" rx="7" fill="url(#logo-grd)"/>
-            <text x="8" y="24" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="16" font-weight="800" fill="#ffffff" letter-spacing="-0.5">F</text>
-            <text x="34" y="24" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="18" font-weight="700" fill="currentColor" letter-spacing="-0.3">Flow</text>
-            <text x="82" y="24" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="13" font-weight="600" fill="var(--text-muted)" letter-spacing="-0.2">MD</text>
-          </svg>
+          <img src="assets/logo-dark.png" alt="FlowMD" class="flowmd-topbar-logo flowmd-topbar-logo-dark" width="299" height="96">
+          <img src="assets/logo-light.png" alt="" aria-hidden="true" class="flowmd-topbar-logo flowmd-topbar-logo-light" width="299" height="96">
         </div>
         <!-- Active Study Edition Indicator (populated by app.js) -->
         <span class="edition-badge" id="topbar-source-badge" title="Study Source" role="button" tabindex="0">
@@ -295,30 +286,30 @@
   <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics-compat.js"></script>
 
   <!-- Application Data & Logic -->
-  <script src="data.js?v=251"></script>
-  <script src="data_marrow_6_5.js?v=251"></script>
-  <script src="js/core/namespace.js?v=251"></script>
-  <script src="js/core/constants.js?v=251"></script>
-  <script src="js/core/icons.js?v=251"></script>
-  <script src="js/core/state-store.js?v=251"></script>
-  <script src="js/core/source-data.js?v=251"></script>
-  <script src="js/core/subjects.js?v=251"></script>
-  <script src="js/core/metrics.js?v=251"></script>
-  <script src="js/features/toast.js?v=251"></script>
-  <script src="js/features/theme.js?v=251"></script>
-  <script src="js/features/search.js?v=251"></script>
-  <script src="js/features/onboarding.js?v=251"></script>
-  <script src="js/features/backup.js?v=251"></script>
-  <script src="js/features/study-plan-config.js?v=251"></script>
-  <script src="js/features/source-settings.js?v=251"></script>
-  <script src="js/features/charts.js?v=251"></script>
-  <script src="js/features/pwa-install.js?v=251"></script>
-  <script src="js/features/views/dashboard.js?v=251"></script>
-  <script src="js/features/views/curriculum.js?v=251"></script>
-  <script src="js/features/views/subject-detail.js?v=251"></script>
-  <script src="js/features/views/analytics.js?v=251"></script>
-  <script src="js/features/views/profile.js?v=251"></script>
-  <script src="app.js?v=251"></script>
+  <script src="data.js?v=252"></script>
+  <script src="data_marrow_6_5.js?v=252"></script>
+  <script src="js/core/namespace.js?v=252"></script>
+  <script src="js/core/constants.js?v=252"></script>
+  <script src="js/core/icons.js?v=252"></script>
+  <script src="js/core/state-store.js?v=252"></script>
+  <script src="js/core/source-data.js?v=252"></script>
+  <script src="js/core/subjects.js?v=252"></script>
+  <script src="js/core/metrics.js?v=252"></script>
+  <script src="js/features/toast.js?v=252"></script>
+  <script src="js/features/theme.js?v=252"></script>
+  <script src="js/features/search.js?v=252"></script>
+  <script src="js/features/onboarding.js?v=252"></script>
+  <script src="js/features/backup.js?v=252"></script>
+  <script src="js/features/study-plan-config.js?v=252"></script>
+  <script src="js/features/source-settings.js?v=252"></script>
+  <script src="js/features/charts.js?v=252"></script>
+  <script src="js/features/pwa-install.js?v=252"></script>
+  <script src="js/features/views/dashboard.js?v=252"></script>
+  <script src="js/features/views/curriculum.js?v=252"></script>
+  <script src="js/features/views/subject-detail.js?v=252"></script>
+  <script src="js/features/views/analytics.js?v=252"></script>
+  <script src="js/features/views/profile.js?v=252"></script>
+  <script src="app.js?v=252"></script>
 
 </body>
 </html>
