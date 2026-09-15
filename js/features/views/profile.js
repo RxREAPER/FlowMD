@@ -81,7 +81,7 @@
               ${getSourceLabel(state.activeSource || 'marrow_8')}
             </div>
           </div>
-          <button class="v2-arcade-btn" id="btn-change-source" style="height: 38px; padding: 0 16px; min-width: 96px;">
+          <button class="v2-arcade-btn" id="btn-change-source" style="height: 38px; padding: 0 12px; min-width: 96px;">
             <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-swap_horiz"/></svg> Change
           </button>
         </div>
@@ -93,7 +93,7 @@
           <svg class="material-symbols-outlined" style="color: #f59e0b; font-size: 20px;"><use href="#fmd-i-phone_iphone"/></svg>
           Your data lives on this device
         </h3>
-        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+        <p style="font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
           Progress is stored only on this device — no account, nothing uploaded.
           Clearing browser data or uninstalling the app erases it, so export a backup below.
         </p>
@@ -104,7 +104,7 @@
           <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-backup"/></svg>
           Backup
         </h3>
-        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
+        <p style="font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
           Save your progress to a file and restore it on a new device. Backups stay importable across future app versions.
         </p>
         ${state.lastBackupAt ? `
@@ -124,7 +124,7 @@
           <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-cloud_sync"/></svg>
           Cloud Sync
         </h3>
-        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        <p style="font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.85rem; color: var(--text-muted); margin: 0;">
           Cloud sync is coming soon. For now, move between devices with Export / Import above.
         </p>
       </div>
@@ -134,7 +134,7 @@
           <svg class="material-symbols-outlined" style="color: var(--text-secondary); font-size: 20px;"><use href="#fmd-i-install_mobile"/></svg>
           Install App
         </h3>
-        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
+        <p style="font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 12px 0;">
           Use FlowMD like a native app — installs to your home screen, runs full-screen and works offline.
         </p>
         ${pwaInstall ? pwaInstall.renderProfileInstallCard() : ''}
@@ -145,7 +145,7 @@
           <svg class="material-symbols-outlined" style="color: var(--accent-primary); font-size: 20px;"><use href="#fmd-i-support_agent"/></svg>
           <h3 style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin: 0;">Developer Support & Contact</h3>
         </div>
-        <p style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
+        <p style="font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 14px 0;">
           Need help or have a question? Click below to reveal the developer contact email.
         </p>
         <button class="v2-arcade-btn" id="btn-show-support-email" style="height: 38px; width: 100%;">

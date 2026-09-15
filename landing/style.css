@@ -5,6 +5,15 @@
    No external fonts, no remote requests (system stacks only).
    ============================================================ */
 
+/* Brand font: Inter variable (self-hosted, no external requests) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./assets/fonts/inter-variable-latin.woff2') format('woff2-variations');
+}
+
 :root {
   /* Light mode (default) */
   --bg: #f8fafc;
@@ -20,7 +29,7 @@
   --text-2: #475569;
   --text-3: #94a3b8;
   --radius: 12px;
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 [data-theme="dark"] {
