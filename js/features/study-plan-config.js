@@ -12,10 +12,10 @@
 (function () {
   'use strict';
 
-  const { getState, saveState } = window.FlowMD.store;
-  const { getDataset, getSourceLabel } = window.FlowMD.sourceData;
+  const { getState, saveState, setDailyTasksMode, removeManualTaskVideo, markStudyActivity } = window.FlowMD.store;
+  const { getDataset } = window.FlowMD.sourceData;
   const { getSyllabusStatsForSource, getSubjectOrSyllabusMetrics, getMetricsForModalScope } = window.FlowMD.metrics;
-  const { STUDY_SOURCES, DEFAULT_PLAN, PLAN_A_ACCENT, PLAN_B_ACCENT, toLocalDateKey, escapeHtml, escapeAttr, FLOWMD_ICONS } = window.FlowMD.constants;
+  const { STUDY_SOURCES, DEFAULT_PLAN, PLAN_A_ACCENT, PLAN_B_ACCENT, toLocalDateKey, escapeHtml, escapeAttr, FLOWMD_ICONS, DAILY_TASKS_MODE_AUTO, DAILY_TASKS_MODE_MANUAL } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
 
   // Same live object reference app.js uses — mutations are in-place.
@@ -44,6 +44,95 @@
     const selChip = container.querySelector('.plan-config-chip.selected[data-chap]');
     const name = selChip ? selChip.getAttribute('data-chap') : null;
     return (name && name !== '__all__') ? [name] : [];
+  }
+
+  // --- Daily Tasks Topics section (lives in the sheet, mirrors the dashboard
+  // card): Auto = curriculum-order queue from the plan targets; Manual = the
+  // user's hand-picked topics (added from the spotlight search "+ Task").
+  // Shared classes with the dashboard keep the two sections consistent.
+  function renderTopicsSection(activeTabKey) {
+    const isManual = state.dailyTasksMode === DAILY_TASKS_MODE_MANUAL;
+    let manualListHtml = '';
+    if (isManual) {
+      const manualIds = Array.isArray(state.dailyTasksManual) ? state.dailyTasksManual : [];
+      const dataset = getDataset();
+      const byId = {};
+      dataset.forEach(sub => {
+        (sub.chapters || []).forEach(chap => {
+          (chap.videos || []).forEach(v => {
+            if (manualIds.indexOf(v.id) !== -1) byId[v.id] = { ...v, subjectName: sub.subject, chapterName: chap.name };
+          });
+        });
+      });
+      const items = manualIds.map(id => byId[id]).filter(Boolean);
+      const pending = items.filter(v => !state.completedVideos[v.id]);
+      const done = items.length - pending.length;
+
+      manualListHtml = `
+        <div class="spc-topics-manual-block">
+          <div class="spc-manual-add">
+            <button type="button" class="v2-arcade-btn" id="spc-btn-add-task-topic">
+              <svg class="material-symbols-outlined"><use href="#fmd-i-add_task"/></svg>
+              <span>Add Topics from Search</span>
+            </button>
+            <span class="spc-manual-hint">${items.length} topic${items.length === 1 ? '' : 's'} • ${done} done • ${pending.length} to go</span>
+          </div>
+          ${items.length === 0 ? `
+            <div class="onboarding-empty-cta spc-topics-empty">
+              <div class="onboarding-title" style="margin-bottom:6px;">No manual topics yet</div>
+              <div class="onboarding-sub">Search any subject, chapter or video topic and tap “+ Task” to add it here.</div>
+            </div>
+          ` : `
+            <div class="v2-quest-list">
+              ${items.map(v => {
+                const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
+                let vNum = '#' + (v.videoNumber || '1').replace(/^#+/, '');
+                const isDone = !!state.completedVideos[v.id];
+                return `
+                  <div class="v2-quest-row ${isDone ? 'completed' : ''}">
+                    <label class="v2-pixel-checkbox-label">
+                      <input type="checkbox" class="queue-chk spc-manual-task-chk" data-video-id="${v.id}" ${isDone ? 'checked' : ''}>
+                      <span class="v2-pixel-checkbox-box"></span>
+                      <div>
+                        <div class="v2-quest-title"><span class="quest-video-num">${vNum}</span> ${v.title}</div>
+                        <div class="quest-video-chapter">${v.subjectName} • ${v.chapterName}</div>
+                      </div>
+                    </label>
+                    <div class="quest-video-dur">${durStr}</div>
+                    <button type="button" class="spc-manual-remove" data-spc-remove-task="${v.id}" title="Remove from Daily Tasks" aria-label="Remove from Daily Tasks">
+                      <svg class="material-symbols-outlined"><use href="#fmd-i-close"/></svg>
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `}
+          ${items.length > 0 && pending.length === 0 ? `
+            <div class="congrats-card-pop manual-congrats">
+              ${FLOWMD_ICONS.trophy}
+              <span>All manual topics completed! Add more from search.</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="spc-topics-section">
+        <div class="spc-topics-divider"><span>Daily Tasks</span></div>
+        <div class="spc-mode-toggle">
+          <span class="spc-mode-label">Topics</span>
+          <div class="spc-mode-switch" role="group" aria-label="Daily Tasks topic mode" id="spc-daily-tasks-mode-switch">
+            <button type="button" class="spc-mode-opt ${!isManual ? 'active' : ''}" data-spc-mode="${DAILY_TASKS_MODE_AUTO}">Auto</button>
+            <button type="button" class="spc-mode-opt ${isManual ? 'active' : ''}" data-spc-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
+          </div>
+        </div>
+        <div class="spc-topics-mode-help">${isManual
+          ? 'Manual: study only the topics you pick — added one tap from the search.'
+          : 'Auto: topics follow your plan target in curriculum order.'}</div>
+        ${manualListHtml}
+      </div>
+    `;
   }
 
   // --- Sheet open / close ---
@@ -108,6 +197,7 @@
       </div>
 
       ${activePlan ? renderPlanForm(sheetTab, activePlan) : renderAddPlanIntro(sheetTab)}
+      ${renderTopicsSection(sheetTab)}
     `;
 
     initPlanConfig();
@@ -509,6 +599,9 @@
     if (dateInput) dateInput.oninput = () => synchronizeModalPace('date', sheetTab);
     if (vidsInput) vidsInput.oninput = () => synchronizeModalPace('dailyVids', sheetTab);
 
+    // --- Topics section wiring (mode switch + manual list) ---
+    wireTopicsSection();
+
     // Math Guide Accordion Toggles
     document.querySelectorAll('#plan-config-sheet-content .math-guide-card').forEach(card => {
       const header = card.querySelector('.math-guide-header');
@@ -550,6 +643,79 @@
     });
 
     synchronizeModalPace('init', sheetTab);
+  }
+
+  // --- Topics helpers ---
+  // Look a manual task video's subject up on the whole active dataset (it may
+  // belong to no plan's target subject at all).
+  function findVideoSubjectId(videoId) {
+    const dataset = getDataset();
+    for (const sub of dataset) {
+      for (const chap of (sub.chapters || [])) {
+        for (const v of (chap.videos || [])) {
+          if (v.id === videoId) return sub.id;
+        }
+      }
+    }
+    return null;
+  }
+
+  // Re-render just the Topics section in place (mode flip, tick, remove) —
+  // the open form, focus and scroll position survive.
+  function refreshTopicsSection() {
+    const activeTab = sheetTab;
+    const sections = document.querySelectorAll('#plan-config-sheet-content .spc-topics-section');
+    if (!sections.length) return;
+    // Render into a detached container, then swap in the fresh section so
+    // everything after it (nothing yet) and before it stays untouched.
+    const tmp = document.createElement('div');
+    tmp.innerHTML = renderTopicsSection(activeTab);
+    const fresh = tmp.firstElementChild;
+    sections[0].replaceWith(fresh);
+    // Re-wire the topics interactions with the same init path.
+    wireTopicsSection();
+  }
+
+  function wireTopicsSection() {
+    const modeSwitch = document.getElementById('spc-daily-tasks-mode-switch');
+    if (modeSwitch) {
+      modeSwitch.querySelectorAll('.spc-mode-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mode = btn.getAttribute('data-spc-mode');
+          if (mode === state.dailyTasksMode) return;
+          setDailyTasksMode(mode);
+          refreshTopicsSection();
+        });
+      });
+    }
+    document.getElementById('spc-btn-add-task-topic')?.addEventListener('click', () => {
+      if (window.FlowMD.search && window.FlowMD.search.openSpotlightModal) {
+        window.FlowMD.search.openSpotlightModal();
+      }
+    });
+    document.querySelectorAll('[data-spc-remove-task]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        removeManualTaskVideo(btn.getAttribute('data-spc-remove-task'));
+        showToast('Removed from Daily Tasks', 'info');
+        refreshTopicsSection();
+      });
+    });
+    document.querySelectorAll('.spc-manual-task-chk').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        const vidId = e.target.getAttribute('data-video-id');
+        const subjectId = findVideoSubjectId(vidId);
+        if (e.target.checked) {
+          state.completedVideos[vidId] = true;
+          markStudyActivity(true, subjectId);
+          showToast('Task completed!', 'check_circle');
+        } else {
+          delete state.completedVideos[vidId];
+          markStudyActivity(false, subjectId);
+        }
+        saveState();
+        refreshTopicsSection();
+      });
+    });
   }
 
   function synchronizeModalPace(source, planKey = 'plan_a') {
@@ -653,6 +819,7 @@
     initPlanConfig,
     synchronizeModalPace,
     focusStudyPlanConfig,
-    getSelectedUnitsForPlanKey
+    getSelectedUnitsForPlanKey,
+    refreshTopicsSection
   };
 })();

@@ -227,6 +227,9 @@
         const added = addManualTaskVideo(vidId);
         showToast(added ? 'Added to Daily Tasks!' : 'Already in Daily Tasks', added ? 'add_task' : 'info');
         renderSpotlightResults(query);
+        // The Configure Study Plan sheet may be open underneath — keep its
+        // Topics section in sync with the new list.
+        if (window.FlowMD.planConfig) window.FlowMD.planConfig.refreshTopicsSection();
       });
     });
 
