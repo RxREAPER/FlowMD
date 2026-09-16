@@ -145,6 +145,10 @@ async function run() {
   check('Sheet has Plan A and Plan B tabs', await page.locator('.spc-tab').count() === 2);
   check('No Dual-Track toggle remains', await page.locator('#toggle-plan-b').count() === 0);
   check('Sheet shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
+  check('Sheet Focus Chapter chips container renders for Plan A (id chapter-chips-a)',
+    await page.locator('#chapter-chips-a').count() === 1);
+  check('Sheet chapters count badge renders for Plan A (id chapters-count-a)',
+    await page.locator('#chapters-count-a').count() === 1);
 
   // A fresh profile must NOT have assumed subject/pace/deadline values — the
   // site waits for the user to fill the Configure Study Plan sheet.
