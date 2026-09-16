@@ -1,9 +1,13 @@
 /* ============================================================
-   FlowMD Features — Study Plan Config
-   The always-visible inline config card + the dual-plan goal
-   wizard (subject select, chapter chips, pace sync, A/B apply).
+   FlowMD Features — Configure Study Plan (bottom sheet)
+   Opened from the center bottom-nav button ("Plan") on any view.
+   Plan A / Plan B tabs — each tab is either a full goal form
+   (subject, focus chapter, deadline, auto-synced pace) or an
+   "add plan" intro when that plan is not enabled yet. Every
+   enabled plan can be disabled, so a user can run Plan B alone.
 
-   Extracted verbatim from app.js (2026-08-10). Behavior unchanged.
+   Replaces the old always-visible inline dashboard card and the
+   Dual-Track toggle (issue #10).
    ============================================================ */
 (function () {
   'use strict';
@@ -17,234 +21,21 @@
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
 
-  // --- Study Plan Config: always-visible inline form card ---
-  function renderStudyPlanConfigCard() {
-    return `
-      <section id="study-plan-config" class="study-plan-config-section" aria-label="Study plan configuration">
-        <div class="spc-header">
-          <h2 class="spc-title">Study Plan Configuration</h2>
-          <p class="spc-sub">Set your daily pace, target deadline &amp; dual-track goals. Everything auto-synchronizes.</p>
-        </div>
+  // Module-local sheet DOM cache + active tab (survives close/open).
+  let sheetDom = {};
+  let sheetTab = 'plan_a';
 
-        <div class="spc-body">
-          <!-- Plan Selector Dropdown + Dual-Track Toggle -->
-          <div class="spc-toolbar">
-            <div class="spc-plan-select-wrap">
-              <svg class="material-symbols-outlined spc-flag-icon"><use href="#fmd-i-flag"/></svg>
-              <select id="goal-plan-select" class="plan-config-input spc-plan-select" aria-label="Select plan to configure">
-                <option value="plan_a">Plan A — Primary Target</option>
-              </select>
-              <svg class="material-symbols-outlined spc-select-arrow"><use href="#fmd-i-expand_more"/></svg>
-            </div>
-            <label class="plan-config-dual spc-dual-toggle">
-              <input type="checkbox" id="toggle-plan-b">
-              <span class="plan-config-switch"><i></i></span>
-              <span class="plan-config-dual-label">Dual-Track</span>
-            </label>
-          </div>
-
-          <!-- PLAN A FORM -->
-          <div id="goal-plan-a-form">
-            <div class="plan-config-plan-head">
-              <span class="plan-config-plan-badge"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-flag"/></svg> Plan A — Primary Target</span>
-              <span class="plan-config-plan-role">Main <b>Subject Goal</b></span>
-            </div>
-
-            <form id="goal-form-a" onsubmit="return false;" class="plan-config-form">
-              <div class="plan-config-hint">
-                <svg class="material-symbols-outlined"><use href="#fmd-i-calculate"/></svg>
-                <span id="smart-math-text">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
-              </div>
-
-              <div class="plan-config-field">
-                <label class="plan-config-label" for="select-target-subject">Priority Target Subject</label>
-                <div class="plan-config-select-wrap">
-                  <select id="select-target-subject" class="plan-config-input"></select>
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-expand_more"/></svg>
-                </div>
-              </div>
-
-              <div class="plan-config-field">
-                <div class="plan-config-field-head">
-                  <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count-a" class="plan-config-chips-count"></span></label>
-                </div>
-                <div class="plan-config-hint" style="margin:4px 0 8px 0;">
-                  <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-filter_alt"/></svg>
-                  <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
-                </div>
-                <div class="plan-config-chips" id="chapter-chips-a"></div>
-              </div>
-
-              <div class="plan-config-field">
-                <div class="plan-config-hint" style="margin:0;">
-                  <svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-auto_stories"/></svg>
-                  <span>Syllabus source: <b id="goal-source-label">Marrow Edition 8</b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
-                </div>
-              </div>
-
-              <div class="plan-config-field">
-                <div class="plan-config-field-head">
-                  <label class="plan-config-label" for="input-target-date" style="margin:0;">Target Deadline</label>
-                  <span id="days-remaining-badge" class="plan-config-badge">Not set</span>
-                </div>
-                <input type="date" id="input-target-date" value="" class="plan-config-input">
-              </div>
-
-              <div id="fields-video-mode" class="plan-config-pace-grid" style="display:grid;">
-                <div class="plan-config-pace">
-                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
-                  <div class="plan-config-pace-input-wrap">
-                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-day" value="" class="plan-config-pace-input">
-                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
-                  </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
-                </div>
-                <div class="plan-config-pace">
-                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
-                  <div class="plan-config-pace-input-wrap">
-                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-week" value="" class="plan-config-pace-input">
-                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
-                  </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
-                </div>
-                <div class="plan-config-pace">
-                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
-                  <div class="plan-config-pace-input-wrap">
-                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-month" value="" class="plan-config-pace-input">
-                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode">+</button>
-                  </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
-                </div>
-              </div>
-
-              
-              <div class="plan-config-guide math-guide-card">
-                <div class="plan-config-guide-header math-guide-header">
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
-                  <span>How Plan A Date &amp; Pace Auto-Synchronize</span>
-                  <svg class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon"><use href="#fmd-i-expand_more"/></svg>
-                </div>
-                <div class="plan-config-guide-body math-guide-body">
-                  <strong>Auto-Synchronization:</strong><br>
-                  &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan A <strong>Daily Pace</strong>.<br>
-                  &bull; Changing <strong>Daily Pace</strong> auto-updates Plan A <strong>Target Date</strong>.
-                </div>
-              </div>
-
-              <div class="plan-config-actions">
-                <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals">
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
-                  <span>Save &amp; Apply Plan A Target</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- PLAN B FORM -->
-          <div id="goal-plan-b-form" style="display:none;">
-            <div class="plan-config-plan-head">
-              <span class="plan-config-plan-badge"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-flag"/></svg> Plan B — Secondary Target</span>
-              <span class="plan-config-plan-role">Parallel <b>Subject Goal</b></span>
-            </div>
-
-            <form id="goal-form-b" onsubmit="return false;" class="plan-config-form">
-              <div class="plan-config-hint">
-                <svg class="material-symbols-outlined"><use href="#fmd-i-calculate"/></svg>
-                <span id="smart-math-text-b">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
-              </div>
-
-              <div class="plan-config-field">
-                <label class="plan-config-label" for="select-target-subject-b">Priority Target Subject</label>
-                <div class="plan-config-select-wrap">
-                  <select id="select-target-subject-b" class="plan-config-input"></select>
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-expand_more"/></svg>
-                </div>
-              </div>
-
-              <div class="plan-config-field">
-                <div class="plan-config-field-head">
-                  <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count-b" class="plan-config-chips-count"></span></label>
-                </div>
-                <div class="plan-config-hint" style="margin:4px 0 8px 0;">
-                  <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-filter_alt"/></svg>
-                  <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
-                </div>
-                <div class="plan-config-chips" id="chapter-chips-b"></div>
-              </div>
-
-              <div class="plan-config-field">
-                <div class="plan-config-field-head">
-                  <label class="plan-config-label" for="input-target-date-b" style="margin:0;">Target Deadline</label>
-                  <span id="days-remaining-badge-b" class="plan-config-badge">Not set</span>
-                </div>
-                <input type="date" id="input-target-date-b" value="" class="plan-config-input">
-              </div>
-
-              <div id="fields-video-mode-b" class="plan-config-pace-grid" style="display:grid;">
-                <div class="plan-config-pace">
-                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
-                  <div class="plan-config-pace-input-wrap">
-                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-day-b" value="" class="plan-config-pace-input">
-                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
-                  </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily-b" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
-                </div>
-                <div class="plan-config-pace">
-                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
-                  <div class="plan-config-pace-input-wrap">
-                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-week-b" value="" class="plan-config-pace-input">
-                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
-                  </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly-b" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
-                </div>
-                <div class="plan-config-pace">
-                  <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
-                  <div class="plan-config-pace-input-wrap">
-                    <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode-b">&#8722;</button>
-                    <input type="number" min="1" id="input-videos-per-month-b" value="" class="plan-config-pace-input">
-                    <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode-b">+</button>
-                  </div>
-                  <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly-b" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
-                </div>
-              </div>
-
-              
-              <div class="plan-config-guide math-guide-card">
-                <div class="plan-config-guide-header math-guide-header">
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
-                  <span>How Plan B Date &amp; Pace Auto-Synchronize</span>
-                  <svg class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon"><use href="#fmd-i-expand_more"/></svg>
-                </div>
-                <div class="plan-config-guide-body math-guide-body">
-                  <strong>Auto-Synchronization:</strong><br>
-                  &bull; Selecting a <strong>Target Date</strong> auto-calculates Plan B <strong>Daily Pace</strong>.<br>
-                  &bull; Changing <strong>Daily Pace</strong> auto-updates Plan B <strong>Target Date</strong>.
-                </div>
-              </div>
-
-              <div class="plan-config-actions">
-                <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals-b">
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
-                  <span>Save &amp; Apply Plan B Target</span>
-                </button>
-                <button type="button" class="plan-config-btn plan-config-btn-danger" id="btn-remove-plan-b">
-                  <svg class="material-symbols-outlined"><use href="#fmd-i-disabled_by_default"/></svg>
-                  <span>Disable / Remove Plan B</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>`;
+  // --- Plan helpers ---
+  function getPlan(planKey) {
+    if (!state.plans || state.plans.length === 0) return null;
+    return state.plans.find(p => p.id === planKey) || null;
   }
 
-  // --- View 1: Dashboard View ---
+  function hasPlan(planKey) {
+    return !!getPlan(planKey);
+  }
 
+  // --- Selected focus chapter for the tab currently rendered ---
   function getSelectedUnitsForPlanKey(isPlanB) {
     const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
     if (!container) return [];
@@ -255,20 +46,253 @@
     return (name && name !== '__all__') ? [name] : [];
   }
 
-  // --- Goal Modal Helpers (Dual-Plan Fully Functional) ---
-  function focusStudyPlanConfig() {
-    if (state.currentView !== 'dashboard') {
-      if (window.FlowMD.shell) window.FlowMD.shell.switchView('dashboard');
-    }
-    const card = document.getElementById('study-plan-config');
-    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // --- Sheet open / close ---
+  function openPlanConfigSheet(dom) {
+    if (dom) sheetDom = dom;
+    const overlay = document.getElementById('plan-config-sheet-overlay');
+    const content = document.getElementById('plan-config-sheet-content');
+    if (!overlay || !content) return;
+    // Default to the primary tab on a fresh open; keep the last tab when
+    // the sheet is merely re-opened during the same session.
+    if (!hasPlan(sheetTab)) sheetTab = 'plan_a';
+    renderPlanConfigSheet();
+    overlay.classList.add('active');
+    const subSelect = document.getElementById(sheetTab === 'plan_b' ? 'select-target-subject-b' : 'select-target-subject');
+    if (subSelect) setTimeout(() => subSelect.focus({ preventScroll: true }), 250);
   }
 
-  function initStudyPlanConfig() {
-    const subSelectA = document.getElementById('select-target-subject');
-    const subSelectB = document.getElementById('select-target-subject-b');
-    const srcLabelEl = document.getElementById('goal-source-label');
+  function closePlanConfigSheet() {
+    const overlay = document.getElementById('plan-config-sheet-overlay');
+    if (overlay && overlay.classList.contains('active')) {
+      overlay.classList.remove('active');
+      // The dashboard/analytics behind the sheet may reflect new plans.
+      if (window.FlowMD.shell) window.FlowMD.shell.render();
+    }
+  }
+
+  // --- Sheet template ---
+  function renderPlanConfigSheet() {
+    const content = document.getElementById('plan-config-sheet-content');
+    if (!content) return;
     const sid = state.activeSource || 'marrow_8';
+    const src = STUDY_SOURCES.find(s => s.id === sid);
+    const activePlan = getPlan(sheetTab);
+
+    const tabBtn = (key, label) => {
+      const p = getPlan(key);
+      // Badge only when the plan is enabled AND actually configured.
+      const badge = (p && p.targetSubject) ? 'On' : '';
+      return `
+      <button type="button" class="spc-tab ${sheetTab === key ? 'active' : ''}" data-spc-tab="${key}">
+        <span class="spc-tab-dot" style="background:${key === 'plan_a' ? PLAN_A_ACCENT : PLAN_B_ACCENT};"></span>
+        <span>${label}</span>
+        ${badge ? `<span class="spc-tab-badge">${badge}</span>` : ''}
+      </button>`;
+    };
+
+    content.innerHTML = `
+      <div class="spc-sheet-head">
+        <div class="spc-sheet-head-text">
+          <div class="plan-config-hero-kicker">Study Plan</div>
+          <h2 class="plan-config-hero-title">Configure Study Plan</h2>
+          <p class="spc-sheet-sub">${escapeHtml(src ? src.label : 'Marrow Edition 8')} &bull; pace &amp; deadline auto-synchronize</p>
+        </div>
+        <button type="button" class="plan-config-icon-btn" id="spc-sheet-close" title="Close" aria-label="Close Configure Study Plan">
+          <svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-close"/></svg>
+        </button>
+      </div>
+
+      <div class="spc-tabs" role="tablist" aria-label="Plans">
+      ${tabBtn('plan_a', 'Plan A')}
+      ${tabBtn('plan_b', 'Plan B')}
+      </div>
+
+      ${activePlan ? renderPlanForm(sheetTab, activePlan) : renderAddPlanIntro(sheetTab)}
+    `;
+
+    initPlanConfig();
+  }
+
+  function renderAddPlanIntro(planKey) {
+    const isB = planKey === 'plan_b';
+    const accent = isB ? PLAN_B_ACCENT : PLAN_A_ACCENT;
+    const label = isB ? 'Plan B' : 'Plan A';
+    const otherEnabled = hasPlan(isB ? 'plan_a' : 'plan_b');
+    return `
+      <div class="spc-add-intro">
+        <div class="spc-add-icon" style="color:${accent};">
+          <svg class="material-symbols-outlined" style="font-size:34px;"><use href="#fmd-i-flag"/></svg>
+        </div>
+        <div class="onboarding-title" style="margin-bottom:6px;">${label} is not enabled</div>
+        <div class="onboarding-sub">${otherEnabled
+          ? `Add a parallel ${label} goal — a second subject with its own pace and deadline, tracked alongside your other plan.`
+          : 'Set a priority target subject, a daily pace and a deadline. FlowMD builds your daily tasks from it.'}</div>
+        <button type="button" class="v2-arcade-btn spc-add-btn" id="spc-add-plan" data-add-plan="${planKey}" style="--plan-accent:${accent};">
+          <svg class="material-symbols-outlined"><use href="#fmd-i-add_task"/></svg>
+          <span>Add ${label}</span>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderPlanForm(planKey, plan) {
+    const isB = planKey === 'plan_b';
+    const suffix = isB ? '-b' : '';
+    const accent = plan.accentColor || (isB ? PLAN_B_ACCENT : PLAN_A_ACCENT);
+    // Disabling is always offered — even on the last plan. A user must be
+    // able to step back to "no plan"; the queue engine treats a plan-less
+    // state the same as a fresh (unconfigured) one.
+    const canDisableAlways = true;
+    const otherPlan = state.plans.find(p => p.id !== planKey);
+    const videosPerWeek = plan.videosPerWeek || '';
+    const videosPerMonth = plan.videosPerMonth || '';
+
+    return `
+      <div id="goal-plan-${isB ? 'b' : 'a'}-form">
+        <div class="plan-config-plan-head">
+          <span class="plan-config-plan-badge" style="background:${accent};"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-flag"/></svg> ${escapeHtml(plan.label)}</span>
+          <span class="plan-config-plan-role">${isB ? 'Parallel' : 'Main'} <b>Subject Goal</b></span>
+        </div>
+
+        <form id="goal-form${suffix}" onsubmit="return false;" class="plan-config-form">
+          <div class="plan-config-hint">
+            <svg class="material-symbols-outlined"><use href="#fmd-i-calculate"/></svg>
+            <span id="smart-math-text${suffix}">Pick a subject — pace &amp; deadline auto-synchronize from there.</span>
+          </div>
+
+          <div class="plan-config-field">
+            <label class="plan-config-label" for="select-target-subject${suffix}">Priority Target Subject</label>
+            <div class="plan-config-select-wrap">
+              <select id="select-target-subject${suffix}" class="plan-config-input"></select>
+              <svg class="material-symbols-outlined"><use href="#fmd-i-expand_more"/></svg>
+            </div>
+          </div>
+
+          <div class="plan-config-field">
+            <div class="plan-config-field-head">
+              <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count${suffix}" class="plan-config-chips-count"></span></label>
+            </div>
+            <div class="plan-config-hint" style="margin:4px 0 8px 0;">
+              <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-filter_alt"/></svg>
+              <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
+            </div>
+            <div class="plan-config-chips" id="chapter-chips${suffix}"></div>
+          </div>
+
+          <div class="plan-config-field">
+            <div class="plan-config-hint" style="margin:0;">
+              <svg class="material-symbols-outlined" style="font-size:18px;"><use href="#fmd-i-auto_stories"/></svg>
+              <span>Syllabus source: <b id="goal-source-label${suffix}"></b>. Change it from <b>Profile → Settings → Study Source</b>.</span>
+            </div>
+          </div>
+
+          <div class="plan-config-field">
+            <div class="plan-config-field-head">
+              <label class="plan-config-label" for="input-target-date${suffix}" style="margin:0;">Target Deadline</label>
+              <span id="days-remaining-badge${suffix}" class="plan-config-badge">Not set</span>
+            </div>
+            <input type="date" id="input-target-date${suffix}" value="${escapeAttr(plan.targetDate || '')}" class="plan-config-input">
+          </div>
+
+          <div id="fields-video-mode${suffix}" class="plan-config-pace-grid" style="display:grid;">
+            <div class="plan-config-pace">
+              <div class="plan-config-pace-top"><span class="plan-config-pace-label">Daily</span><span class="plan-config-pace-unit">vids</span></div>
+              <div class="plan-config-pace-input-wrap">
+                <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode${suffix}">&#8722;</button>
+                <input type="number" min="1" id="input-videos-per-day${suffix}" value="${escapeAttr(plan.videosPerDay || '')}" class="plan-config-pace-input">
+                <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode${suffix}">+</button>
+              </div>
+              <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-daily${suffix}" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
+            </div>
+            <div class="plan-config-pace">
+              <div class="plan-config-pace-top"><span class="plan-config-pace-label">Weekly</span><span class="plan-config-pace-unit">vids</span></div>
+              <div class="plan-config-pace-input-wrap">
+                <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode${suffix}">&#8722;</button>
+                <input type="number" min="1" id="input-videos-per-week${suffix}" value="${escapeAttr(videosPerWeek)}" class="plan-config-pace-input">
+                <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode${suffix}">+</button>
+              </div>
+              <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-weekly${suffix}" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
+            </div>
+            <div class="plan-config-pace">
+              <div class="plan-config-pace-top"><span class="plan-config-pace-label">Monthly</span><span class="plan-config-pace-unit">vids</span></div>
+              <div class="plan-config-pace-input-wrap">
+                <button type="button" class="plan-config-step" data-step-index="0" data-step-fields="fields-video-mode${suffix}">&#8722;</button>
+                <input type="number" min="1" id="input-videos-per-month${suffix}" value="${escapeAttr(videosPerMonth)}" class="plan-config-pace-input">
+                <button type="button" class="plan-config-step" data-step-index="2" data-step-fields="fields-video-mode${suffix}">+</button>
+              </div>
+              <label class="plan-config-pace-tick"><input type="checkbox" id="toggle-card-monthly${suffix}" checked><svg class="ms material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg><span>On</span></label>
+            </div>
+          </div>
+
+          <div class="plan-config-guide math-guide-card">
+            <div class="plan-config-guide-header math-guide-header">
+              <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
+              <span>How ${escapeHtml(plan.label)} Date &amp; Pace Auto-Synchronize</span>
+              <svg class="material-symbols-outlined plan-config-guide-arrow math-guide-toggle-icon"><use href="#fmd-i-expand_more"/></svg>
+            </div>
+            <div class="plan-config-guide-body math-guide-body">
+              <strong>Auto-Synchronization:</strong><br>
+              &bull; Selecting a <strong>Target Date</strong> auto-calculates ${escapeHtml(plan.label)} <strong>Daily Pace</strong>.<br>
+              &bull; Changing <strong>Daily Pace</strong> auto-updates ${escapeHtml(plan.label)} <strong>Target Date</strong>.
+            </div>
+          </div>
+
+          <div class="plan-config-actions">
+            <button type="button" class="plan-config-btn plan-config-btn-prim" id="btn-apply-goals${suffix}">
+              <svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg>
+              <span>Save &amp; Apply ${escapeHtml(plan.label)} Target</span>
+            </button>
+            ${canDisableAlways ? `
+              <button type="button" class="plan-config-btn plan-config-btn-danger" id="btn-disable-plan${isB ? '-b' : '-a'}">
+                <svg class="material-symbols-outlined"><use href="#fmd-i-disabled_by_default"/></svg>
+                <span>Disable ${escapeHtml(plan.label)}${otherPlan ? ` — run ${escapeHtml(otherPlan.label)} only` : ''}</span>
+              </button>
+            ` : ''}
+          </div>
+        </form>
+      </div>
+    `;
+  }
+
+  // --- Sheet init (wire the currently rendered tab) ---
+  function initPlanConfig() {
+    const isB = (sheetTab === 'plan_b');
+    const suffix = isB ? '-b' : '';
+    const subSelect = document.getElementById('select-target-subject' + suffix);
+    const srcLabelEl = document.getElementById('goal-source-label' + suffix);
+    const sid = state.activeSource || 'marrow_8';
+    const plan = getPlan(sheetTab);
+
+    // Close button
+    const closeBtn = document.getElementById('spc-sheet-close');
+    if (closeBtn) closeBtn.onclick = () => closePlanConfigSheet();
+
+    // Tabs
+    document.querySelectorAll('.spc-tab').forEach(btn => {
+      btn.onclick = () => {
+        sheetTab = btn.getAttribute('data-spc-tab');
+        renderPlanConfigSheet();
+      };
+    });
+
+    // Add-plan intro buttons
+    const addBtn = document.getElementById('spc-add-plan');
+    if (addBtn) {
+      addBtn.onclick = () => {
+        const key = addBtn.getAttribute('data-add-plan');
+        if (hasPlan(key)) return;
+        const isNewPlan = key === 'plan_b'
+          ? DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT)
+          : DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
+        if (key === 'plan_b') state.plans.push(isNewPlan);
+        else state.plans.unshift(isNewPlan);
+        saveState();
+        showToast(`${key === 'plan_b' ? 'Plan B' : 'Plan A'} added — set its target.`, 'flag', 'Plan Added');
+        renderPlanConfigSheet();
+      };
+    }
+
+    if (!plan) return; // add-intro tab — nothing further to wire
 
     function renderSubjectOptionsFor(sourceId, selectEl, preferredValue) {
       if (!selectEl) return null;
@@ -292,53 +316,23 @@
       return stats;
     }
 
-    function populateSubjectUI() {
-      if (srcLabelEl) {
-        const src = STUDY_SOURCES.find(s => s.id === sid);
-        srcLabelEl.textContent = src ? src.label : 'Marrow Edition 8';
-      }
-      renderSubjectOptionsFor(sid, subSelectA, state.plans && state.plans[0] ? state.plans[0].targetSubject : '');
-      renderSubjectOptionsFor(sid, subSelectB, state.plans && state.plans[1] ? state.plans[1].targetSubject : '');
+    if (srcLabelEl) {
+      const src = STUDY_SOURCES.find(s => s.id === sid);
+      srcLabelEl.textContent = src ? src.label : 'Marrow Edition 8';
+    }
+    renderSubjectOptionsFor(sid, subSelect, plan.targetSubject || '');
+    if (subSelect && plan.targetSubject && subSelect.querySelector(`option[value="${plan.targetSubject}"]`)) {
+      subSelect.value = plan.targetSubject;
     }
 
-    populateSubjectUI();
-
-    const planA = state.plans[0] || DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
-    const hasPlanB = state.plans.length >= 2;
-    const planB = hasPlanB ? state.plans[1] : DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology');
-
-    // Populate Plan A Form
-    if (subSelectA) {
-      if (planA.targetSubject && subSelectA.querySelector(`option[value="${planA.targetSubject}"]`)) {
-        subSelectA.value = planA.targetSubject;
-      } else if (subSelectA.options.length > 0) {
-        subSelectA.selectedIndex = 0;
-      }
-    }
-    const dateInputA = document.getElementById('input-target-date');
-    if (dateInputA) dateInputA.value = planA.targetDate || '';
-    const vidsInputA = document.getElementById('input-videos-per-day');
-    if (vidsInputA) vidsInputA.value = planA.videosPerDay || '';
-
-    // Populate Plan B Form (no assumed subject — placeholder until chosen)
-    if (subSelectB) {
-      const prefB = planB.targetSubject || '';
-      if (prefB && subSelectB.querySelector(`option[value="${prefB}"]`)) {
-        subSelectB.value = prefB;
-      } else if (subSelectB.options.length > 0) {
-        subSelectB.selectedIndex = 0;
-      }
-    }
-    const dateInputB = document.getElementById('input-target-date-b');
-    if (dateInputB) dateInputB.value = planB.targetDate || '';
-    const vidsInputB = document.getElementById('input-videos-per-day-b');
-    if (vidsInputB) vidsInputB.value = planB.videosPerDay || '';
+    const dateInput = document.getElementById('input-target-date' + suffix);
+    const vidsInput = document.getElementById('input-videos-per-day' + suffix);
 
     // --- Focus Chapter: render + wire single-select chips ---
-    function updateChapterCount(isPlanB, total) {
-      const countEl = document.getElementById(isPlanB ? 'chapters-count-b' : 'chapters-count-a');
+    function updateChapterCount(isPlanBTab, total) {
+      const countEl = document.getElementById(isPlanBTab ? 'chapters-count-b' : 'chapters-count-a');
       if (!countEl) return;
-      const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
+      const container = document.getElementById(isPlanBTab ? 'chapter-chips-b' : 'chapter-chips-a');
       const allChip = container ? container.querySelector('.plan-config-chip[data-chap="__all__"]') : null;
       if (allChip && allChip.classList.contains('selected')) {
         countEl.textContent = 'All chapters';
@@ -348,13 +342,14 @@
       }
     }
 
-    function renderUnitChips(planKey, subjectVal) {
-      const isPlanB = (planKey === 'plan_b');
-      const container = document.getElementById(isPlanB ? 'chapter-chips-b' : 'chapter-chips-a');
+    function renderUnitChips(planKeyTab, subjectVal) {
+      const isPlanBChip = (planKeyTab === 'plan_b');
+      const container = document.getElementById(isPlanBChip ? 'chapter-chips-b' : 'chapter-chips-a');
       if (!container) return;
-      const idx = isPlanB ? 1 : 0;
+      const idx = isPlanBChip ? 1 : 0;
+      const planObj = getPlan(planKeyTab);
 
-      const sid = state.activeSource || 'marrow_8';
+      const sidChip = state.activeSource || 'marrow_8';
       let chapters = [];
       try {
         const dataset = getDataset();
@@ -368,12 +363,12 @@
         container.innerHTML = subjectVal
           ? '<div class="plan-config-chips-empty">No chapters found for this subject.</div>'
           : '<div class="plan-config-chips-empty">Select a subject to see its chapters.</div>';
-        updateChapterCount(isPlanB, 0);
+        updateChapterCount(isPlanBChip, 0);
         return;
       }
 
-      const savedUnits = (state.plans && state.plans[idx] && Array.isArray(state.plans[idx].targetUnits) && state.plans[idx].targetUnits.length > 0)
-        ? state.plans[idx].targetUnits.map(u => String(u)) : null;
+      const savedUnits = (planObj && Array.isArray(planObj.targetUnits) && planObj.targetUnits.length > 0)
+        ? planObj.targetUnits.map(u => String(u)) : null;
 
       // Single focus per plan: exactly one saved chapter -> select it; anything else (none or legacy multi) -> All Chapters.
       let focusedName = null;
@@ -382,7 +377,7 @@
         if (match) focusedName = String(match.name);
       }
 
-      const searchId = `plan-config-chapter-search-${isPlanB ? 'b' : 'a'}`;
+      const searchId = `plan-config-chapter-search-${isPlanBChip ? 'b' : 'a'}`;
       const allChip = `<button type="button" class="plan-config-chip ${focusedName ? '' : 'selected'}" data-chap="__all__"><svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-select_all"/></svg><span>All Chapters</span></button>`;
 
       container.innerHTML = `
@@ -424,197 +419,98 @@
             container.querySelectorAll('.plan-config-chip').forEach(c => c.classList.remove('selected'));
             chip.classList.add('selected');
           }
-          updateChapterCount(isPlanB, chapters.length);
-          synchronizeModalPace('subjectChange', planKey);
+          updateChapterCount(isPlanBChip, chapters.length);
+          synchronizeModalPace('subjectChange', planKeyTab);
         };
       });
 
-      updateChapterCount(isPlanB, chapters.length);
+      updateChapterCount(isPlanBChip, chapters.length);
     }
 
-    renderUnitChips('plan_a', subSelectA ? subSelectA.value : '');
-    renderUnitChips('plan_b', subSelectB ? subSelectB.value : '');
+    renderUnitChips(sheetTab, subSelect ? subSelect.value : '');
 
-    const togglePlanB = document.getElementById('toggle-plan-b');
-    if (togglePlanB) togglePlanB.checked = hasPlanB;
-
-    const planSelect = document.getElementById('goal-plan-select');
-    const formA = document.getElementById('goal-plan-a-form');
-    const formB = document.getElementById('goal-plan-b-form');
-    const dualStatusEl = document.getElementById('spc-dual-status');
-
-    function syncPlanSelectOptions() {
-      if (!planSelect) return;
-      const hasB = state.plans.length >= 2 || (togglePlanB && togglePlanB.checked);
-      const optB = planSelect.querySelector('option[value="plan_b"]');
-      if (hasB && !optB) {
-        const opt = document.createElement('option');
-        opt.value = 'plan_b';
-        opt.textContent = 'Plan B — Secondary Target';
-        planSelect.appendChild(opt);
-      } else if (!hasB && optB) {
-        optB.remove();
-      }
-    }
-
-    function switchGoalTab(activePlan) {
-      const isB = (activePlan === 'plan_b');
-      if (planSelect) planSelect.value = isB ? 'plan_b' : 'plan_a';
-      if (formA) formA.style.display = isB ? 'none' : 'block';
-      if (formB) formB.style.display = isB ? 'block' : 'none';
-      if (dualStatusEl) dualStatusEl.textContent = isB ? 'On' : 'Off';
-      if (isB && togglePlanB && !togglePlanB.checked) {
-        togglePlanB.checked = true;
-        if (state.plans.length < 2) {
-          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
-        }
-      }
-      synchronizeModalPace('init', isB ? 'plan_b' : 'plan_a');
-    }
-
-    syncPlanSelectOptions();
-    if (planSelect) planSelect.onchange = () => switchGoalTab(planSelect.value);
-
-    if (togglePlanB) {
-      togglePlanB.onchange = () => {
-        if (togglePlanB.checked) {
-          if (state.plans.length < 2) {
-            state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT, 'Pathology'));
-          }
-          syncPlanSelectOptions();
-          switchGoalTab('plan_b');
-        } else {
-          if (state.plans.length >= 2) {
-            state.plans.splice(1, 1);
-          }
-          syncPlanSelectOptions();
-          switchGoalTab('plan_a');
-        }
-        saveState();
-      };
-    }
-
-    // --- Save Plan A Action ---
+    // --- Save plan action ---
     // The site waits for the user: subject, deadline and daily pace must all
     // be filled in before a plan is saved — nothing is assumed.
-    const btnApplyA = document.getElementById('btn-apply-goals');
-    if (btnApplyA) {
-      btnApplyA.onclick = () => {
-        const newSubject = subSelectA ? subSelectA.value : '';
-        const newDate = dateInputA ? dateInputA.value : '';
-        const newVids = parseInt(vidsInputA ? vidsInputA.value : '', 10);
-        if (!newSubject) { showToast('Select a priority target subject first.', 'error', 'Incomplete Target'); return; }
-        if (!newDate) { showToast('Pick a target deadline date.', 'error', 'Incomplete Target'); return; }
-        if (!newVids || newVids < 1) { showToast('Enter your daily video pace (min 1).', 'error', 'Incomplete Target'); return; }
+    const btnApply = document.getElementById('btn-apply-goals' + suffix);
+    if (btnApply) {
+      btnApply.onclick = () => {
+        const planObj = getPlan(sheetTab);
+        if (!planObj) return;
+        const newSubject = subSelect ? subSelect.value : '';
+        const newDate = dateInput ? dateInput.value : '';
+        const newVids = parseInt(vidsInput ? vidsInput.value : '', 10);
+        if (!newSubject) { showToast(`Select a priority target subject for ${planObj.label}.`, 'error', 'Incomplete Target'); return; }
+        if (!newDate) { showToast(`Pick a target deadline date for ${planObj.label}.`, 'error', 'Incomplete Target'); return; }
+        if (!newVids || newVids < 1) { showToast(`Enter the daily video pace for ${planObj.label} (min 1).`, 'error', 'Incomplete Target'); return; }
         state.isConfigured = true;
-        if (!state.plans[0]) state.plans[0] = DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT);
-        const prevSubject = state.plans[0].targetSubject;
-        state.plans[0].targetSubject = newSubject;
-        state.plans[0].targetDate = newDate;
-        state.plans[0].videosPerDay = newVids;
-        state.plans[0].videosPerWeek = newVids * 7;
-        state.plans[0].videosPerMonth = newVids * 30;
-        const prevUnits = state.plans[0].targetUnits;
-        state.plans[0].targetUnits = getSelectedUnitsForPlanKey(false);
+        const idx = state.plans.indexOf(planObj);
+        const prevSubject = planObj.targetSubject;
+        planObj.targetSubject = newSubject;
+        planObj.targetDate = newDate;
+        planObj.videosPerDay = newVids;
+        planObj.videosPerWeek = newVids * 7;
+        planObj.videosPerMonth = newVids * 30;
+        const prevUnits = planObj.targetUnits;
+        planObj.targetUnits = getSelectedUnitsForPlanKey(isB);
         if (prevSubject !== newSubject) {
           // Subject changed: reset queue state so the daily quest reloads a
           // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
-          state.plans[0].queueBatchVideoIds = [];
-          state.plans[0].queueCompletedInBatch = 0;
-          state.plans[0].extraBatchesCompletedToday = 0;
-          state.plans[0].lastBatchDate = '';
-        } else if ((prevUnits || []).join('|') !== (state.plans[0].targetUnits || []).join('|')) {
-          state.plans[0].queueBatchVideoIds = [];
-          state.plans[0].queueCompletedInBatch = 0;
-          state.plans[0].extraBatchesCompletedToday = 0;
+          planObj.queueBatchVideoIds = [];
+          planObj.queueCompletedInBatch = 0;
+          planObj.extraBatchesCompletedToday = 0;
+          planObj.lastBatchDate = '';
+        } else if ((prevUnits || []).join('|') !== (planObj.targetUnits || []).join('|')) {
+          planObj.queueBatchVideoIds = [];
+          planObj.queueCompletedInBatch = 0;
+          planObj.extraBatchesCompletedToday = 0;
         }
 
-        // Keep legacy state.goals fully in sync (analytics/history reads aside,
-        // it's still a cloud field) — weekly/monthly included so it is never
-        // half-stale next to the per-plan source of truth.
-        state.goals.targetSubject = state.plans[0].targetSubject;
-        state.goals.targetDate = state.plans[0].targetDate;
-        state.goals.videosPerDay = state.plans[0].videosPerDay;
-        state.goals.videosPerWeek = state.plans[0].videosPerWeek;
-        state.goals.videosPerMonth = state.plans[0].videosPerMonth;
-
-        saveState();
-        showToast('Plan A Target Configured & Saved!', 'check_circle', 'Plan A Updated');
-        if (window.FlowMD.shell) window.FlowMD.shell.render();
-      };
-    }
-
-    // --- Save Plan B Action (waits for user input — no assumed values) ---
-    const btnApplyB = document.getElementById('btn-apply-goals-b');
-    if (btnApplyB) {
-      btnApplyB.onclick = () => {
-        const newSubject = subSelectB ? subSelectB.value : '';
-        const newDate = dateInputB ? dateInputB.value : '';
-        const newVids = parseInt(vidsInputB ? vidsInputB.value : '', 10);
-        if (!newSubject) { showToast('Select a priority target subject for Plan B.', 'error', 'Incomplete Target'); return; }
-        if (!newDate) { showToast('Pick a target deadline date for Plan B.', 'error', 'Incomplete Target'); return; }
-        if (!newVids || newVids < 1) { showToast('Enter the daily video pace for Plan B (min 1).', 'error', 'Incomplete Target'); return; }
-        if (state.plans.length < 2) {
-          state.plans.push(DEFAULT_PLAN('plan_b', 'Plan B', PLAN_B_ACCENT));
-        }
-        const prevSubject = state.plans[1].targetSubject;
-        state.plans[1].targetSubject = newSubject;
-        state.plans[1].targetDate = newDate;
-        state.plans[1].videosPerDay = newVids;
-        state.plans[1].videosPerWeek = newVids * 7;
-        state.plans[1].videosPerMonth = newVids * 30;
-        const prevUnits = state.plans[1].targetUnits;
-        state.plans[1].targetUnits = getSelectedUnitsForPlanKey(true);
-        if (prevSubject !== newSubject) {
-          // Subject changed: reset queue state so the daily quest reloads a
-          // fresh batch at the normal pace (not stuck in 1-at-a-time extra mode)
-          state.plans[1].queueBatchVideoIds = [];
-          state.plans[1].queueCompletedInBatch = 0;
-          state.plans[1].extraBatchesCompletedToday = 0;
-          state.plans[1].lastBatchDate = '';
-        } else if ((prevUnits || []).join('|') !== (state.plans[1].targetUnits || []).join('|')) {
-          state.plans[1].queueBatchVideoIds = [];
-          state.plans[1].queueCompletedInBatch = 0;
-          state.plans[1].extraBatchesCompletedToday = 0;
+        // Keep the primary plan mirrored into legacy state.goals (analytics
+        // and the cloud field still read it).
+        if (state.plans[idx] && state.plans[idx].id === 'plan_a') {
+          state.goals.targetSubject = planObj.targetSubject;
+          state.goals.targetDate = planObj.targetDate;
+          state.goals.videosPerDay = planObj.videosPerDay;
+          state.goals.videosPerWeek = planObj.videosPerWeek;
+          state.goals.videosPerMonth = planObj.videosPerMonth;
         }
 
         saveState();
-        showToast('Plan B Target Configured & Saved!', 'check_circle', 'Plan B Updated');
-        if (window.FlowMD.shell) window.FlowMD.shell.render();
+        showToast(`${planObj.label} Target Configured & Saved!`, 'check_circle', `${planObj.label} Updated`);
+        closePlanConfigSheet();
       };
     }
 
-    // --- Remove Plan B Action ---
-    const btnRemoveB = document.getElementById('btn-remove-plan-b');
-    if (btnRemoveB) {
-      btnRemoveB.onclick = () => {
-        if (state.plans.length >= 2) state.plans.splice(1, 1);
-        if (togglePlanB) togglePlanB.checked = false;
+    // --- Disable plan action (run the other plan alone) ---
+    const btnDisable = document.getElementById('btn-disable-plan' + (isB ? '-b' : '-a'));
+    if (btnDisable) {
+      btnDisable.onclick = () => {
+        const planObj = getPlan(sheetTab);
+        if (!planObj) return;
+        // Disabling the last plan is allowed: the state becomes plan-less and
+        // the queue engine lazily re-seeds an UNSET plan_a (same as fresh).
+        state.plans = state.plans.filter(p => p.id !== planObj.id);
+        if (state.activePlanId === planObj.id) {
+          state.activePlanId = state.plans[0] ? state.plans[0].id : 'plan_a';
+        }
         saveState();
-        showToast('Plan B Target Disabled.', 'info', 'Single Plan Mode');
-        switchGoalTab('plan_a');
-        if (window.FlowMD.shell) window.FlowMD.shell.render();
+        showToast(`${planObj.label} disabled.`, 'info', 'Single Plan Mode');
+        sheetTab = state.plans[0] ? state.plans[0].id : 'plan_a';
+        renderPlanConfigSheet();
       };
     }
 
-    // --- Subject & Pace Listeners for Plan A ---
-    if (subSelectA) subSelectA.onchange = () => {
-      renderUnitChips('plan_a', subSelectA.value);
-      synchronizeModalPace('subjectChange', 'plan_a');
+    // --- Subject & Pace Listeners ---
+    if (subSelect) subSelect.onchange = () => {
+      renderUnitChips(sheetTab, subSelect.value);
+      synchronizeModalPace('subjectChange', sheetTab);
     };
-    if (dateInputA) dateInputA.oninput = () => synchronizeModalPace('date', 'plan_a');
-    if (vidsInputA) vidsInputA.oninput = () => synchronizeModalPace('dailyVids', 'plan_a');
-
-    // --- Subject & Pace Listeners for Plan B ---
-    if (subSelectB) subSelectB.onchange = () => {
-      renderUnitChips('plan_b', subSelectB.value);
-      synchronizeModalPace('subjectChange', 'plan_b');
-    };
-    if (dateInputB) dateInputB.oninput = () => synchronizeModalPace('date', 'plan_b');
-    if (vidsInputB) vidsInputB.oninput = () => synchronizeModalPace('dailyVids', 'plan_b');
+    if (dateInput) dateInput.oninput = () => synchronizeModalPace('date', sheetTab);
+    if (vidsInput) vidsInput.oninput = () => synchronizeModalPace('dailyVids', sheetTab);
 
     // Math Guide Accordion Toggles
-    document.querySelectorAll('.math-guide-card').forEach(card => {
+    document.querySelectorAll('#plan-config-sheet-content .math-guide-card').forEach(card => {
       const header = card.querySelector('.math-guide-header');
       const body = card.querySelector('.math-guide-body');
       const icon = card.querySelector('.math-guide-toggle-icon');
@@ -628,7 +524,7 @@
     });
 
     // Stepper buttons (±) for the pace inputs
-    document.querySelectorAll('#study-plan-config .plan-config-step').forEach(btn => {
+    document.querySelectorAll('#plan-config-sheet-content .plan-config-step').forEach(btn => {
       btn.onclick = (e) => {
         e.preventDefault();
         const wrap = btn.closest('.plan-config-pace-input-wrap');
@@ -641,38 +537,37 @@
         let val = (parseFloat(input.value) || 0) + (isPlus ? step : -step);
         val = Math.min(max, Math.max(min, val));
         input.value = val;
-        const isPlanB = !!btn.closest('#goal-plan-b-form');
-        const planKey = isPlanB ? 'plan_b' : 'plan_a';
-        const isDaily = /per-day|daily-target/.test(input.id);
+        const isDaily = /per-day/.test(input.id);
         if (isDaily) {
-          synchronizeModalPace('dailyVids', planKey);
+          synchronizeModalPace('dailyVids', sheetTab);
         } else {
-          const vidsWeek = document.getElementById(isPlanB ? 'input-videos-per-week-b' : 'input-videos-per-week');
-          const vidsMonth = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
-          const day = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
+          const vidsWeek = document.getElementById('input-videos-per-week' + suffix);
+          const vidsMonth = document.getElementById('input-videos-per-month' + suffix);
+          const day = document.getElementById('input-videos-per-day' + suffix);
           if (day && day.value) { const d = parseFloat(day.value); if (d > 0) { if (vidsWeek) vidsWeek.value = Math.max(1, Math.round(d * 7)); if (vidsMonth) vidsMonth.value = Math.max(1, Math.round(d * 30)); } }
         }
       };
     });
 
-    switchGoalTab('plan_a');
+    synchronizeModalPace('init', sheetTab);
   }
 
   function synchronizeModalPace(source, planKey = 'plan_a') {
     const isPlanB = (planKey === 'plan_b');
-    const subSelect = document.getElementById(isPlanB ? 'select-target-subject-b' : 'select-target-subject');
+    const suffix = isPlanB ? '-b' : '';
+    const subSelect = document.getElementById('select-target-subject' + suffix);
     const selectedSubVal = subSelect ? subSelect.value : '';
     const modalSource = state.activeSource || 'marrow_8';
     const selectedUnits = getSelectedUnitsForPlanKey(isPlanB);
     const metrics = getMetricsForModalScope(selectedSubVal, selectedUnits, modalSource);
 
-    const dateInput = document.getElementById(isPlanB ? 'input-target-date-b' : 'input-target-date');
-    const badge = document.getElementById(isPlanB ? 'days-remaining-badge-b' : 'days-remaining-badge');
-    const bannerText = document.getElementById(isPlanB ? 'smart-math-text-b' : 'smart-math-text');
-    const vidsInput = document.getElementById(isPlanB ? 'input-videos-per-day-b' : 'input-videos-per-day');
+    const dateInput = document.getElementById('input-target-date' + suffix);
+    const badge = document.getElementById('days-remaining-badge' + suffix);
+    const bannerText = document.getElementById('smart-math-text' + suffix);
+    const vidsInput = document.getElementById('input-videos-per-day' + suffix);
 
     let now = new Date();
-    const planObj = isPlanB ? (state.plans[1] || {}) : (state.plans[0] || {});
+    const planObj = getPlan(planKey) || {};
 
     if (source === 'init' || source === 'subjectChange') {
       if (!selectedSubVal) {
@@ -721,9 +616,9 @@
     const monthlyVids = dailyVids * 30;
 
     if (source !== 'dailyVids' && vidsInput) vidsInput.value = dailyVids;
-    const vidsWeekEl = document.getElementById(isPlanB ? 'input-videos-per-week-b' : 'input-videos-per-week');
+    const vidsWeekEl = document.getElementById('input-videos-per-week' + suffix);
     if (vidsWeekEl) vidsWeekEl.value = weeklyVids;
-    const vidsMonthEl = document.getElementById(isPlanB ? 'input-videos-per-month-b' : 'input-videos-per-month');
+    const vidsMonthEl = document.getElementById('input-videos-per-month' + suffix);
     if (vidsMonthEl) vidsMonthEl.value = monthlyVids;
 
     const dateFormatted = targetDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -744,12 +639,18 @@
     }
   }
 
-  // --- Study Source Settings Modal (separate dialog from Profile → Settings) ---
+  // --- Focus helper (analytics / profile / dashboard CTAs) ---
+  function focusStudyPlanConfig() {
+    if (window.FlowMD.shell) window.FlowMD.shell.switchView('dashboard');
+    openPlanConfigSheet();
+  }
 
   // Expose
   window.FlowMD.planConfig = {
-    renderStudyPlanConfigCard,
-    initStudyPlanConfig,
+    renderPlanConfigSheet,
+    openPlanConfigSheet,
+    closePlanConfigSheet,
+    initPlanConfig,
     synchronizeModalPace,
     focusStudyPlanConfig,
     getSelectedUnitsForPlanKey

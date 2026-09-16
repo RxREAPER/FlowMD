@@ -18,6 +18,10 @@
     DEFAULT_PLAN,
     PLAN_A_ACCENT,
     STUDY_SOURCES,
+    DAILY_TASKS_MODE_KEY,
+    DAILY_TASKS_MANUAL_KEY,
+    DAILY_TASKS_MODE_AUTO,
+    DAILY_TASKS_MODE_MANUAL,
     todayKey,
     toLocalDateKey
   } = window.FlowMD.constants;
@@ -169,6 +173,10 @@
     isConfigured: false,
     activeSource: 'marrow_8',
     isOffline: false,
+    // Daily Tasks topic source: 'auto' (curriculum order) or 'manual'
+    // (user-picked video topics via search).
+    dailyTasksMode: DAILY_TASKS_MODE_AUTO,
+    dailyTasksManual: [],
     // Dual-Subject Tracking v2
     plans: [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)],
     activePlanId: 'plan_a',
@@ -219,7 +227,7 @@
 
   // Switch the active edition: flush the current live fields into the old
   // slice, point activeSource at the new edition, and load its slice as the
-  // live view. Per-day queue bookkeeping resets so the daily quests
+  // live view. Per-day task bookkeeping resets so the daily tasks
   // regenerate from the new edition's dataset.
   function switchSource(src) {
     // Validate against the declared study sources (works with or without the
@@ -325,6 +333,14 @@
 
       const savedConfigured = localStorage.getItem('flowmd_is_configured');
       if (savedConfigured === 'true') state.isConfigured = true;
+
+      // Daily Tasks topic mode: 'auto' (default) or 'manual'.
+      const savedTasksMode = localStorage.getItem(DAILY_TASKS_MODE_KEY);
+      if (savedTasksMode === DAILY_TASKS_MODE_AUTO || savedTasksMode === DAILY_TASKS_MODE_MANUAL) {
+        state.dailyTasksMode = savedTasksMode;
+      }
+      const savedTasksManual = localStorage.getItem(DAILY_TASKS_MANUAL_KEY);
+      if (savedTasksManual !== null) state.dailyTasksManual = safeParse(savedTasksManual, []);
 
       // --- Per-edition partitions (v4): load the durable slices, then point
       // the live working fields at the active edition. Legacy v3 flat data
@@ -454,6 +470,8 @@
     [STORAGE_KEYS.QUEUE_BATCH_VIDEOS, () => JSON.stringify(state.queueBatchVideoIds || [])],
     ['flowmd_active_source', () => state.activeSource || 'marrow_8'],
     ['flowmd_is_configured', () => state.isConfigured ? 'true' : 'false'],
+    [DAILY_TASKS_MODE_KEY, () => state.dailyTasksMode || DAILY_TASKS_MODE_AUTO],
+    [DAILY_TASKS_MANUAL_KEY, () => JSON.stringify(state.dailyTasksManual || [])],
     [STORAGE_KEYS.PLANS, () => JSON.stringify(state.plans || [])],
     [STORAGE_KEYS.DAILY_HISTORY_BY_SUBJECT, () => JSON.stringify(state.dailyHistoryBySubject || {})],
     [STORAGE_KEYS.BULK_COMPLETED_CHAPTERS, () => JSON.stringify(state.bulkCompletedChapters || {})],
@@ -631,6 +649,31 @@
     return streak.currentStreak || 0;
   }
 
+  // --- Daily Tasks topic mode ---
+  // Modes are exclusive: 'auto' generates the queue from the plan target in
+  // curriculum order; 'manual' shows only the user-picked topics. The plan
+  // target itself is never deleted — it is parked while manual mode is on.
+  function setDailyTasksMode(mode) {
+    if (mode !== DAILY_TASKS_MODE_AUTO && mode !== DAILY_TASKS_MODE_MANUAL) return;
+    state.dailyTasksMode = mode;
+    saveState();
+  }
+
+  function addManualTaskVideo(videoId) {
+    if (!videoId || typeof videoId !== 'string') return false;
+    if (!Array.isArray(state.dailyTasksManual)) state.dailyTasksManual = [];
+    if (state.dailyTasksManual.indexOf(videoId) !== -1) return false;
+    state.dailyTasksManual.push(videoId);
+    saveState();
+    return true;
+  }
+
+  function removeManualTaskVideo(videoId) {
+    if (!Array.isArray(state.dailyTasksManual)) return;
+    state.dailyTasksManual = state.dailyTasksManual.filter(id => id !== videoId);
+    saveState();
+  }
+
   // Merge plans arrays with local-wins: for each plan ID present locally, local
   // data takes precedence. Cloud-only plans (new device added a plan) are appended.
   function mergePlansLocalWins(cloudPlans, localPlans) {
@@ -657,6 +700,9 @@
     saveState,
     markStudyActivity,
     getStudyStreak,
+    setDailyTasksMode,
+    addManualTaskVideo,
+    removeManualTaskVideo,
     mergePlansLocalWins,
     snapshotCloudState,
     flushLiveToEdition,

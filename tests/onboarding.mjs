@@ -95,7 +95,9 @@ async function run() {
     check('Wizard step 1 label correct',
       (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 2'));
     check('Dashboard is gated while unconfigured',
-      (await page.locator('#study-plan-config').count()) === 0);
+      (await page.locator('.android-bottom-nav').isVisible()) === false);
+    check('Search bar hidden during wizard',
+      (await page.locator('#btn-toggle-search').isVisible()) === false);
 
     // Step 1 — study source
     const optCount = await page.locator('.onboarding-option').count();
@@ -186,7 +188,9 @@ async function run() {
     check('Wizard removed after finishing',
       (await page.locator('.onboarding-card').count()) === 0);
     check('Dashboard renders after finishing',
-      (await page.locator('#study-plan-config').count()) === 1);
+      (await page.locator('.android-bottom-nav').isVisible()) === true);
+    check('Search bar appears after finishing',
+      (await page.locator('#btn-toggle-search').isVisible()) === true);
 
     // Persisted state
     const stored = await page.evaluate(() => ({
@@ -209,7 +213,7 @@ async function run() {
     check('Wizard does NOT reappear after reload',
       (await page.locator('.onboarding-card').count()) === 0);
     check('Dashboard persists after reload',
-      (await page.locator('#study-plan-config').count()) === 1);
+      (await page.locator('.android-bottom-nav').isVisible()) === true);
 
     await context.close();
   }
@@ -230,7 +234,7 @@ async function run() {
     check('Legacy tutorial_seen=true skips wizard (migrated to configured)',
       (await page.locator('.onboarding-card').count()) === 0);
     check('Legacy user lands on dashboard',
-      (await page.locator('#study-plan-config').count()) === 1);
+      (await page.locator('.android-bottom-nav').isVisible()) === true);
 
     await context.close();
   }

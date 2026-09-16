@@ -54,7 +54,7 @@ const FLOWMD_ICONS = {
 
   // --- App cache-busting version (bumped by scripts/bump-version.js on deploy;
   // used for dynamic script injection so lazy-loaded data files bust the cache) ---
-  const APP_VERSION = '257';
+  const APP_VERSION = '258';
 
   // --- Constants & LocalStorage Keys ---
   const STORAGE_KEYS = {
@@ -78,6 +78,16 @@ const FLOWMD_ICONS = {
     // Per-edition partitions (v4+): { marrow_8: {...}, marrow_6_5: {...} }
     EDITIONS: 'flowmd_editions_v4'
   };
+
+  // --- Daily Tasks mode ---
+  // 'auto'    — the queue is generated from the plan's target subject (and
+  //             focus chapter), in curriculum order.
+  // 'manual'  — the user hand-picks video topics (via search); the plan
+  //             target is parked while manual mode is on.
+  const DAILY_TASKS_MODE_KEY = 'flowmd_daily_tasks_mode';
+  const DAILY_TASKS_MANUAL_KEY = 'flowmd_daily_tasks_manual';
+  const DAILY_TASKS_MODE_AUTO = 'auto';
+  const DAILY_TASKS_MODE_MANUAL = 'manual';
 
   // --- Study Sources ---
   // available: false  → "coming soon" — UI shows it but disables selection
@@ -133,8 +143,12 @@ const FLOWMD_ICONS = {
   const PLAN_B_ACCENT = '#f43f5e';   // rose pink
 
   const DEFAULT_PERSONAL = {
-    doctorName: 'Dr. Aspirant'
+    doctorName: 'Dr'
   };
+
+  // Legacy default from older builds — still treated as "no real name" by the
+  // cloud-merge logic so old profiles can adopt a synced real name.
+  const LEGACY_DEFAULT_DOCTOR_NAME = 'Dr. Aspirant';
 
   const DEFAULT_GOALS = {
     targetDate: '',
@@ -232,6 +246,10 @@ const FLOWMD_ICONS = {
     SCHEMA_VERSION,
     APP_VERSION,
     STORAGE_KEYS,
+    DAILY_TASKS_MODE_KEY,
+    DAILY_TASKS_MANUAL_KEY,
+    DAILY_TASKS_MODE_AUTO,
+    DAILY_TASKS_MODE_MANUAL,
     STUDY_SOURCES,
     DEFAULT_PLAN,
     PLAN_A_ACCENT,

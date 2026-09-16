@@ -16,14 +16,14 @@
   <meta name="viewport-fit" content="cover">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-TileColor" content="#0b0f19">
-  <link rel="icon" type="image/svg+xml" href="icon.svg?v=257">
+  <link rel="icon" type="image/svg+xml" href="icon.svg?v=258">
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=257">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=258">
   
   <!-- No Google Fonts — system font stacks + inline SVG icons (zero external font requests) -->
   
   <!-- Unified Mobile-First Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=257">
+  <link rel="stylesheet" href="style.css?v=258">
 </head>
 <body>
   
@@ -80,7 +80,7 @@
     </div>
 
     <!-- Study Source Hint (below search bar) -->
-    <div class="topbar-source-hint" style="padding: 6px 14px; font-size: 0.68rem; color: var(--text-muted); margin-top: -2px; line-height: 1.3;">
+    <div class="topbar-source-hint" id="subtopbar-source-hint" style="padding: 6px 14px; font-size: 0.68rem; color: var(--text-muted); margin-top: -2px; line-height: 1.3;">
       You can change your study source anytime later from <b>Profile → Settings → Study Source</b>
     </div>
 
@@ -129,6 +129,17 @@
         <span class="nav-bar-label">Curriculum</span>
         <span class="nav-ripple"></span>
       </button>
+      <button class="android-nav-item android-nav-item-center" id="nav-btn-plan-config" title="Configure Study Plan" aria-label="Configure Study Plan">
+        <span class="nav-icon-wrap">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="4" y1="7.5" x2="20" y2="7.5"/>
+            <circle cx="9.5" cy="7.5" r="2.4"/>
+            <line x1="4" y1="16.5" x2="20" y2="16.5"/>
+            <circle cx="14.5" cy="16.5" r="2.4"/>
+          </svg>
+        </span>
+        <span class="nav-bar-label">Plan</span>
+      </button>
       <button class="android-nav-item" data-view="analytics">
         <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="20" x2="18" y2="10"/>
@@ -157,6 +168,16 @@
       <div class="bottom-sheet-drag-handle"></div>
       <div class="bottom-sheet-content" id="bottom-sheet-content">
         <!-- Injected dynamically for Profile, Settings, Filters -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Configure Study Plan — bottom sheet opened from the center nav button -->
+  <div class="bottom-sheet-overlay" id="plan-config-sheet-overlay">
+    <div class="bottom-sheet" id="plan-config-sheet" role="dialog" aria-modal="true" aria-label="Configure Study Plan">
+      <div class="bottom-sheet-drag-handle"></div>
+      <div class="bottom-sheet-content" id="plan-config-sheet-content">
+        <!-- Injected by js/features/study-plan-config.js -->
       </div>
     </div>
   </div>
@@ -286,30 +307,30 @@
   <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics-compat.js"></script>
 
   <!-- Application Data & Logic -->
-  <script src="data.js?v=257"></script>
-  <script src="data_marrow_6_5.js?v=257"></script>
-  <script src="js/core/namespace.js?v=257"></script>
-  <script src="js/core/constants.js?v=257"></script>
-  <script src="js/core/icons.js?v=257"></script>
-  <script src="js/core/state-store.js?v=257"></script>
-  <script src="js/core/source-data.js?v=257"></script>
-  <script src="js/core/subjects.js?v=257"></script>
-  <script src="js/core/metrics.js?v=257"></script>
-  <script src="js/features/toast.js?v=257"></script>
-  <script src="js/features/theme.js?v=257"></script>
-  <script src="js/features/search.js?v=257"></script>
-  <script src="js/features/onboarding.js?v=257"></script>
-  <script src="js/features/backup.js?v=257"></script>
-  <script src="js/features/study-plan-config.js?v=257"></script>
-  <script src="js/features/source-settings.js?v=257"></script>
-  <script src="js/features/charts.js?v=257"></script>
-  <script src="js/features/pwa-install.js?v=257"></script>
-  <script src="js/features/views/dashboard.js?v=257"></script>
-  <script src="js/features/views/curriculum.js?v=257"></script>
-  <script src="js/features/views/subject-detail.js?v=257"></script>
-  <script src="js/features/views/analytics.js?v=257"></script>
-  <script src="js/features/views/profile.js?v=257"></script>
-  <script src="app.js?v=257"></script>
+  <script src="data.js?v=258"></script>
+  <script src="data_marrow_6_5.js?v=258"></script>
+  <script src="js/core/namespace.js?v=258"></script>
+  <script src="js/core/constants.js?v=258"></script>
+  <script src="js/core/icons.js?v=258"></script>
+  <script src="js/core/state-store.js?v=258"></script>
+  <script src="js/core/source-data.js?v=258"></script>
+  <script src="js/core/subjects.js?v=258"></script>
+  <script src="js/core/metrics.js?v=258"></script>
+  <script src="js/features/toast.js?v=258"></script>
+  <script src="js/features/theme.js?v=258"></script>
+  <script src="js/features/search.js?v=258"></script>
+  <script src="js/features/onboarding.js?v=258"></script>
+  <script src="js/features/backup.js?v=258"></script>
+  <script src="js/features/study-plan-config.js?v=258"></script>
+  <script src="js/features/source-settings.js?v=258"></script>
+  <script src="js/features/charts.js?v=258"></script>
+  <script src="js/features/pwa-install.js?v=258"></script>
+  <script src="js/features/views/dashboard.js?v=258"></script>
+  <script src="js/features/views/curriculum.js?v=258"></script>
+  <script src="js/features/views/subject-detail.js?v=258"></script>
+  <script src="js/features/views/analytics.js?v=258"></script>
+  <script src="js/features/views/profile.js?v=258"></script>
+  <script src="app.js?v=258"></script>
 
 </body>
 </html>

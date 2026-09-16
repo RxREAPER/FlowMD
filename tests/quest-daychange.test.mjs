@@ -152,7 +152,7 @@ check('New videos are different from old (fresh day)', t4.batchAfter.every(id =>
 // ─── Test 5: UI verification after day change ────────────────
 console.log('\n🔹 Test 5: UI verification after day change');
 const uiText = await page.evaluate(() => document.body.innerText);
-check('Dashboard shows Daily Quests section', uiText.includes('Daily Quests'));
+check('Dashboard shows Daily Tasks section', uiText.includes('Daily Tasks'));
 check('Plan A label visible', uiText.includes('Plan A'));
 check('No congratulations banner', !uiText.includes('Daily Target Achieved'));
 check('New video titles shown', uiText.includes('#04') || uiText.includes('#05') || uiText.includes('#06'));

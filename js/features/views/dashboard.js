@@ -9,13 +9,13 @@
 (function () {
   'use strict';
 
-  const { getState, getStudyStreak, markStudyActivity, saveState } = window.FlowMD.store;
-  const { getPlanScopeVideos, getScopedChapterNames } = window.FlowMD.sourceData;
+  const { getState, getStudyStreak, markStudyActivity, saveState, setDailyTasksMode, addManualTaskVideo, removeManualTaskVideo } = window.FlowMD.store;
+  const { getPlanScopeVideos, getScopedChapterNames, getDataset } = window.FlowMD.sourceData;
   const { getAllPlanQueues, getPlanById } = window.FlowMD.metrics;
-  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey } = window.FlowMD.constants;
+  const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey, DAILY_TASKS_MODE_AUTO, DAILY_TASKS_MODE_MANUAL } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { renderEditionChip } = window.FlowMD.theme;
-  const { renderStudyPlanConfigCard, initStudyPlanConfig, focusStudyPlanConfig } = window.FlowMD.planConfig;
+  const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { renderOnboardingWizard } = window.FlowMD.onboarding;
 
   // Same live object reference app.js uses — mutations are in-place.
@@ -59,13 +59,139 @@
     });
   }
 
+  // --- Daily Tasks: manual mode section ---
+  // In manual mode the user's hand-picked topics (added from search) ARE the
+  // task list — one global list, not per-plan quest blocks.
+  function renderManualTasksSection() {
+    const manualIds = Array.isArray(state.dailyTasksManual) ? state.dailyTasksManual : [];
+    const dataset = getDataset();
+    const byId = {};
+    dataset.forEach(sub => {
+      (sub.chapters || []).forEach(chap => {
+        (chap.videos || []).forEach(v => {
+          if (manualIds.indexOf(v.id) !== -1) {
+            byId[v.id] = { ...v, subjectName: sub.subject, chapterName: chap.name };
+          }
+        });
+      });
+    });
+    const items = manualIds.map(id => byId[id]).filter(Boolean);
+    const pending = items.filter(v => !state.completedVideos[v.id]);
+    const done = items.length - pending.length;
+
+    return `
+      <div class="v2-quest-card action-queue-card" id="manual-tasks-card">
+        <div class="anl-report-card-head">
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks</div>
+          <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">MANUAL MODE</span>
+        </div>
+
+        <div class="spc-mode-toggle">
+          <span class="spc-mode-label">Topics</span>
+          <div class="spc-mode-switch" role="group" aria-label="Daily Tasks topic mode" id="daily-tasks-mode-switch">
+            <button type="button" class="spc-mode-opt" data-mode="${DAILY_TASKS_MODE_AUTO}">Auto</button>
+            <button type="button" class="spc-mode-opt active" data-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
+          </div>
+        </div>
+
+        <div class="spc-manual-add">
+          <button type="button" class="v2-arcade-btn" id="btn-add-task-topic">
+            <svg class="material-symbols-outlined"><use href="#fmd-i-add_task"/></svg>
+            <span>Add Topics from Search</span>
+          </button>
+          <span class="spc-manual-hint">${items.length} topic${items.length === 1 ? '' : 's'} • ${done} done • ${pending.length} to go</span>
+        </div>
+
+        ${items.length === 0 ? `
+          <div class="onboarding-empty-cta manual-empty-cta">
+            <div class="onboarding-title" style="margin-bottom:6px;">No manual topics yet</div>
+            <div class="onboarding-sub">Search any subject, chapter or video topic and tap “+ Task” to add it here.</div>
+          </div>
+        ` : `
+          <div class="v2-quest-list">
+            ${items.map(v => {
+              const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
+              let vNum = '#' + (v.videoNumber || '1').replace(/^#+/, '');
+              const isDone = !!state.completedVideos[v.id];
+              return `
+                <div class="v2-quest-row ${isDone ? 'completed' : ''}">
+                  <label class="v2-pixel-checkbox-label">
+                    <input type="checkbox" class="queue-chk" data-video-id="${v.id}" data-manual="1" ${isDone ? 'checked' : ''}>
+                    <span class="v2-pixel-checkbox-box"></span>
+                    <div>
+                      <div class="v2-quest-title"><span class="quest-video-num">${vNum}</span> ${v.title}</div>
+                      <div class="quest-video-chapter">${v.subjectName} • ${v.chapterName}</div>
+                    </div>
+                  </label>
+                  <div class="quest-video-dur">${durStr}</div>
+                  <button type="button" class="spc-manual-remove" data-remove-task="${v.id}" title="Remove from Daily Tasks" aria-label="Remove from Daily Tasks">
+                    <svg class="material-symbols-outlined"><use href="#fmd-i-close"/></svg>
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `}
+        ${items.length > 0 && pending.length === 0 ? `
+          <div class="congrats-card-pop manual-congrats">
+            ${FLOWMD_ICONS.trophy}
+            <span>All manual topics completed! Add more from search.</span>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  // Look a video up on the whole active dataset (manual tasks may belong to
+  // any subject, not just a plan target).
+  function findDatasetVideo(videoId) {
+    const dataset = getDataset();
+    for (const sub of dataset) {
+      for (const chap of (sub.chapters || [])) {
+        for (const v of (chap.videos || [])) {
+          if (v.id === videoId) return { ...v, subjectId: sub.id };
+        }
+      }
+    }
+    return null;
+  }
+
+  function initDailyTasksModeSwitch() {
+    const modeSwitch = document.getElementById('daily-tasks-mode-switch');
+    if (!modeSwitch) return;
+    modeSwitch.querySelectorAll('.spc-mode-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-mode');
+        if (mode === state.dailyTasksMode) return;
+        setDailyTasksMode(mode);
+        if (window.FlowMD.shell) window.FlowMD.shell.render();
+      });
+    });
+  }
+
+  function initManualTasksSection() {
+    initDailyTasksModeSwitch();
+    document.getElementById('btn-add-task-topic')?.addEventListener('click', () => {
+      if (window.FlowMD.search && window.FlowMD.search.openSpotlightModal) {
+        window.FlowMD.search.openSpotlightModal();
+      }
+    });
+    document.querySelectorAll('[data-remove-task]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        removeManualTaskVideo(btn.getAttribute('data-remove-task'));
+        showToast('Removed from Daily Tasks', 'info');
+        if (window.FlowMD.shell) window.FlowMD.shell.render();
+      });
+    });
+  }
+
   function renderDashboardView(dom, stats) {
     DOM = dom;
     if (!state.isConfigured) {
       renderOnboardingWizard(0);
       return;
     }
-    const docName = state.personal.doctorName || 'Dr. Aspirant';
+    const docName = state.personal.doctorName || 'Dr';
     const plans = state.plans && state.plans.length > 0 ? state.plans : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)];
     const hasTargetSet = plans.some(p => p.targetSubject && p.targetSubject !== '');
     const allQueues = getAllPlanQueues();
@@ -73,6 +199,9 @@
 
     const todayStr = todayKey();
     const todayCompletedCount = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
+
+    // --- Daily Tasks topic source: 'auto' (curriculum order) or 'manual' ---
+    const isManualMode = state.dailyTasksMode === 'manual';
 
     let totalVidsDay = 0;
     plans.forEach(p => {
@@ -170,7 +299,7 @@
       `;
     }
 
-    const allQuestsDone = allQueues.every(q => q.isDailyTargetMet);
+    const allQuestsDone = !isManualMode && allQueues.every(q => q.isDailyTargetMet);
     const hasDualPlans = plans.length >= 2;
 
     DOM.appMain.innerHTML = `
@@ -212,7 +341,7 @@
         <div class="v2-achievement-alert congrats-card-pop all-quests-banner">
           <div class="v2-alert-icon-box" style="background: #ffd700;">${FLOWMD_ICONS.trophy}</div>
           <div class="v2-alert-content">
-            <div class="v2-alert-category all-quests-category"><svg class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;"><use href="#fmd-i-emoji_events"/></svg> ALL DAILY QUESTS COMPLETE!</div>
+            <div class="v2-alert-category all-quests-category"><svg class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;"><use href="#fmd-i-emoji_events"/></svg> ALL DAILY TASKS COMPLETE!</div>
             <div class="v2-alert-title">Outstanding Performance!</div>
             <div class="v2-alert-body">Every plan's daily target has been achieved today!</div>
           </div>
@@ -220,27 +349,41 @@
         </div>
       ` : ''}
 
-      <!-- Daily Quest Section (per plan) -->
+      <!-- Daily Tasks -->
+      ${isManualMode ? renderManualTasksSection() : `
       <div class="v2-quest-card action-queue-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Quests</div>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks</div>
           <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${hasDualPlans ? 'DUAL TRACK' : `${allQueues[0]?.subjectName || 'All Topics'}`}</span>
         </div>
+
+        <div class="spc-mode-toggle">
+          <span class="spc-mode-label">Topics</span>
+          <div class="spc-mode-switch" role="group" aria-label="Daily Tasks topic mode" id="daily-tasks-mode-switch">
+            <button type="button" class="spc-mode-opt active" data-mode="${DAILY_TASKS_MODE_AUTO}">Auto</button>
+            <button type="button" class="spc-mode-opt" data-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
+          </div>
+        </div>
+
         <div style="padding-top:4px;">
           ${hasTargetSet
             ? plans.map((plan, idx) => renderPlanQuestBlock(plan, allQueues[idx])).join('')
             : `
               <div class="onboarding-empty-cta">
                 <div class="onboarding-title" style="margin-bottom:6px;">No study target set yet</div>
-                <div class="onboarding-sub">Pick a subject and a daily pace to start your daily quests.</div>
+                <div class="onboarding-sub">Pick a subject and a daily pace to start your daily tasks, or switch to manual topics below.</div>
                 <button type="button" class="v2-arcade-btn" id="btn-set-first-target" style="height:46px; min-width:150px; padding:0 16px; margin-top:14px;">Set Your First Target 🎯</button>
               </div>`}
         </div>
       </div>
+      `}
 
-      <!-- Study Plan Configuration (always-visible inline form) -->
-      ${renderStudyPlanConfigCard()}
+      <!-- Configure Study Plan lives in the bottom sheet opened from the
+           center nav button (window.FlowMD.planConfig.openPlanConfigSheet) -->
     `;
+
+    if (isManualMode) initManualTasksSection();
+    initDailyTasksModeSwitch();
 
     document.querySelectorAll('.btn-open-queue-subject').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -279,7 +422,25 @@
       chk.addEventListener('change', (e) => {
         const vidId = e.target.getAttribute('data-video-id');
         const planId = e.target.getAttribute('data-plan-id');
+        const isManual = e.target.getAttribute('data-manual') === '1';
         const plan = planId ? getPlanById(planId) : null;
+
+        if (isManual) {
+          // Manual tasks: look the video up on the whole active dataset (it
+          // may belong to no plan's target subject at all).
+          const found = findDatasetVideo(vidId);
+          if (e.target.checked) {
+            state.completedVideos[vidId] = true;
+            markStudyActivity(true, found ? found.subjectId : null);
+            showToast('Task completed!', 'check_circle');
+          } else {
+            delete state.completedVideos[vidId];
+            markStudyActivity(false, found ? found.subjectId : null);
+          }
+          saveState();
+          updateQuestAfterCheck();
+          return;
+        }
 
         if (e.target.checked) {
           state.completedVideos[vidId] = true;
@@ -309,6 +470,7 @@
       });
     });
 
+    // Heatmap tier filter buttons
     document.querySelectorAll('.fm-heatmap-filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
@@ -320,9 +482,6 @@
         });
       });
     });
-
-    // Always-visible inline Study Plan config card
-    initStudyPlanConfig();
   }
 
 

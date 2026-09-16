@@ -119,8 +119,10 @@ const SHOTS = {
     await waitAnchor(page, '.v2-quest-row', 3);
   },
   'plan-a-pacing': async (page) => {
+    // Plan config lives in the bottom sheet opened from the center nav button.
+    await page.locator('#nav-btn-plan-config').click();
+    await page.waitForTimeout(500);
     await waitAnchor(page, '.plan-config-pace-input');
-    await scrollIntoView(page, '#study-plan-config');
     const v = await page.evaluate(() => ({
       d: document.getElementById('input-videos-per-day')?.value ?? null,
       w: document.getElementById('input-videos-per-week')?.value ?? null
@@ -131,9 +133,8 @@ const SHOTS = {
     if (!ok) throw new Error('Plan A pace assertion failed');
   },
   'plan-b-pacing': async (page) => {
-    await waitAnchor(page, '#goal-plan-select');
-    await scrollIntoView(page, '#study-plan-config');
-    await page.locator('#goal-plan-select').selectOption('plan_b');
+    // Sheet already open from plan-a-pacing; just switch tabs.
+    await page.locator('.spc-tab[data-spc-tab="plan_b"]').click();
     await page.waitForTimeout(450);
     await waitAnchor(page, '#goal-plan-b-form');
     const v = await page.evaluate(() => ({
@@ -144,6 +145,9 @@ const SHOTS = {
     const ok = Number.isFinite(d) && d >= 6 && d <= 10 && parseInt(v.w, 10) === d * 7;
     check('Plan B pace derived from seeded 8/day (day 6-10, week = day*7)', ok, JSON.stringify(v));
     if (!ok) throw new Error('Plan B pace assertion failed');
+    // Close the sheet so the next scene can reach the bottom nav.
+    await page.evaluate(() => window.FlowMD.planConfig.closePlanConfigSheet());
+    await page.waitForTimeout(400);
   },
   analytics: async (page) => {
     await clickNav(page, 'analytics');

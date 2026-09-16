@@ -101,7 +101,7 @@
 
         <div class="onboarding-alert" style="border-color: var(--info, var(--accent-primary)); background: var(--info-bg, rgba(14,165,233,0.1)); color: var(--text-secondary);">
           <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-info"/></svg>
-          Each edition keeps its own plans, goals, daily quests &amp; analytics. Completions are tracked per edition.
+          Each edition keeps its own plans, goals, daily tasks &amp; analytics. Completions are tracked per edition.
         </div>
 
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
@@ -144,7 +144,7 @@
       }
       // Per-edition partitions: switching points the live working fields at
       // the other edition's OWN plans / goals / history. Each edition keeps
-      // its own subject, deadline, paces, daily quests, goal pulse and graphs
+      // its own subject, deadline, paces, daily tasks, goal pulse and graphs
       // (completions were already keyed per source). A never-configured
       // edition starts unset — the app waits for the user to fill it in.
       switchSource(selected);

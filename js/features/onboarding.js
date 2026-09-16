@@ -14,7 +14,7 @@
   const { applyTheme } = window.FlowMD.theme;
   const { showToast } = window.FlowMD.toast;
   const { getSourceLabel } = window.FlowMD.sourceData;
-  const { STUDY_SOURCES, escapeHtml, escapeAttr } = window.FlowMD.constants;
+  const { STUDY_SOURCES, escapeHtml, escapeAttr, LEGACY_DEFAULT_DOCTOR_NAME } = window.FlowMD.constants;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -30,7 +30,13 @@
     onboardingStep = Math.max(0, Math.min(1, step || 0));
     if (!onboardingSeeded) {
       onboardingSeeded = true;
-      if (state.personal && state.personal.doctorName) onboardingName = state.personal.doctorName;
+      // Seed with the saved name unless it is a placeholder default (current
+      // or legacy) — the field must start EMPTY so the user types their own.
+      if (state.personal && state.personal.doctorName &&
+          state.personal.doctorName !== 'Dr' &&
+          state.personal.doctorName !== LEGACY_DEFAULT_DOCTOR_NAME) {
+        onboardingName = state.personal.doctorName;
+      }
     }
     const total = 2;
     const dots = [0, 1].map(i =>
@@ -73,7 +79,7 @@
         <div class="onboarding-sub">Help us personalize your dashboard.</div>
         <div style="text-align:left; margin-top:16px;">
           <label class="plan-config-label" for="onboarding-name">What should we call you?</label>
-          <input type="text" id="onboarding-name" class="onboarding-name-input" value="${escapeAttr(onboardingName)}" placeholder="Dr. Aspirant">
+          <input type="text" id="onboarding-name" class="onboarding-name-input" value="${escapeAttr(onboardingName)}" placeholder="Dr" autocomplete="name">
         </div>
         <div style="text-align:left; margin-top:16px;">
           <label class="plan-config-label">Theme</label>
@@ -84,7 +90,7 @@
         </div>
         <div class="onboarding-sub" style="margin-top:12px;">Change anytime from the Profile tab.</div>
         <hr style="margin:20px 0; border:none; border-top:1px solid var(--border);">
-        <div class="onboarding-title" style="font-size:1rem; margin-bottom:8px;">✅ You're all set, ${escapeHtml(onboardingName || 'Doctor')}!</div>
+        <div class="onboarding-title" style="font-size:1rem; margin-bottom:8px;">✅ You're all set, ${escapeHtml(onboardingName || 'Dr')}!</div>
         <div class="onboarding-sub">${getSourceLabel(onboardingSource)} • ${onboardingTheme === 'dark' ? 'Dark Mode' : 'Light Mode'}</div>
         <div class="onboarding-guide-list">
           <div class="onboarding-guide-item"><span class="onboarding-guide-num">1</span><span>📋 Set your study target — pick a subject and daily video pace.</span></div>
@@ -166,8 +172,7 @@
 
   function finishOnboarding() {
     state.isConfigured = true;
-    state.activeSource = onboardingSource;
-    state.personal.doctorName = onboardingName || state.personal.doctorName || 'Dr. Aspirant';
+    state.activeSource = onboardingSource;          state.personal.doctorName = onboardingName || 'Dr';
     state.theme = onboardingTheme;
     applyTheme(state.theme);
     saveState();

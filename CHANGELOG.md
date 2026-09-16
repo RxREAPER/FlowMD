@@ -1,5 +1,16 @@
 # FlowMD — Change Log
 
+## [2026-09-16] Fullscreen onboarding, center Plan sheet, Daily Tasks Auto/Manual modes (v258)
+
+- **The setup wizard is fullscreen.** Onboarding now hides the bottom nav + search bar so nothing distracts from first-run setup, and the doctor-name field auto-focuses for keyboard/IME entry on phones.
+- **Default doctor name shortened to "Dr"** everywhere — constants, the sync empty-name handling, onboarding preview, avatar initials, and view fallbacks.
+- **Search bar + source hint scoped to the dashboard.** Curriculum, analytics, and profile keep their full height with no dead header space.
+- **Breadcrumb bars removed from all views** (the delegates were dropped from `app.js`) — view titles now carry the context themselves.
+- **Study Plan Config rebuilt as a bottom sheet**, opened from a new **center nav button ("Plan")**: Plan A | Plan B tabs, per-plan subject/pace/deadline forms, and Disable actions — including disabling the last remaining plan. The old Dual-Track toggle is gone (the sheet's tabs replace it).
+- **Daily Quests → Daily Tasks with Auto/Manual topic modes.** *Auto* keeps the curriculum-order queue; *Manual* parks plan targets and serves a topic list the user builds themselves — add topics one-tap from the spotlight search (**"+ Task"** button on video results), remove them from the dashboard card. The queue engine serves manual topics, and Analytics reflects the parked-plan state honestly instead of showing plan-derived targets.
+- **Tests updated**: smoke drives the new Plan sheet flow, the navigation test navigates to dashboard before search, and the store key-count is pinned at 18 (new `flowmd_daily_tasks_*` keys). Full suite green (106/19/71/42/23/8/10/44/28 checks + 70 unit).
+- Cache-busted to v258.
+
 ## [2026-08-15] TWA Android shell: assetlinks + offline-first closed-beta copy (v227)
 
 - **Digital Asset Links for the Android TWA:** the site now serves the real file at `/.well-known/assetlinks.json`, tying `com.flowmd.app` + the release signing cert to flowmd-04.web.app. The hosting ignore glob changed from `**/.*` to `**/.[!w]*` so the dot-directory deploys while other hidden entries stay out (an earlier rewrite attempt served an empty `[]` from Firebase — replaced with the canonical file). This is the trust handshake that lets the TWA APK run full-screen without a URL bar.
