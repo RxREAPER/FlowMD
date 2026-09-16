@@ -1,5 +1,13 @@
 # FlowMD — Change Log
 
+## [2026-09-17] Plan sheet Topics section, purple docked Plan FAB, name-field keyboard popup (v260)
+
+- **The Plan sheet now carries the Topics (Daily Tasks) section.** The Configure Study Plan sheet gained a "Daily Tasks" divider with the same Auto/Manual mode switch the dashboard card has — Auto serves topics from the plan targets in curriculum order; Manual parks the plans and serves the user's hand-picked topic list, with Add-from-Search, per-topic tick and remove right inside the sheet. Flips/ticks/removals re-render only the Topics section in place (open form, focus and scroll survive), and adding a topic from the search while the sheet is open updates the sheet's list live. The dashboard card and the sheet share the same classes, so both always match.
+- **The center Plan button is a purple docked FAB.** It lifts up out of the bottom bar yet stays visually attached — a ring in the app background color reads as a notch carved into the pill — with the "Plan" label riding below like every other nav item. The icon matches the sibling outline style and stroke weight; the fill is the app's fixed brand purple (`--accent-secondary` → `--v2-purple-accent`), deliberately not the switchable accent color, and the label carries the same purple in both idle and active states.
+- **Setup wizard step 2 pops the device keyboard.** The "What should we call you?" field auto-focuses when the step renders — synchronously inside the Next-button tap gesture (required by iOS Safari) with a post-layout re-focus fallback — so users can type their name immediately. A smoke/onboarding check asserts the field holds focus.
+- **Tests**: smoke drives the sheet's Topics switch (render + store round-trip), modules registry pins `refreshTopicsSection`; fixed a time-of-day flake in the streak unit test ("yesterday" now follows the app's 5 AM day boundary, same as production — the plain 24h-ago date mismatched between midnight and 5 AM local). Full suite green (107/19/76/43/23/8/10/44/28 checks + 70 unit).
+- Cache-busted to v260.
+
 ## [2026-09-16] Fullscreen onboarding, center Plan sheet, Daily Tasks Auto/Manual modes (v258)
 
 - **The setup wizard is fullscreen.** Onboarding now hides the bottom nav + search bar so nothing distracts from first-run setup, and the doctor-name field auto-focuses for keyboard/IME entry on phones.

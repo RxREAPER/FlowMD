@@ -152,6 +152,20 @@
       nameInputEl.addEventListener('input', () => { onboardingName = nameInputEl.value.trim(); });
     }
 
+    // Step 2: pop the device keyboard — focus the name field synchronously
+    // inside the Next-button click gesture (required for iOS Safari) and
+    // re-focus shortly after in case layout stole it. Only re-focus when
+    // nothing else has taken focus (e.g. the theme buttons).
+    if (onboardingStep === 1 && nameInputEl) {
+      nameInputEl.focus({ preventScroll: true });
+      setTimeout(() => {
+        const el = document.getElementById('onboarding-name');
+        if (el && (document.activeElement === document.body || !document.activeElement)) {
+          el.focus({ preventScroll: true });
+        }
+      }, 350);
+    }
+
     const nextBtn = document.getElementById('onboarding-next');
     if (nextBtn) {
       nextBtn.disabled = (onboardingStep === 0 && !STUDY_SOURCES.find(s => s.id === onboardingSource)?.available);

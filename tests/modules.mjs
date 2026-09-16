@@ -64,7 +64,7 @@ const EXPECTED = {
   backup: ['exportBackup', 'importBackup', 'FORMAT_VERSION', 'MAX_SUPPORTED_FORMAT_VERSION', 'KEY_PATTERN'],
   onboarding: ['renderOnboardingWizard', 'finishOnboarding'],
   shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal'],
-  planConfig: ['renderPlanConfigSheet', 'openPlanConfigSheet', 'closePlanConfigSheet', 'initPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
+  planConfig: ['renderPlanConfigSheet', 'openPlanConfigSheet', 'closePlanConfigSheet', 'initPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey', 'refreshTopicsSection'],
   sourceSettings: ['openSourceSettingsModal'],
   charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap'],
   pwaInstall: ['init', 'isInstalled', 'isInstallable', 'getPrompt', 'requestInstall',

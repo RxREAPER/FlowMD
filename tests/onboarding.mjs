@@ -134,6 +134,8 @@ async function run() {
     check('Step 2 label correct',
       (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
     check('Name input rendered', (await page.locator('#onboarding-name').count()) === 1);
+    check('Name input is auto-focused for the device keyboard',
+      await page.evaluate(() => document.activeElement && document.activeElement.id === 'onboarding-name'));
     check('Theme grid renders 2 options',
       (await page.locator('.onboarding-theme-opt').count()) === 2);
     check('Dark theme pre-checked',

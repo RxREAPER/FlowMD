@@ -49,7 +49,10 @@ test('markStudyActivity does not double-count the streak within the same day', (
 test('markStudyActivity extends a streak from yesterday', () => {
   const { FlowMD } = createFlowMDSandbox({ modules: STORE });
   const st = FlowMD.store.getState();
-  const yesterday = FlowMD.constants.toLocalDateKey(new Date(Date.now() - 86400000));
+  // "Yesterday" must follow the app's 5 AM day boundary (same definition
+  // markStudyActivity uses) — a plain 24h-ago date mismatches between
+  // midnight and 5 AM local and made this test time-of-day dependent.
+  const yesterday = FlowMD.constants.toLocalDateKey(new Date(Date.now() - 5 * 3600000 - 86400000));
   st.streakData = { lastStudyDate: yesterday, currentStreak: 4 };
   FlowMD.store.markStudyActivity(true);
   assert.equal(st.streakData.currentStreak, 5);

@@ -1894,25 +1894,57 @@ body {
   outline-offset: 2px;
 }
 
-/* Center action button — Configure Study Plan */
+/* Center action button — Configure Study Plan.
+   Docked-FAB look (like the reference in issue #10): a circular purple
+   action button that lifts up out of the bar yet stays visually attached
+   to it — the app-background ring reads as a notch carved into the pill —
+   with the label riding below like every other nav item. The icon mirrors
+   the outline style of the sibling icons; the label uses the app's purple
+   accent in both idle and active states. */
+.android-nav-item-center {
+  flex: 0 0 auto;
+  min-width: 74px;
+  position: relative;
+  overflow: visible;
+  justify-content: flex-end;
+  padding-bottom: 3px;
+}
 .android-nav-item-center .nav-icon-wrap {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-primary, #00f0ff), #7877c6);
-  color: #04101a;
-  box-shadow: 0 2px 10px rgba(0, 240, 255, 0.35);
+  /* Fixed brand purples (accent-secondary/v2-purple-accent) — NOT the
+     switchable --accent-primary, so the FAB stays purple in every accent. */
+  background: linear-gradient(135deg, var(--accent-secondary, #a855f7), var(--v2-purple-accent, #8b5cf6));
+  color: #ffffff;
+  border: 3px solid var(--bg-app, #0a0a0f); /* shared ring: reads as part of the bar */
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(168, 85, 247, 0.35);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.25s ease, box-shadow 0.25s ease;
 }
-.android-nav-item-center.active .nav-icon-wrap,
+.android-nav-item-center:hover .nav-icon-wrap {
+  transform: translateX(-50%) translateY(-2px);
+  filter: brightness(1.08);
+}
 .android-nav-item-center:active .nav-icon-wrap {
-  filter: brightness(1.12);
+  transform: translateX(-50%) scale(0.94);
 }
 .android-nav-item-center .nav-icon {
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
+}
+.android-nav-item-center .nav-bar-label,
+.android-nav-item-center.active .nav-bar-label {
+  color: var(--accent-secondary, #a855f7);
 }
 
 /* --- Daily Tasks Auto/Manual mode toggle --- */
@@ -1996,6 +2028,41 @@ body {
 .spc-add-task-btn.in-tasks {
   border-color: var(--accent-success, #10b981);
   color: var(--accent-success, #10b981);
+}
+
+/* --- Topics section inside the Configure Study Plan sheet --- */
+.spc-topics-section {
+  margin-top: 18px;
+}
+.spc-topics-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px 0;
+}
+.spc-topics-divider::before,
+.spc-topics-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle, rgba(255, 255, 255, 0.1));
+}
+.spc-topics-divider span {
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.spc-topics-mode-help {
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: -4px 0 10px 0;
+}
+.spc-topics-empty {
+  margin-top: 4px;
 }
 
 /* --- Configure Study Plan bottom sheet (opened from the center nav button) --- */
