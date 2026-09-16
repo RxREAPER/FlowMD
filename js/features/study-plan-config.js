@@ -260,13 +260,13 @@
 
           <div class="plan-config-field">
             <div class="plan-config-field-head">
-              <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count${suffix}" class="plan-config-chips-count"></span></label>
+              <label class="plan-config-label" style="margin:0;">Focus Chapter <span id="chapters-count${isB ? '-b' : '-a'}" class="plan-config-chips-count"></span></label>
             </div>
             <div class="plan-config-hint" style="margin:4px 0 8px 0;">
               <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-filter_alt"/></svg>
               <span>Pick a single chapter to focus on, or keep All Chapters for the full subject.</span>
             </div>
-            <div class="plan-config-chips" id="chapter-chips${suffix}"></div>
+            <div class="plan-config-chips" id="chapter-chips${isB ? '-b' : '-a'}"></div>
           </div>
 
           <div class="plan-config-field">
