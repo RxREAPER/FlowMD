@@ -85,14 +85,18 @@
   // --- Cache DOM Elements ---
   function cacheDOM() {
     DOM.appMain = document.getElementById('app-main');
-    DOM.navItems = document.querySelectorAll('.android-nav-item');
+    DOM.navItems = document.querySelectorAll('.android-nav-item[data-view]');
     DOM.btnToggleSearch = document.getElementById('btn-toggle-search');
+    DOM.searchContainer = document.querySelector('.v2-subtopbar-search-container');
+    DOM.subtopbarSourceHint = document.getElementById('subtopbar-source-hint');
     DOM.themeToggleBtn = document.getElementById('theme-toggle-btn');
     DOM.topbarUserProfile = document.getElementById('topbar-user-profile');
     DOM.topbarAvatarInitials = document.getElementById('topbar-avatar-initials');
     DOM.bottomSheetOverlay = document.getElementById('bottom-sheet-overlay');
     DOM.bottomSheetContent = document.getElementById('bottom-sheet-content');
-    DOM.studyPlanConfig = document.getElementById('study-plan-config');
+    DOM.planConfigSheetOverlay = document.getElementById('plan-config-sheet-overlay');
+    DOM.planConfigSheetContent = document.getElementById('plan-config-sheet-content');
+    DOM.navBtnPlanConfig = document.getElementById('nav-btn-plan-config');
     DOM.brandHomeLink = document.getElementById('brand-home-link');
     DOM.topbarSourceBadge = document.getElementById('topbar-source-badge');
     DOM.topbarSourceBadgeText = document.querySelector('.edition-badge-text');
@@ -140,6 +144,23 @@
       DOM.btnToggleSearch.addEventListener('click', () => openSpotlightModal());
     }
 
+    // Center nav button — opens the Configure Study Plan sheet from any view.
+    if (DOM.navBtnPlanConfig) {
+      DOM.navBtnPlanConfig.addEventListener('click', () => {
+        const cfg = window.FlowMD.planConfig;
+        if (cfg && cfg.openPlanConfigSheet) cfg.openPlanConfigSheet(DOM);
+      });
+    }
+
+    // Click-outside closes the Configure Study Plan sheet.
+    if (DOM.planConfigSheetOverlay) {
+      DOM.planConfigSheetOverlay.addEventListener('click', (e) => {
+        if (e.target === DOM.planConfigSheetOverlay) {
+          window.FlowMD.planConfig.closePlanConfigSheet();
+        }
+      });
+    }
+
     document.getElementById('spotlight-close-btn')?.addEventListener('click', closeSpotlightModal);
     document.getElementById('spotlight-search-modal')?.addEventListener('click', (e) => {
       if (e.target === document.getElementById('spotlight-search-modal')) closeSpotlightModal();
@@ -156,6 +177,7 @@
       if (e.key === 'Escape') {
         closeSpotlightModal();
         closeInfoModal();
+        window.FlowMD.planConfig.closePlanConfigSheet();
         return;
       }
 
@@ -259,15 +281,6 @@
           );
         }
       }
-
-      // Global Breadcrumb Delegate Handlers
-      if (e.target.closest('.nav-bc-home')) {
-        e.preventDefault();
-        switchView('dashboard');
-      } else if (e.target.closest('.nav-bc-curriculum')) {
-        e.preventDefault();
-        switchView('curriculum');
-      }
     });
   }
 
@@ -283,8 +296,28 @@
   }
 
   // --- View Switcher ---
+  // --- Search bar & bottom nav visibility ---
+  // Search is a dashboard feature; the setup wizard owns the whole screen
+  // (it renders in the dashboard slot whenever the profile is unconfigured).
+  function isOnboardingActive() {
+    return state.currentView === 'onboarding' || (state.currentView === 'dashboard' && !state.isConfigured);
+  }
+
+  function updateShellSurfaces() {
+    const showSearch = state.currentView === 'dashboard' && state.isConfigured;
+    if (DOM.searchContainer) DOM.searchContainer.style.display = showSearch ? '' : 'none';
+    if (DOM.subtopbarSourceHint) DOM.subtopbarSourceHint.style.display = showSearch ? '' : 'none';
+    const showNav = !isOnboardingActive();
+    if (DOM.navItems && DOM.navItems.length) {
+      DOM.navItems.forEach(item => { item.style.display = showNav ? '' : 'none'; });
+    }
+    const navEl = document.querySelector('.android-bottom-nav');
+    if (navEl) navEl.style.display = showNav ? '' : 'none';
+  }
+
   function switchView(viewName) {
     state.currentView = viewName;
+    updateShellSurfaces();
     DOM.navItems.forEach(item => {
       item.classList.toggle('active', item.getAttribute('data-view') === viewName);
     });
@@ -316,6 +349,7 @@
 
     updateTopbarInitials();
     updateTopbarSource();
+    updateShellSurfaces();
     const stats = getSyllabusStats();
 
     if (state.currentView === 'dashboard') {

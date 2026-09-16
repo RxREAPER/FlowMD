@@ -59,7 +59,7 @@ test('saveState selective writes: unchanged state writes nothing after the first
   const { FlowMD, setItemCalls } = createFlowMDSandbox({ modules: STORE });
   const st = FlowMD.store.getState();
   FlowMD.store.saveState();
-  assert.equal(setItemCalls.length, 16, 'first save writes every key (incl. editions partition)');
+  assert.equal(setItemCalls.length, 18, 'first save writes every key (incl. editions partition + daily-tasks mode/manual list)');
   setItemCalls.length = 0;
   FlowMD.store.saveState();
   assert.equal(setItemCalls.length, 0, 'no-op save writes nothing');

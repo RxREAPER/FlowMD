@@ -80,7 +80,7 @@
     </div>
 
     <!-- Study Source Hint (below search bar) -->
-    <div class="topbar-source-hint" style="padding: 6px 14px; font-size: 0.68rem; color: var(--text-muted); margin-top: -2px; line-height: 1.3;">
+    <div class="topbar-source-hint" id="subtopbar-source-hint" style="padding: 6px 14px; font-size: 0.68rem; color: var(--text-muted); margin-top: -2px; line-height: 1.3;">
       You can change your study source anytime later from <b>Profile → Settings → Study Source</b>
     </div>
 
@@ -129,6 +129,17 @@
         <span class="nav-bar-label">Curriculum</span>
         <span class="nav-ripple"></span>
       </button>
+      <button class="android-nav-item android-nav-item-center" id="nav-btn-plan-config" title="Configure Study Plan" aria-label="Configure Study Plan">
+        <span class="nav-icon-wrap">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="4" y1="7.5" x2="20" y2="7.5"/>
+            <circle cx="9.5" cy="7.5" r="2.4"/>
+            <line x1="4" y1="16.5" x2="20" y2="16.5"/>
+            <circle cx="14.5" cy="16.5" r="2.4"/>
+          </svg>
+        </span>
+        <span class="nav-bar-label">Plan</span>
+      </button>
       <button class="android-nav-item" data-view="analytics">
         <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="20" x2="18" y2="10"/>
@@ -157,6 +168,16 @@
       <div class="bottom-sheet-drag-handle"></div>
       <div class="bottom-sheet-content" id="bottom-sheet-content">
         <!-- Injected dynamically for Profile, Settings, Filters -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Configure Study Plan — bottom sheet opened from the center nav button -->
+  <div class="bottom-sheet-overlay" id="plan-config-sheet-overlay">
+    <div class="bottom-sheet" id="plan-config-sheet" role="dialog" aria-modal="true" aria-label="Configure Study Plan">
+      <div class="bottom-sheet-drag-handle"></div>
+      <div class="bottom-sheet-content" id="plan-config-sheet-content">
+        <!-- Injected by js/features/study-plan-config.js -->
       </div>
     </div>
   </div>

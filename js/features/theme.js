@@ -26,9 +26,13 @@
   }
 
   function updateTopbarInitials() {
-    const docName = (state.personal && state.personal.doctorName) ? state.personal.doctorName : 'Dr. Aspirant';
+    const docName = (state.personal && state.personal.doctorName) ? state.personal.doctorName : 'Dr';
     const cleanName = docName.replace(/^Dr\.?\s*/i, '').trim();
-    const initials = cleanName.length >= 2 ? (cleanName.charAt(0) + cleanName.charAt(1)).toUpperCase() : (cleanName.charAt(0) || 'A').toUpperCase();
+    // "Dr" alone (the default) leaves cleanName empty — show "DR". A real
+    // one-letter name keeps its letter.
+    const initials = cleanName.length >= 2
+      ? (cleanName.charAt(0) + cleanName.charAt(1)).toUpperCase()
+      : (cleanName.charAt(0) || 'DR').toUpperCase();
 
     const initialsElem = document.getElementById('topbar-avatar-initials');
     if (initialsElem) {

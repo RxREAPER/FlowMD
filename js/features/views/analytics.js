@@ -118,6 +118,11 @@
       return { plan, q, m, vids, remVids, daysNeeded, finishDate, finishDateStr, targetDate, daysLeft, ideal7, ideal30, planPaceDelta, scopedUnits };
     });
 
+    // Daily Tasks topic mode: in manual mode every plan target is parked —
+    // its tiles keep showing the configured numbers but flag the parking so
+    // the user knows why today's progress is not advancing against them.
+    const isManualTasksMode = state.dailyTasksMode === 'manual';
+
     const goalTile = (o) => `
       <div class="anl-goal-tile" style="--tile:${o.color}">
         <span class="anl-goal-badge-top" style="${o.badgeStyle || ''}">${o.badge}</span>
@@ -191,7 +196,7 @@
         badgeStyle: `color:${behind ? 'var(--danger)' : 'var(--success)'}; border-color:${behind ? 'var(--danger)' : 'var(--success)'};`,
         value: `${ps.finishDateStr}`,
         unit: '',
-        desc: `${ps.plan.targetSubject}${ps.scopedUnits && ps.scopedUnits.length > 0 ? ' → ' + ps.scopedUnits.length + ' chapters' : ''} @ ${ps.vids}/day`,
+        desc: `${isManualTasksMode ? '⏸ Parked (manual topics) — ' : ''}${ps.plan.targetSubject}${ps.scopedUnits && ps.scopedUnits.length > 0 ? ' → ' + ps.scopedUnits.length + ' chapters' : ''} @ ${ps.vids}/day`,
         pct: planPct,
         delta: `${daysDiff}d ${behind ? 'behind' : 'ahead'} (${ps.plan.targetDate})`,
         deltaColor: behind ? 'var(--danger)' : 'var(--success)'
@@ -199,13 +204,6 @@
     }).join('');
 
     DOM.appMain.innerHTML = `
-      <!-- Breadcrumb -->
-      <div class="fm-breadcrumb">
-        <span class="fm-breadcrumb-item nav-bc-home">Home</span>
-        <span class="fm-breadcrumb-separator">&gt;</span>
-        <span class="fm-breadcrumb-item active">Analytics</span>
-      </div>
-
       <!-- Study Intelligence Report Hero -->
       <section class="anl-report-hero">
         <div class="anl-hero-main">
@@ -270,7 +268,7 @@
           <svg class="material-symbols-outlined"><use href="#fmd-i-track_changes"/></svg>
           <div>
             <strong>No study target set yet</strong>
-            <small>Set a subject, daily pace &amp; deadline to power your Goal Pulse.</small>
+            <small>Set a subject, daily pace &amp; deadline to power your Goal Pulse — or switch Daily Tasks to manual topics from the dashboard.</small>
           </div>
           <button type="button" class="v2-arcade-btn" id="btn-analytics-set-target" style="height:38px; padding:0 16px;">Set Your Target</button>
         </div>`}
@@ -286,7 +284,7 @@
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
-      const shareText = `<svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-target"/></svg> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr. Aspirant'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
+      const shareText = `<svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-target"/></svg> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome'));
       } else {

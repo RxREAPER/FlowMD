@@ -1889,10 +1889,189 @@ body {
   transition: transform 0.1s ease;
 }
 
-/* Focus visible for accessibility */
-.android-nav-item:focus-visible {
+/* Focus visible for accessibility */  .android-nav-item:focus-visible {
   outline: 2px solid rgba(0, 240, 255, 0.5);
   outline-offset: 2px;
+}
+
+/* Center action button — Configure Study Plan */
+.android-nav-item-center .nav-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary, #00f0ff), #7877c6);
+  color: #04101a;
+  box-shadow: 0 2px 10px rgba(0, 240, 255, 0.35);
+}
+.android-nav-item-center.active .nav-icon-wrap,
+.android-nav-item-center:active .nav-icon-wrap {
+  filter: brightness(1.12);
+}
+.android-nav-item-center .nav-icon {
+  width: 19px;
+  height: 19px;
+}
+
+/* --- Daily Tasks Auto/Manual mode toggle --- */
+.spc-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 2px 0 10px 0;
+}
+.spc-mode-label {
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.spc-mode-switch {
+  display: inline-flex;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));
+  border-radius: 999px;
+  overflow: hidden;
+}
+.spc-mode-opt {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.spc-mode-opt.active {
+  background: rgba(0, 240, 255, 0.14);
+  color: var(--accent-primary, #00f0ff);
+}
+.spc-manual-add {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.spc-manual-hint {
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.spc-manual-remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+.spc-manual-remove:hover {
+  color: var(--danger, #ef4444);
+  background: rgba(239, 68, 68, 0.1);
+}
+.spc-add-task-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--accent-primary, #00f0ff);
+  color: var(--accent-primary, #00f0ff);
+  background: transparent;
+  border-radius: 999px;
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.spc-add-task-btn.in-tasks {
+  border-color: var(--accent-success, #10b981);
+  color: var(--accent-success, #10b981);
+}
+
+/* --- Configure Study Plan bottom sheet (opened from the center nav button) --- */
+.spc-sheet-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.spc-sheet-head-text { min-width: 0; }
+.spc-sheet-sub {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 6px 0 0 0;
+}
+.spc-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.spc-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: var(--font-display, 'Inter', system-ui, sans-serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.spc-tab.active {
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+  background: rgba(0, 240, 255, 0.08);
+}
+.spc-tab-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+.spc-tab-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-success, #10b981);
+  border: 1px solid var(--accent-success, #10b981);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+.spc-add-intro {
+  text-align: center;
+  padding: 22px 12px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.spc-add-icon {
+  margin-bottom: 8px;
+}
+.spc-add-btn {
+  margin-top: 16px;
+  height: 46px;
+  min-width: 170px;
+  padding: 0 18px;
 }
 
 /* --- Card & Section Container Styles --- */
@@ -4165,7 +4344,7 @@ body {
     gap: 2px;
     min-width: 56px;
     min-height: 44px;
-    padding: 4px 8px;
+    padding: 4px 4px;
     border: none;
     background: transparent;
     color: #64748b;
@@ -5854,7 +6033,7 @@ body {
 @media (max-width: 480px) {
   .android-nav-item .nav-bar-label {
     font-size: 0.6rem;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
     white-space: nowrap;
   }
 }
@@ -7063,4 +7242,30 @@ body {
 [data-theme="light"] .plan-config-badge {
   background: var(--accent-primary);
   box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* --- Manual Daily Tasks list + curriculum subject cards (Issue #10) --- */
+.curriculum-sub-card {
+  margin-top: 10px;
+  padding: 12px 14px;
+}
+.manual-empty-cta {
+  padding: 8px 0 4px;
+}
+.v2-quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+.manual-congrats {
+  text-align: center;
+  padding: 12px;
+  color: var(--success);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }

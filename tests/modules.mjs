@@ -47,7 +47,8 @@ function check(name, ok, detail = '') {
 // Module -> required exports. Tasks append their module before extraction.
 const EXPECTED = {
   store: ['getState', 'safeParse', 'migrateStateSchema', 'loadState', 'saveState',
-          'markStudyActivity', 'getStudyStreak', 'mergePlansLocalWins'],
+          'markStudyActivity', 'getStudyStreak', 'mergePlansLocalWins',
+          'setDailyTasksMode', 'addManualTaskVideo', 'removeManualTaskVideo'],
   icons: ['ensureSprite', 'renderIcon', 'setIcon', 'ICON_PATHS'],
   sourceData: ['SOURCE_DATA', 'qualifySourceData', 'initSourceData', 'getDataset',
                'getSubjectChapters', 'getScopedChapterNames', 'getPlanScopeVideos',
@@ -63,7 +64,7 @@ const EXPECTED = {
   backup: ['exportBackup', 'importBackup', 'FORMAT_VERSION', 'MAX_SUPPORTED_FORMAT_VERSION', 'KEY_PATTERN'],
   onboarding: ['renderOnboardingWizard', 'finishOnboarding'],
   shell: ['render', 'switchView', 'resetPageScrollTop', 'triggerHaptic', 'openInfoModal', 'closeInfoModal'],
-  planConfig: ['renderStudyPlanConfigCard', 'initStudyPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
+  planConfig: ['renderPlanConfigSheet', 'openPlanConfigSheet', 'closePlanConfigSheet', 'initPlanConfig', 'synchronizeModalPace', 'focusStudyPlanConfig', 'getSelectedUnitsForPlanKey'],
   sourceSettings: ['openSourceSettingsModal'],
   charts: ['renderExecutionChart', 'renderPixelSubjectHeatmap'],
   pwaInstall: ['init', 'isInstalled', 'isInstallable', 'getPrompt', 'requestInstall',

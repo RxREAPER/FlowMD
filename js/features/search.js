@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  const { getState, saveState, markStudyActivity } = window.FlowMD.store;
+  const { getState, saveState, markStudyActivity, addManualTaskVideo } = window.FlowMD.store;
   const { getDataset } = window.FlowMD.sourceData;
   const { getSubjectIconSrc, getSubjectSvgIcon } = window.FlowMD.subjects;
   const { escapeHtml } = window.FlowMD.constants;
@@ -132,6 +132,10 @@
     // Deep search results only (no command palette shortcuts)
     const searchData = performDeepSearch(q);
 
+    // Manual Daily Tasks mode: video results offer a one-tap "+ Task" add.
+    const isManualTasksMode = state.dailyTasksMode === 'manual';
+    const manualTaskSet = new Set(Array.isArray(state.dailyTasksManual) ? state.dailyTasksManual : []);
+
     if (searchData.totalMatches === 0) {
       container.innerHTML = `
         <div style="text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: 1.1rem;">
@@ -173,6 +177,7 @@
             const isDone = v.isCompleted;
             let vNum = v.videoNumber || '#1';
             vNum = '#' + vNum.replace(/^#+/, '');
+            const inTasks = manualTaskSet.has(v.id);
             return `
               <div class="v2-quest-row ${isDone ? 'completed' : ''}">
                 <label class="v2-pixel-checkbox-label">
@@ -185,7 +190,15 @@
                     </div>
                   </div>
                 </label>
-                <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); font-weight: 700;">${v.durationMins || 0}m ${v.durationSecs || 0}s</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  ${isManualTasksMode ? `
+                    <button type="button" class="spc-add-task-btn ${inTasks ? 'in-tasks' : ''}" data-add-task="${v.id}" title="${inTasks ? 'In Daily Tasks' : 'Add to Daily Tasks'}">
+                      <svg class="material-symbols-outlined"><use href="#${inTasks ? 'fmd-i-check_circle' : 'fmd-i-add_task'}"/></svg>
+                      <span>${inTasks ? 'Task ✓' : '+ Task'}</span>
+                    </button>
+                  ` : ''}
+                  <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); font-weight: 700;">${v.durationMins || 0}m ${v.durationSecs || 0}s</div>
+                </div>
               </div>
             `;
           }).join('')}
@@ -204,6 +217,16 @@
         }
         closeSpotlightModal();
         if (window.FlowMD.shell) window.FlowMD.shell.switchView('subject_detail');
+      });
+    });
+
+    // "+ Task" adders (manual Daily Tasks mode only)
+    document.querySelectorAll('[data-add-task]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const vidId = btn.getAttribute('data-add-task');
+        const added = addManualTaskVideo(vidId);
+        showToast(added ? 'Added to Daily Tasks!' : 'Already in Daily Tasks', added ? 'add_task' : 'info');
+        renderSpotlightResults(query);
       });
     });
 

@@ -21,12 +21,6 @@
     let filteredSubjects = stats.subjectsStats;
 
     DOM.appMain.innerHTML = `
-      <div class="fm-breadcrumb">
-        <span class="fm-breadcrumb-item nav-bc-home">Home</span>
-        <span class="fm-breadcrumb-separator">&gt;</span>
-        <span class="fm-breadcrumb-item active">Curriculum</span>
-      </div>
-
       <div class="section-title-row">
         <h2 class="section-title" style="font-family: var(--font-display);">Curriculum & Subjects</h2>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -59,7 +53,7 @@
       </div>
 
       ${filteredSubjects.map(sub => `
-        <div class="v2-pixel-card" style="margin-bottom: 10px; padding: 12px 14px;">
+        <div class="v2-pixel-card curriculum-sub-card">
           <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
             <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
               <span class="subject-icon-medium" style="display:inline-flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</span>

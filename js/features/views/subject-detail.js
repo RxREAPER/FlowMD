@@ -201,14 +201,6 @@ function renderFacultyCard(faculty, subjectId) {
 
     DOM.appMain.innerHTML = `
       <div class="pwa-curriculum-scroll">
-        <div class="fm-breadcrumb">
-          <span class="fm-breadcrumb-item nav-bc-home">Home</span>
-          <span class="fm-breadcrumb-separator">&gt;</span>
-          <span class="fm-breadcrumb-item nav-bc-curriculum" data-view="curriculum">Curriculum</span>
-          <span class="fm-breadcrumb-separator">&gt;</span>
-          <span class="fm-breadcrumb-item active">${subObj.name}</span>
-        </div>
-
         <!-- Back Button - separate at top -->
         <button class="pwa-back-btn" id="btn-back-to-curriculum" aria-label="Back to curriculum">
           <svg class="material-symbols-outlined"><use href="#fmd-i-arrow_back"/></svg>
@@ -306,7 +298,6 @@ function renderFacultyCard(faculty, subjectId) {
         }).join('') : ''}
       </div>
     `;    document.getElementById('btn-back-to-curriculum')?.addEventListener('click', () => shellSwitchView('curriculum'));
-    document.querySelector('.nav-bc-curriculum')?.addEventListener('click', () => shellSwitchView('curriculum'));
 
     document.getElementById('btn-toggle-all-chapters')?.addEventListener('click', () => {
       const isAnyExpanded = Object.values(state.expandedChapters).some(v => v === true);

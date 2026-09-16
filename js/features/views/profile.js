@@ -36,15 +36,9 @@
   // --- View 6: Profile View ---
   function renderProfileView(dom, stats) {
     DOM = dom;
-    const docName = state.personal.doctorName || 'Dr. Aspirant';
+    const docName = state.personal.doctorName || 'Dr';
 
     DOM.appMain.innerHTML = `
-      <div class="fm-breadcrumb">
-        <span class="fm-breadcrumb-item nav-bc-home">Home</span>
-        <span class="fm-breadcrumb-separator">&gt;</span>
-        <span class="fm-breadcrumb-item active">Account & Profile</span>
-      </div>
-
       <div class="section-title-row">
         <h2 class="section-title" style="font-family: var(--font-display);">Account & Profile</h2>
       </div>
@@ -52,7 +46,7 @@
       <div class="v2-pixel-card" style="padding: 20px; margin-bottom: 16px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
           <div class="fm-avatar fm-avatar-lg fm-avatar-cyan">
-            ${escapeHtml((docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase())}
+            ${escapeHtml((docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DR').toUpperCase())}
           </div>
           <div>
             <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${escapeHtml(docName)}</h2>
@@ -176,7 +170,7 @@
 
     document.getElementById('profile-edit-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
-      state.personal.doctorName = document.getElementById('prof-doc-name').value || 'Dr. Aspirant';
+      state.personal.doctorName = document.getElementById('prof-doc-name').value || 'Dr';
       saveState();
       showToast('Profile updated!', 'check_circle');
       if (window.FlowMD.shell) window.FlowMD.shell.render();
@@ -250,8 +244,8 @@
   // --- Profile Bottom Sheet Controller ---
   function openProfileBottomSheet(dom) {
     DOM = dom;
-    const docName = state.personal.doctorName || 'Dr. Aspirant';
-    const initials = (docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DA').toUpperCase();
+    const docName = state.personal.doctorName || 'Dr';
+    const initials = (docName.replace(/^Dr\.?\s*/i, '').trim().slice(0, 2) || 'DR').toUpperCase();
 
     DOM.bottomSheetContent.innerHTML = `
       <div style="text-align: center; margin-bottom: 16px;">

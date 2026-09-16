@@ -56,7 +56,7 @@ async function dismissOverlays(page) {
       if (el.style.position === 'fixed' && el.style.zIndex === '99999') el.remove();
     });
     // Hide static modals (keep in DOM — they are re-used later)
-    ['#source-settings-modal', '#bottom-sheet-overlay'].forEach(sel => {
+    ['#source-settings-modal', '#bottom-sheet-overlay', '#pwa-install-modal-overlay'].forEach(sel => {
       const el = document.querySelector(sel);
       if (el) el.style.display = 'none';
     });
@@ -110,27 +110,44 @@ async function run() {
     };
     return {
       topbar: g('.topbar'),
-      configCard: g('#study-plan-config'),
+      configCard: g('#plan-config-sheet'),
       navItem: g('.android-nav-item:not(.active)'),
       navActive: g('.android-nav-item.active')
     };
   });
   const isPainted = (s) => s && s.bg && s.bg !== 'rgba(0, 0, 0, 0)' && s.bg !== 'transparent';
   check('Topbar has a painted background (fm- CSS applied)', isPainted(styles.topbar), JSON.stringify(styles.topbar && styles.topbar.bg));
-  check('Plan config card is styled (bg + radius)', isPainted(styles.configCard) && parseFloat(styles.configCard.radius) > 0,
+  check('Plan config sheet is styled (bg + radius)', isPainted(styles.configCard) && parseFloat(styles.configCard.radius) > 0,
     JSON.stringify(styles.configCard && { bg: styles.configCard.bg, radius: styles.configCard.radius }));
   check('Active nav item is visually distinct (cyan vs grey)',
     !!styles.navItem && !!styles.navActive && styles.navActive.color !== styles.navItem.color,
     `active=${styles.navActive && styles.navActive.color} inactive=${styles.navItem && styles.navItem.color}`);
 
-  // Study plan config is always-visible inline on the dashboard
-  const configVisible = await page.locator('#study-plan-config').isVisible();
-  check('Study plan config card is visible inline on dashboard', configVisible === true);
-  check('Study plan config shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
-  check('Study plan config has plan selector', await page.locator('#goal-plan-select').count() === 1);
+  // First-visit PWA install modal (fresh profile → not installed, not dismissed)
+  const installModal = await page.locator('#pwa-install-modal-overlay.active').count();
+  check('First-visit install modal auto-shows on dashboard', installModal === 1,
+    installModal ? 'modal present' : 'MISSING');
+
+  // Drop the auto-shown first-visit install modal so it can't intercept
+  // the nav clicks below.
+  await dismissOverlays(page);
+
+  // Configure Study Plan: bottom sheet opened from the center nav button
+  const navHasPlanBtn = await page.locator('#nav-btn-plan-config').count();
+  check('Center nav Plan button present', navHasPlanBtn === 1);
+  check('Search bar visible on dashboard', await page.locator('#btn-toggle-search').isVisible());
+  await page.locator('#nav-btn-plan-config').click();
+  await page.waitForTimeout(400);
+  const sheetActive = await page.evaluate(() => document.getElementById('plan-config-sheet-overlay')?.classList.contains('active'));
+  check('Plan config sheet opens from center nav button', sheetActive === true);
+  const sheetText = await page.locator('#plan-config-sheet-content').innerText();
+  check('Sheet is titled Configure Study Plan', sheetText.includes('Configure Study Plan'));
+  check('Sheet has Plan A and Plan B tabs', await page.locator('.spc-tab').count() === 2);
+  check('No Dual-Track toggle remains', await page.locator('#toggle-plan-b').count() === 0);
+  check('Sheet shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
 
   // A fresh profile must NOT have assumed subject/pace/deadline values — the
-  // site waits for the user to fill the Study Plan Config.
+  // site waits for the user to fill the Configure Study Plan sheet.
   const configValues = await page.evaluate(() => ({
     subject: document.getElementById('select-target-subject')?.value ?? null,
     vids: document.getElementById('input-videos-per-day')?.value ?? null,
@@ -140,10 +157,9 @@ async function run() {
     configValues.subject === '' && configValues.vids === '' && configValues.date === '',
     JSON.stringify(configValues));
 
-  // First-visit PWA install modal (fresh profile → not installed, not dismissed)
-  const installModal = await page.locator('#pwa-install-modal-overlay.active').count();
-  check('First-visit install modal auto-shows on dashboard', installModal === 1,
-    installModal ? 'modal present' : 'MISSING');
+  // Close the sheet (Escape) so later sections can reach the bottom nav.
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
 
   // Capacitor native shell (Android APK): the WebView never fires
   // beforeinstallprompt and never reports display-mode standalone, so the
@@ -181,9 +197,18 @@ async function run() {
   // re-render would destroy the open <select> (it closes before picking).
   // The select element must survive the prompt and still be pickable.
   {
+    // The subject select lives in the plan-config sheet now — open it first.
+    await page.locator('#nav-btn-plan-config').click();
+    await page.waitForTimeout(400);
+
     const surv = await page.evaluate(() => {
       const sel = document.getElementById('select-target-subject');
       if (!sel) return { replaced: true, detail: 'no select' };
+      // Reproduce the original scenario: the install modal is visible when
+      // Chrome fires beforeinstallprompt.
+      if (window.FlowMD.pwaInstall && window.FlowMD.pwaInstall.showInstallModal) {
+        window.FlowMD.pwaInstall.showInstallModal();
+      }
       window.__selRef = sel;
       window.dispatchEvent(new Event('beforeinstallprompt'));
       return new Promise((resolve) => setTimeout(() => {
@@ -200,7 +225,8 @@ async function run() {
     check('Install modal upgrades in place (Install button appears, overlay survives)',
       surv.modalPresent === true && surv.installBtnPresent === true, JSON.stringify(surv));
 
-    // Close the install modal so later real clicks are not intercepted.
+    // Hide the install modal (the plan-config sheet overlay is intentionally
+    // left open) so the select click below lands.
     await dismissOverlays(page);
 
     // Picking a subject must not invent a pace or deadline — the site waits
@@ -216,12 +242,17 @@ async function run() {
     check('Picking a subject waits for user input (no assumed pace/deadline)',
       afterPick.date === '' && afterPick.vids === '' && afterPick.week === '' && afterPick.badge === 'Not set',
       JSON.stringify(afterPick));
+
+    // Close the sheet before navigating on.
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
   }
 
   // Curriculum view
   await clickNav(page, 'curriculum');
   const curriculumSubjects = await page.locator('.curriculum-sub-row').count();
   check('Curriculum view shows subject rows', curriculumSubjects > 5, `found ${curriculumSubjects}`);
+  check('Search bar hidden on curriculum', !(await page.locator('#btn-toggle-search').isVisible()));
 
   // Subject detail
   if (curriculumSubjects > 0) {
@@ -237,14 +268,18 @@ async function run() {
   await clickNav(page, 'analytics');
   const anlText = await page.locator('#app-main').innerText();
   check('Analytics view renders content', anlText.length > 50);
+  check('Search bar hidden on analytics', !(await page.locator('#btn-toggle-search').isVisible()));
+  check('No breadcrumb bars on analytics', await page.locator('.fm-breadcrumb').count() === 0);
   check('Analytics Goal Pulse shows empty state when no target set',
     anlText.includes('Goal Pulse') && anlText.includes('No study target set yet'),
     'empty-state CTA present');
 
-  // Regression: the Preparation Setup card must RESPOND to Study Plan Config
-  // goals. Configure Plan A (subject, pace, deadline), save, and verify the
-  // analytics card shows the saved daily/weekly/monthly targets + target date.
+  // Regression: the Preparation Setup card must RESPOND to the Configure
+  // Study Plan sheet. Configure Plan A (subject, pace, deadline), save, and
+  // verify the analytics card shows the saved daily/weekly/monthly targets.
   await clickNav(page, 'dashboard');
+  await page.locator('#nav-btn-plan-config').click();
+  await page.waitForTimeout(400);
   await page.locator('#select-target-subject').selectOption({ index: 1 });
   await page.locator('#input-videos-per-day').fill('3');
   await page.evaluate(() => {
@@ -254,6 +289,10 @@ async function run() {
   });
   await page.locator('#btn-apply-goals').click();
   await page.waitForTimeout(400);
+  {
+    const sheetClosedAfterSave = await page.evaluate(() => !document.getElementById('plan-config-sheet-overlay')?.classList.contains('active'));
+    check('Plan config sheet closes after Save & Apply', sheetClosedAfterSave === true);
+  }
   const savedPlan = await page.evaluate(() => {
     const p = window.FlowMD.store.getState().plans[0];
     return {
@@ -308,15 +347,94 @@ async function run() {
       (await page.locator('#app-main').innerText()).includes('Device Layout Check') === false);
   }
 
-  // Search modal
+  // Search modal (dashboard-only search bar)
+  await clickNav(page, 'dashboard');
+  await page.waitForTimeout(300);
   const searchBtn = await page.locator('#btn-toggle-search').count();
-  check('Search button present', searchBtn > 0);
+  check('Search button present on dashboard', searchBtn > 0);
   if (searchBtn) {
     await page.locator('#btn-toggle-search').click();
     await page.waitForTimeout(300);
     check('Search modal opens', await page.locator('#spotlight-search-modal').evaluate(el => el.style.display !== 'none'));
     await page.keyboard.press('Escape');
     await page.waitForTimeout(200);
+  }
+
+  // Daily Tasks: Auto/Manual topic modes
+  {
+    const tasksText = await page.locator('#app-main').innerText();
+    check('Dashboard shows Daily Tasks section', tasksText.includes('Daily Tasks'));
+    check('No Daily Quests label remains', !tasksText.includes('Daily Quests'));
+    check('Auto mode is default', await page.locator('.spc-mode-opt[data-mode="auto"].active').count() === 1);
+    await page.locator('.spc-mode-opt[data-mode="manual"]').click();
+    await page.waitForTimeout(400);
+    check('Manual mode shows manual tasks card', await page.locator('#manual-tasks-card').count() === 1);
+    check('Manual mode offers Add Topics from Search', await page.locator('#btn-add-task-topic').count() === 1);
+    // Add topics via the spotlight search "+ Task" button
+    // btn-add-task-topic opens the spotlight programmatically — no search
+    // bar click needed (the search bar is dashboard-only anyway).
+    await page.locator('#btn-add-task-topic').click();
+    await page.waitForTimeout(400);
+    await page.locator('#spotlight-search-input').fill('anatomy');
+    await page.waitForTimeout(400);
+    const addBtnCount = await page.locator('[data-add-task]').count();
+    check('Search shows + Task buttons in manual mode', addBtnCount > 0, `found ${addBtnCount}`);
+    if (addBtnCount > 0) {
+      await page.locator('[data-add-task]').first().click();
+      await page.waitForTimeout(300);
+      const manualIds = await page.evaluate(() => window.FlowMD.store.getState().dailyTasksManual);
+      check('+ Task adds the topic to manual tasks', Array.isArray(manualIds) && manualIds.length === 1, JSON.stringify(manualIds));
+    }
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
+    // Back to auto
+    await page.locator('.spc-mode-opt[data-mode="auto"]').click();
+    await page.waitForTimeout(400);
+    check('Switching back to Auto restores plan quests', await page.locator('#manual-tasks-card').count() === 0);
+  }
+
+  // Plan B alone: add Plan B, disable Plan A
+  {
+    await page.locator('#nav-btn-plan-config').click();
+    await page.waitForTimeout(400);
+    // Plan B tab shows the add-plan intro for a fresh profile
+    await page.locator('.spc-tab[data-spc-tab="plan_b"]').click();
+    await page.waitForTimeout(300);
+    const addPlanBtn = page.locator('#spc-add-plan');
+    check('Plan B tab shows Add Plan intro', await addPlanBtn.count() === 1);
+    await addPlanBtn.click();
+    await page.waitForTimeout(300);
+    check('Add Plan B creates the Plan B form', await page.locator('#goal-plan-b-form').isVisible());
+    await page.locator('#btn-apply-goals-b').click();
+    await page.waitForTimeout(300);
+    const planBErr = await page.locator('#toast-container').innerText();
+    check('Saving Plan B without a subject is blocked', /select a priority target subject/i.test(planBErr), planBErr.slice(0, 80));
+    // Disable Plan A — Plan B should remain (single-plan mode)
+    await page.locator('.spc-tab[data-spc-tab="plan_a"]').click();
+    await page.waitForTimeout(300);
+    await page.locator('#btn-disable-plan-a').click();
+    await page.waitForTimeout(400);
+    const plansAfterDisable = await page.evaluate(() => window.FlowMD.store.getState().plans.map(p => p.id));
+    check('Disable Plan A leaves Plan B alone', plansAfterDisable.length === 1 && plansAfterDisable[0] === 'plan_b', JSON.stringify(plansAfterDisable));
+    // Clean up: disable Plan B too, restore single Plan A
+    await page.locator('.spc-tab[data-spc-tab="plan_b"]').click();
+    await page.waitForTimeout(300);
+    await page.locator('#btn-disable-plan-b').click();
+    await page.waitForTimeout(400);
+    const plansReset = await page.evaluate(() => window.FlowMD.store.getState().plans.map(p => p.id));
+    // The queue engine re-seeds an UNSET plan_a lazily; the state may be
+    // plan-less (length 0) or hold only that unset Plan A — both are the
+    // "no plan configured" state.
+    check('Disabling Plan B returns to no-plan state',
+      plansReset.length === 0 || (plansReset.length === 1 && plansReset[0] === 'plan_a'),
+      JSON.stringify(plansReset));
+    // Re-add Plan A for later sections
+    await page.locator('.spc-tab[data-spc-tab="plan_a"]').click();
+    await page.waitForTimeout(300);
+    await page.locator('#spc-add-plan').click();
+    await page.waitForTimeout(300);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
   }
 
   // Theme toggle
@@ -469,6 +587,9 @@ async function run() {
     });
     await page.reload();
     await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(400);
+    // The stepper lives inside the plan-config sheet — open it before measuring.
+    await page.evaluate(() => window.FlowMD.planConfig.openPlanConfigSheet());
     await page.waitForTimeout(400);
     const docOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
     check('No horizontal page overflow at 800px (pace grid fits the card)', docOverflow === false);

@@ -151,6 +151,44 @@
       plan.queueBatchVideoIds = [];
     }
 
+    // --- Manual mode: the user's hand-picked topics ARE the queue. The plan
+    // target is parked (never mutated) and no batch bookkeeping runs; the
+    // list is global (state.dailyTasksManual) and shown once on the
+    // dashboard, not once per plan.
+    if (state.dailyTasksMode === 'manual') {
+      const manualIds = Array.isArray(state.dailyTasksManual) ? state.dailyTasksManual : [];
+      const byId = {};
+      dataset.forEach(sub => {
+        (sub.chapters || []).forEach(chap => {
+          (chap.videos || []).forEach(v => {
+            if (manualIds.indexOf(v.id) !== -1) {
+              byId[v.id] = { ...v, subjectName: sub.subject, chapterName: chap.name, subjectId: sub.id };
+            }
+          });
+        });
+      });
+      // Preserve the user's add order; ids that resolve on the current
+      // edition's dataset are shown (cross-edition leftovers stay stored).
+      const manualVideos = manualIds.map(id => byId[id]).filter(Boolean);
+      const pending = manualVideos.filter(v => !state.completedVideos[v.id]);
+      const completedCount = manualVideos.length - pending.length;
+      return {
+        planId: plan.id,
+        planLabel: plan.label,
+        planAccentColor: plan.accentColor,
+        subjectName: 'Manual Topics',
+        subjectId: manualVideos[0] ? manualVideos[0].subjectId : 'manual',
+        baseTargetPace: manualVideos.length || 1,
+        queueCompletedInBatch: completedCount,
+        totalCompletedToday: completedCount,
+        isDailyTargetAchieved: false,
+        isDailyTargetMet: manualVideos.length > 0 && pending.length === 0,
+        allSubjectDone: manualVideos.length > 0 && pending.length === 0,
+        videos: pending,
+        isManualMode: true
+      };
+    }
+
     if (!Array.isArray(plan.queueBatchVideoIds)) plan.queueBatchVideoIds = [];
 
     // If user has completed daily target and is doing extra videos, load 1 at a time

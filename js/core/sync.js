@@ -309,8 +309,9 @@
     if (!isPlainObject(v) || Object.keys(v).length === 0) return true;
     // The untouched default profile (only the placeholder doctor name) carries
     // no real identity — treat it as empty so it can't wipe a real name.
+    // Both the current default ('Dr') and the legacy one ('Dr. Aspirant') count.
     const keys = Object.keys(v);
-    return keys.length === 1 && v.doctorName === 'Dr. Aspirant';
+    return keys.length === 1 && (v.doctorName === 'Dr' || v.doctorName === 'Dr. Aspirant');
   }
   function isEmptyStreak(v) {
     if (!isPlainObject(v)) return true;

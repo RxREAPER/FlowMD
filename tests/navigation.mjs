@@ -102,7 +102,10 @@ async function run() {
   await page.waitForTimeout(500);
   console.log('view subject_detail: rendered', (await page.locator('#app-main').innerText().catch(() => '')).length, 'chars');
 
-  // Search modal open + query
+  // Search modal open + query — the search bar is dashboard-only now, so
+  // navigate back to the dashboard before opening it.
+  await page.locator('.android-nav-item[data-view="dashboard"]').first().click({ force: true }).catch(() => {});
+  await page.waitForTimeout(400);
   await page.locator('#btn-toggle-search').click({ force: true }).catch(() => {});
   await page.waitForTimeout(300);
   await page.locator('#spotlight-search-input').fill('anatomy');
