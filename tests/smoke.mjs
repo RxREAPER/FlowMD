@@ -348,6 +348,15 @@ async function run() {
   check('Analytics Goal Pulse shows empty state when no target set',
     anlText.includes('Goal Pulse') && anlText.includes('No study target set yet'),
     'empty-state CTA present');
+  // Issue #18: 30-day progress card always renders with 30 day bars.
+  check('Analytics shows 30-Day Progress card',
+    anlText.includes('30-Day Progress') && await page.locator('.anl-month30-bar').count() === 30,
+    `bars: ${await page.locator('.anl-month30-bar').count()}`);
+  // Issue #18: 7-day chart uses the taller 250-unit viewBox.
+  {
+    const vb = await page.locator('.chart-svg').first().getAttribute('viewBox').catch(() => null);
+    check('7-Day chart stretched to taller viewBox (250)', vb === '0 0 600 250', String(vb));
+  }
 
   // Regression: the Preparation Setup card must RESPOND to the Configure
   // Study Plan sheet. Configure Plan A (subject, pace, deadline), save, and
@@ -391,6 +400,20 @@ async function run() {
     !prepText.includes('No study target set yet');
   check('Preparation Setup reflects Study Plan Config goals (daily/weekly/monthly/date)',
     prepOk, JSON.stringify({ savedPlan, sample: prepText.slice(0, 220) }));
+
+  // Issue #18: welcome-card progress bar reflects configured subjects.
+  {
+    await clickNav(page, 'dashboard');
+    await page.waitForTimeout(300);
+    const hero = await page.evaluate(() => ({
+      segs: document.querySelectorAll('.hero-subj-seg').length,
+      legend: Array.from(document.querySelectorAll('.hero-subj-legend-item')).map(el => el.textContent.trim().replace(/\s+/g, ' ')),
+      heroText: (document.querySelector('.fm-feature-card-desc') || {}).textContent || ''
+    }));
+    check('Welcome card shows per-subject progress segments after plan config',
+      hero.segs >= 1 && hero.legend.some(t => /\d+%$/.test(t)),
+      JSON.stringify(hero));
+  }
 
   // Issue #17: manual-mode daily tasks must drive Goal Pulse. Switch to
   // manual topics, add 3 videos, complete 1, and verify the daily/weekly/

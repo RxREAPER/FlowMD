@@ -141,12 +141,15 @@
 
   function renderExecutionChart(last7Days, vidsDay, maxChartVal) {
     const dailyCounts = getDailyCountsExcludingBulk();
+    // Issue #18: stretch the plot vertically ("larger in diagonal sense")
+    // so the trend line reads more dramatically, while the day counters
+    // below stay compact.
     const width = 600;
-    const height = 200;
+    const height = 250;
     const padL = 14;
     const padR = 14;
     const padT = 32;
-    const padB = 26;
+    const padB = 22;
     const chartW = width - padL - padR;
     const chartH = height - padT - padB;
     const baseY = padT + chartH;
