@@ -161,25 +161,11 @@ async function run() {
     configValues.subject === '' && configValues.vids === '' && configValues.date === '',
     JSON.stringify(configValues));
 
-  // Topics (Daily Tasks Auto/Manual) section lives inside the Plan sheet
-  // (innerText reflects the CSS uppercase transform, so compare lowercase)
+  // Issue #11: the Daily Tasks (Topics) section was removed from the Plan
+  // sheet — topic mode lives on the dashboard's Daily Tasks card only.
   const sheetTextLower = sheetText.toLowerCase();
-  check('Sheet has a Topics (Daily Tasks) section', sheetTextLower.includes('daily tasks') && sheetTextLower.includes('topics'));
-  check('Sheet Topics mode switch renders Auto + Manual',
-    await page.locator('#spc-daily-tasks-mode-switch .spc-mode-opt[data-spc-mode="auto"]').count() === 1 &&
-    await page.locator('#spc-daily-tasks-mode-switch .spc-mode-opt[data-spc-mode="manual"]').count() === 1);
-  check('Sheet Topics starts in Auto mode',
-    await page.locator('#spc-daily-tasks-mode-switch .spc-mode-opt[data-spc-mode="auto"].active').count() === 1);
-  {
-    await page.locator('#spc-daily-tasks-mode-switch .spc-mode-opt[data-spc-mode="manual"]').click();
-    await page.waitForTimeout(300);
-    check('Sheet manual mode offers Add Topics from Search', await page.locator('#spc-btn-add-task-topic').count() === 1);
-    // Flip the mode back from the sheet (drives the store through the sheet)
-    await page.locator('#spc-daily-tasks-mode-switch .spc-mode-opt[data-spc-mode="auto"]').click();
-    await page.waitForTimeout(300);
-    const storeMode = await page.evaluate(() => window.FlowMD.store.getState().dailyTasksMode);
-    check('Sheet Topics mode switch drives the store', storeMode === 'auto', String(storeMode));
-  }
+  check('Plan sheet no longer contains the Daily Tasks topics section (issue #11)',
+    !sheetTextLower.includes('topics') && await page.locator('#spc-daily-tasks-mode-switch').count() === 0);
 
   // Close the sheet (Escape) so later sections can reach the bottom nav.
   await page.keyboard.press('Escape');

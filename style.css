@@ -1904,6 +1904,14 @@ body {
    with the label riding below like every other nav item. The icon mirrors
    the outline style of the sibling icons; the label uses the app's purple
    accent in both idle and active states. */
+/* --- Center-docked Plan centerpiece (issue #11) ---
+   A filled purple circular button seated in a concave notch carved into
+   the pill bar: an app-colored ring reads as part of the notch, the
+   button protrudes above the bar, and a layered neon-purple bloom makes
+   it the elevated active centerpiece of the navigation system. The tune
+   icon stays a clean white outline with a soft white glow. Adapts to
+   light/dark via the --bg-app ring + soft veil shadows (like the other
+   nav items). */
 .android-nav-item-center {
   flex: 0 0 auto;
   min-width: 74px;
@@ -1914,40 +1922,80 @@ body {
 }
 .android-nav-item-center .nav-icon-wrap {
   position: absolute;
-  top: -24px;
+  top: -26px;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  /* Fixed brand purples (accent-secondary/v2-purple-accent) — NOT the
-     switchable --accent-primary, so the FAB stays purple in every accent. */
-  background: linear-gradient(135deg, var(--accent-secondary, #a855f7), var(--v2-purple-accent, #8b5cf6));
+  /* Filled brand-purple disc (accent-secondary/v2-purple-accent — fixed, not
+     the switchable --accent-primary, so the centerpiece stays purple). */
+  background:
+    radial-gradient(120% 120% at 32% 22%, rgba(255, 255, 255, 0.28), transparent 42%),
+    linear-gradient(135deg, var(--accent-secondary, #a855f7), var(--v2-purple-accent, #8b5cf6));
   color: #ffffff;
-  border: 3px solid var(--bg-app, #0a0a0f); /* shared ring: reads as part of the bar */
+  border: none;
+  /* Ring in the app background color → reads as the concave notch gap
+     carved into the pill, visually merging button and bar. */
   box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.45),
-    0 0 18px rgba(168, 85, 247, 0.35);
+    0 0 0 4px var(--bg-app, #0a0a0f),
+    0 0 0 6px rgba(168, 85, 247, 0.35),
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    0 0 26px rgba(168, 85, 247, 0.45),
+    0 0 54px rgba(168, 85, 247, 0.18);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
               filter 0.25s ease, box-shadow 0.25s ease;
 }
 .android-nav-item-center:hover .nav-icon-wrap {
   transform: translateX(-50%) translateY(-2px);
   filter: brightness(1.08);
+  box-shadow:
+    0 0 0 4px var(--bg-app, #0a0a0f),
+    0 0 0 6px rgba(168, 85, 247, 0.45),
+    0 12px 26px rgba(0, 0, 0, 0.5),
+    0 0 34px rgba(168, 85, 247, 0.55),
+    0 0 66px rgba(168, 85, 247, 0.22);
 }
 .android-nav-item-center:active .nav-icon-wrap {
   transform: translateX(-50%) scale(0.94);
 }
 .android-nav-item-center .nav-icon {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
+  /* Clean white outline with a subtle neon-white glow. */
+  color: #ffffff;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.65));
 }
 .android-nav-item-center .nav-bar-label,
 .android-nav-item-center.active .nav-bar-label {
   color: var(--accent-secondary, #a855f7);
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+
+/* Light theme: the notch ring takes the page background; the purple bloom
+   softens and the outer illumination becomes a gentle ambient veil. */
+[data-theme="light"] .android-nav-item-center .nav-icon-wrap {
+  box-shadow:
+    0 0 0 4px var(--bg-app, #f8fafc),
+    0 0 0 6px rgba(168, 85, 247, 0.30),
+    0 10px 20px rgba(15, 23, 42, 0.22),
+    0 0 22px rgba(168, 85, 247, 0.30),
+    0 0 46px rgba(168, 85, 247, 0.14);
+}
+[data-theme="light"] .android-nav-item-center:hover .nav-icon-wrap {
+  box-shadow:
+    0 0 0 4px var(--bg-app, #f8fafc),
+    0 0 0 6px rgba(168, 85, 247, 0.40),
+    0 12px 24px rgba(15, 23, 42, 0.25),
+    0 0 30px rgba(168, 85, 247, 0.38),
+    0 0 56px rgba(168, 85, 247, 0.18);
+}
+[data-theme="light"] .android-nav-item-center .nav-bar-label,
+[data-theme="light"] .android-nav-item-center.active .nav-bar-label {
+  text-shadow: none;
 }
 
 /* --- Daily Tasks header: today's total-hours goal (issue #15) --- */
@@ -5900,6 +5948,143 @@ body {
 .onboarding-hint-path b {
   color: var(--text-primary);
   font-weight: 700;
+}
+
+/* --- Onboarding step 3: full-screen install prompt (issue #11) ---
+   While on the install step the shell chrome hides and the wizard card
+   fills the viewport, so the install ask gets the user's full attention. */
+body.onboarding-fullscreen .topbar,
+body.onboarding-fullscreen .v2-subtopbar-search-container,
+body.onboarding-fullscreen .android-bottom-nav {
+  display: none !important;
+}
+
+body.onboarding-fullscreen .app-main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.onboarding-fullscreen-wrap {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.onboarding-card-install {
+  text-align: center;
+  border-color: rgba(0, 240, 255, 0.35);
+  box-shadow:
+    0 0 40px rgba(0, 240, 255, 0.10),
+    0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.onboarding-install-icon {
+  width: 84px;
+  height: 84px;
+  margin: 4px auto 14px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(120% 120% at 30% 20%, rgba(0, 240, 255, 0.25), transparent 55%), var(--bg-surface);
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.30), inset 0 0 14px rgba(0, 240, 255, 0.15);
+}
+
+.onboarding-install-icon .material-symbols-outlined {
+  font-size: 44px;
+  color: var(--accent-primary);
+}
+
+.onboarding-install-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 14px auto 0;
+  max-width: 330px;
+  text-align: left;
+}
+
+.onboarding-install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px auto 0;
+  max-width: 340px;
+  text-align: left;
+}
+
+.onboarding-install-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.onboarding-install-step .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.onboarding-install-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  background: var(--bg-surface-hover);
+  border: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.onboarding-footer-install {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.onboarding-skip-link {
+  background: transparent;
+  border: none;
+  padding: 2px 6px;
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.onboarding-skip-link:hover {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .onboarding-install-step {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .onboarding-card-install {
+  box-shadow:
+    0 0 30px rgba(6, 182, 212, 0.10),
+    0 14px 40px rgba(15, 23, 42, 0.12);
 }
 
 /* --- Profile Settings card --- */
