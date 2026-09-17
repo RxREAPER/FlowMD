@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  const { FLOWMD_ICONS, SUBJECT_ICONS, SUBJECT_SVG_ICONS, SUBJECT_COLORS, escapeHtml } = window.FlowMD.constants;
+  const { FLOWMD_ICONS, SUBJECT_ICONS, SUBJECT_SVG_ICONS, SUBJECT_COLORS, escapeHtml, todayKey } = window.FlowMD.constants;
   const { getDailyCountsExcludingBulk } = window.FlowMD.sourceData;
   const { getSubjectColor } = window.FlowMD.subjects;
 
@@ -138,6 +138,21 @@
   }
 
 
+
+  // Per-day detail line for the 30-Day Progress card (issue #28): shows how
+  // much was completed on the tapped/selected day vs the daily target.
+  function renderMonth30Detail(day, dayTarget) {
+    if (!day) return '';
+    const isToday = day.dateKey === todayKey();
+    const dayLabel = isToday ? 'Today' : (day.fullDate ? day.fullDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) : day.label);
+    const pct = dayTarget > 0 ? Math.round((day.count / dayTarget) * 100) : 0;
+    const status = dayTarget <= 0
+      ? 'no target set'
+      : day.met ? 'target met' : (day.count > 0 ? Math.max(1, dayTarget - day.count) + ' more to hit target' : 'nothing completed');
+    return `<span class="anl-month30-detail-day"><b>${dayLabel}</b></span>` +
+      `<span class="anl-month30-detail-count"><b>${day.count}</b>&nbsp;video${day.count === 1 ? '' : 's'}</span>` +
+      `<span class="anl-month30-detail-status">${pct > 0 ? '· ' + pct + '% of ' + dayTarget + '/day · ' : ''}${status}</span>`;
+  }
 
   function renderExecutionChart(last7Days, vidsDay, maxChartVal) {
     const dailyCounts = getDailyCountsExcludingBulk();
@@ -274,6 +289,7 @@
   // Expose
   window.FlowMD.charts = {
     renderExecutionChart,
-    renderPixelSubjectHeatmap
+    renderPixelSubjectHeatmap,
+    renderMonth30Detail
   };
 })();

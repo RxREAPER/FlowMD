@@ -25,6 +25,8 @@
 
   // --- Targeted quest checkbox update (no innerHTML rebuild, scroll preserved) ---
   function updateQuestAfterCheck() {
+    // Issue #28: keep the welcome-card "Current Subject Progress" realtime.
+    updateHeroSubjectProgress();
     const freshQueues = getAllPlanQueues();
     // Update each plan block's progress text
     document.querySelectorAll('.plan-quest-block').forEach((block, idx) => {
@@ -205,16 +207,20 @@
     });
   }
 
-  // Welcome card progress (issue #18): one track per subject scoped under
-  // Configure Study Plan, stacked as a segmented progress bar. Falls back to
-  // the overall syllabus figure when no plan target is configured.
-  function renderHeroSubjectProgress(plans, stats) {
-    const scoped = plans.filter(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
+  // "Current Subject Progress" (issues #18 + #28): one track per subject
+  // scoped under Configure Study Plan (Plan A + Plan B), stacked as a segmented
+  // progress bar. Falls back to the overall syllabus figure when no plan target
+  // is configured. Realtime: updateHeroSubjectProgress() re-renders the block
+  // in place after every completion tick, without rebuilding the dashboard.
+  function buildHeroSubjectProgressInner(plans) {
+    const overall = getSubjectOrSyllabusMetricsForPlan({});
+    const overallPct = overall.totalVideos > 0 ? Math.round((overall.completedVideos / overall.totalVideos) * 100) : 0;
+    const scoped = (plans || []).filter(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
     if (!scoped.length) {
       return `
-        <div class="hero-mastery-value">${stats.percentage}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
+        <div class="hero-mastery-value">${overallPct}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
         <div class="v2-hp-bar-bg hero-hp-bar">
-          <div class="v2-hp-bar-fill" style="width:${stats.percentage}%;"></div>
+          <div class="v2-hp-bar-fill" style="width:${overallPct}%;"></div>
         </div>
       `;
     }
@@ -234,14 +240,73 @@
     const legend = segData.map(s => `
       <span class="hero-subj-legend-item">
         <span class="hero-subj-dot" style="background:${s.color}; box-shadow:0 0 6px ${s.color};"></span>
-        ${escapeHtml(s.plan.targetSubject)} <b>${s.pct}%</b>
+        <span class="hero-subj-legend-name">${escapeHtml(s.plan.targetSubject)}</span>
+        <b>${s.m.completedVideos}/${s.m.totalVideos}</b>
       </span>
     `).join('');
     return `
-      <div class="hero-mastery-value">${blended}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
-      <div class="hero-subj-bar">${segs}</div>
-      <div class="hero-subj-legend">${legend}</div>
+      <div class="hero-mastery-value" id="hero-subj-pct">${blended}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
+      <div class="hero-subj-bar" id="hero-subj-segs">${segs}</div>
+      <div class="hero-subj-legend" id="hero-subj-legend">${legend}</div>
     `;
+  }
+
+  function renderHeroSubjectProgress(plans) {
+    return `<div id="hero-subj-progress-block">${buildHeroSubjectProgressInner(plans)}</div>`;
+  }
+
+  // Realtime update (issue #28): called after any completion change so the
+  // welcome-card bar reflects the user's input immediately.
+  function updateHeroSubjectProgress() {
+    const block = document.getElementById('hero-subj-progress-block');
+    if (block) block.innerHTML = buildHeroSubjectProgressInner(state.plans || []);
+  }
+
+  // --- Issue #28: "How your daily topics work" explainer popup ---
+  // Lives outside the plan-config sheet; opened from the Daily Tasks
+  // "How modes work" link. Closable via ×, backdrop click, or Esc.
+  function openModesExplainerModal() {
+    const existing = document.getElementById('modes-explainer-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-backdrop active';
+    overlay.id = 'modes-explainer-overlay';
+    overlay.innerHTML = `
+      <div class="modal-card modes-explainer-card" role="dialog" aria-modal="true" aria-label="How your daily topics work">
+        <button type="button" class="modes-explainer-close" id="modes-explainer-close" aria-label="Close">×</button>
+        <div class="spc-mode-explainer">
+          <div class="spc-mode-explainer-title">
+            <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
+            How your daily topics work
+          </div>
+          <div class="spc-mode-explainer-row">
+            <span class="spc-mode-explainer-num" style="--ex-accent: var(--accent-primary);">1</span>
+            <div>
+              <b>Automatic mode</b> — topics follow your lecture module order. FlowMD queues the next videos from your target subject's curriculum each day, so you always know what's next.
+            </div>
+          </div>
+          <div class="spc-mode-explainer-row">
+            <span class="spc-mode-explainer-num" style="--ex-accent: var(--accent-secondary, #a855f7);">2</span>
+            <div>
+              <b>Manual mode</b> — pick topics as per your requirement: search any topic and tap <b>“+ Task”</b> to add it from the search box. Manual completions reflect on your analytics too — built for students who prefer a dynamic method of study.
+            </div>
+          </div>
+          <div class="spc-mode-explainer-foot">You can switch between Auto and Manual anytime from the Daily Tasks card on your dashboard.</div>
+        </div>
+      </div>`;
+
+    const close = () => {
+      overlay.classList.remove('active');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(() => overlay.remove(), 180);
+    };
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    overlay.querySelector('#modes-explainer-close').addEventListener('click', close);
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(overlay);
   }
 
   function renderDashboardView(dom, stats) {
@@ -385,14 +450,11 @@
           </p>
           <div class="hero-mastery-block">
             <div class="hero-mastery-top">
-              <span class="hero-mastery-label"><span class="hero-mastery-dot"></span> Subject Progress</span>
+              <span class="hero-mastery-label"><span class="hero-mastery-dot"></span> Current Subject Progress</span>
               <span style="font-size:0.7rem; font-weight:600; color:var(--text-muted); font-family: var(--font-hud);">${stats.totalVideos > 0 ? stats.completedVideos + ' / ' + stats.totalVideos + ' videos' : 'No data yet'}</span>
             </div>
             ${renderHeroSubjectProgress(plans, stats)}
-            <div class="hero-mastery-sub">
-              <span>${stats.percentage < 25 ? 'Just getting started' : stats.percentage < 50 ? 'Building momentum' : stats.percentage < 75 ? 'Strong progress' : stats.percentage < 90 ? 'Almost there' : 'Mastery achieved!'}</span>
-              <span>${stats.percentage < 100 ? (100 - stats.percentage) + '% to mastery' : 'Complete!'}</span>
-            </div>
+            <!-- Issue #28: "Building momentum" tagline removed — no real function -->
           </div>
         </div>
       </div>
@@ -449,12 +511,12 @@
     if (isManualMode) initManualTasksSection();
     initDailyTasksModeSwitch();
 
-    // Issue #25: "How modes work" opens the plan sheet, where the full
-    // Auto-vs-Manual explainer lives.
-    document.getElementById('btn-what-are-modes')?.addEventListener('click', () => {
-      if (window.FlowMD.planConfig && window.FlowMD.planConfig.openPlanConfigSheet) {
-        window.FlowMD.planConfig.openPlanConfigSheet();
-      }
+    // Issue #25/#28: "How modes work" opens a dedicated popup with the full
+    // Auto-vs-Manual explainer (no longer inside the plan-config sheet).
+    document.querySelectorAll('#btn-what-are-modes').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openModesExplainerModal();
+      });
     });
 
     document.querySelectorAll('.btn-open-queue-subject').forEach(btn => {

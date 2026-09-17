@@ -3538,6 +3538,18 @@ body {
   display: inline-block;
 }
 
+/* Issue #28: legend shows completed/total per subject (not a big bold %). */
+.hero-subj-legend-item b {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 0.66rem;
+  font-family: var(--font-hud);
+  letter-spacing: 0.02em;
+}
+.hero-subj-legend-name {
+  font-weight: 400;
+}
+
 .hero-mastery-sub {
   display: flex;
   align-items: center;
@@ -3960,6 +3972,37 @@ body {
   border: 1px solid color-mix(in srgb, var(--accent-primary) 25%, transparent);
 }
 
+/* Issue #28: explainer popup (opened from Daily Tasks "How modes work") */
+.modes-explainer-card {
+  position: relative;
+  max-width: 440px;
+}
+.modes-explainer-card .spc-mode-explainer {
+  margin: 0;
+}
+.modes-explainer-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.modes-explainer-close:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+}
+
 .spc-mode-explainer-title {
   display: flex;
   align-items: center;
@@ -4058,11 +4101,14 @@ body {
   }
 }
 
+/* Square Marrow-style subject cards (issue #28): aspect-ratio locked,
+   icon-led, subtle metadata line instead of bold stat columns. */
 .curr-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
   overflow: hidden;
@@ -4083,20 +4129,26 @@ body {
 }
 
 .curr-card-head {
+  flex: 1;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 12px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 16%, transparent), transparent 70%);
-  border-bottom: 1px solid var(--border-color);
+  padding: 14px 14px 10px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 14%, transparent), transparent 75%);
 }
 
 .curr-card-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 30%, transparent);
   color: var(--sub-accent, var(--accent-primary));
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 45%, transparent));
 }
 
 .curr-card-icon .material-symbols-outlined {
@@ -4104,80 +4156,58 @@ body {
 }
 
 .curr-card-name {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   font-family: var(--font-display), monospace;
   font-size: 0.92rem;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 1.25;
   color: var(--text-primary);
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .curr-card-pct {
   font-family: var(--font-hud);
   font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--sub-accent, var(--accent-primary));
-  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
 }
 
 .curr-card.is-complete .curr-card-pct {
   color: var(--success);
 }
 
-.curr-card-body {
-  display: flex;
-  align-items: stretch;
-  padding: 10px 12px;
-  gap: 8px;
-  flex: 1;
-}
-
-.curr-card-stat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-width: 0;
-}
-
-.curr-card-stat + .curr-card-stat {
-  border-left: 1px solid var(--border-color);
-}
-
-.curr-card-stat-num {
-  font-family: var(--font-display), monospace;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-
-.curr-card-stat-label {
+/* Subtle metadata strip: "12/204 videos · 0/90 modules" (Marrow-style). */
+.curr-card-meta {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border-color);
   font-family: var(--font-hud);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.curr-card-meta b {
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .curr-card-bar {
-  height: 6px;
+  height: 4px;
   background: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 10%, var(--bg-surface-raised));
-  border-top: 1px solid var(--border-color);
   overflow: hidden;
 }
 
 .curr-card-bar-fill {
   height: 100%;
-  border-radius: 0 4px 0 0;
   background: linear-gradient(90deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 65%, transparent), var(--sub-accent, var(--accent-primary)));
-  box-shadow: 0 0 10px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 45%, transparent);
   transition: width 0.35s ease;
 }
 
@@ -4239,6 +4269,138 @@ body {
 
 .chapt-node.is-open .chapt-node-dot {
   background: color-mix(in srgb, var(--accent-primary) 25%, var(--bg-surface-raised));
+}
+
+/* Issue #28: unit header meta + single tick control + Marrow-style lecture rows */
+/* Visually-hidden legacy bulk checkbox (kept for form semantics only). */
+.bulk-chapter-checkbox-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.unit-title-wrap {
+  min-width: 0;
+  flex: 1;
+}
+
+.unit-title-wrap .accordion-title {
+  white-space: normal;
+}
+
+.unit-done-meta {
+  margin-top: 3px;
+  font-family: var(--font-hud);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+.chapt-node.is-done .unit-done-meta {
+  color: var(--success);
+}
+
+.unit-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.unit-done-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-family: var(--font-hud);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.unit-done-btn .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.unit-done-btn:hover {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 55%, var(--border-color));
+}
+
+.unit-done-btn.is-done {
+  color: var(--success);
+  border-color: color-mix(in srgb, var(--success) 55%, var(--border-color));
+  background: color-mix(in srgb, var(--success) 10%, var(--bg-surface));
+}
+
+/* Marrow-style lecture row: colored number tile + subtle meta row */
+.mv-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 3px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.mv-meta .material-symbols-outlined {
+  font-size: 12px;
+  vertical-align: -2px;
+  margin-right: 2px;
+}
+
+.mv-time,
+.mv-done {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 400;
+}
+
+.mv-done {
+  color: var(--success);
+}
+
+.mv-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: 0.78rem;
+  font-weight: 700;
+  box-shadow: inset 0 -12px 18px rgba(0, 0, 0, 0.18);
+}
+
+.subject-done-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-family: var(--font-hud);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--success);
+}
+
+.subject-done-banner .material-symbols-outlined {
+  font-size: 14px;
 }
 
 /* Daily Tasks visual progress track (issue #16 redesign) */
@@ -7512,6 +7674,43 @@ body.onboarding-fullscreen .app-main {
 
 .anl-month30-bar.is-zero .anl-month30-fill {
   background: color-mix(in srgb, var(--text-muted) 30%, transparent);
+}
+
+/* Issue #28: per-day detail line under the 30-day strip */
+.anl-month30-detail {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 18px;
+  margin-top: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent-primary) 6%, var(--bg-surface-raised));
+  border: 1px solid var(--border-color);
+  font-family: var(--font-hud), sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.anl-month30-detail b {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.anl-month30-detail-count {
+  color: var(--accent-primary);
+}
+
+.anl-month30-bar {
+  cursor: pointer;
+}
+
+.anl-month30-bar.is-selected {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 1px;
+  border-radius: 2px;
 }
 
 .anl-month30-scale {
