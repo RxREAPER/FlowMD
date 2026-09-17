@@ -37,6 +37,26 @@
     return toLocalDateKey(new Date(Date.now() - 5 * 3600000));
   }
 
+  // Human completion date for lecture cards (issue #16). Input is the value
+  // stored in state.completedVideos: an ISO timestamp for videos completed
+  // since this feature shipped, or legacy boolean `true` for everything
+  // completed before it (shown without a date).
+  function formatCompletionDate(stored, now) {
+    if (!stored || stored === true) return '';
+    const t = new Date(stored).getTime();
+    if (!isFinite(t)) return '';
+    const ref = now instanceof Date ? now.getTime() : (typeof now === 'number' ? now : Date.now());
+    const days = Math.floor((ref - t) / 86400000);
+    if (days <= 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return days + ' days ago';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const d = new Date(t);
+    const sameYear = d.getFullYear() === new Date(ref).getFullYear();
+    const day = d.getDate() + (d.getDate() % 10 === 1 && d.getDate() !== 11 ? 'st' : d.getDate() % 10 === 2 && d.getDate() !== 12 ? 'nd' : d.getDate() % 10 === 3 && d.getDate() !== 13 ? 'rd' : 'th');
+    return day + ' ' + months[d.getMonth()] + (sameYear ? '' : ' ' + d.getFullYear());
+  }
+
   
 
   // --- Shared SVG Icon Set (FlowMD) ---
@@ -243,6 +263,7 @@ const FLOWMD_ICONS = {
     escapeAttr,
     toLocalDateKey,
     todayKey,
+    formatCompletionDate,
     SCHEMA_VERSION,
     APP_VERSION,
     STORAGE_KEYS,

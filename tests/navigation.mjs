@@ -98,7 +98,7 @@ async function run() {
   // Subject detail via curriculum row
   await page.locator('.android-nav-item[data-view="curriculum"]').first().click({ force: true }).catch(() => {});
   await page.waitForTimeout(400);
-  await page.locator('.curriculum-sub-row').first().click({ force: true }).catch(() => {});
+  await page.locator('.curr-card').first().click({ force: true }).catch(() => {});
   await page.waitForTimeout(500);
   console.log('view subject_detail: rendered', (await page.locator('#app-main').innerText().catch(() => '')).length, 'chars');
 

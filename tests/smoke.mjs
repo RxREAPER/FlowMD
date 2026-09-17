@@ -260,8 +260,25 @@ async function run() {
 
   // Curriculum view
   await clickNav(page, 'curriculum');
-  const curriculumSubjects = await page.locator('.curriculum-sub-row').count();
-  check('Curriculum view shows subject rows', curriculumSubjects > 5, `found ${curriculumSubjects}`);
+  const curriculumSubjects = await page.locator('.curr-card').count();
+  check('Curriculum view shows subject cards', curriculumSubjects > 5, `found ${curriculumSubjects}`);
+  // Two-column card grid (issue #16)
+  check('Curriculum cards use 2-col grid (issue #16)',
+    await page.evaluate(() => getComputedStyle(document.querySelector('.curr-grid')).gridTemplateColumns.split(' ').length) === 2);
+  check('Curriculum card has icon header + stats + bar (issue #16)',
+    await page.locator('.curr-card').first().evaluate(el =>
+      !!el.querySelector('.curr-card-head') && !!el.querySelector('.curr-card-stat-num') && !!el.querySelector('.curr-card-bar-fill')));
+  check('Curriculum card bottom bar width matches %',
+    await page.evaluate(() => {
+      const card = document.querySelector('.curr-card');
+      const fill = card && card.querySelector('.curr-card-bar-fill');
+      const pctEl = card && card.querySelector('.curr-card-pct');
+      if (!fill || !pctEl) return false;
+      const pct = parseInt(pctEl.textContent, 10);
+      const w = parseFloat(getComputedStyle(fill).width);
+      const max = parseFloat(getComputedStyle(fill.parentElement).width);
+      return Math.abs(w / max * 100 - pct) <= 2 || (pct === 0 && w === 0);
+    }));
   check('Search bar hidden on curriculum', !(await page.locator('#btn-toggle-search').isVisible()));
 
   // Collapsible "How completion is counted" legend (issue #15)
@@ -285,10 +302,39 @@ async function run() {
 
   // Subject detail
   if (curriculumSubjects > 0) {
-    await page.locator('.curriculum-sub-row').first().click();
+    await page.locator('.curr-card').first().click();
     await page.waitForTimeout(500);
     const subjText = await page.locator('#app-main').innerText();
     check('Subject detail view renders chapters', subjText.includes('Chapter') || subjText.includes('chapter') || subjText.length > 100);
+    // Collapsed chapters + timeline rail (issue #16)
+    check('Chapters collapsed by default (issue #16)',
+      await page.locator('.accordion-body.active').count() === 0);
+    check('Chapters sit on a numbered timeline rail (issue #16)',
+      await page.locator('.chapt-node .chapt-node-dot').count() >= 3 &&
+      await page.locator('.chapt-rail-line').count() >= 2);
+    // Expand a chapter via its header and confirm the row shows duration
+    await page.locator('.accordion-header').first().click();
+    await page.waitForTimeout(300);
+    check('Chapter expands on header click',
+      await page.locator('.accordion-body.active').count() === 1);
+    check('Lecture rows carry duration',
+      await page.locator('.accordion-body.active .v2-quest-row .quest-video-dur').count() >= 1);
+    // Completion-date metadata (issue #16): ticking a video records an ISO
+    // timestamp that renders as "Completed Today"; unticking clears it.
+    const row = page.locator('.accordion-body.active .v2-quest-row').first();
+    await row.locator('.v2-pixel-checkbox-label').click();
+    await page.waitForTimeout(300);
+    const doneLine = await row.locator('.quest-done-when').innerText().catch(() => '');
+    check('Ticked lecture shows completion date (issue #16)', /completed today/i.test(doneLine), JSON.stringify(doneLine));
+    const storedVal = await page.evaluate(() => {
+      const cb = document.querySelector('.accordion-body.active .react-task-checkbox');
+      return window.FlowMD.store.getState().completedVideos[cb.getAttribute('data-video-id')];
+    });
+    check('Completion stores ISO timestamp (issue #16)', typeof storedVal === 'string' && !isNaN(Date.parse(storedVal)), String(storedVal));
+    await row.locator('.v2-pixel-checkbox-label').click();
+    await page.waitForTimeout(300);
+    check('Untick clears completion date (issue #16)',
+      await row.locator('.quest-done-when').count() === 0);
   } else {
     check('Subject detail view renders chapters', false, 'no subject row to click');
   }
@@ -613,10 +659,10 @@ async function run() {
     await clickNav(page65, 'curriculum');
     // Wait for the async data load + re-render (not a fixed timeout).
     await page65.waitForFunction(
-      () => document.querySelectorAll('.curriculum-sub-row').length > 5,
+      () => document.querySelectorAll('.curr-card').length > 5,
       { timeout: 10000 }
     ).catch(() => {});
-    const subjects65 = await page65.locator('.curriculum-sub-row').count();
+    const subjects65 = await page65.locator('.curr-card').count();
     check('Returning marrow_6_5 user gets curriculum after lazy boot load', subjects65 > 5, `found ${subjects65}`);
     check('Returning 6.5 user has no console errors on lazy boot', errs65.length === 0, errs65.join(' | ').slice(0, 200));
     await ctx65.close();

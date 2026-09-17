@@ -61,29 +61,40 @@
         </div>
       </div>
 
-      ${filteredSubjects.map(sub => `
-        <div class="v2-pixel-card curriculum-sub-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" class="curriculum-sub-row" data-subject-id="${sub.id}">
-            <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-              <span class="subject-icon-medium" style="display:inline-flex;align-items:center;justify-content:center;color:${sub.accentColor};">${sub.svgIcon}</span>
-              <div style="min-width: 0;">
-                <div style="font-family: var(--font-display); font-weight: 700; font-size: 1rem;">${sub.name}</div>
-                <div style="font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2px;">${sub.raw.chapters ? sub.raw.chapters.length : 0} CHAPTERS • ${sub.completedVideos}/${sub.totalVideos} videos • ${sub.totalHours}h</div>
-              </div>
+      <!-- Two-column subject card grid (issue #16): icon header, body with
+           progress/hours, full-width progress bar at the bottom -->
+      <div class="curr-grid">
+        ${filteredSubjects.map(sub => {
+          const pct = sub.percentage || 0;
+          const chapCount = sub.raw && sub.raw.chapters ? sub.raw.chapters.length : 0;
+          return `
+          <div class="curr-card ${pct === 100 ? 'is-complete' : ''}" data-subject-id="${sub.id}" role="button" tabindex="0" aria-label="Open ${sub.name} — ${pct}% complete">
+            <div class="curr-card-head" style="--sub-accent: ${sub.accentColor};">
+              <span class="curr-card-icon" aria-hidden="true">${sub.svgIcon}</span>
+              <span class="curr-card-name">${sub.name}</span>
+              <span class="curr-card-pct">${pct}%</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="v2-hud-badge" style="${sub.percentage === 100 ? 'color: var(--success); border-color: var(--success);' : ''}">${sub.percentage}%</span>
-              <svg class="material-symbols-outlined" style="color: var(--text-muted);"><use href="#fmd-i-chevron_right"/></svg>
+            <div class="curr-card-body">
+              <div class="curr-card-stat"><span class="curr-card-stat-num">${chapCount}</span><span class="curr-card-stat-label">Chapters</span></div>
+              <div class="curr-card-stat"><span class="curr-card-stat-num">${sub.completedVideos}/${sub.totalVideos}</span><span class="curr-card-stat-label">Videos</span></div>
+              <div class="curr-card-stat"><span class="curr-card-stat-num">${sub.totalHours}h</span><span class="curr-card-stat-label">Content</span></div>
+            </div>
+            <div class="curr-card-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
+              <div class="curr-card-bar-fill" style="width:${pct}%;"></div>
             </div>
           </div>
-        </div>
-      `).join('')}
+        `;}).join('')}
+      </div>
     `;
 
-    document.querySelectorAll('.curriculum-sub-row').forEach(row => {
-      row.addEventListener('click', () => {
-        state.activeSubjectId = row.getAttribute('data-subject-id');
+    document.querySelectorAll('.curr-card').forEach(card => {
+      const open = () => {
+        state.activeSubjectId = card.getAttribute('data-subject-id');
         if (window.FlowMD.shell) window.FlowMD.shell.switchView('subject_detail');
+      };
+      card.addEventListener('click', open);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
     });
 

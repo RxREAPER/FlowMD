@@ -10,7 +10,7 @@
   'use strict';
 
   const { getState, getStudyStreak, markStudyActivity, saveState, setDailyTasksMode, addManualTaskVideo, removeManualTaskVideo } = window.FlowMD.store;
-  const { getPlanScopeVideos, getScopedChapterNames, getDataset } = window.FlowMD.sourceData;
+  const { getPlanScopeVideos, getScopedChapterNames, getDataset, getVideoCompletedDate } = window.FlowMD.sourceData;
   const { getAllPlanQueues, getPlanById } = window.FlowMD.metrics;
   const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey, DAILY_TASKS_MODE_AUTO, DAILY_TASKS_MODE_MANUAL } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
@@ -114,6 +114,8 @@
               const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
               let vNum = '#' + (v.videoNumber || '1').replace(/^#+/, '');
               const isDone = !!state.completedVideos[v.id];
+              // Completion-date metadata (issue #16)
+              const doneWhen = isDone ? getVideoCompletedDate(v.id) : '';
               return `
                 <div class="v2-quest-row ${isDone ? 'completed' : ''}">
                   <label class="v2-pixel-checkbox-label">
@@ -122,6 +124,7 @@
                     <div>
                       <div class="v2-quest-title"><span class="quest-video-num">${vNum}</span> ${v.title}</div>
                       <div class="quest-video-chapter">${v.subjectName} • ${v.chapterName}</div>
+                      ${doneWhen ? `<div class="quest-done-when"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</div>` : ''}
                     </div>
                   </label>
                   <div class="quest-video-dur">${durStr}</div>
@@ -249,6 +252,10 @@
             </div>
           ` : ''}
 
+          <div class="plan-quest-track" aria-hidden="true">
+            <div class="plan-quest-track-fill" style="width:${dailyPctPlan}%;"></div>
+          </div>
+
           <div class="plan-quest-stats-row">
             <div class="plan-quest-target-text">
               TARGET: <strong>${(plan.extraBatchesCompletedToday || 0) > 0 ? '1 VIDEO AT A TIME' : queue.baseTargetPace + ' VIDS/DAY'}</strong>
@@ -296,6 +303,8 @@
                 const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
                 let vNum = '#' + (v.videoNumber || '#1').replace(/^#+/, '');
                 const isDone = !!state.completedVideos[v.id];
+                // Completion-date metadata (issue #16)
+                const doneWhen = isDone ? getVideoCompletedDate(v.id) : '';
                 return `
                   <div class="v2-quest-row ${isDone ? 'completed' : ''}">
                     <label class="v2-pixel-checkbox-label">
@@ -304,6 +313,7 @@
                       <div>
                         <div class="v2-quest-title"><span class="quest-video-num">${vNum}</span> ${v.title}</div>
                         <div class="quest-video-chapter">${v.chapterName}</div>
+                        ${doneWhen ? `<div class="quest-done-when"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</div>` : ''}
                       </div>
                     </label>
                     <div class="quest-video-dur">${durStr}</div>
@@ -446,7 +456,7 @@
           // may belong to no plan's target subject at all).
           const found = findDatasetVideo(vidId);
           if (e.target.checked) {
-            state.completedVideos[vidId] = true;
+            state.completedVideos[vidId] = new Date().toISOString();
             markStudyActivity(true, found ? found.subjectId : null);
             showToast('Task completed!', 'check_circle');
           } else {
@@ -459,7 +469,7 @@
         }
 
         if (e.target.checked) {
-          state.completedVideos[vidId] = true;
+          state.completedVideos[vidId] = new Date().toISOString();
           // Get subjectId from the video (scoped to the plan's dataset)
           const planVideos = plan ? getPlanScopeVideos(plan) : [];
           const video = planVideos.find(v => v.id === vidId);
