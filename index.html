@@ -38,36 +38,19 @@
           <img src="assets/logo-dark.png" alt="FlowMD" class="flowmd-topbar-logo flowmd-topbar-logo-dark" width="299" height="96">
           <img src="assets/logo-light.png" alt="" aria-hidden="true" class="flowmd-topbar-logo flowmd-topbar-logo-light" width="299" height="96">
         </div>
-        <!-- Active Study Edition Indicator (populated by app.js) -->
-        <span class="edition-badge" id="topbar-source-badge" title="Study Source" role="button" tabindex="0">
-          <svg class="material-symbols-outlined"><use href="#fmd-i-auto_stories"/></svg>
-          <span class="edition-badge-text">Marrow 8</span>
-        </span>
         <!-- Offline Indicator (hidden by default, shown by app.js when offline) -->
         <span class="offline-indicator" id="topbar-offline-indicator" style="display: none;" title="You are offline">
           <svg class="material-symbols-outlined" style="font-size: 16px;"><use href="#fmd-i-wifi_off"/></svg>
           <span style="font-size: 0.7rem; margin-left: 4px;">Offline</span>
         </span>
-        <span class="topbar-source-hint" style="font-size: 0.7rem; color: var(--text-muted); margin-left: 8px; font-weight: 400;">(you can change study source anytime later from Profile → Settings → Study Source)</span>
       </div>
 
-      <!-- Right: Profile Avatar & Theme Toggle Switch -->
+      <!-- Right: Profile Avatar (theme toggle lives in Profile → Settings) -->
       <div class="topbar-right">
         <!-- Profile Avatar -->
         <div class="fm-avatar fm-avatar-sm fm-avatar-cyan" id="topbar-user-profile" title="Account & Profile" style="cursor: pointer;">
           <span id="topbar-avatar-initials">DA</span>
         </div>
-
-        <!-- Theme Toggle Switch -->
-        <div class="retro-theme-toggle" id="theme-toggle-btn" title="Toggle Light / Dark Mode">
-          <div class="retro-theme-track">
-            <svg class="material-symbols-outlined icon-sun"><use href="#fmd-i-light_mode"/></svg>
-            <svg class="material-symbols-outlined icon-moon"><use href="#fmd-i-dark_mode"/></svg>
-            <div class="retro-theme-thumb" id="theme-slider-thumb"></div>
-          </div>
-        </div>
-
-
       </div>
     </header>
 
@@ -77,11 +60,6 @@
         <svg class="material-symbols-outlined search-icon" style="font-size: 20px; color: var(--accent-primary);"><use href="#fmd-i-search"/></svg>
         <input type="text" id="topbar-search-input" placeholder="Search 20 subjects, chapters, topics..." readonly>
       </div>
-    </div>
-
-    <!-- Study Source Hint (below search bar) -->
-    <div class="topbar-source-hint" id="subtopbar-source-hint" style="padding: 6px 14px; font-size: 0.68rem; color: var(--text-muted); margin-top: -2px; line-height: 1.3;">
-      You can change your study source anytime later from <b>Profile → Settings → Study Source</b>
     </div>
 
     <!-- Q-banks Coming Soon — Collapsible Update Banner (collapse + dismiss wired in app.js) -->

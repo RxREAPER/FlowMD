@@ -31,7 +31,7 @@
   const {
     applyTheme,
     updateTopbarInitials,
-    updateTopbarSource
+    updateOfflineIndicator
   } = window.FlowMD.theme;
 
   const {
@@ -39,8 +39,6 @@
     closeSpotlightModal,
     renderSpotlightResults
   } = window.FlowMD.search;
-
-  const { openSourceSettingsModal } = window.FlowMD.sourceSettings;
 
   const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
 
@@ -70,6 +68,7 @@
     bindEvents();
     initQbBanner();
     initServiceWorker();
+    initOfflineIndicator();
     if (window.FlowMD.pwaInstall) window.FlowMD.pwaInstall.init();
     render();
     resetPageScrollTop();
@@ -82,14 +81,25 @@
     });
   }
 
+  // --- Offline indicator: mirror real network state into the topbar pill ---
+  // (the dormant sync stack used to own state.isOffline; UI/UX 2 wires it to
+  // the browser's online/offline events so the indicator actually works).
+  function initOfflineIndicator() {
+    const sync = () => {
+      state.isOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+      updateOfflineIndicator();
+    };
+    window.addEventListener('online', sync);
+    window.addEventListener('offline', sync);
+    sync();
+  }
+
   // --- Cache DOM Elements ---
   function cacheDOM() {
     DOM.appMain = document.getElementById('app-main');
     DOM.navItems = document.querySelectorAll('.android-nav-item[data-view]');
     DOM.btnToggleSearch = document.getElementById('btn-toggle-search');
     DOM.searchContainer = document.querySelector('.v2-subtopbar-search-container');
-    DOM.subtopbarSourceHint = document.getElementById('subtopbar-source-hint');
-    DOM.themeToggleBtn = document.getElementById('theme-toggle-btn');
     DOM.topbarUserProfile = document.getElementById('topbar-user-profile');
     DOM.topbarAvatarInitials = document.getElementById('topbar-avatar-initials');
     DOM.bottomSheetOverlay = document.getElementById('bottom-sheet-overlay');
@@ -98,8 +108,6 @@
     DOM.planConfigSheetContent = document.getElementById('plan-config-sheet-content');
     DOM.navBtnPlanConfig = document.getElementById('nav-btn-plan-config');
     DOM.brandHomeLink = document.getElementById('brand-home-link');
-    DOM.topbarSourceBadge = document.getElementById('topbar-source-badge');
-    DOM.topbarSourceBadgeText = document.querySelector('.edition-badge-text');
   }
 
   // --- Interactive Info Popover Helper ---
@@ -190,38 +198,9 @@
       }
     });
 
-    if (DOM.themeToggleBtn) {
-      DOM.themeToggleBtn.addEventListener('click', () => {
-        state.theme = state.theme === 'dark' ? 'light' : 'dark';
-        applyTheme(state.theme);
-        saveState();
-      });
-    }
-
     if (DOM.topbarUserProfile) {
       DOM.topbarUserProfile.addEventListener('click', () => openProfileBottomSheet(DOM));
     }
-
-    const topbarSrcBadge = document.getElementById('topbar-source-badge');
-    if (topbarSrcBadge) {
-      topbarSrcBadge.addEventListener('click', openSourceSettingsModal);
-      topbarSrcBadge.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openSourceSettingsModal();
-        }
-      });
-    }
-
-    // Delegated click for any in-view edition chip → source settings dialog
-    document.addEventListener('click', (e) => {
-      const chip = e.target.closest('.btn-open-source-settings');
-      if (chip) {
-        e.preventDefault();
-        e.stopPropagation();
-        openSourceSettingsModal();
-      }
-    });
 
     if (DOM.bottomSheetOverlay) {
       DOM.bottomSheetOverlay.addEventListener('click', (e) => {
@@ -306,7 +285,6 @@
   function updateShellSurfaces() {
     const showSearch = state.currentView === 'dashboard' && state.isConfigured;
     if (DOM.searchContainer) DOM.searchContainer.style.display = showSearch ? '' : 'none';
-    if (DOM.subtopbarSourceHint) DOM.subtopbarSourceHint.style.display = showSearch ? '' : 'none';
     const showNav = !isOnboardingActive();
     if (DOM.navItems && DOM.navItems.length) {
       DOM.navItems.forEach(item => { item.style.display = showNav ? '' : 'none'; });
@@ -348,7 +326,7 @@
     if (!DOM.appMain) return;
 
     updateTopbarInitials();
-    updateTopbarSource();
+    updateOfflineIndicator();
     updateShellSurfaces();
     const stats = getSyllabusStats();
 

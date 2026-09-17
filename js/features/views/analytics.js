@@ -22,8 +22,6 @@
     return toLocalDateKey(new Date(d.getTime() - 5 * 3600000));
   }
 
-  const { renderEditionChip } = window.FlowMD.theme;
-
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
 
@@ -215,7 +213,6 @@
           </div>
         </div>
         <div class="anl-hero-actions">
-          ${renderEditionChip()}
           <span class="v2-hud-badge" style="color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'}; border-color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'};"><svg class="material-symbols-outlined" style="font-size:14px;"><use href="#fmd-i-speed"/></svg> ${weeklyPct}% Weekly Pace</span>
           <button class="v2-arcade-btn" id="btn-share-report" style="height:34px; padding:0 14px; font-size:0.82rem; background:var(--accent-gradient);">
             <svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-share"/></svg>

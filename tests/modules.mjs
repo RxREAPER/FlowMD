@@ -59,7 +59,7 @@ const EXPECTED = {
             'getMetricsForModalScope', 'getTodayQueueForPlan', 'getAllPlanQueues',
             'getTodaysActionQueue', 'getPlanById', 'getSyllabusStats',
             'getSubjectOrSyllabusMetrics'],
-  theme: ['applyTheme', 'updateTopbarInitials', 'updateTopbarSource', 'updateOfflineIndicator', 'renderEditionChip'],
+  theme: ['applyTheme', 'updateTopbarInitials', 'updateOfflineIndicator'],
   search: ['performDeepSearch', 'openSpotlightModal', 'closeSpotlightModal', 'renderSpotlightResults'],
   backup: ['exportBackup', 'importBackup', 'FORMAT_VERSION', 'MAX_SUPPORTED_FORMAT_VERSION', 'KEY_PATTERN'],
   onboarding: ['renderOnboardingWizard', 'finishOnboarding'],

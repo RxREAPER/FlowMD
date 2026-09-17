@@ -23,6 +23,7 @@
   const { getSourceLabel } = window.FlowMD.sourceData;
   const { escapeHtml, escapeAttr } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
+  const { applyTheme } = window.FlowMD.theme;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { openSourceSettingsModal } = window.FlowMD.sourceSettings;
   const pwaInstall = window.FlowMD.pwaInstall;
@@ -78,6 +79,19 @@
           <button class="v2-arcade-btn" id="btn-change-source" style="height: 38px; padding: 0 12px; min-width: 96px;">
             <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-swap_horiz"/></svg> Change
           </button>
+        </div>
+        <div class="profile-settings-row">
+          <div>
+            <div class="profile-settings-row-label">Appearance</div>
+            <div class="profile-settings-row-value">Light / Dark mode</div>
+          </div>
+          <div class="retro-theme-toggle profile-theme-toggle" id="theme-toggle-btn" title="Toggle Light / Dark Mode" role="switch" aria-checked="${state.theme !== 'light' ? 'true' : 'false'}" aria-label="Dark mode" tabindex="0">
+            <div class="retro-theme-track">
+              <svg class="material-symbols-outlined icon-sun"><use href="#fmd-i-light_mode"/></svg>
+              <svg class="material-symbols-outlined icon-moon"><use href="#fmd-i-dark_mode"/></svg>
+              <div class="retro-theme-thumb" id="theme-slider-thumb"></div>
+            </div>
+          </div>
         </div>
         <div class="profile-settings-hint">Switching source changes the syllabus, targets &amp; focus chapters shown in the app.</div>
       </div>
@@ -184,6 +198,25 @@
     });
 
     document.getElementById('btn-change-source')?.addEventListener('click', openSourceSettingsModal);
+
+    // Theme toggle (moved here from the topbar — issue #15). The switch is
+    // rendered from state, so just flip, persist and re-render.
+    const themeToggle = document.getElementById('theme-toggle-btn');
+    if (themeToggle) {
+      const flipTheme = () => {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(state.theme);
+        saveState();
+        if (window.FlowMD.shell) window.FlowMD.shell.render();
+      };
+      themeToggle.addEventListener('click', flipTheme);
+      themeToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          flipTheme();
+        }
+      });
+    }
 
     document.getElementById('btn-export-backup')?.addEventListener('click', async () => {
       if (window.FlowMD.backup && window.FlowMD.backup.exportBackup) {

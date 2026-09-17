@@ -1451,20 +1451,65 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* --- AVATAR COMPONENT --- */
+/* --- AVATAR COMPONENT ---
+   Neon HUD identity disc: dark glass core, cyan ring + inner bloom,
+   HUD-font initials with a soft neon cast — tuned to the app's
+   arcade/HUD chrome (issue #15 avatar redesign). Light theme flips
+   to a pale cyan disc with deep-teal initials. */
 .fm-avatar {
+  --av-ring: rgba(0, 240, 255, 0.55);
+  --av-glow: rgba(0, 240, 255, 0.30);
+  --av-ink: #d9fbff;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-gradient);
-  color: #ffffff;
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  background:
+    radial-gradient(120% 120% at 30% 18%, rgba(0, 240, 255, 0.22), transparent 46%),
+    radial-gradient(90% 90% at 70% 90%, rgba(99, 102, 241, 0.20), transparent 52%),
+    linear-gradient(140deg, #0a2731 0%, #06202a 55%, #041a22 100%);
+  color: var(--av-ink);
+  font-family: var(--font-hud), 'Inter', system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.55);
+  border: 1px solid var(--av-ring);
+  box-shadow:
+    inset 0 0 10px rgba(0, 240, 255, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 14px var(--av-glow),
+    0 2px 6px rgba(0, 0, 0, 0.45);
   user-select: none;
-  transition: all 0.15s ease;
+  transition: transform 0.18s ease, box-shadow 0.25s ease;
   box-sizing: border-box;
+}
+
+[data-theme="light"] .fm-avatar {
+  --av-ring: rgba(8, 145, 178, 0.60);
+  --av-glow: rgba(6, 182, 212, 0.25);
+  --av-ink: #0e7490;
+  background:
+    radial-gradient(120% 120% at 30% 18%, rgba(255, 255, 255, 0.85), transparent 48%),
+    linear-gradient(140deg, #e5f9fd 0%, #d2f2f9 60%, #c2ecf5 100%);
+  text-shadow: none;
+  box-shadow:
+    inset 0 0 8px rgba(6, 182, 212, 0.18),
+    0 1px 4px rgba(2, 44, 54, 0.18);
+}
+
+/* Topbar avatar is tappable — subtle neon lift on hover/press. */
+#topbar-user-profile:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 10px rgba(0, 240, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 20px rgba(0, 240, 255, 0.45),
+    0 3px 8px rgba(0, 0, 0, 0.45);
+}
+
+#topbar-user-profile:active {
+  transform: scale(0.95);
 }
 
 .fm-avatar-sm {
@@ -1488,30 +1533,44 @@ body {
   border-radius: 50%;
 }
 
-/* Avatar Tone Variants */
+/* Avatar Tone Variants (kept for completeness — the app chrome uses the
+   base neon disc; these flip the ring/glow accent only) */
 .fm-avatar-green {
-  background: linear-gradient(135deg, #10b981 0%, #34d399 100%) !important;
-  color: #ffffff !important;
+  --av-ring: rgba(16, 185, 129, 0.55);
+  --av-glow: rgba(16, 185, 129, 0.30);
+  --av-ink: #d2fbe8;
 }
 
 .fm-avatar-cyan {
-  background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%) !important;
-  color: #ffffff !important;
+  --av-ring: rgba(0, 240, 255, 0.55);
+  --av-glow: rgba(0, 240, 255, 0.30);
+  --av-ink: #d9fbff;
 }
 
 .fm-avatar-gold {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
-  color: #ffffff !important;
+  --av-ring: rgba(245, 158, 11, 0.55);
+  --av-glow: rgba(245, 158, 11, 0.30);
+  --av-ink: #ffedc7;
 }
 
 .fm-avatar-purple {
-  background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%) !important;
-  color: #ffffff !important;
+  --av-ring: rgba(168, 85, 247, 0.55);
+  --av-glow: rgba(168, 85, 247, 0.30);
+  --av-ink: #f3e3ff;
 }
 
 .fm-avatar-red {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%) !important;
-  color: #ffffff !important;
+  --av-ring: rgba(239, 68, 68, 0.55);
+  --av-glow: rgba(239, 68, 68, 0.30);
+  --av-ink: #ffe0e0;
+}
+
+[data-theme="light"] .fm-avatar-green,
+[data-theme="light"] .fm-avatar-cyan,
+[data-theme="light"] .fm-avatar-gold,
+[data-theme="light"] .fm-avatar-purple,
+[data-theme="light"] .fm-avatar-red {
+  --av-ink: #0e7490;
 }
 
 /* --- FLOWMD V2 TOPBAR --- */
@@ -1554,7 +1613,7 @@ body {
 
 /* Brand logo images (light/dark variants swapped via the theme attribute) */
 .flowmd-topbar-logo {
-  height: 40px;
+  height: 34px;
   width: auto;
   display: block;
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1630,62 +1689,6 @@ body {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-}
-
-/* --- Theme Toggle Switch (Modern pill default, retro square override) --- */
-.retro-theme-toggle {
-  cursor: pointer;
-  user-select: none;
-  display: inline-block;
-}
-
-.retro-theme-track {
-  position: relative;
-  width: 50px;
-  height: 26px;
-  background-color: var(--bg-surface-hover);
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 6px;
-  box-sizing: border-box;
-}
-
-.retro-theme-track .icon-sun {
-  font-size: 13px;
-  color: #f59e0b;
-  z-index: 1;
-}
-
-.retro-theme-track .icon-moon {
-  font-size: 13px;
-  color: #6366f1;
-  z-index: 1;
-}
-
-.retro-theme-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background-color: var(--accent-primary);
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
-  z-index: 2;
-}
-
-[data-theme="dark"] .retro-theme-thumb {
-  transform: translateX(24px);
-  background-color: #6366f1;
-}
-
-[data-theme="light"] .retro-theme-thumb {
-  transform: translateX(0px);
-  background-color: #f59e0b;
 }
 
 /* --- Manual Sync Button --- */
@@ -1945,6 +1948,17 @@ body {
 .android-nav-item-center .nav-bar-label,
 .android-nav-item-center.active .nav-bar-label {
   color: var(--accent-secondary, #a855f7);
+}
+
+/* --- Daily Tasks header: today's total-hours goal (issue #15) --- */
+.dash-today-hours {
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* --- Daily Tasks Auto/Manual mode toggle --- */
@@ -2475,7 +2489,8 @@ body {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Curriculum completion legend — how video ticks vs chapter Select All count */
+/* Curriculum completion legend — how video ticks vs chapter Select All count.
+   Collapsible (issue #15): collapsed by default, persisted in localStorage. */
 .curriculum-legend {
   margin: 8px 0 16px 0;
   padding: 12px 14px;
@@ -2488,13 +2503,43 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
   font-family: var(--font-hud), sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-primary);
-  margin-bottom: 10px;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.curriculum-legend-chevron {
+  margin-left: auto;
+  font-size: 18px;
+  transition: transform 0.22s ease;
+}
+
+.curriculum-legend.is-collapsed .curriculum-legend-chevron {
+  transform: rotate(-90deg);
+}
+
+.curriculum-legend-body {
+  margin-top: 10px;
+}
+
+.curriculum-legend.is-collapsed .curriculum-legend-body {
+  display: none;
+}
+
+.curriculum-legend:not(.is-collapsed) .curriculum-legend-head {
+  margin-bottom: 0;
 }
 
 .curriculum-legend-head .material-symbols-outlined {
@@ -5799,102 +5844,6 @@ body {
   }
 }
 
-/* --- Active Edition Badge (Topbar) --- */
-.edition-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 12px 0 10px;
-  font-family: var(--font-hud), sans-serif;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text-primary);
-  background: linear-gradient(135deg, var(--bg-surface-raised), var(--bg-surface));
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-full);
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.edition-badge .material-symbols-outlined {
-  font-size: 16px;
-  color: var(--accent-primary);
-}
-
-.edition-badge:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent-primary);
-  box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.25);
-}
-
-.edition-badge:active {
-  transform: translateY(0) scale(0.97);
-}
-
-.edition-badge-text {
-  color: var(--text-primary);
-}
-
-[data-theme="light"] .edition-badge {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
-
-[data-theme="light"] .edition-badge-text {
-  color: #1e293b;
-}
-
-/* --- Edition Chip (Dashboard / Analytics / Curriculum header) --- */
-.edition-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 12px;
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--accent-primary);
-  background: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  border-radius: var(--radius-full);
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.2s ease;
-}
-
-.edition-chip:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: var(--accent-primary);
-  transform: translateY(-1px);
-}
-
-.edition-chip:active {
-  transform: translateY(0) scale(0.97);
-}
-
-.edition-chip .material-symbols-outlined {
-  font-size: 15px;
-}
-
-.btn-open-source-settings {
-  cursor: pointer;
-}
-
-[data-theme="light"] .edition-chip {
-  background: color-mix(in srgb, var(--accent-primary) 12%, #fff);
-  border-color: color-mix(in srgb, var(--accent-primary) 30%, #fff);
-  color: var(--accent-primary);
-}
-
 /* --- Offline Indicator (Topbar) --- */
 .offline-indicator {
   display: inline-flex;
@@ -5923,13 +5872,6 @@ body {
   background: rgba(217, 119, 6, 0.15);
   border-color: #d97706;
   color: #d97706;
-}
-
-/* --- Topbar source hint --- */
-.topbar-source-hint {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  font-weight: 400;
 }
 
 /* --- Onboarding wizard path hint --- */
@@ -5967,6 +5909,67 @@ body {
   justify-content: space-between;
   gap: 12px;
   padding: 12px 0;
+}
+
+/* --- Theme Toggle Switch (lives in Profile → Settings since UI/UX 2) --- */
+.retro-theme-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.profile-theme-toggle {
+  margin: 4px 0;
+}
+
+.retro-theme-track {
+  position: relative;
+  width: 50px;
+  height: 26px;
+  background-color: var(--bg-surface-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+.retro-theme-track .icon-sun {
+  font-size: 13px;
+  color: #f59e0b;
+  z-index: 1;
+}
+
+.retro-theme-track .icon-moon {
+  font-size: 13px;
+  color: #6366f1;
+  z-index: 1;
+}
+
+.retro-theme-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--accent-primary);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+  z-index: 2;
+}
+
+[data-theme="dark"] .retro-theme-thumb {
+  transform: translateX(24px);
+  background-color: #6366f1;
+}
+
+[data-theme="light"] .retro-theme-thumb {
+  transform: translateX(0px);
+  background-color: #f59e0b;
 }
 
 /* Let the label block shrink (wrap) instead of squeezing the action button
@@ -6065,12 +6068,6 @@ body {
 }
 
 /* --- Narrow-screen compaction --- */
-@media (max-width: 900px) {
-  .topbar-source-hint {
-    display: none;
-  }
-}
-
 @media (max-width: 360px) {
   .topbar {
     padding: 0 10px;
@@ -6080,19 +6077,6 @@ body {
   }
   .topbar-right {
     gap: 4px;
-  }
-  .edition-badge {
-    height: 28px;
-    padding: 0 10px 0 8px;
-    font-size: 0.68rem;
-  }
-  .edition-badge .material-symbols-outlined {
-    font-size: 14px;
-  }
-  .edition-chip {
-    height: 28px;
-    padding: 0 10px;
-    font-size: 0.68rem;
   }
 }
 
@@ -6106,14 +6090,6 @@ body {
 }
 
 @media (max-width: 340px) {
-  .edition-badge {
-    gap: 4px;
-    padding: 0 8px 0 7px;
-    font-size: 0.64rem;
-  }
-  .edition-badge .material-symbols-outlined {
-    font-size: 13px;
-  }
   .profile-settings-row {
     flex-direction: column;
     align-items: flex-start;

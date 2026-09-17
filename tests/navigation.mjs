@@ -140,8 +140,11 @@ async function run() {
   console.log('bottom sheet closes on overlay click:', sheetClosedByOverlay ? 'YES' : 'NO');
   if (!sheetClosedByOverlay) errors.push('[assert] bottom sheet did not close on overlay click');
 
-  // Source settings modal
-  await page.locator('#topbar-source-badge').click({ force: true }).catch(() => {});
+  // Source settings modal — opened from Profile → Settings (issue #15 moved
+  // it out of the topbar)
+  await page.locator('.android-nav-item[data-view="profile"]').first().click({ force: true }).catch(() => {});
+  await page.waitForTimeout(400);
+  await page.locator('#btn-change-source').click({ force: true }).catch(() => {});
   await page.waitForTimeout(300);
 
   await browser.close();

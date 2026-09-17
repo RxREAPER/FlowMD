@@ -7,8 +7,14 @@
 (function () {
   'use strict';
 
+  const LEGEND_COLLAPSED_KEY = 'flowmd.curriculumLegendCollapsed';
+
+  function isLegendCollapsed() {
+    // Collapsed by default (issue #15); '0' records an explicit expand.
+    try { return localStorage.getItem(LEGEND_COLLAPSED_KEY) !== '0'; } catch (e) { return true; }
+  }
+
   const { getState } = window.FlowMD.store;
-  const { renderEditionChip } = window.FlowMD.theme;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -19,22 +25,24 @@
   function renderCurriculumView(dom, stats) {
     DOM = dom;
     let filteredSubjects = stats.subjectsStats;
+    const legendCollapsed = isLegendCollapsed();
 
     DOM.appMain.innerHTML = `
       <div class="section-title-row">
         <h2 class="section-title" style="font-family: var(--font-display);">Curriculum & Subjects</h2>
         <div style="display: flex; align-items: center; gap: 8px;">
-          ${renderEditionChip()}
           <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
         </div>
       </div>
 
-      <div class="curriculum-legend">
-        <div class="curriculum-legend-head">
+      <div class="curriculum-legend ${legendCollapsed ? 'is-collapsed' : ''}" id="curriculum-legend">
+        <button type="button" class="curriculum-legend-head" id="curriculum-legend-toggle" aria-expanded="${legendCollapsed ? 'false' : 'true'}" aria-controls="curriculum-legend-body" title="Show / hide how completion is counted">
           <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
           <span>How completion is counted</span>
-        </div>
-        <div class="curriculum-legend-row">
+          <svg class="material-symbols-outlined curriculum-legend-chevron"><use href="#fmd-i-expand_more"/></svg>
+        </button>
+        <div class="curriculum-legend-body" id="curriculum-legend-body">
+          <div class="curriculum-legend-row">
           <span class="curriculum-legend-icon curriculum-legend-icon-count"><svg class="material-symbols-outlined"><use href="#fmd-i-check_box"/></svg></span>
           <div class="curriculum-legend-text">
             <div class="curriculum-legend-title">Individual video tick</div>
@@ -49,6 +57,7 @@
             <div class="curriculum-legend-sub">Marks the whole chapter complete but stays out of Analytics — tick previously finished chapters without skewing your stats.</div>
           </div>
           <span class="v2-hud-badge curriculum-legend-badge curriculum-legend-badge-skip">Excluded</span>
+          </div>
         </div>
       </div>
 
@@ -77,6 +86,18 @@
         if (window.FlowMD.shell) window.FlowMD.shell.switchView('subject_detail');
       });
     });
+
+    // Collapsible "How completion is counted" legend (collapsed by default,
+    // state persisted — issue #15).
+    const legendToggle = document.getElementById('curriculum-legend-toggle');
+    if (legendToggle) {
+      legendToggle.addEventListener('click', () => {
+        const box = document.getElementById('curriculum-legend');
+        const nowCollapsed = box.classList.toggle('is-collapsed');
+        legendToggle.setAttribute('aria-expanded', String(!nowCollapsed));
+        try { localStorage.setItem(LEGEND_COLLAPSED_KEY, nowCollapsed ? '1' : '0'); } catch (e) { /* non-fatal */ }
+      });
+    }
   }
 
 // --- View 3: Subject Detail View — Chapter Accordions ---
