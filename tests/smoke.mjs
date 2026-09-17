@@ -346,6 +346,50 @@ async function run() {
   check('Preparation Setup reflects Study Plan Config goals (daily/weekly/monthly/date)',
     prepOk, JSON.stringify({ savedPlan, sample: prepText.slice(0, 220) }));
 
+  // Issue #17: manual-mode daily tasks must drive Goal Pulse. Switch to
+  // manual topics, add 3 videos, complete 1, and verify the daily/weekly/
+  // monthly goals use the manual list as the target (3 / 21 / 30×) and the
+  // completion counts include manual ticks.
+  {
+    const manualSetup = await page.evaluate(() => {
+      const { setDailyTasksMode, addManualTaskVideo, markStudyActivity } = window.FlowMD.store;
+      const dataset = window.FlowMD.sourceData.getDataset();
+      const ids = [];
+      for (const sub of dataset) {
+        for (const chap of (sub.chapters || [])) {
+          for (const v of (chap.videos || [])) {
+            if (ids.length < 3) ids.push(v.id);
+          }
+        }
+      }
+      setDailyTasksMode('manual');
+      ids.forEach((id) => addManualTaskVideo(id));
+      markStudyActivity(true, null); // simulate ticking one manual task
+      window.FlowMD.shell.render();
+      return { ids };
+    });
+    check('Manual mode set up with 3 topics', manualSetup.ids.length === 3, JSON.stringify(manualSetup.ids.length));
+    await clickNav(page, 'analytics');
+    await page.waitForTimeout(300);
+    const pulseText = await page.locator('#app-main').innerText();
+    const pulseOk = pulseText.includes('Goal Pulse') &&
+      /1\/\s*3/.test(pulseText) &&
+      pulseText.includes('manual topic') &&
+      !pulseText.includes('No study target set yet');
+    check('Goal Pulse daily goal uses manual topic count (1/3 done)', pulseOk,
+      pulseText.slice(pulseText.indexOf('Goal Pulse'), pulseText.indexOf('Goal Pulse') + 260).replace(/\s+/g, ' '));
+    const pulseUnits = await page.evaluate(() => Array.from(document.querySelectorAll('.anl-goal-value')).map(el => el.textContent.trim().replace(/\s+/g, ' ')));
+    const weeklyMonthlyOk = pulseUnits.some(u => /1\/\s*21/.test(u)) && pulseUnits.some(u => /1\/\s*90/.test(u));
+    check('Goal Pulse weekly (×7) & monthly (×30) targets derive from manual topics', weeklyMonthlyOk, JSON.stringify(pulseUnits));
+    // Restore auto mode so later scenarios are unaffected.
+    await page.evaluate(() => {
+      window.FlowMD.store.setDailyTasksMode('auto');
+      window.FlowMD.store.getState().dailyTasksManual = [];
+      window.FlowMD.store.saveState();
+      window.FlowMD.shell.render();
+    });
+  }
+
   // Profile view
   await clickNav(page, 'profile');
   const profileText = await page.locator('#app-main').innerText();
