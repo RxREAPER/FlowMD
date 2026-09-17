@@ -3951,6 +3951,100 @@ body {
   font-weight: 700;
 }
 
+/* --- Daily-topics mode explainer (issue #25) --- */
+.spc-mode-explainer {
+  margin: 4px 0 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent-primary) 6%, var(--bg-surface-raised));
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 25%, transparent);
+}
+
+.spc-mode-explainer-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-hud);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  margin-bottom: 10px;
+}
+
+.spc-mode-explainer-title .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.spc-mode-explainer-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.spc-mode-explainer-row + .spc-mode-explainer-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.spc-mode-explainer-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-family: var(--font-hud);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ex-accent, var(--accent-primary));
+  background: color-mix(in srgb, var(--ex-accent, var(--accent-primary)) 14%, var(--bg-surface-raised));
+  border: 1px solid color-mix(in srgb, var(--ex-accent, var(--accent-primary)) 45%, transparent);
+}
+
+.spc-mode-explainer-row b {
+  color: var(--text-primary);
+}
+
+.spc-mode-explainer-foot {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Caption under the dashboard Auto/Manual toggle (issue #25) */
+.spc-mode-caption {
+  margin: -4px 0 8px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.spc-mode-caption-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.spc-mode-caption-link:hover {
+  color: var(--text-primary);
+}
+
 /* --- Curriculum 2-column card grid (issue #16) --- */
 .curr-grid {
   display: grid;
