@@ -17,11 +17,18 @@
 1. When substantive work is completed (PR merged, issue closed, significant
    design decision made), append a terse entry to the TOP of the
    **Session Log** section of `WORKLOG.md` (newest first).
-2. Entry format: `### YYYY-MM-DD · Session N — short title` followed by
+2. **Merged PRs are logged automatically** by CI (`.github/workflows/worklog.yml`
+   → `scripts/log-merged-pr.mjs`): the PR title drives classification and the
+   PR body's `## Summary` bullets are quoted. Do NOT hand-write entries for
+   merges that CI will log. Instead, hand-log what automation cannot see:
+   decisions made before the PR, rejected alternatives, cross-session context.
+3. Entry format: `### YYYY-MM-DD · Session N — short title` followed by
    bullet points with PR links, what/why, and any gotcha a future session
    would otherwise have to rediscover.
-3. Commit the worklog update together with the work (or as a tiny follow-up
+4. Commit the worklog update together with the work (or as a tiny follow-up
    commit on `main`). Keep it under ~10 lines per item; link PRs instead of
    narrating them.
-4. Never put secrets, personal file paths, or reference images into the
+5. Never put secrets, personal file paths, or reference images into the
    worklog — it is committed to a public-capable repo.
+6. Write PR bodies with a `## Summary` section of short bullets — the
+   auto-logger quotes it verbatim into WORKLOG.md.
