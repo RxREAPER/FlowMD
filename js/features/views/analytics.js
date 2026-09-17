@@ -75,6 +75,15 @@
       actual30DaysCount += dailyCounts[dateKey(d)] || 0;
     }
 
+    // Daily Tasks topic mode: in manual mode every plan target is parked —
+    // the user's hand-picked topic list IS the goal (issue #17): the videos
+    // they add become the daily target and drive the weekly/monthly pace
+    // the same way a plan's daily pace would.
+    const isManualTasksMode = state.dailyTasksMode === 'manual';
+    const manualCount = isManualTasksMode && Array.isArray(state.dailyTasksManual)
+      ? state.dailyTasksManual.length
+      : 0;
+
     // Aggregate total daily/weekly/monthly targets across all plans (0 when
     // nothing configured) — these power both the Goal Pulse and the
     // Preparation Setup card.
@@ -87,14 +96,21 @@
       totalVidsMonth += parseInt(p.videosPerMonth, 10) || 0;
     });
 
-    const ideal7DaysTarget = totalVidsDay * 7;
-    const ideal30DaysTarget = totalVidsDay * 30;
+    // Effective targets: manual mode swaps the parked plan pace for the
+    // manual list size (daily pace ⇒ ×7/×30 rolling ideals, same math as
+    // plan mode). Completion counts already include manual ticks because
+    // they flow through markStudyActivity → dailyHistory.
+    const hasManualGoal = manualCount > 0;
+    const effectiveDayTarget = hasManualGoal ? manualCount : totalVidsDay;
+    const ideal7DaysTarget = effectiveDayTarget * 7;
+    const ideal30DaysTarget = effectiveDayTarget * 30;
+    const hasAnyTarget = hasTarget || hasManualGoal;
     const paceDelta = actual7DaysCount - ideal7DaysTarget;
     const lectureDeficit = Math.abs(paceDelta);
 
-    const weeklyPct = hasTarget ? Math.min(100, Math.round((actual7DaysCount / Math.max(1, ideal7DaysTarget)) * 100)) : 0;
-    const monthlyPct = hasTarget ? Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100)) : 0;
-    const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => dailyCounts[d.dateKey] || 0), 1);
+    const weeklyPct = hasAnyTarget ? Math.min(100, Math.round((actual7DaysCount / Math.max(1, ideal7DaysTarget)) * 100)) : 0;
+    const monthlyPct = hasAnyTarget ? Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100)) : 0;
+    const maxChartVal = Math.max(effectiveDayTarget, ...last7Days.map(d => dailyCounts[d.dateKey] || 0), 1);
 
     // 30-day progress card (issue #18): per-day bars for the rolling month.
     const last30Days = [];
@@ -135,11 +151,6 @@
       return { plan, q, m, vids, remVids, daysNeeded, finishDate, finishDateStr, targetDate, daysLeft, ideal7, ideal30, planPaceDelta, scopedUnits };
     });
 
-    // Daily Tasks topic mode: in manual mode every plan target is parked —
-    // its tiles keep showing the configured numbers but flag the parking so
-    // the user knows why today's progress is not advancing against them.
-    const isManualTasksMode = state.dailyTasksMode === 'manual';
-
     const goalTile = (o) => `
       <div class="anl-goal-tile" style="--tile:${o.color}">
         <span class="anl-goal-badge-top" style="${o.badgeStyle || ''}">${o.badge}</span>
@@ -159,8 +170,13 @@
       </div>
     `;
 
-    const todayPct = totalVidsDay > 0 ? Math.min(100, Math.round((todayDone / totalVidsDay) * 100)) : 0;
-    const todayMet = todayDone >= totalVidsDay;
+    const todayPct = effectiveDayTarget > 0 ? Math.min(100, Math.round((todayDone / effectiveDayTarget) * 100)) : 0;
+    const todayMet = effectiveDayTarget > 0 && todayDone >= effectiveDayTarget;
+    // In manual mode the per-plan queue breakdown is meaningless (the auto
+    // queue is parked) — the manual list is the goal instead.
+    const todayDesc = hasManualGoal
+      ? `${manualCount} manual topic${manualCount === 1 ? '' : 's'} today`
+      : `combined videos today${hasDualPlans ? '<br>' + plans.map((p, i) => `${p.label}: ${allQueues[i].queueCompletedInBatch}/${p.videosPerDay}`).join('<br>') : ''}`;
     const todayTile = goalTile({
       color: '#0ea5e9',
       icon: 'today',
@@ -168,10 +184,10 @@
       badge: todayMet ? 'Done' : 'In progress',
       badgeStyle: `color:${todayMet ? 'var(--success)' : 'var(--warning)'}; border-color:${todayMet ? 'var(--success)' : 'var(--warning)'};`,
       value: `${todayDone}`,
-      unit: `/ ${totalVidsDay}`,
-      desc: `combined videos today${hasDualPlans ? '<br>' + plans.map((p, i) => `${p.label}: ${allQueues[i].queueCompletedInBatch}/${p.videosPerDay}`).join('<br>') : ''}`,
+      unit: `/ ${effectiveDayTarget}`,
+      desc: todayDesc,
       pct: todayPct,
-      delta: todayPct >= 100 ? 'Goal met' : `${totalVidsDay - todayDone} to go`,
+      delta: todayMet ? 'Goal met' : (effectiveDayTarget > 0 ? `${effectiveDayTarget - todayDone} to go` : 'No topics added'),
       deltaColor: todayMet ? 'var(--success)' : 'var(--warning)'
     });
 
@@ -240,7 +256,7 @@
         </div>
         <div class="anl-hero-chips">
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--accent-primary)"></span> Syllabus <b>${stats.percentage}%</b></span>
-          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#10b981"></span> Daily Target <b>${totalVidsDay}</b></span>
+          <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#10b981"></span> Daily Target <b>${effectiveDayTarget}${hasManualGoal ? ' 🖐' : ''}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#f59e0b"></span> 7-Day <b>${actual7DaysCount}/${ideal7DaysTarget}</b></span>
           <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#a855f7"></span> Days Left <b>${daysLeft || '—'}</b></span>
         </div>
@@ -273,7 +289,7 @@
 
       <!-- Goal Pulse -->
       <div class="anl-goal-section-label"><svg class="material-symbols-outlined" style="font-size:18px; color:var(--accent-primary);"><use href="#fmd-i-target"/></svg> Goal Pulse — Today / Week / Month</div>
-      ${hasTarget ? `
+      ${hasAnyTarget ? `
         <div class="anl-goal-grid">
           ${todayTile}
           ${weekTile}
@@ -290,7 +306,7 @@
         </div>`}
 
       <!-- 7-Day Execution Chart -->
-      ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal)}
+      ${renderExecutionChart(last7Days, effectiveDayTarget, maxChartVal)}
 
       <!-- 30-Day Progress Card (issue #18) -->
       <section class="anl-report-card anl-month30-card">
@@ -323,7 +339,7 @@
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
-      const shareText = `<svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-target"/></svg> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${totalVidsDay} vids/day\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
+      const shareText = `<svg class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;"><use href="#fmd-i-target"/></svg> FlowMD Study Intelligence Report\nDoctor: ${state.personal.doctorName || 'Dr'}\n${hasDualPlans ? `Dual-Track: ${plans.map(p => p.targetSubject).join(' + ')}\n` : ''}Syllabus HP Mastery: ${stats.percentage}%\nCombined Daily Target: ${effectiveDayTarget} vids/day${hasManualGoal ? ' (manual topics)' : ''}\n7-Day Actual: ${actual7DaysCount}/${ideal7DaysTarget}\n${planStats.filter(ps => ps.plan.targetSubject && ps.plan.videosPerDay).map(ps => `${ps.plan.label} ETA: ${ps.finishDateStr}`).join('\n')}\nBuilt with FlowMD!`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(shareText).then(() => showToast('Report Copied to Clipboard!', 'auto_awesome'));
       } else {

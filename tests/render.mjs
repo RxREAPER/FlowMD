@@ -220,7 +220,7 @@ async function run() {
     await nav(page, 'profile');     await audit('profile');
 
     await nav(page, 'curriculum');
-    const row = page.locator('.curriculum-sub-row').first();
+    const row = page.locator('.curr-card').first();
     if (await row.count()) { await row.click({ force: true }).catch(() => {}); await page.waitForTimeout(400); }
     await audit('subject-detail');
 

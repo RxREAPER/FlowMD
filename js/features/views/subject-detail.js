@@ -13,7 +13,7 @@
   'use strict';
 
   const { getState, saveState, markStudyActivity } = window.FlowMD.store;
-  const { getChapterVideoIds, isChapterBulkCompleted, getBulkChapterKey, getDailyCountsExcludingBulk, getScopedChapterNames } = window.FlowMD.sourceData;
+  const { getChapterVideoIds, isChapterBulkCompleted, getBulkChapterKey, getDailyCountsExcludingBulk, getScopedChapterNames, getVideoCompletedDate } = window.FlowMD.sourceData;
   const { getSyllabusStats, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
   const { getSubjectColor, getSubjectName, getSubjectFaculty } = window.FlowMD.subjects;
   const { showToast } = window.FlowMD.toast;
@@ -139,13 +139,32 @@
 
   // Update a single video checkbox row + cascade bulk checkbox.
   function updateVideoRow(vidId, isChecked, subjectId, chapterName) {
-    if (!chapterName) return; // can't cascade bulk checkbox without knowing the chapter
     const cb = DOM.appMain.querySelector('.react-task-checkbox[data-video-id="' + vidId + '"]');
     if (cb) {
       cb.checked = isChecked;
       const row = cb.closest('.v2-quest-row');
-      if (row) row.classList.toggle('completed', isChecked);
+      if (row) {
+        row.classList.toggle('completed', isChecked);
+        // Keep the completion-date metadata in sync without a rebuild (issue #16).
+        let when = row.querySelector('.quest-done-when');
+        if (isChecked) {
+          const dateStr = getVideoCompletedDate(vidId);
+          if (dateStr) {
+            if (!when) {
+              when = document.createElement('div');
+              when.className = 'quest-done-when';
+              when.innerHTML = '<svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> ';
+              const textWrap = row.querySelector('.v2-pixel-checkbox-label > div');
+              if (textWrap) textWrap.appendChild(when);
+            }
+            when.innerHTML = '<svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ' + dateStr;
+          }
+        } else if (when) {
+          when.remove();
+        }
+      }
     }
+    if (!chapterName) return; // can't cascade bulk checkbox without knowing the chapter
     // Recalculate whether bulk checkbox should be checked
     const videoIds = getChapterVideoIds(subjectId, chapterName);
     const allDone = videoIds.length > 0 && videoIds.every(id => !!state.completedVideos[id]);
@@ -259,8 +278,17 @@ function renderFacultyCard(faculty, subjectId) {
           const isBulkCompleted = isChapterBulkCompleted(subjectId, chapterName) || (chap.videos && chap.videos.length > 0 && chap.videos.every(v => !!state.completedVideos[v.id]));
           const bulkKey = getBulkChapterKey(subjectId, chapterName);
           const chapMins = (chap.videos || []).reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0); const chapHours = (chapMins / 60).toFixed(1);
+          // Collapsed by default (issue #16); user expansion still wins.
+          const chapExpanded = state.expandedChapters[chap.name] === true;
+          const chapDone = (chap.videos || []).filter(v => !!state.completedVideos[v.id]).length;
           return `
-            <div class="accordion-header ${state.expandedChapters[chap.name] === true ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;${dimStyle}">
+            <div class="chapt-node ${chapExpanded ? 'is-open' : ''} ${isBulkCompleted ? 'is-done' : ''}" style="${dimStyle}">
+              <div class="chapt-rail">
+                <div class="chapt-node-dot" aria-hidden="true">${chap.videos ? chap.videos.length : 0}</div>
+                <div class="chapt-rail-line" aria-hidden="true"></div>
+              </div>
+              <div class="chapt-node-body">
+            <div class="accordion-header ${chapExpanded ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;">
               <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
                 <label class="bulk-chapter-checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;">
                   <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
@@ -271,13 +299,15 @@ function renderFacultyCard(faculty, subjectId) {
               <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
             </div>
 
-            <div class="accordion-body ${state.expandedChapters[chap.name] === true ? 'active' : ''}">
+            <div class="accordion-body ${chapExpanded ? 'active' : ''}">
               <div class="v2-quest-card" style="padding-top: 14px; margin-top: 4px; margin-bottom: 10px;">
                 ${chap.videos ? chap.videos.map(v => {
                   const isDone = !!state.completedVideos[v.id];
                   const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
                   let vNum = v.videoNumber || '#1';
                   vNum = '#' + vNum.replace(/^#+/, '');
+                  // Completion-date metadata (issue #16)
+                  const doneWhen = isDone ? getVideoCompletedDate(v.id) : '';
 
                   return `
                     <div class="v2-quest-row ${isDone ? 'completed' : ''}">
@@ -286,14 +316,17 @@ function renderFacultyCard(faculty, subjectId) {
                         <span class="v2-pixel-checkbox-box"></span>
                         <div>
                           <div class="v2-quest-title"><span style="color: var(--accent-primary); font-family: var(--font-hud); margin-right: 4px;">${vNum}</span> ${v.title}</div>
+                          ${doneWhen ? `<div class="quest-done-when"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</div>` : ''}
                         </div>
                       </label>
-                      <div style="font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); font-weight: 700;">${durStr}</div>
+                      <div class="quest-video-dur">${durStr}</div>
                     </div>
                   `;
                 }).join('') : ''}
               </div>
             </div>
+              </div><!-- /chapt-node-body -->
+            </div><!-- /chapt-node -->
           `;
         }).join('') : ''}
       </div>
@@ -310,6 +343,7 @@ function renderFacultyCard(faculty, subjectId) {
       // Targeted: toggle .active on every accordion header + body in-place.
       DOM.appMain.querySelectorAll('.accordion-header').forEach(h => h.classList.toggle('active', newExpandedState));
       DOM.appMain.querySelectorAll('.accordion-body').forEach(b => b.classList.toggle('active', newExpandedState));
+      DOM.appMain.querySelectorAll('.chapt-node').forEach(n => n.classList.toggle('is-open', newExpandedState));
       updateToggleAllBtn();
     });
 
@@ -324,6 +358,8 @@ function renderFacultyCard(faculty, subjectId) {
         hdr.classList.toggle('active', isActive);
         const body = hdr.nextElementSibling;
         if (body && body.classList.contains('accordion-body')) body.classList.toggle('active', isActive);
+        const node = hdr.closest('.chapt-node');
+        if (node) node.classList.toggle('is-open', isActive);
         updateToggleAllBtn();
       });
     });
@@ -359,7 +395,7 @@ function renderFacultyCard(faculty, subjectId) {
         if (!vidId) return;
         const isChecked = e.target.checked;
         if (isChecked) {
-          state.completedVideos[vidId] = true;
+          state.completedVideos[vidId] = new Date().toISOString();
           markStudyActivity(true);
           showToast('Marked as Completed!', 'check_circle');
         } else {

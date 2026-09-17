@@ -237,7 +237,7 @@
       chk.addEventListener('change', (e) => {
         const vidId = e.target.getAttribute('data-video-id');
         if (e.target.checked) {
-          state.completedVideos[vidId] = true;
+          state.completedVideos[vidId] = new Date().toISOString();
           markStudyActivity(true);
           showToast('Completed Video!', 'check_circle');
         } else {

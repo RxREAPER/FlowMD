@@ -260,8 +260,25 @@ async function run() {
 
   // Curriculum view
   await clickNav(page, 'curriculum');
-  const curriculumSubjects = await page.locator('.curriculum-sub-row').count();
-  check('Curriculum view shows subject rows', curriculumSubjects > 5, `found ${curriculumSubjects}`);
+  const curriculumSubjects = await page.locator('.curr-card').count();
+  check('Curriculum view shows subject cards', curriculumSubjects > 5, `found ${curriculumSubjects}`);
+  // Two-column card grid (issue #16)
+  check('Curriculum cards use 2-col grid (issue #16)',
+    await page.evaluate(() => getComputedStyle(document.querySelector('.curr-grid')).gridTemplateColumns.split(' ').length) === 2);
+  check('Curriculum card has icon header + stats + bar (issue #16)',
+    await page.locator('.curr-card').first().evaluate(el =>
+      !!el.querySelector('.curr-card-head') && !!el.querySelector('.curr-card-stat-num') && !!el.querySelector('.curr-card-bar-fill')));
+  check('Curriculum card bottom bar width matches %',
+    await page.evaluate(() => {
+      const card = document.querySelector('.curr-card');
+      const fill = card && card.querySelector('.curr-card-bar-fill');
+      const pctEl = card && card.querySelector('.curr-card-pct');
+      if (!fill || !pctEl) return false;
+      const pct = parseInt(pctEl.textContent, 10);
+      const w = parseFloat(getComputedStyle(fill).width);
+      const max = parseFloat(getComputedStyle(fill.parentElement).width);
+      return Math.abs(w / max * 100 - pct) <= 2 || (pct === 0 && w === 0);
+    }));
   check('Search bar hidden on curriculum', !(await page.locator('#btn-toggle-search').isVisible()));
 
   // Collapsible "How completion is counted" legend (issue #15)
@@ -285,10 +302,39 @@ async function run() {
 
   // Subject detail
   if (curriculumSubjects > 0) {
-    await page.locator('.curriculum-sub-row').first().click();
+    await page.locator('.curr-card').first().click();
     await page.waitForTimeout(500);
     const subjText = await page.locator('#app-main').innerText();
     check('Subject detail view renders chapters', subjText.includes('Chapter') || subjText.includes('chapter') || subjText.length > 100);
+    // Collapsed chapters + timeline rail (issue #16)
+    check('Chapters collapsed by default (issue #16)',
+      await page.locator('.accordion-body.active').count() === 0);
+    check('Chapters sit on a numbered timeline rail (issue #16)',
+      await page.locator('.chapt-node .chapt-node-dot').count() >= 3 &&
+      await page.locator('.chapt-rail-line').count() >= 2);
+    // Expand a chapter via its header and confirm the row shows duration
+    await page.locator('.accordion-header').first().click();
+    await page.waitForTimeout(300);
+    check('Chapter expands on header click',
+      await page.locator('.accordion-body.active').count() === 1);
+    check('Lecture rows carry duration',
+      await page.locator('.accordion-body.active .v2-quest-row .quest-video-dur').count() >= 1);
+    // Completion-date metadata (issue #16): ticking a video records an ISO
+    // timestamp that renders as "Completed Today"; unticking clears it.
+    const row = page.locator('.accordion-body.active .v2-quest-row').first();
+    await row.locator('.v2-pixel-checkbox-label').click();
+    await page.waitForTimeout(300);
+    const doneLine = await row.locator('.quest-done-when').innerText().catch(() => '');
+    check('Ticked lecture shows completion date (issue #16)', /completed today/i.test(doneLine), JSON.stringify(doneLine));
+    const storedVal = await page.evaluate(() => {
+      const cb = document.querySelector('.accordion-body.active .react-task-checkbox');
+      return window.FlowMD.store.getState().completedVideos[cb.getAttribute('data-video-id')];
+    });
+    check('Completion stores ISO timestamp (issue #16)', typeof storedVal === 'string' && !isNaN(Date.parse(storedVal)), String(storedVal));
+    await row.locator('.v2-pixel-checkbox-label').click();
+    await page.waitForTimeout(300);
+    check('Untick clears completion date (issue #16)',
+      await row.locator('.quest-done-when').count() === 0);
   } else {
     check('Subject detail view renders chapters', false, 'no subject row to click');
   }
@@ -367,6 +413,50 @@ async function run() {
     check('Welcome card shows per-subject progress segments after plan config',
       hero.segs >= 1 && hero.legend.some(t => /\d+%$/.test(t)),
       JSON.stringify(hero));
+  }
+
+  // Issue #17: manual-mode daily tasks must drive Goal Pulse. Switch to
+  // manual topics, add 3 videos, complete 1, and verify the daily/weekly/
+  // monthly goals use the manual list as the target (3 / 21 / 30×) and the
+  // completion counts include manual ticks.
+  {
+    const manualSetup = await page.evaluate(() => {
+      const { setDailyTasksMode, addManualTaskVideo, markStudyActivity } = window.FlowMD.store;
+      const dataset = window.FlowMD.sourceData.getDataset();
+      const ids = [];
+      for (const sub of dataset) {
+        for (const chap of (sub.chapters || [])) {
+          for (const v of (chap.videos || [])) {
+            if (ids.length < 3) ids.push(v.id);
+          }
+        }
+      }
+      setDailyTasksMode('manual');
+      ids.forEach((id) => addManualTaskVideo(id));
+      markStudyActivity(true, null); // simulate ticking one manual task
+      window.FlowMD.shell.render();
+      return { ids };
+    });
+    check('Manual mode set up with 3 topics', manualSetup.ids.length === 3, JSON.stringify(manualSetup.ids.length));
+    await clickNav(page, 'analytics');
+    await page.waitForTimeout(300);
+    const pulseText = await page.locator('#app-main').innerText();
+    const pulseOk = pulseText.includes('Goal Pulse') &&
+      /1\/\s*3/.test(pulseText) &&
+      pulseText.includes('manual topic') &&
+      !pulseText.includes('No study target set yet');
+    check('Goal Pulse daily goal uses manual topic count (1/3 done)', pulseOk,
+      pulseText.slice(pulseText.indexOf('Goal Pulse'), pulseText.indexOf('Goal Pulse') + 260).replace(/\s+/g, ' '));
+    const pulseUnits = await page.evaluate(() => Array.from(document.querySelectorAll('.anl-goal-value')).map(el => el.textContent.trim().replace(/\s+/g, ' ')));
+    const weeklyMonthlyOk = pulseUnits.some(u => /1\/\s*21/.test(u)) && pulseUnits.some(u => /1\/\s*90/.test(u));
+    check('Goal Pulse weekly (×7) & monthly (×30) targets derive from manual topics', weeklyMonthlyOk, JSON.stringify(pulseUnits));
+    // Restore auto mode so later scenarios are unaffected.
+    await page.evaluate(() => {
+      window.FlowMD.store.setDailyTasksMode('auto');
+      window.FlowMD.store.getState().dailyTasksManual = [];
+      window.FlowMD.store.saveState();
+      window.FlowMD.shell.render();
+    });
   }
 
   // Profile view
@@ -636,10 +726,10 @@ async function run() {
     await clickNav(page65, 'curriculum');
     // Wait for the async data load + re-render (not a fixed timeout).
     await page65.waitForFunction(
-      () => document.querySelectorAll('.curriculum-sub-row').length > 5,
+      () => document.querySelectorAll('.curr-card').length > 5,
       { timeout: 10000 }
     ).catch(() => {});
-    const subjects65 = await page65.locator('.curriculum-sub-row').count();
+    const subjects65 = await page65.locator('.curr-card').count();
     check('Returning marrow_6_5 user gets curriculum after lazy boot load', subjects65 > 5, `found ${subjects65}`);
     check('Returning 6.5 user has no console errors on lazy boot', errs65.length === 0, errs65.join(' | ').slice(0, 200));
     await ctx65.close();

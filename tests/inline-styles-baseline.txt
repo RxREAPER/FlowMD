@@ -64,17 +64,10 @@ js/features/views/analytics.js: margin-top:20px;
 js/features/views/analytics.js: text-align:right;
 js/features/views/analytics.js: width:${o.pct}%; --fill:${o.color};
 js/features/views/analytics.js: width:100%;
-js/features/views/curriculum.js: ${sub.percentage === 100 ? 'color: var(--success); border-color: var(--success);' : ''}
-js/features/views/curriculum.js: color: var(--text-muted);
-js/features/views/curriculum.js: display: flex; align-items: center; gap: 12px; min-width: 0;
+js/features/views/curriculum.js: --sub-accent: ${sub.accentColor};
 js/features/views/curriculum.js: display: flex; align-items: center; gap: 8px;
-js/features/views/curriculum.js: display: flex; align-items: center; gap: 8px;
-js/features/views/curriculum.js: display: flex; align-items: center; justify-content: space-between; cursor: pointer;
-js/features/views/curriculum.js: display:inline-flex;align-items:center;justify-content:center;color:${sub.accentColor};
 js/features/views/curriculum.js: font-family: var(--font-display);
-js/features/views/curriculum.js: font-family: var(--font-display); font-weight: 700; font-size: 1rem;
-js/features/views/curriculum.js: font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2p
-js/features/views/curriculum.js: min-width: 0;
+js/features/views/curriculum.js: width:${pct}%;
 js/features/views/dashboard.js: --plan-accent: ${planColor};
 js/features/views/dashboard.js: background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;
 js/features/views/dashboard.js: background: #ffd700;
@@ -108,6 +101,7 @@ js/features/views/dashboard.js: margin-bottom:6px;
 js/features/views/dashboard.js: margin-left:auto;
 js/features/views/dashboard.js: padding-top:4px;
 js/features/views/dashboard.js: text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); fo
+js/features/views/dashboard.js: width:${dailyPctPlan}%;
 js/features/views/dashboard.js: width:${s.pct}%;
 js/features/views/dashboard.js: width:${stats.percentage}%;
 js/features/views/dashboard.js: width:100%; background:#a855f7;
@@ -162,6 +156,7 @@ js/features/views/profile.js: width: 100%; background: var(--danger);
 js/features/views/profile.js: width: 100%; justify-content: flex-start;
 js/features/views/profile.js: width: 100%; justify-content: flex-start;
 js/features/views/profile.js: width: 100%; margin-bottom: 8px;
+js/features/views/subject-detail.js: ${dimStyle}
 js/features/views/subject-detail.js: --faculty-color: ${subjectColor};
 js/features/views/subject-detail.js: background: ${subjectColor};
 js/features/views/subject-detail.js: border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select
@@ -172,7 +167,6 @@ js/features/views/subject-detail.js: display: flex; align-items: center; gap: 8p
 js/features/views/subject-detail.js: display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; p
 js/features/views/subject-detail.js: display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; paddi
 js/features/views/subject-detail.js: font-family: var(--font-display); font-size: 0.95rem;
-js/features/views/subject-detail.js: font-family: var(--font-hud); font-size: 0.95rem; color: var(--text-muted); font-weight: 7
 js/features/views/subject-detail.js: font-family: var(--font-hud); font-size: 1rem; color: var(--text-muted); font-weight: 700;
 js/features/views/subject-detail.js: font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:${subObj.percentage
 js/features/views/subject-detail.js: font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--accent-primar

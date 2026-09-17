@@ -516,6 +516,28 @@ body {
   border-bottom: none;
 }
 
+/* --- Completion-date metadata (issue #16) --- */
+.quest-done-when {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+  font-family: var(--font-hud);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.quest-done-when .material-symbols-outlined {
+  font-size: 11px;
+}
+
+.v2-quest-row.completed .quest-done-when {
+  color: var(--success);
+}
+
 /* --- CHECKBOX --- */
 .v2-pixel-checkbox-label {
   display: inline-flex;
@@ -1746,7 +1768,13 @@ body {
   box-shadow: 0 0 0 0 var(--v2-ink, #161310);
 }
 
-/* --- MODERN FLOATING DOCK NAVIGATION BAR --- */
+/* --- MODERN FLOATING DOCK NAVIGATION BAR ---
+   The painted skin (glass background, border, blur, shadows) lives on a
+   ::before overlay so a radial MASK can carve a concave notch out of the
+   bar's top edge where the Plan centerpiece sits — the button's bottom
+   half dips into the dip and bar + button read as one merged shape
+   (issue #11). Masking the overlay instead of the nav itself keeps the
+   protruding half of the button unclipped. */
 .android-bottom-nav {
   position: fixed;
   bottom: 16px;
@@ -1755,22 +1783,42 @@ body {
   width: calc(100% - 32px);
   max-width: 440px;
   height: 58px;
-  background: rgba(12, 15, 24, 0.82);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 999px;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 0 0 1px rgba(0, 0, 0, 0.4);
+  background: transparent;
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 5px 8px;
   box-sizing: border-box;
+}
+
+.android-bottom-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(12, 15, 24, 0.82);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.4);
+  /* The notch: a transparent circle CONCENTRIC with the Plan disc (disc
+     center sits 9px above the bar's top edge). Radius 32px = disc 25px +
+     a uniform 7px of air all around, so the cut's curve runs parallel to
+     the disc and the two shapes read as one merged, milled notch. */
+  -webkit-mask-image: radial-gradient(circle at 50% -9px, transparent 0 32px, #000 34px);
+  mask-image: radial-gradient(circle at 50% -9px, transparent 0 32px, #000 34px);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-position: center;
+  mask-position: center;
 }
 
 .android-nav-item {
@@ -1905,24 +1953,24 @@ body {
    the outline style of the sibling icons; the label uses the app's purple
    accent in both idle and active states. */
 /* --- Center-docked Plan centerpiece (issue #11) ---
-   A filled purple circular button seated in a concave notch carved into
-   the pill bar: an app-colored ring reads as part of the notch, the
-   button protrudes above the bar, and a layered neon-purple bloom makes
-   it the elevated active centerpiece of the navigation system. The tune
-   icon stays a clean white outline with a soft white glow. Adapts to
-   light/dark via the --bg-app ring + soft veil shadows (like the other
-   nav items). */
+   Filled purple circular button seated in the concave notch carved into
+   the bar's ::before skin (see .android-bottom-nav::before). The disc
+   protrudes ~28px above the bar and its lower half sits inside the carved
+   dip, so bar and button merge into one shape. A refined neon-purple glow
+   rings the disc; the tune icon is a clean white outline with a soft
+   neon-white glow; the label rides well clear below the disc in the
+   app's purple accent. Light theme only softens the glow. */
 .android-nav-item-center {
   flex: 0 0 auto;
-  min-width: 74px;
+  min-width: 78px;
   position: relative;
   overflow: visible;
   justify-content: flex-end;
-  padding-bottom: 3px;
+  padding-bottom: 8px;
 }
 .android-nav-item-center .nav-icon-wrap {
   position: absolute;
-  top: -26px;
+  top: -34px;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
@@ -1938,14 +1986,13 @@ body {
     linear-gradient(135deg, var(--accent-secondary, #a855f7), var(--v2-purple-accent, #8b5cf6));
   color: #ffffff;
   border: none;
-  /* Ring in the app background color → reads as the concave notch gap
-     carved into the pill, visually merging button and bar. */
+  /* Refined purple bloom only — the visual separation from the bar comes
+     from the carved notch, not from a painted ring. */
   box-shadow:
-    0 0 0 4px var(--bg-app, #0a0a0f),
-    0 0 0 6px rgba(168, 85, 247, 0.35),
+    0 0 0 2px rgba(168, 85, 247, 0.30),
     0 10px 22px rgba(0, 0, 0, 0.45),
-    0 0 26px rgba(168, 85, 247, 0.45),
-    0 0 54px rgba(168, 85, 247, 0.18);
+    0 0 24px rgba(168, 85, 247, 0.42),
+    0 0 52px rgba(168, 85, 247, 0.16);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
               filter 0.25s ease, box-shadow 0.25s ease;
 }
@@ -1953,11 +2000,10 @@ body {
   transform: translateX(-50%) translateY(-2px);
   filter: brightness(1.08);
   box-shadow:
-    0 0 0 4px var(--bg-app, #0a0a0f),
-    0 0 0 6px rgba(168, 85, 247, 0.45),
+    0 0 0 2px rgba(168, 85, 247, 0.40),
     0 12px 26px rgba(0, 0, 0, 0.5),
-    0 0 34px rgba(168, 85, 247, 0.55),
-    0 0 66px rgba(168, 85, 247, 0.22);
+    0 0 32px rgba(168, 85, 247, 0.52),
+    0 0 64px rgba(168, 85, 247, 0.20);
 }
 .android-nav-item-center:active .nav-icon-wrap {
   transform: translateX(-50%) scale(0.94);
@@ -1969,29 +2015,47 @@ body {
   color: #ffffff;
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.65));
 }
+/* Label rides at the very bottom of the center slot — well clear of the
+   disc's lower edge, which tucks into the carved notch. */
 .android-nav-item-center .nav-bar-label,
 .android-nav-item-center.active .nav-bar-label {
   color: var(--accent-secondary, #a855f7);
   text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+  margin-top: 0;
+  transform: translateY(1px);
 }
 
-/* Light theme: the notch ring takes the page background; the purple bloom
-   softens and the outer illumination becomes a gentle ambient veil. */
+/* Browsers without CSS masking: fall back to the app-colored ring around
+   the disc so the separation still reads (issue #11 graceful degrade). */
+@supports not (mask-image: radial-gradient(#000, #fff)) {
+  .android-bottom-nav::before {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .android-nav-item-center .nav-icon-wrap {
+    box-shadow:
+      0 0 0 4px var(--bg-app, #0a0a0f),
+      0 0 0 6px rgba(168, 85, 247, 0.35),
+      0 10px 22px rgba(0, 0, 0, 0.45),
+      0 0 26px rgba(168, 85, 247, 0.45);
+  }
+}
+
+/* Light theme: softer bloom, gentle ambient veil (the notch itself is
+   carved in the skin, identical for both themes). */
 [data-theme="light"] .android-nav-item-center .nav-icon-wrap {
   box-shadow:
-    0 0 0 4px var(--bg-app, #f8fafc),
-    0 0 0 6px rgba(168, 85, 247, 0.30),
+    0 0 0 2px rgba(168, 85, 247, 0.28),
     0 10px 20px rgba(15, 23, 42, 0.22),
-    0 0 22px rgba(168, 85, 247, 0.30),
-    0 0 46px rgba(168, 85, 247, 0.14);
+    0 0 20px rgba(168, 85, 247, 0.30),
+    0 0 44px rgba(168, 85, 247, 0.13);
 }
 [data-theme="light"] .android-nav-item-center:hover .nav-icon-wrap {
   box-shadow:
-    0 0 0 4px var(--bg-app, #f8fafc),
-    0 0 0 6px rgba(168, 85, 247, 0.40),
+    0 0 0 2px rgba(168, 85, 247, 0.38),
     0 12px 24px rgba(15, 23, 42, 0.25),
-    0 0 30px rgba(168, 85, 247, 0.38),
-    0 0 56px rgba(168, 85, 247, 0.18);
+    0 0 28px rgba(168, 85, 247, 0.38),
+    0 0 54px rgba(168, 85, 247, 0.17);
 }
 [data-theme="light"] .android-nav-item-center .nav-bar-label,
 [data-theme="light"] .android-nav-item-center.active .nav-bar-label {
@@ -3887,6 +3951,221 @@ body {
   font-weight: 700;
 }
 
+/* --- Curriculum 2-column card grid (issue #16) --- */
+.curr-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 380px) {
+  .curr-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.curr-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.curr-card:hover,
+.curr-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 55%, var(--border-color));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 18%, transparent);
+  outline: none;
+}
+
+.curr-card.is-complete {
+  border-color: color-mix(in srgb, var(--success) 55%, var(--border-color));
+}
+
+.curr-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 16%, transparent), transparent 70%);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.curr-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sub-accent, var(--accent-primary));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 45%, transparent));
+}
+
+.curr-card-icon .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.curr-card-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display), monospace;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.curr-card-pct {
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--sub-accent, var(--accent-primary));
+  flex-shrink: 0;
+}
+
+.curr-card.is-complete .curr-card-pct {
+  color: var(--success);
+}
+
+.curr-card-body {
+  display: flex;
+  align-items: stretch;
+  padding: 10px 12px;
+  gap: 8px;
+  flex: 1;
+}
+
+.curr-card-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.curr-card-stat + .curr-card-stat {
+  border-left: 1px solid var(--border-color);
+}
+
+.curr-card-stat-num {
+  font-family: var(--font-display), monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.curr-card-stat-label {
+  font-family: var(--font-hud);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.curr-card-bar {
+  height: 6px;
+  background: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 10%, var(--bg-surface-raised));
+  border-top: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.curr-card-bar-fill {
+  height: 100%;
+  border-radius: 0 4px 0 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 65%, transparent), var(--sub-accent, var(--accent-primary)));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 45%, transparent);
+  transition: width 0.35s ease;
+}
+
+/* --- Subject-detail chapter timeline (issue #16) --- */
+.chapt-node {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.chapt-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 30px;
+}
+
+.chapt-node-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-family: var(--font-hud);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 12%, var(--bg-surface-raised));
+  border: 2px solid color-mix(in srgb, var(--accent-primary) 55%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent-primary) 22%, transparent);
+  z-index: 1;
+}
+
+.chapt-node.is-done .chapt-node-dot {
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, var(--bg-surface-raised));
+  border-color: color-mix(in srgb, var(--success) 60%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--success) 25%, transparent);
+}
+
+.chapt-rail-line {
+  flex: 1;
+  width: 2px;
+  min-height: 8px;
+  margin-top: 4px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 45%, transparent), color-mix(in srgb, var(--accent-primary) 12%, transparent));
+}
+
+.chapt-node:last-child .chapt-rail-line {
+  display: none;
+}
+
+.chapt-node-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.chapt-node.is-open .chapt-node-dot {
+  background: color-mix(in srgb, var(--accent-primary) 25%, var(--bg-surface-raised));
+}
+
+/* Daily Tasks visual progress track (issue #16 redesign) */
+.plan-quest-track {
+  height: 8px;
+  border-radius: 6px;
+  margin: 2px 0 10px;
+  background: color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 10%, var(--bg-surface-raised));
+  border: 1px solid color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 30%, transparent);
+  overflow: hidden;
+}
+
+.plan-quest-track-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 70%, transparent), var(--plan-accent, var(--accent-primary)));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 45%, transparent);
+  transition: width 0.35s ease;
+}
+
 .quest-video-num {
   color: var(--plan-accent, var(--accent-primary));
   font-weight: 700;
@@ -4545,11 +4824,28 @@ body {
     height: 60px;
     padding: 0 4px;
     padding-bottom: env(safe-area-inset-bottom, 8px);
+  }
+  /* Painted skin on ::before (same notch mask as the desktop pill). */
+  .android-bottom-nav::before {
     background: rgba(12, 15, 24, 0.92);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     backdrop-filter: blur(20px) saturate(1.4);
+    border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    -webkit-mask-image: radial-gradient(circle at 50% -9px, transparent 0 32px, #000 34px);
+    mask-image: radial-gradient(circle at 50% -9px, transparent 0 32px, #000 34px);
+  }
+  /* The center item keeps its bottom-docked label on phones too — the
+     generic .android-nav-item overrides above would otherwise center it
+     and merge the label into the disc (the 1:14 collision). */
+  .android-nav-item-center {
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    padding-top: 0;
+  }
+  .android-nav-item-center .nav-icon-wrap {
+    top: -34px;
   }
   .android-nav-item {
     display: flex;
