@@ -36,6 +36,14 @@
 - Known-good flake status: none remaining as of PR #31 (offline icons check fixed).
 
 ## Session Log
+### 2026-09-17 — Auto-log (merged PRs)
+
+- Merged **#34 — auto-log merged PRs to WORKLOG.md** (CI, by RxREAPER) → 2973de2
+  - Files: 5
+  - New `worklog.yml` workflow: after every merge to `main`, a script fetches the merged PR via the REST API, classifies it from the title (feat/fix/uiux/chore…), quotes the PR body…
+  - Idempotent (grep guard), concurrency-grouped, push-retry against deploy-bump races, and self-filtering so its own commits never re-trigger it.
+  - The logger's commit always carries `[skip-deploy]`; `deploy.yml` now honors that suffix so the worklog push never double-deploys.
+  - Agent rule + worklog header updated: hand-log only what automation can't see; PR bodies should carry a clean `## Summary` section.
 
 ### 2026-09-17 · Session 2 — UI/UX wave 2, #28 redesign, test hygiene
 - **PR #22** — real concave notch cut into the bottom bar (SVG-style radial mask, concentric with the Plan disc) + Plan label clearance. From the user's video feedback (issue #15 thread).
