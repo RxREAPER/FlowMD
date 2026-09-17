@@ -11,7 +11,7 @@
 
   const { getState, getStudyStreak, markStudyActivity, saveState, setDailyTasksMode, addManualTaskVideo, removeManualTaskVideo } = window.FlowMD.store;
   const { getPlanScopeVideos, getScopedChapterNames, getDataset } = window.FlowMD.sourceData;
-  const { getAllPlanQueues, getPlanById } = window.FlowMD.metrics;
+  const { getAllPlanQueues, getPlanById, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
   const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey, DAILY_TASKS_MODE_AUTO, DAILY_TASKS_MODE_MANUAL } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
@@ -201,6 +201,45 @@
     });
   }
 
+  // Welcome card progress (issue #18): one track per subject scoped under
+  // Configure Study Plan, stacked as a segmented progress bar. Falls back to
+  // the overall syllabus figure when no plan target is configured.
+  function renderHeroSubjectProgress(plans, stats) {
+    const scoped = plans.filter(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
+    if (!scoped.length) {
+      return `
+        <div class="hero-mastery-value">${stats.percentage}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
+        <div class="v2-hp-bar-bg hero-hp-bar">
+          <div class="v2-hp-bar-fill" style="width:${stats.percentage}%;"></div>
+        </div>
+      `;
+    }
+    const segData = scoped.map((plan, idx) => {
+      const m = getSubjectOrSyllabusMetricsForPlan(plan);
+      const pct = m.totalVideos > 0 ? Math.round((m.completedVideos / m.totalVideos) * 100) : 0;
+      const color = plan.accentColor || (idx === 0 ? '#00e5ff' : '#a855f7');
+      return { plan, m, pct, color };
+    });
+    const totalVids = segData.reduce((sum, s) => sum + Math.max(1, s.m.totalVideos), 0);
+    const blended = Math.round(segData.reduce((sum, s) => sum + s.pct * Math.max(1, s.m.totalVideos), 0) / Math.max(1, totalVids));
+    const segs = segData.map(s => `
+      <div class="hero-subj-seg" style="flex:${Math.max(1, s.m.totalVideos)}; --seg:${s.color};" title="${s.plan.label}: ${escapeHtml(s.plan.targetSubject)} — ${s.pct}% (${s.m.completedVideos}/${s.m.totalVideos} videos)">
+        <div class="hero-subj-seg-fill" style="width:${s.pct}%;"></div>
+      </div>
+    `).join('');
+    const legend = segData.map(s => `
+      <span class="hero-subj-legend-item">
+        <span class="hero-subj-dot" style="background:${s.color}; box-shadow:0 0 6px ${s.color};"></span>
+        ${escapeHtml(s.plan.targetSubject)} <b>${s.pct}%</b>
+      </span>
+    `).join('');
+    return `
+      <div class="hero-mastery-value">${blended}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
+      <div class="hero-subj-bar">${segs}</div>
+      <div class="hero-subj-legend">${legend}</div>
+    `;
+  }
+
   function renderDashboardView(dom, stats) {
     DOM = dom;
     if (!state.isConfigured) {
@@ -335,13 +374,10 @@
           </p>
           <div class="hero-mastery-block">
             <div class="hero-mastery-top">
-              <span class="hero-mastery-label"><span class="hero-mastery-dot"></span> Syllabus Mastery</span>
+              <span class="hero-mastery-label"><span class="hero-mastery-dot"></span> Subject Progress</span>
               <span style="font-size:0.7rem; font-weight:600; color:var(--text-muted); font-family: var(--font-hud);">${stats.totalVideos > 0 ? stats.completedVideos + ' / ' + stats.totalVideos + ' videos' : 'No data yet'}</span>
             </div>
-            <div class="hero-mastery-value">${stats.percentage}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
-            <div class="v2-hp-bar-bg hero-hp-bar">
-              <div class="v2-hp-bar-fill" style="width:${stats.percentage}%;"></div>
-            </div>
+            ${renderHeroSubjectProgress(plans, stats)}
             <div class="hero-mastery-sub">
               <span>${stats.percentage < 25 ? 'Just getting started' : stats.percentage < 50 ? 'Building momentum' : stats.percentage < 75 ? 'Strong progress' : stats.percentage < 90 ? 'Almost there' : 'Mastery achieved!'}</span>
               <span>${stats.percentage < 100 ? (100 - stats.percentage) + '% to mastery' : 'Complete!'}</span>

@@ -96,6 +96,25 @@
     const monthlyPct = hasTarget ? Math.min(100, Math.round((actual30DaysCount / Math.max(1, ideal30DaysTarget)) * 100)) : 0;
     const maxChartVal = Math.max(totalVidsDay, ...last7Days.map(d => dailyCounts[d.dateKey] || 0), 1);
 
+    // 30-day progress card (issue #18): per-day bars for the rolling month.
+    const last30Days = [];
+    let daysMet30 = 0;
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dk = dateKey(d);
+      const count = dailyCounts[dk] || 0;
+      const met = hasTarget && totalVidsDay > 0 && count >= totalVidsDay;
+      if (met) daysMet30++;
+      last30Days.push({
+        count,
+        met,
+        partial: !met && count > 0,
+        label: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+      });
+    }
+    const max30Val = Math.max(totalVidsDay, ...last30Days.map(d => d.count), 1);
+    const paceDelta30 = actual30DaysCount - ideal30DaysTarget;
+
     // Per-plan stats
     const planStats = plans.map((plan, idx) => {
       const q = allQueues[idx];
@@ -272,6 +291,29 @@
 
       <!-- 7-Day Execution Chart -->
       ${renderExecutionChart(last7Days, totalVidsDay, maxChartVal)}
+
+      <!-- 30-Day Progress Card (issue #18) -->
+      <section class="anl-report-card anl-month30-card">
+        <div class="anl-report-card-head">
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-calendar_month"/></svg> 30-Day Progress</div>
+          <span class="v2-hud-badge" style="color:${monthlyPct >= 100 ? 'var(--success)' : 'var(--accent-primary)'}; border-color:${monthlyPct >= 100 ? 'var(--success)' : 'var(--accent-primary)'};">${monthlyPct}% of target</span>
+        </div>
+        <div class="anl-month30-stats">
+          <div class="anl-month30-big">${actual30DaysCount}<span> / ${ideal30DaysTarget} vids</span></div>
+          <div class="anl-month30-chips">
+            <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--success)"></span> Days on target <b>${daysMet30}/30</b></span>
+            <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#f59e0b"></span> Pace <b>${paceDelta30 >= 0 ? '+' : '− '}${Math.abs(paceDelta30)}</b></span>
+          </div>
+        </div>
+        <div class="anl-month30-strip" role="img" aria-label="30-day completion strip">
+          ${last30Days.map(d => {
+            const h = Math.max(10, Math.round((d.count / max30Val) * 100));
+            const cls = d.met ? 'is-met' : (d.partial ? 'is-part' : 'is-zero');
+            return `<div class="anl-month30-bar ${cls}" title="${d.label}: ${d.count} video${d.count !== 1 ? 's' : ''}${d.met ? ' — target met' : ''}"><div class="anl-month30-fill" style="height:${h}%"></div></div>`;
+          }).join('')}
+        </div>
+        <div class="anl-month30-scale"><span>30 days ago</span><span>today</span></div>
+      </section>
 
       <!-- Subject Heatmap (moved from dashboard) -->
       <div style="margin-top:20px;">

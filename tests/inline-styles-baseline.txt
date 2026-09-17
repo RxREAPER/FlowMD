@@ -19,7 +19,6 @@ index.html: display:none; z-index: 9990; align-items: flex-start; padding-top: 4
 index.html: display:none; z-index: 9999;
 index.html: display:none; z-index:9996;
 index.html: font-family: var(--font-hud); font-size: 1.08rem; color: #cbd5e1; line-height: 1.5;
-index.html: font-size: 0.7rem; color: var(--text-muted); margin-left: 8px; font-weight: 400;
 index.html: font-size: 0.7rem; margin-left: 4px;
 index.html: font-size: 16px;
 index.html: font-size: 18px;
@@ -39,7 +38,6 @@ index.html: max-width: 460px; width: 92%;
 index.html: max-width: 580px; width: 95%; max-height: 82vh; padding: 0; overflow: hidden; border: 2px 
 index.html: padding: 16px 18px; max-height: calc(82vh - 65px); overflow-y: auto;
 index.html: padding: 20px;
-index.html: padding: 6px 14px; font-size: 0.68rem; color: var(--text-muted); margin-top: -2px; line-he
 index.html: text-align: center; color: var(--text-muted); padding: 30px 0; font-family: 'Inter', syste
 index.html: width: 28px; height: 28px; padding: 0; background: transparent; border: none; color: #fff;
 index.html: width: 32px; height: 32px; padding: 0;
@@ -47,8 +45,11 @@ js/features/views/analytics.js: ${o.badgeStyle || ''}
 js/features/views/analytics.js: --chip:#10b981
 js/features/views/analytics.js: --chip:#a855f7
 js/features/views/analytics.js: --chip:#f59e0b
+js/features/views/analytics.js: --chip:#f59e0b
 js/features/views/analytics.js: --chip:var(--accent-primary)
+js/features/views/analytics.js: --chip:var(--success)
 js/features/views/analytics.js: --tile:${o.color}
+js/features/views/analytics.js: color:${monthlyPct >= 100 ? 'var(--success)' : 'var(--accent-primary)'}; border-color:${mo
 js/features/views/analytics.js: color:${o.deltaColor || 'var(--text-muted)'};
 js/features/views/analytics.js: color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'}; border-color:${weeklyPct 
 js/features/views/analytics.js: color:var(--accent-primary); border-color:var(--accent-primary);
@@ -56,6 +57,7 @@ js/features/views/analytics.js: font-size:14px;
 js/features/views/analytics.js: font-size:16px;
 js/features/views/analytics.js: font-size:18px; color:var(--accent-primary);
 js/features/views/analytics.js: font-size:18px;vertical-align:middle;
+js/features/views/analytics.js: height:${h}%
 js/features/views/analytics.js: height:34px; padding:0 14px; font-size:0.82rem; background:var(--accent-gradient);
 js/features/views/analytics.js: height:38px; padding:0 16px;
 js/features/views/analytics.js: margin-top:20px;
@@ -72,20 +74,23 @@ js/features/views/curriculum.js: display:inline-flex;align-items:center;justify-
 js/features/views/curriculum.js: font-family: var(--font-display);
 js/features/views/curriculum.js: font-family: var(--font-display); font-weight: 700; font-size: 1rem;
 js/features/views/curriculum.js: font-family: var(--font-hud); font-size: 0.92rem; color: var(--text-muted); margin-top: 2p
-js/features/views/curriculum.js: margin-bottom: 10px; padding: 12px 14px;
 js/features/views/curriculum.js: min-width: 0;
 js/features/views/dashboard.js: --plan-accent: ${planColor};
 js/features/views/dashboard.js: background: #a855f7; color: #ffffff; font-size: 20px; font-weight: bold;
 js/features/views/dashboard.js: background: #ffd700;
 js/features/views/dashboard.js: background: var(--accent-success, #10b981);
 js/features/views/dashboard.js: background:${planColor};
+js/features/views/dashboard.js: background:${s.color}; box-shadow:0 0 6px ${s.color};
 js/features/views/dashboard.js: color: #a855f7;
 js/features/views/dashboard.js: color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-colo
 js/features/views/dashboard.js: color: var(--accent-success, #10b981);
 js/features/views/dashboard.js: color:var(--accent-primary); border-color:var(--accent-primary);
+js/features/views/dashboard.js: color:var(--accent-primary); border-color:var(--accent-primary);
 js/features/views/dashboard.js: display:flex; flex-direction:column; gap: 2px;
+js/features/views/dashboard.js: flex:${Math.max(1, s.m.totalVideos)}; --seg:${s.color};
 js/features/views/dashboard.js: font-size: 14px;
 js/features/views/dashboard.js: font-size:0.7rem; font-weight:600; color:var(--text-muted); font-family: var(--font-hud);
+js/features/views/dashboard.js: font-size:0.9rem; font-weight:600; opacity:0.7;
 js/features/views/dashboard.js: font-size:0.9rem; font-weight:600; opacity:0.7;
 js/features/views/dashboard.js: font-size:13px;
 js/features/views/dashboard.js: font-size:16px;
@@ -99,9 +104,11 @@ js/features/views/dashboard.js: height:46px; min-width:150px; padding:0 16px; ma
 js/features/views/dashboard.js: margin-bottom: 8px;
 js/features/views/dashboard.js: margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);
 js/features/views/dashboard.js: margin-bottom:6px;
+js/features/views/dashboard.js: margin-bottom:6px;
 js/features/views/dashboard.js: margin-left:auto;
 js/features/views/dashboard.js: padding-top:4px;
 js/features/views/dashboard.js: text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); fo
+js/features/views/dashboard.js: width:${s.pct}%;
 js/features/views/dashboard.js: width:${stats.percentage}%;
 js/features/views/dashboard.js: width:100%; background:#a855f7;
 js/features/views/dashboard.js: width:100%; background:#ffd700;

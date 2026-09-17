@@ -1579,7 +1579,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  height: 76px;
+  height: 64px;
   box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.92);
   -webkit-backdrop-filter: blur(16px);
@@ -1613,7 +1613,7 @@ body {
 
 /* Brand logo images (light/dark variants swapped via the theme attribute) */
 .flowmd-topbar-logo {
-  height: 34px;
+  height: 30px;
   width: auto;
   display: block;
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -3417,6 +3417,61 @@ body {
   font-weight: 700;
   color: var(--accent-primary);
   line-height: 1.1;
+}
+
+/* Subject progress (issue #18): segmented per-plan tracks in the welcome
+   card — each segment sized by its subject's video count, filled by that
+   subject's completion. */
+.hero-subj-bar {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 8px;
+}
+
+.hero-subj-seg {
+  position: relative;
+  height: 10px;
+  min-width: 28px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--seg, var(--accent-primary)) 12%, var(--bg-surface-raised));
+  border: 1px solid color-mix(in srgb, var(--seg, var(--accent-primary)) 35%, transparent);
+  overflow: hidden;
+}
+
+.hero-subj-seg-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--seg, var(--accent-primary)) 65%, transparent), var(--seg, var(--accent-primary)));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--seg, var(--accent-primary)) 60%, transparent);
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-subj-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 6px;
+}
+
+.hero-subj-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-hud), sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.hero-subj-legend-item b {
+  color: var(--text-primary);
+}
+
+.hero-subj-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 .hero-mastery-sub {
@@ -6258,7 +6313,7 @@ body.onboarding-fullscreen .app-main {
     padding: 0 10px;
   }
   .flowmd-topbar-logo {
-    height: 34px;
+    height: 30px;
   }
   .topbar-right {
     gap: 4px;
@@ -6924,9 +6979,9 @@ body.onboarding-fullscreen .app-main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 8px 4px;
-  border-radius: 10px;
+  gap: 2px;
+  padding: 5px 3px;
+  border-radius: 9px;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
   text-align: center;
@@ -6944,14 +6999,14 @@ body.onboarding-fullscreen .app-main {
 
 .ex-day-name {
   font-family: var(--font-hud), sans-serif;
-  font-size: 0.66rem;
+  font-size: 0.58rem;
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .ex-day-count {
   font-family: var(--font-display), sans-serif;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--text-primary);
 }
@@ -6992,6 +7047,93 @@ body.onboarding-fullscreen .app-main {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
+}
+
+/* --- 30-Day Progress card (issue #18) --- */
+.anl-month30-card {
+  margin-top: 16px;
+}
+
+.anl-month30-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 10px;
+}
+
+.anl-month30-big {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.anl-month30-big span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.anl-month30-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.anl-month30-strip {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 56px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-color);
+}
+
+.anl-month30-bar {
+  flex: 1 1 0;
+  height: 100%;
+  min-width: 3px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--text-muted) 8%, transparent);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.anl-month30-fill {
+  width: 100%;
+  border-radius: 3px;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.anl-month30-bar.is-met .anl-month30-fill {
+  background: linear-gradient(180deg, var(--success), color-mix(in srgb, var(--success) 55%, transparent));
+  box-shadow: 0 0 6px color-mix(in srgb, var(--success) 50%, transparent);
+}
+
+.anl-month30-bar.is-part .anl-month30-fill {
+  background: linear-gradient(180deg, var(--warning), color-mix(in srgb, var(--warning) 55%, transparent));
+}
+
+.anl-month30-bar.is-zero .anl-month30-fill {
+  background: color-mix(in srgb, var(--text-muted) 30%, transparent);
+}
+
+.anl-month30-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-family: var(--font-hud), sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* --- Analytics responsive --- */
