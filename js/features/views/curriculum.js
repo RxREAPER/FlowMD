@@ -15,6 +15,7 @@
   }
 
   const { getState } = window.FlowMD.store;
+  const { getSubjectCompletedDate } = window.FlowMD.sourceData;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -61,12 +62,14 @@
         </div>
       </div>
 
-      <!-- Two-column subject card grid (issue #16): icon header, body with
-           progress/hours, full-width progress bar at the bottom -->
+      <!-- Square Marrow-style subject cards (issue #28): icon-led, subtle
+           metadata strip, hairline progress bar. Completion date (issue #28)
+           appears in the meta line once every video is ticked. -->
       <div class="curr-grid">
         ${filteredSubjects.map(sub => {
           const pct = sub.percentage || 0;
           const chapCount = sub.raw && sub.raw.chapters ? sub.raw.chapters.length : 0;
+          const doneWhen = pct === 100 ? getSubjectCompletedDate(sub.id) : '';
           return `
           <div class="curr-card ${pct === 100 ? 'is-complete' : ''}" data-subject-id="${sub.id}" role="button" tabindex="0" aria-label="Open ${sub.name} — ${pct}% complete">
             <div class="curr-card-head" style="--sub-accent: ${sub.accentColor};">
@@ -74,11 +77,7 @@
               <span class="curr-card-name">${sub.name}</span>
               <span class="curr-card-pct">${pct}%</span>
             </div>
-            <div class="curr-card-body">
-              <div class="curr-card-stat"><span class="curr-card-stat-num">${chapCount}</span><span class="curr-card-stat-label">Chapters</span></div>
-              <div class="curr-card-stat"><span class="curr-card-stat-num">${sub.completedVideos}/${sub.totalVideos}</span><span class="curr-card-stat-label">Videos</span></div>
-              <div class="curr-card-stat"><span class="curr-card-stat-num">${sub.totalHours}h</span><span class="curr-card-stat-label">Content</span></div>
-            </div>
+            <div class="curr-card-meta">${sub.completedVideos}/${sub.totalVideos} videos · ${chapCount} module${chapCount === 1 ? '' : 's'}${doneWhen ? ` · <b>Completed ${doneWhen}</b>` : ''}</div>
             <div class="curr-card-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
               <div class="curr-card-bar-fill" style="width:${pct}%;"></div>
             </div>

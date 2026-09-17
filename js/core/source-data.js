@@ -143,6 +143,46 @@
     return window.FlowMD.constants.formatCompletionDate(val);
   }
 
+  // Raw newest completion timestamp across a set of video ids (ISO string or
+  // null). Unlike getVideoCompletedDate this is used to derive UNIT / SUBJECT
+  // completion dates (issue #28) — the date the last member video was ticked.
+  function getLatestCompletedAt(videoIds) {
+    const state = getState();
+    let newest = null;
+    (videoIds || []).forEach(id => {
+      const val = state.completedVideos[id];
+      if (val && val !== true) {
+        const t = Date.parse(val);
+        if (!isNaN(t) && (newest === null || t > newest)) newest = t;
+      }
+    });
+    return newest === null ? null : new Date(newest).toISOString();
+  }
+
+  // Human completion date for a unit/chapter: the day its last video was
+  // completed. Empty string when the chapter isn't fully done (or its
+  // completions predate the timestamp feature).
+  function getChapterCompletedDate(subjectId, chapterName) {
+    const state = getState();
+    const ids = getChapterVideoIds(subjectId, chapterName);
+    if (!ids.length || !ids.every(id => !!state.completedVideos[id])) return '';
+    const iso = getLatestCompletedAt(ids);
+    return iso ? window.FlowMD.constants.formatCompletionDate(iso) : 'Completed';
+  }
+
+  // Human completion date for a whole subject (all videos done).
+  function getSubjectCompletedDate(subjectId) {
+    const state = getState();
+    const dataset = getDataset();
+    const sub = dataset && dataset.find(s => s.id === subjectId);
+    if (!sub) return '';
+    const vids = [];
+    (sub.chapters || []).forEach(ch => (ch.videos || []).forEach(v => vids.push(v.id)));
+    if (!vids.length || !vids.every(id => !!state.completedVideos[id])) return '';
+    const iso = getLatestCompletedAt(vids);
+    return iso ? window.FlowMD.constants.formatCompletionDate(iso) : 'Completed';
+  }
+
   // --- Source Label / Edition Helpers (extracted from app.js 2026-08-10) ---
   function getSourceLabel(sourceId) {
     const s = STUDY_SOURCES.find(x => x.id === sourceId);
@@ -169,6 +209,9 @@
     isChapterBulkCompleted,
     getChapterVideoIds,
     getVideoCompletedDate,
+    getLatestCompletedAt,
+    getChapterCompletedDate,
+    getSubjectCompletedDate,
     getDailyCountsExcludingBulk,
     getSourceLabel,
     getEditionShort

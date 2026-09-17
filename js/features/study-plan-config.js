@@ -189,26 +189,9 @@
             </div>
           </div>
 
-          <!-- How daily topics work (issue #25): explain Auto vs Manual modes -->
-          <div class="spc-mode-explainer">
-            <div class="spc-mode-explainer-title">
-              <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
-              How your daily topics work
-            </div>
-            <div class="spc-mode-explainer-row">
-              <span class="spc-mode-explainer-num" style="--ex-accent: var(--accent-primary);">1</span>
-              <div>
-                <b>Automatic mode</b> — topics follow your lecture module order. FlowMD queues the next videos from your target subject's curriculum each day, so you always know what's next.
-              </div>
-            </div>
-            <div class="spc-mode-explainer-row">
-              <span class="spc-mode-explainer-num" style="--ex-accent: var(--accent-secondary, #a855f7);">2</span>
-              <div>
-                <b>Manual mode</b> — pick topics as per your requirement: search any topic and tap <b>“+ Task”</b> to add it from the search box. Manual completions reflect on your analytics too — built for students who prefer a dynamic method of study.
-              </div>
-            </div>
-            <div class="spc-mode-explainer-foot">You can switch between Auto and Manual anytime from the Daily Tasks card on your dashboard.</div>
-          </div>
+          <!-- Issue #28: the "How your daily topics work" explainer moved out of
+               this sheet — it now lives in a popup opened from the Daily Tasks
+               "How modes work" link on the dashboard. -->
 
           <div class="plan-config-field">
             <div class="plan-config-field-head">

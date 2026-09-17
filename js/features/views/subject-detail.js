@@ -13,7 +13,7 @@
   'use strict';
 
   const { getState, saveState, markStudyActivity } = window.FlowMD.store;
-  const { getChapterVideoIds, isChapterBulkCompleted, getBulkChapterKey, getDailyCountsExcludingBulk, getScopedChapterNames, getVideoCompletedDate } = window.FlowMD.sourceData;
+  const { getChapterVideoIds, isChapterBulkCompleted, getBulkChapterKey, getDailyCountsExcludingBulk, getScopedChapterNames, getVideoCompletedDate, getChapterCompletedDate, getSubjectCompletedDate } = window.FlowMD.sourceData;
   const { getSyllabusStats, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
   const { getSubjectColor, getSubjectName, getSubjectFaculty } = window.FlowMD.subjects;
   const { showToast } = window.FlowMD.toast;
@@ -98,32 +98,42 @@
     btn.textContent = anyExpanded ? 'Collapse All' : 'Expand All';
   }
 
-  // Update the bulk-chapter checkbox icon + video row completed states
-  // for a single chapter, WITHOUT rebuilding the DOM.
-  function updateChapterDOM(chapterName, subjectId) {
-    const bulkKey = getBulkChapterKey(subjectId, chapterName);
-    const isBulk = isChapterBulkCompleted(subjectId, chapterName);
-    // Find the chapter's header element
+  // Update a unit header's done-count + completion-date line in place
+  // (issue #28: units show "n done · Completed <date>" once fully ticked).
+  function updateChapterDoneMeta(chapterName) {
     const header = DOM.appMain.querySelector(
       '.accordion-header[data-chap-name="' + chapterName + '"]'
     );
     if (!header) return;
-    // Update the bulk checkbox checked state
+    const subjectId = header.getAttribute('data-subject-id');
+    const videos = getChapterVideoIds(subjectId, chapterName);
+    const doneCount = videos.filter(id => !!state.completedVideos[id]).length;
+    const allDone = videos.length > 0 && doneCount === videos.length;
+    const numEl = header.querySelector('.unit-num');
+    if (numEl) numEl.classList.toggle('is-done', allDone);
+    const doneEl = header.querySelector('.unit-done-meta');
+    if (doneEl) {
+      const when = allDone ? getChapterCompletedDate(subjectId, chapterName) : '';
+      doneEl.textContent = when
+        ? doneCount + '/' + videos.length + ' done · Completed ' + when
+        : doneCount + '/' + videos.length + ' done';
+    }
+  }
+
+  // Update a single chapter's rows + unit meta WITHOUT rebuilding the DOM.
+  function updateChapterDOM(chapterName, subjectId) {
+    const header = DOM.appMain.querySelector(
+      '.accordion-header[data-chap-name="' + chapterName + '"]'
+    );
+    if (!header) return;
+    const bulkKey = getBulkChapterKey(subjectId, chapterName);
+    const isBulk = isChapterBulkCompleted(subjectId, chapterName);
+    // Keep the (visually hidden) bulk checkbox in sync for form semantics.
     const bulkCb = header.querySelector('.bulk-chapter-checkbox');
     if (bulkCb) bulkCb.checked = isBulk;
-    // Update the icon (re-render the icon SVG)
-    const iconLabel = header.querySelector('.bulk-chapter-checkbox-label');
-    if (iconLabel && window.FlowMD.icons) {
-      const svgEl = iconLabel.querySelector('svg, .material-symbols-outlined');
-      if (svgEl) {
-        const newSvg = window.FlowMD.icons.renderIcon(
-          isBulk ? 'check_box' : 'check_box_outline_blank',
-          '',
-          'font-size: 18px; color: ' + (isBulk ? 'var(--success)' : 'var(--text-muted)')
-        );
-        svgEl.outerHTML = newSvg;
-      }
-    }
+    // Update the node's done state (rail dot + card ring)
+    const node = header.closest('.chapt-node');
+    if (node) node.classList.toggle('is-done', isBulk);
     // Update individual video rows in this chapter's accordion body
     const body = header.nextElementSibling;
     if (!body) return;
@@ -145,17 +155,16 @@
       const row = cb.closest('.v2-quest-row');
       if (row) {
         row.classList.toggle('completed', isChecked);
-        // Keep the completion-date metadata in sync without a rebuild (issue #16).
-        let when = row.querySelector('.quest-done-when');
+        // Keep the completion-date metadata in sync without a rebuild (issues #16/#28).
+        let when = row.querySelector('.mv-done');
         if (isChecked) {
           const dateStr = getVideoCompletedDate(vidId);
           if (dateStr) {
             if (!when) {
-              when = document.createElement('div');
-              when.className = 'quest-done-when';
-              when.innerHTML = '<svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> ';
-              const textWrap = row.querySelector('.v2-pixel-checkbox-label > div');
-              if (textWrap) textWrap.appendChild(when);
+              when = document.createElement('span');
+              when.className = 'mv-done';
+              const meta = row.querySelector('.mv-meta');
+              if (meta) meta.appendChild(when);
             }
             when.innerHTML = '<svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ' + dateStr;
           }
@@ -177,6 +186,7 @@
       delete state.bulkCompletedChapters[bulkKey];
     }
     updateChapterDOM(chapterName, subjectId);
+    updateChapterDoneMeta(chapterName);
   }
 
   // Lazy shell bridge (app.js loads last; call sites stay valid in any context).
@@ -217,6 +227,9 @@ function renderFacultyCard(faculty, subjectId) {
       }
     });
     const hasFocusScope = focusedChapterSet.size > 0;
+    // Issue #28: subject-level completion date, shown beside the subject
+    // once every video is ticked.
+    const subjectDoneWhen = getSubjectCompletedDate(subObj.id);
 
     DOM.appMain.innerHTML = `
       <div class="pwa-curriculum-scroll">
@@ -231,6 +244,7 @@ function renderFacultyCard(faculty, subjectId) {
             <div class="pwa-subject-detail-name">${subObj.name}</div>
             <div class="pwa-subject-detail-faculty">${renderFacultyCard(subObj.faculty || getSubjectFaculty(subObj.id), subObj.id)}</div>
             <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done</div>
+            ${subjectDoneWhen ? `<div class="subject-done-banner"><svg class="material-symbols-outlined"><use href="#fmd-i-verified"/></svg> Subject completed ${subjectDoneWhen}</div>` : ''}
           </div>
         </div>
         <!-- Sub-Subject Analytics -->
@@ -270,7 +284,7 @@ function renderFacultyCard(faculty, subjectId) {
           </button>
         </div>
 
-        ${subObj.raw.chapters ? subObj.raw.chapters.map(chap => {
+        ${subObj.raw.chapters ? subObj.raw.chapters.map((chap, chapIdx) => {
           const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
           const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
           const subjectId = subObj.id;
@@ -281,22 +295,36 @@ function renderFacultyCard(faculty, subjectId) {
           // Collapsed by default (issue #16); user expansion still wins.
           const chapExpanded = state.expandedChapters[chap.name] === true;
           const chapDone = (chap.videos || []).filter(v => !!state.completedVideos[v.id]).length;
+          const chapTotal = (chap.videos || []).length;
+          const chapAllDone = chapTotal > 0 && chapDone === chapTotal;
+          // Issue #28: completion date of the unit itself (last ticked video).
+          const chapDoneWhen = chapAllDone ? getChapterCompletedDate(subjectId, chapterName) : '';
+          // Serial unit number (issue #28): 1, 2, 3… — not the video count.
+          const serialNum = chapIdx + 1;
           return `
-            <div class="chapt-node ${chapExpanded ? 'is-open' : ''} ${isBulkCompleted ? 'is-done' : ''}" style="${dimStyle}">
+            <div class="chapt-node ${chapExpanded ? 'is-open' : ''} ${chapAllDone ? 'is-done' : ''}" style="${dimStyle}">
               <div class="chapt-rail">
-                <div class="chapt-node-dot" aria-hidden="true">${chap.videos ? chap.videos.length : 0}</div>
+                <div class="chapt-node-dot unit-num ${chapAllDone ? 'is-done' : ''}" aria-hidden="true">${serialNum}</div>
                 <div class="chapt-rail-line" aria-hidden="true"></div>
               </div>
               <div class="chapt-node-body">
-            <div class="accordion-header ${chapExpanded ? 'active' : ''}" data-chap-name="${chap.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;">
+            <div class="accordion-header ${chapExpanded ? 'active' : ''}" data-chap-name="${chap.name}" data-subject-id="${subjectId}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;">
               <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
-                <label class="bulk-chapter-checkbox-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0;">
-                  <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
-                  ${window.FlowMD.icons.renderIcon(isBulkCompleted ? 'check_box' : 'check_box_outline_blank', '', 'font-size: 18px; color: ' + (isBulkCompleted ? 'var(--success)' : 'var(--text-muted)'))}
+                <label class="bulk-chapter-checkbox-label" aria-hidden="true" tabindex="-1">
+                  <input type="checkbox" class="bulk-chapter-checkbox" data-bulk-key="${bulkKey}" ${isBulkCompleted ? 'checked' : ''} tabindex="-1" aria-hidden="true">
                 </label>
-                <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name} (${chap.videos ? chap.videos.length : 0} Videos • ${chapHours}h)</div>
+                <div class="unit-title-wrap">
+                  <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name}</div>
+                  <div class="unit-done-meta">${chapAllDone && chapDoneWhen ? chapDone + '/' + chapTotal + ' done · Completed ' + chapDoneWhen : chapDone + '/' + chapTotal + ' done'}</div>
+                </div>
               </div>
-              <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
+              <div class="unit-head-actions">
+                <button type="button" class="unit-done-btn ${chapAllDone ? 'is-done' : ''}" data-bulk-key="${bulkKey}" aria-pressed="${chapAllDone}" title="${chapAllDone ? 'Mark unit as not done' : 'Mark every topic in this unit done'}">
+                  <svg class="material-symbols-outlined"><use href="#fmd-i-${chapAllDone ? 'check_circle' : 'check_box_outline_blank'}"/></svg>
+                  <span>${chapAllDone ? 'Done' : 'Mark done'}</span>
+                </button>
+                <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
+              </div>
             </div>
 
             <div class="accordion-body ${chapExpanded ? 'active' : ''}">
@@ -306,7 +334,7 @@ function renderFacultyCard(faculty, subjectId) {
                   const durStr = `${v.durationMins || 0}m ${v.durationSecs || 0}s`;
                   let vNum = v.videoNumber || '#1';
                   vNum = '#' + vNum.replace(/^#+/, '');
-                  // Completion-date metadata (issue #16)
+                  // Completion-date metadata (issues #16/#28)
                   const doneWhen = isDone ? getVideoCompletedDate(v.id) : '';
 
                   return `
@@ -316,10 +344,10 @@ function renderFacultyCard(faculty, subjectId) {
                         <span class="v2-pixel-checkbox-box"></span>
                         <div>
                           <div class="v2-quest-title"><span style="color: var(--accent-primary); font-family: var(--font-hud); margin-right: 4px;">${vNum}</span> ${v.title}</div>
-                          ${doneWhen ? `<div class="quest-done-when"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</div>` : ''}
+                          <div class="mv-meta"><span class="mv-time"><svg class="material-symbols-outlined"><use href="#fmd-i-schedule"/></svg> ${durStr}</span>${doneWhen ? `<span class="mv-done"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</span>` : ''}</div>
                         </div>
                       </label>
-                      <div class="quest-video-dur">${durStr}</div>
+                      <span class="mv-tile" aria-hidden="true" style="background:${window.FlowMD.constants.mvTileColor(v.id)};">${(v.videoNumber || '1').replace(/^#+/, '')}</span>
                     </div>
                   `;
                 }).join('') : ''}
@@ -364,28 +392,31 @@ function renderFacultyCard(faculty, subjectId) {
       });
     });
 
-    // Bulk Chapter Completion Checkboxes
-    document.querySelectorAll('.bulk-chapter-checkbox').forEach(chk => {
-      chk.addEventListener('change', (e) => {
-        e.stopPropagation(); // Prevent accordion toggle
-        const bulkKey = e.target.getAttribute('data-bulk-key');
+    // Bulk (unit) completion — triggered by the “Mark unit done” button in the
+    // unit header (issue #28: only ONE tick control per unit title). The hidden
+    // checkbox remains for form semantics; the button is the user-facing control.
+    document.querySelectorAll('.unit-done-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // prevent accordion toggle
+        const bulkKey = btn.getAttribute('data-bulk-key');
         const [subjectId, chapterName] = bulkKey.split('::');
         const videoIds = getChapterVideoIds(subjectId, chapterName);
-
-        if (e.target.checked) {
+        const allDone = videoIds.length > 0 && videoIds.every(id => !!state.completedVideos[id]);
+        if (!allDone) {
           videoIds.forEach(vidId => { state.completedVideos[vidId] = true; });
           state.bulkCompletedChapters[bulkKey] = true;
-          showToast(`Chapter "${chapterName}" marked complete (excluded from analytics)`, 'check_box');
+          showToast(`Unit "${chapterName}" marked complete (excluded from analytics)`, 'check_box');
         } else {
-
           videoIds.forEach(vidId => { delete state.completedVideos[vidId]; });
           delete state.bulkCompletedChapters[bulkKey];
-          showToast(`Chapter "${chapterName}" unmarked`, 'check_box_outline_blank');
+          showToast(`Unit "${chapterName}" unmarked`, 'check_box_outline_blank');
         }
         saveState();
-        // Targeted: update chapter rows + header stats in-place.
+        // Targeted: update chapter rows + unit meta + header stats in-place.
         updateChapterDOM(chapterName, subjectId);
+        updateChapterDoneMeta(chapterName);
         updateHeaderStats();
+        updateToggleAllBtn();
       });
     });
 
@@ -403,7 +434,7 @@ function renderFacultyCard(faculty, subjectId) {
           markStudyActivity(false);
         }
         saveState();
-        // Targeted: update this row + cascade bulk checkbox + header stats.
+        // Targeted: update this row + cascade bulk checkbox + unit meta + stats.
         updateVideoRow(vidId, isChecked, subObj.id, subObj.raw.chapters ? (
           subObj.raw.chapters.find(ch => (ch.videos || []).some(v => v.id === vidId)) || {}
         ).name : null);
@@ -412,7 +443,7 @@ function renderFacultyCard(faculty, subjectId) {
     });
   }
 
-﻿// --- 7-Day Execution Chart ---
+// --- 7-Day Execution Chart ---
 
   // Expose
   window.FlowMD.views = Object.assign(window.FlowMD.views || {}, {

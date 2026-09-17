@@ -57,6 +57,22 @@
     return day + ' ' + months[d.getMonth()] + (sameYear ? '' : ' ' + d.getFullYear());
   }
 
+  // --- Marrow-style lecture tile palette (issue #28) ---
+  // Deterministic per-video accent colors for the numbered tile on lecture
+  // rows (mirrors the colorful thumbnails in the reference design).
+  const MV_TILE_COLORS = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981', '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6', '#d946ef', '#ec4899', '#14b8a6'];
+
+  function hashString(str) {
+    let h = 5381;
+    const s = String(str || '');
+    for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
+
+  function mvTileColor(videoId) {
+    return MV_TILE_COLORS[hashString(videoId) % MV_TILE_COLORS.length];
+  }
+
   
 
   // --- Shared SVG Icon Set (FlowMD) ---
@@ -264,6 +280,9 @@ const FLOWMD_ICONS = {
     toLocalDateKey,
     todayKey,
     formatCompletionDate,
+    MV_TILE_COLORS,
+    hashString,
+    mvTileColor,
     SCHEMA_VERSION,
     APP_VERSION,
     STORAGE_KEYS,

@@ -12,7 +12,7 @@
   const { getState } = window.FlowMD.store;
   const { getDailyCountsExcludingBulk, getScopedChapterNames } = window.FlowMD.sourceData;
   const { getAllPlanQueues, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
-  const { renderExecutionChart, renderPixelSubjectHeatmap } = window.FlowMD.charts;
+  const { renderExecutionChart, renderPixelSubjectHeatmap, renderMonth30Detail } = window.FlowMD.charts;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { showToast } = window.FlowMD.toast;
   const { escapeHtml, todayKey, DEFAULT_PLAN, PLAN_A_ACCENT, toLocalDateKey } = window.FlowMD.constants;
@@ -125,7 +125,8 @@
         count,
         met,
         partial: !met && count > 0,
-        label: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+        label: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+        fullDate: d
       });
     }
     const max30Val = Math.max(totalVidsDay, ...last30Days.map(d => d.count), 1);
@@ -319,15 +320,18 @@
           <div class="anl-month30-chips">
             <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--success)"></span> Days on target <b>${daysMet30}/30</b></span>
             <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#f59e0b"></span> Pace <b>${paceDelta30 >= 0 ? '+' : '− '}${Math.abs(paceDelta30)}</b></span>
+            <span class="anl-chip"><span class="anl-chip-dot" style="--chip:var(--accent-primary)"></span> Avg <b>${(actual30DaysCount / 30).toFixed(1)}/day</b></span>
+            <span class="anl-chip"><span class="anl-chip-dot" style="--chip:#a855f7"></span> Best <b>${max30Val === 0 ? 0 : Math.max(...last30Days.map(d => d.count))}</b></span>
           </div>
         </div>
-        <div class="anl-month30-strip" role="img" aria-label="30-day completion strip">
-          ${last30Days.map(d => {
+        <div class="anl-month30-strip" role="img" aria-label="30-day completion strip — tap a bar for details" id="month30-strip">
+          ${last30Days.map((d, i) => {
             const h = Math.max(10, Math.round((d.count / max30Val) * 100));
             const cls = d.met ? 'is-met' : (d.partial ? 'is-part' : 'is-zero');
-            return `<div class="anl-month30-bar ${cls}" title="${d.label}: ${d.count} video${d.count !== 1 ? 's' : ''}${d.met ? ' — target met' : ''}"><div class="anl-month30-fill" style="height:${h}%"></div></div>`;
+            return `<div class="anl-month30-bar ${cls}${i === last30Days.length - 1 ? ' is-selected' : ''}" data-i="${i}" role="button" tabindex="0" aria-label="${d.label}: ${d.count} video${d.count !== 1 ? 's' : ''}${d.met ? ' — target met' : ''}" title="${d.label}: ${d.count} video${d.count !== 1 ? 's' : ''}${d.met ? ' — target met' : ''}"><div class="anl-month30-fill" style="height:${h}%"></div></div>`;
           }).join('')}
         </div>
+        <div class="anl-month30-detail" id="month30-detail" aria-live="polite">${renderMonth30Detail(last30Days[last30Days.length - 1], effectiveDayTarget)}</div>
         <div class="anl-month30-scale"><span>30 days ago</span><span>today</span></div>
       </section>
 
@@ -346,6 +350,24 @@
         showToast('Study Intelligence Report Ready!', 'auto_awesome');
       }
     });
+
+    // 30-Day strip: tap/click a bar to inspect that day (issue #28)
+    const strip = document.getElementById('month30-strip');
+    const detailBox = document.getElementById('month30-detail');
+    if (strip && detailBox) {
+      const showDay = (bar) => {
+        strip.querySelectorAll('.anl-month30-bar').forEach(b => b.classList.remove('is-selected'));
+        bar.classList.add('is-selected');
+        const day = last30Days[parseInt(bar.getAttribute('data-i'), 10)];
+        if (day) detailBox.innerHTML = renderMonth30Detail(day, effectiveDayTarget);
+      };
+      strip.querySelectorAll('.anl-month30-bar').forEach(bar => {
+        bar.addEventListener('click', () => showDay(bar));
+        bar.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDay(bar); }
+        });
+      });
+    }
 
     document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
     document.getElementById('btn-analytics-set-target')?.addEventListener('click', focusStudyPlanConfig);

@@ -146,14 +146,10 @@ async function run() {
   check('No Dual-Track toggle remains', await page.locator('#toggle-plan-b').count() === 0);
   check('Sheet shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
 
-  // Issue #25: Auto vs Manual modes explainer inside the plan sheet.
-  check('Plan sheet explains Auto vs Manual topic modes (issue #25)',
-    await page.locator('.spc-mode-explainer').count() === 1 &&
-    sheetText.includes('Automatic mode') && sheetText.includes('Manual mode'));
-  check('Explainer mentions lecture module order and + Task from search (issue #25)',
-    sheetText.includes('lecture module order') && sheetText.includes('+ Task') && sheetText.includes('analytics'));
-  check('Explainer has numbered steps 1 and 2 (issue #25)',
-    await page.locator('.spc-mode-explainer-num').count() === 2);
+  // Issue #25/#28: the modes explainer no longer lives in the plan sheet —
+  // it opens as a closable popup from the Daily Tasks "How modes work" link.
+  check('Plan sheet no longer embeds the modes explainer (issue #28)',
+    await page.locator('#plan-config-sheet-content .spc-mode-explainer').count() === 0);
   check('Sheet Focus Chapter chips container renders for Plan A (id chapter-chips-a)',
     await page.locator('#chapter-chips-a').count() === 1);
   check('Sheet chapters count badge renders for Plan A (id chapters-count-a)',
@@ -280,9 +276,15 @@ async function run() {
   // Two-column card grid (issue #16)
   check('Curriculum cards use 2-col grid (issue #16)',
     await page.evaluate(() => getComputedStyle(document.querySelector('.curr-grid')).gridTemplateColumns.split(' ').length) === 2);
-  check('Curriculum card has icon header + stats + bar (issue #16)',
+  // Issue #28: square Marrow-style cards with subtle metadata strip.
+  check('Curriculum card is square (issue #28)',
+    await page.locator('.curr-card').first().evaluate(el => {
+      const r = el.getBoundingClientRect();
+      return Math.abs(r.width - r.height) / Math.max(1, r.width) < 0.08;
+    }));
+  check('Curriculum card has icon head + subtle meta + bar (issue #28)',
     await page.locator('.curr-card').first().evaluate(el =>
-      !!el.querySelector('.curr-card-head') && !!el.querySelector('.curr-card-stat-num') && !!el.querySelector('.curr-card-bar-fill')));
+      !!el.querySelector('.curr-card-head') && !!el.querySelector('.curr-card-meta') && !!el.querySelector('.curr-card-bar-fill')));
   check('Curriculum card bottom bar width matches %',
     await page.evaluate(() => {
       const card = document.querySelector('.curr-card');
@@ -304,6 +306,25 @@ async function run() {
     check('Auto caption under mode switch (issue #25)', /auto mode/i.test(captionAuto) && /lecture module order/i.test(captionAuto), JSON.stringify(captionAuto));
     check('Caption has a How-modes-work link (issue #25)',
       await page.locator('#btn-what-are-modes').count() === 1);
+    // Back to curriculum so the following legend/subject-detail flow runs.
+    await clickNav(page, 'curriculum');
+    await page.waitForTimeout(400);
+  }
+
+  // Issue #28: "How modes work" opens a closable explainer POPUP.
+  {
+    await clickNav(page, 'dashboard');
+    await page.waitForTimeout(300);
+    await page.locator('#btn-what-are-modes').first().click();
+    await page.waitForTimeout(250);
+    check('Modes explainer opens as a popup (issue #28)',
+      await page.locator('#modes-explainer-overlay.modal-backdrop.active').count() === 1);
+    check('Modes explainer popup has a close button (issue #28)',
+      await page.locator('#modes-explainer-close').isVisible());
+    await page.locator('#modes-explainer-close').click();
+    await page.waitForTimeout(300);
+    check('Modes explainer popup closes via × button (issue #28)',
+      await page.locator('#modes-explainer-overlay').count() === 0);
     // Back to curriculum so the following legend/subject-detail flow runs.
     await clickNav(page, 'curriculum');
     await page.waitForTimeout(400);
@@ -337,23 +358,29 @@ async function run() {
     // Collapsed chapters + timeline rail (issue #16)
     check('Chapters collapsed by default (issue #16)',
       await page.locator('.accordion-body.active').count() === 0);
-    check('Chapters sit on a numbered timeline rail (issue #16)',
+    check('Chapters sit on a numbered timeline rail (issues #16/#28)',
       await page.locator('.chapt-node .chapt-node-dot').count() >= 3 &&
-      await page.locator('.chapt-rail-line').count() >= 2);
+      await page.locator('.chapt-rail-line').count() >= 2 &&
+      await page.locator('.unit-num').first().textContent() === '1');
     // Expand a chapter via its header and confirm the row shows duration
     await page.locator('.accordion-header').first().click();
     await page.waitForTimeout(300);
     check('Chapter expands on header click',
       await page.locator('.accordion-body.active').count() === 1);
-    check('Lecture rows carry duration',
-      await page.locator('.accordion-body.active .v2-quest-row .quest-video-dur').count() >= 1);
+    check('Lecture rows carry duration in a meta row (issue #28)',
+      await page.locator('.accordion-body.active .v2-quest-row .mv-time').count() >= 1);
+    check('Lecture rows show colored number tiles (issue #28)',
+      await page.locator('.accordion-body.active .v2-quest-row .mv-tile').count() >= 1);
+    check('Unit headers have a single visible tick control (issue #28)',
+      await page.locator('.unit-done-btn').count() >= 3 &&
+      await page.locator('.unit-done-btn:visible').count() === await page.locator('.unit-done-btn').count());
     // Completion-date metadata (issue #16): ticking a video records an ISO
     // timestamp that renders as "Completed Today"; unticking clears it.
     const row = page.locator('.accordion-body.active .v2-quest-row').first();
     await row.locator('.v2-pixel-checkbox-label').click();
     await page.waitForTimeout(300);
-    const doneLine = await row.locator('.quest-done-when').innerText().catch(() => '');
-    check('Ticked lecture shows completion date (issue #16)', /completed today/i.test(doneLine), JSON.stringify(doneLine));
+    const doneLine = await row.locator('.mv-done').innerText().catch(() => '');
+    check('Ticked lecture shows completion date (issues #16/#28)', /completed today/i.test(doneLine), JSON.stringify(doneLine));
     const storedVal = await page.evaluate(() => {
       const cb = document.querySelector('.accordion-body.active .react-task-checkbox');
       return window.FlowMD.store.getState().completedVideos[cb.getAttribute('data-video-id')];
@@ -361,8 +388,8 @@ async function run() {
     check('Completion stores ISO timestamp (issue #16)', typeof storedVal === 'string' && !isNaN(Date.parse(storedVal)), String(storedVal));
     await row.locator('.v2-pixel-checkbox-label').click();
     await page.waitForTimeout(300);
-    check('Untick clears completion date (issue #16)',
-      await row.locator('.quest-done-when').count() === 0);
+    check('Untick clears completion date (issues #16/#28)',
+      await row.locator('.mv-done').count() === 0);
   } else {
     check('Subject detail view renders chapters', false, 'no subject row to click');
   }
@@ -384,6 +411,19 @@ async function run() {
   {
     const vb = await page.locator('.chart-svg').first().getAttribute('viewBox').catch(() => null);
     check('7-Day chart stretched to taller viewBox (250)', vb === '0 0 600 250', String(vb));
+  }
+  // Issue #28: 30-Day card exposes per-day details; tapping a bar inspects it.
+  {
+    check('30-Day card shows a per-day detail line (issue #28)',
+      await page.locator('#month30-detail').count() === 1 &&
+      (await page.locator('#month30-detail').innerText()).includes('video'));
+    const firstBar = page.locator('.anl-month30-bar').first();
+    await firstBar.click();
+    await page.waitForTimeout(200);
+    const detailText = await page.locator('#month30-detail').innerText();
+    check('Tapping a 30-day bar inspects that day (issue #28)',
+      await firstBar.evaluate(el => el.classList.contains('is-selected')) &&
+      !/today/i.test(detailText), JSON.stringify(detailText));
   }
 
   // Regression: the Preparation Setup card must RESPOND to the Configure
@@ -438,9 +478,31 @@ async function run() {
       legend: Array.from(document.querySelectorAll('.hero-subj-legend-item')).map(el => el.textContent.trim().replace(/\s+/g, ' ')),
       heroText: (document.querySelector('.fm-feature-card-desc') || {}).textContent || ''
     }));
+    // Issue #28: legend shows completed/total counts; bar updates realtime.
     check('Welcome card shows per-subject progress segments after plan config',
-      hero.segs >= 1 && hero.legend.some(t => /\d+%$/.test(t)),
+      hero.segs >= 1 && hero.legend.some(t => /\d+\/\d+$/.test(t)),
       JSON.stringify(hero));
+    // Issue #28: ticking a queue video updates the hero progress IN PLACE.
+    const before = await page.evaluate(() =>
+      (document.getElementById('hero-subj-pct') || {}).textContent || '');
+    const ticked = await page.evaluate(() => {
+      const cb = document.querySelector('.queue-chk:not(:checked)');
+      if (!cb) return false;
+      cb.checked = true;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    });
+    await page.waitForTimeout(300);
+    const after = await page.evaluate(() =>
+      (document.getElementById('hero-subj-pct') || {}).textContent || '');
+    check('Hero progress updates realtime on completion tick (issue #28)',
+      ticked && before !== after, JSON.stringify({ before, after, ticked }));
+    // Untick to restore state for later blocks.
+    await page.evaluate(() => {
+      const cb = document.querySelector('.queue-chk:checked');
+      if (cb) { cb.checked = false; cb.dispatchEvent(new Event('change', { bubbles: true })); }
+    });
+    await page.waitForTimeout(200);
   }
 
   // Issue #17: manual-mode daily tasks must drive Goal Pulse. Switch to
