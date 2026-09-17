@@ -62,14 +62,21 @@ function check(name, ok, detail = '') {
 
 async function iconState(page) {
   return page.evaluate(() => {
-    const el = document.querySelector('.material-symbols-outlined');
-    if (!el) return { found: false };
+    const icons = [...document.querySelectorAll('.material-symbols-outlined')];
+    // The first icon in DOM order may be intentionally hidden — e.g. the
+    // topbar offline indicator is display:none while online — so a plain
+    // querySelector would measure a zero-size box and fail spuriously.
+    // Measure the first VISIBLE icon instead; the ligature/font regression
+    // this guards against affects every icon, so any visible one works.
+    const el = icons.find((n) => n.getBoundingClientRect().width > 0);
+    if (!el) return { found: false, total: icons.length };
     const r = el.getBoundingClientRect();
     const use = el.querySelector('use');
     const href = use ? use.getAttribute('href') : '';
     const symbol = href ? document.querySelector(href) : null;
     return {
       found: true,
+      total: icons.length,
       isSvg: el.tagName === 'svg',
       width: Math.round(r.width),
       height: Math.round(r.height),
