@@ -52,7 +52,12 @@ jobs:
   # events, so a PR alone never deploys to the live site.
   deploy:
     needs: test
-    if: github.event_name != 'pull_request'
+    # Docs-only pushes skip the Firebase deploy: the worklog auto-logger
+    # (worklog.yml) appends "[skip-deploy]" to its commit message when the
+    # merged PR touched no app-shell files, and this condition honors it.
+    if: >
+      github.event_name != 'pull_request' &&
+      !endsWith(github.event.head_commit.message, '[skip-deploy]')
     # The version-bump step pushes back to main; the default GITHUB_TOKEN is
     # read-only, so it needs contents: write or the push fails with a 403.
     permissions:

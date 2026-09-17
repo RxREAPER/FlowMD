@@ -8,6 +8,12 @@
 > significant decisions), APPEND a new entry under **Session Log** and commit
 > it together with (or right after) the work. Keep entries terse — PR links,
 > what/why, gotchas. Newest entries go on TOP of the log.
+>
+> **Automation:** merged PRs are logged automatically by CI
+> (`.github/workflows/worklog.yml`) — title → classification, PR body
+> `## Summary` bullets → quoted verbatim. Hand-log only decisions and
+> context automation can't see, and write PR bodies with a clean
+> `## Summary` section so the auto-entries are useful.
 
 ## Project snapshot
 

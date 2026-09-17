@@ -1,0 +1,70 @@
+name: Log merged PRs to WORKLOG.md
+
+# Appends a terse entry to WORKLOG.md after every PR merge to main, then
+# commits straight to main. Docs-only merges are handled in two layers:
+#   1. The logger runs normally and tags the entry "docs-only".
+#   2. The deploy job skips docs-only pushes (see deploy.yml), so a docs
+#      merge never triggers a Firebase deploy.
+# The logger is safe on docs-only pushes (its own commits are filtered out
+# below), and it self-guards: if the head commit is already a worklog
+# entry, it exits without duplicating.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: worklog-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    # Skip the logger's own commits (and any cache-bump chores) so pushes
+    # made by this workflow never re-trigger it.
+    if: >
+      github.event.head_commit.author.username != 'FlowMD-Auto-Logger' &&
+      !startsWith(github.event.head_commit.message, 'worklog:') &&
+      !startsWith(github.event.head_commit.message, 'chore: bump cache')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch enough history for a clean rebase if the deploy job's
+          # version-bump commit lands between checkout and push.
+          fetch-depth: 20
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Log merged PR to WORKLOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          PR=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls" \
+                --jq '.[0].number // empty')
+          if [ -z "$PR" ]; then
+            echo "Head commit is not a PR merge — nothing to log."
+            exit 0
+          fi
+          # Idempotence guard: this PR may already be logged if the job
+          # re-runs after a retry/race.
+          if grep -q "\`#${PR} — " WORKLOG.md; then
+            echo "PR #${PR} already logged — skipping."
+            exit 0
+          fi
+          node scripts/log-merged-pr.mjs "$PR" "$GITHUB_SHA"
+        # gh is preinstalled on ubuntu-latest runners.
+
+      - name: Upload worklog on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worklog-debug
+          path: WORKLOG.md
+          if-no-files-found: ignore
