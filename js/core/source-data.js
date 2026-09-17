@@ -132,6 +132,17 @@
     return { ...(state.dailyHistory || {}) };
   }
 
+  // --- Completion Metadata (issue #16) ---
+  // Returns the human completion date for a video, e.g. "Today",
+  // "Yesterday", "3 days ago" or "21st Aug". Empty string when the video
+  // isn't completed or predates the completion-date feature (legacy `true`).
+  function getVideoCompletedDate(videoId) {
+    const state = getState();
+    const val = state.completedVideos[videoId];
+    if (!val || val === true) return '';
+    return window.FlowMD.constants.formatCompletionDate(val);
+  }
+
   // --- Source Label / Edition Helpers (extracted from app.js 2026-08-10) ---
   function getSourceLabel(sourceId) {
     const s = STUDY_SOURCES.find(x => x.id === sourceId);
@@ -157,6 +168,7 @@
     getBulkChapterKey,
     isChapterBulkCompleted,
     getChapterVideoIds,
+    getVideoCompletedDate,
     getDailyCountsExcludingBulk,
     getSourceLabel,
     getEditionShort

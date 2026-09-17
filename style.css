@@ -516,6 +516,28 @@ body {
   border-bottom: none;
 }
 
+/* --- Completion-date metadata (issue #16) --- */
+.quest-done-when {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+  font-family: var(--font-hud);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.quest-done-when .material-symbols-outlined {
+  font-size: 11px;
+}
+
+.v2-quest-row.completed .quest-done-when {
+  color: var(--success);
+}
+
 /* --- CHECKBOX --- */
 .v2-pixel-checkbox-label {
   display: inline-flex;
@@ -3872,6 +3894,221 @@ body {
 
 .plan-quest-target-text strong {
   font-weight: 700;
+}
+
+/* --- Curriculum 2-column card grid (issue #16) --- */
+.curr-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 380px) {
+  .curr-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.curr-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.curr-card:hover,
+.curr-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 55%, var(--border-color));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 18%, transparent);
+  outline: none;
+}
+
+.curr-card.is-complete {
+  border-color: color-mix(in srgb, var(--success) 55%, var(--border-color));
+}
+
+.curr-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 16%, transparent), transparent 70%);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.curr-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sub-accent, var(--accent-primary));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 45%, transparent));
+}
+
+.curr-card-icon .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.curr-card-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display), monospace;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.curr-card-pct {
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--sub-accent, var(--accent-primary));
+  flex-shrink: 0;
+}
+
+.curr-card.is-complete .curr-card-pct {
+  color: var(--success);
+}
+
+.curr-card-body {
+  display: flex;
+  align-items: stretch;
+  padding: 10px 12px;
+  gap: 8px;
+  flex: 1;
+}
+
+.curr-card-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.curr-card-stat + .curr-card-stat {
+  border-left: 1px solid var(--border-color);
+}
+
+.curr-card-stat-num {
+  font-family: var(--font-display), monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.curr-card-stat-label {
+  font-family: var(--font-hud);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.curr-card-bar {
+  height: 6px;
+  background: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 10%, var(--bg-surface-raised));
+  border-top: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.curr-card-bar-fill {
+  height: 100%;
+  border-radius: 0 4px 0 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 65%, transparent), var(--sub-accent, var(--accent-primary)));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 45%, transparent);
+  transition: width 0.35s ease;
+}
+
+/* --- Subject-detail chapter timeline (issue #16) --- */
+.chapt-node {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.chapt-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 30px;
+}
+
+.chapt-node-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-family: var(--font-hud);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 12%, var(--bg-surface-raised));
+  border: 2px solid color-mix(in srgb, var(--accent-primary) 55%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent-primary) 22%, transparent);
+  z-index: 1;
+}
+
+.chapt-node.is-done .chapt-node-dot {
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 14%, var(--bg-surface-raised));
+  border-color: color-mix(in srgb, var(--success) 60%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--success) 25%, transparent);
+}
+
+.chapt-rail-line {
+  flex: 1;
+  width: 2px;
+  min-height: 8px;
+  margin-top: 4px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-primary) 45%, transparent), color-mix(in srgb, var(--accent-primary) 12%, transparent));
+}
+
+.chapt-node:last-child .chapt-rail-line {
+  display: none;
+}
+
+.chapt-node-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.chapt-node.is-open .chapt-node-dot {
+  background: color-mix(in srgb, var(--accent-primary) 25%, var(--bg-surface-raised));
+}
+
+/* Daily Tasks visual progress track (issue #16 redesign) */
+.plan-quest-track {
+  height: 8px;
+  border-radius: 6px;
+  margin: 2px 0 10px;
+  background: color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 10%, var(--bg-surface-raised));
+  border: 1px solid color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 30%, transparent);
+  overflow: hidden;
+}
+
+.plan-quest-track-fill {
+  height: 100%;
+  min-width: 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 70%, transparent), var(--plan-accent, var(--accent-primary)));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 45%, transparent);
+  transition: width 0.35s ease;
 }
 
 .quest-video-num {
