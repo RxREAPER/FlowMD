@@ -145,6 +145,15 @@ async function run() {
   check('Sheet has Plan A and Plan B tabs', await page.locator('.spc-tab').count() === 2);
   check('No Dual-Track toggle remains', await page.locator('#toggle-plan-b').count() === 0);
   check('Sheet shows Plan A form', await page.locator('#goal-plan-a-form').isVisible());
+
+  // Issue #25: Auto vs Manual modes explainer inside the plan sheet.
+  check('Plan sheet explains Auto vs Manual topic modes (issue #25)',
+    await page.locator('.spc-mode-explainer').count() === 1 &&
+    sheetText.includes('Automatic mode') && sheetText.includes('Manual mode'));
+  check('Explainer mentions lecture module order and + Task from search (issue #25)',
+    sheetText.includes('lecture module order') && sheetText.includes('+ Task') && sheetText.includes('analytics'));
+  check('Explainer has numbered steps 1 and 2 (issue #25)',
+    await page.locator('.spc-mode-explainer-num').count() === 2);
   check('Sheet Focus Chapter chips container renders for Plan A (id chapter-chips-a)',
     await page.locator('#chapter-chips-a').count() === 1);
   check('Sheet chapters count badge renders for Plan A (id chapters-count-a)',
@@ -161,11 +170,17 @@ async function run() {
     configValues.subject === '' && configValues.vids === '' && configValues.date === '',
     JSON.stringify(configValues));
 
-  // Issue #11: the Daily Tasks (Topics) section was removed from the Plan
-  // sheet — topic mode lives on the dashboard's Daily Tasks card only.
+  // Issue #11: the Daily Tasks (Topics) task-list section was removed from
+  // the Plan sheet — topic mode lives on the dashboard's Daily Tasks card
+  // only. (The sheet may still *mention* topics: issue #25 added the
+  // Auto-vs-Manual explainer here, so assert on the removed UI instead.)
   const sheetTextLower = sheetText.toLowerCase();
   check('Plan sheet no longer contains the Daily Tasks topics section (issue #11)',
-    !sheetTextLower.includes('topics') && await page.locator('#spc-daily-tasks-mode-switch').count() === 0);
+    await page.locator('#spc-daily-tasks-mode-switch').count() === 0 &&
+    await page.locator('.spc-manual-add').count() === 0 &&
+    !sheetTextLower.includes('add topics from search') &&
+    !sheetTextLower.includes('no manual topics yet') &&
+    !sheetText.includes('daily-tasks-mode-switch'));
 
   // Close the sheet (Escape) so later sections can reach the bottom nav.
   await page.keyboard.press('Escape');
@@ -280,6 +295,19 @@ async function run() {
       return Math.abs(w / max * 100 - pct) <= 2 || (pct === 0 && w === 0);
     }));
   check('Search bar hidden on curriculum', !(await page.locator('#btn-toggle-search').isVisible()));
+
+  // Issue #25: mode captions under the dashboard's Auto/Manual switch.
+  await clickNav(page, 'dashboard');
+  await page.waitForTimeout(300);
+  {
+    const captionAuto = await page.locator('.spc-mode-caption').first().innerText().catch(() => '');
+    check('Auto caption under mode switch (issue #25)', /auto mode/i.test(captionAuto) && /lecture module order/i.test(captionAuto), JSON.stringify(captionAuto));
+    check('Caption has a How-modes-work link (issue #25)',
+      await page.locator('#btn-what-are-modes').count() === 1);
+    // Back to curriculum so the following legend/subject-detail flow runs.
+    await clickNav(page, 'curriculum');
+    await page.waitForTimeout(400);
+  }
 
   // Collapsible "How completion is counted" legend (issue #15)
   {

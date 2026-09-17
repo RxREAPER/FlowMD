@@ -94,6 +94,7 @@
             <button type="button" class="spc-mode-opt active" data-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
           </div>
         </div>
+        <div class="spc-mode-caption">Manual mode &mdash; your picked topics, in your order. <button type="button" class="spc-mode-caption-link" id="btn-what-are-modes">How modes work</button></div>
 
         <div class="spc-manual-add">
           <button type="button" class="v2-arcade-btn" id="btn-add-task-topic">
@@ -426,6 +427,7 @@
             <button type="button" class="spc-mode-opt" data-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
           </div>
         </div>
+        <div class="spc-mode-caption">Auto mode &mdash; topics follow lecture module order. <button type="button" class="spc-mode-caption-link" id="btn-what-are-modes">How modes work</button></div>
 
         <div style="padding-top:4px;">
           ${hasTargetSet
@@ -446,6 +448,14 @@
 
     if (isManualMode) initManualTasksSection();
     initDailyTasksModeSwitch();
+
+    // Issue #25: "How modes work" opens the plan sheet, where the full
+    // Auto-vs-Manual explainer lives.
+    document.getElementById('btn-what-are-modes')?.addEventListener('click', () => {
+      if (window.FlowMD.planConfig && window.FlowMD.planConfig.openPlanConfigSheet) {
+        window.FlowMD.planConfig.openPlanConfigSheet();
+      }
+    });
 
     document.querySelectorAll('.btn-open-queue-subject').forEach(btn => {
       btn.addEventListener('click', () => {
