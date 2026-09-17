@@ -12,6 +12,15 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Serialize pipeline runs per ref. Two PRs merging back-to-back used to run
+# their deploy jobs concurrently and race the version-bump push — the loser
+# failed with "! [rejected] main -> main (fetch first)". Queuing (rather than
+# cancel-in-progress) keeps a deploy from ever being killed mid-bump. PR runs
+# get their own group per PR, so they never queue behind pushes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   # Runs on every push to main and on every pull request. Never deploys.
   test:
@@ -67,10 +76,7 @@ jobs:
       # existing FIREBASE_TOKEN secret, which already works. To migrate later,
       # replace the deploy step's token with the google-github-actions/auth@v2
       # OIDC step (see the hardening branch history / CONCERNS.md #8).
-      - name: Bump cache version
-        run: node scripts/bump-version.js
-
-      - name: Commit version bump back to main
+      - name: Bump cache version & commit back to main
         run: |
           echo "::notice::Workflow file from commit $(git rev-parse HEAD) (run on ${{ github.ref_name }})"
           # Self-diagnose: confirm the GITHUB_TOKEN can actually push before
@@ -82,6 +88,14 @@ jobs:
           echo "::notice::GITHUB_TOKEN $PERMS"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # This run's checkout may be behind main by the time the job starts
+          # (back-to-back merges). Re-sync to the true latest main BEFORE
+          # bumping so the version is computed from it, always moves forward,
+          # and the push fast-forwards. The workflow-level concurrency group
+          # guarantees no other deploy runs between this fetch and the push.
+          git fetch origin main
+          git reset --hard origin/main
+          node scripts/bump-version.js
           git add index.html sw.js js/core/constants.js
           if git diff --cached --quiet; then
             echo "No version change to commit"
