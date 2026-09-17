@@ -8,13 +8,6 @@ const DATA_FILES = [
 ];
 // DATA_FILES_END
 
-const FIREBASE_SDK = [
-  'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js',
-  'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js',
-  'https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics-compat.js'
-];
-
 const ASSETS = [
   './',
   './index.html',
@@ -62,21 +55,12 @@ function cacheKeyFor(url) {
   return url.origin + url.pathname;
 }
 
-// Resolve on success, or after `ms` - a slow asset must never hang install.
-function withTimeout(promise, ms) {
-  return Promise.race([promise, new Promise((resolve) => setTimeout(resolve, ms))]);
-}
-
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
-      // Same-origin shell + data files.
+      // Same-origin shell + data files — the app is 100% offline-first:
+      // every byte it needs is same-origin and precached at install time.
       await cache.addAll(ASSETS).catch(e => console.log('Cache add failed', e));
-      // Cross-origin Firebase SDKs — addAll rejects on opaque responses,
-      // so cache each individually.
-      for (const url of FIREBASE_SDK) {
-        try { await withTimeout(cache.add(url), 8000); } catch (_) { /* non-critical */ }
-      }
     })
   );
   self.skipWaiting();

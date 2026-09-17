@@ -93,7 +93,7 @@ async function run() {
     check('Wizard shows on first run (no config)',
       (await page.locator('.onboarding-card').count()) > 0);
     check('Wizard step 1 label correct',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 2'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
     check('Dashboard is gated while unconfigured',
       (await page.locator('.android-bottom-nav').isVisible()) === false);
     check('Search bar hidden during wizard',
@@ -132,7 +132,7 @@ async function run() {
     await page.locator('#onboarding-next').click();
     await page.waitForTimeout(250);
     check('Step 2 label correct',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
     check('Name input rendered', (await page.locator('#onboarding-name').count()) === 1);
     check('Name input is auto-focused for the device keyboard',
       await page.evaluate(() => document.activeElement && document.activeElement.id === 'onboarding-name'));
@@ -155,27 +155,19 @@ async function run() {
     await page.locator('#onboarding-back').click();
     await page.waitForTimeout(250);
     check('Back returns to step 1',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 2'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 1 OF 3'));
     check('Source choice retained after back',
       await hasClass(page, '.onboarding-option[data-source="marrow_6_5"]', 'checked'));
 
     await page.locator('#onboarding-next').click();
     await page.waitForTimeout(250);
     check('Forward returns to step 2',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 3'));
 
     // Step 2 — name + theme + summary (no sign-in step in offline-first)
     check('No sign-in button on step 2', (await page.locator('#onboarding-signin').count()) === 0);
     check('No skip-sign-in button on step 2', (await page.locator('#onboarding-skip-signin').count()) === 0);
 
-    check('Step 2 summary label correct',
-      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 2 OF 2'));
-    check('Step 2 shows "all set" summary',
-      /You're all set/.test(await page.locator('.onboarding-card').innerText()));
-    check('Step 2 summary echoes chosen source',
-      (await page.locator('.onboarding-card').innerText()).includes('Marrow Edition 6.5'));
-    check('Step 2 summary echoes chosen theme',
-      (await page.locator('.onboarding-card').innerText()).includes('Light Mode'));
     check('Step 2 renders 3 guide items',
       (await page.locator('.onboarding-guide-item').count()) === 3);
     check('Step 2 notes device-local storage',
@@ -183,16 +175,38 @@ async function run() {
 
     await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step2-light.png') });
 
+    // Step 3 — full-screen install step (issue #11). In the test browser
+    // beforeinstallprompt never fires, so this renders the manual guide
+    // with a Done CTA and a small skip option.
     await page.locator('#onboarding-next').click();
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(300);
+    check('Step 3 label correct',
+      (await page.locator('.onboarding-card').innerText()).includes('FIRST SETUP · STEP 3 OF 3'));
+    check('Step 3 offers the install/home-screen ask',
+      /Install FlowMD|Home Screen/.test(await page.locator('.onboarding-card').innerText()));
+    check('Step 3 has a Done / Complete Setup CTA',
+      (await page.locator('#onboarding-install-btn').count()) === 1);
+    check('Step 3 has a small skip option',
+      (await page.locator('#onboarding-skip').count()) === 1);
+    check('Step 3 goes full-screen (topbar + bottom nav hidden)',
+      (await page.locator('.android-bottom-nav').isVisible()) === false &&
+      (await page.evaluate(() => document.body.classList.contains('onboarding-fullscreen'))) === true);
+    check('Step 3 echoes the chosen profile',
+      (await page.locator('.onboarding-card').innerText()).includes('Marrow Edition 6.5'));
 
-    // Finish → dashboard
+    await page.screenshot({ path: join(SHOT_DIR, 'onboarding-step3-install.png') });
+
+    // Skip → finish → dashboard
+    await page.locator('#onboarding-skip').click();
+    await page.waitForTimeout(600);
     check('Wizard removed after finishing',
       (await page.locator('.onboarding-card').count()) === 0);
     check('Dashboard renders after finishing',
       (await page.locator('.android-bottom-nav').isVisible()) === true);
     check('Search bar appears after finishing',
       (await page.locator('#btn-toggle-search').isVisible()) === true);
+    check('Skip also dismisses the first-visit install modal',
+      (await page.evaluate(() => localStorage.getItem('flowmd_install_helper_dismissed'))) === '1');
 
     // Persisted state
     const stored = await page.evaluate(() => ({
@@ -216,6 +230,46 @@ async function run() {
       (await page.locator('.onboarding-card').count()) === 0);
     check('Dashboard persists after reload',
       (await page.locator('.android-bottom-nav').isVisible()) === true);
+
+    await context.close();
+  }
+
+  // ---- Scenario C: step-3 native install CTA path (beforeinstallprompt) ----
+  {
+    const context = await browser.newContext({ viewport: { width: 420, height: 900 } });
+    const page = await context.newPage();
+    wireErrors(page, errors);
+
+    await page.goto(`${BASE}/`);
+    await wipeStorage(page);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(600);
+    // Fire the native install prompt BEFORE the wizard's step 3 — Chrome can
+    // do this on first engagement. The step must offer "Install FlowMD" and
+    // finishing via the Done CTA must complete setup.
+    await page.evaluate(() => {
+      const stub = new Event('beforeinstallprompt');
+      stub.preventDefault = () => {};
+      stub.prompt = () => {};
+      stub.userChoice = Promise.resolve({ outcome: 'accepted' });
+      window.dispatchEvent(stub);
+    });
+    await page.waitForTimeout(300);
+    await page.locator('#onboarding-next').click();
+    await page.waitForTimeout(250);
+    await page.locator('#onboarding-next').click();
+    await page.waitForTimeout(300);
+    check('Step 3 offers the native Install CTA when the prompt is captured',
+      (await page.locator('#onboarding-install-btn').innerText()).includes('Install FlowMD'));
+    // The stubbed prompt resolves 'accepted' → pwa-install marks installed
+    // and the wizard auto-finishes.
+    await page.locator('#onboarding-install-btn').click();
+    await page.waitForTimeout(700);
+    check('Native install path completes setup',
+      (await page.evaluate(() => localStorage.getItem('flowmd_is_configured'))) === 'true');
+    check('Installed state recorded',
+      (await page.evaluate(() => window.FlowMD.pwaInstall.isInstalled())) === true);
 
     await context.close();
   }
