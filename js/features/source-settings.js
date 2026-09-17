@@ -13,7 +13,6 @@
   const { SOURCE_DATA, getSourceLabel } = window.FlowMD.sourceData;
   const { STUDY_SOURCES, escapeHtml } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
-  const { updateTopbarSource } = window.FlowMD.theme;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -150,7 +149,6 @@
       switchSource(selected);
       close();
       showToast(`Switched to ${getSourceLabel(selected)} — this edition has its own plan, goals & analytics.`, 'check_circle', 'Study Source Updated');
-      updateTopbarSource();
       if (window.FlowMD.shell) window.FlowMD.shell.render();
     });
   }

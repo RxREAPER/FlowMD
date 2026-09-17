@@ -278,6 +278,25 @@ async function run() {
   check('Curriculum view shows subject rows', curriculumSubjects > 5, `found ${curriculumSubjects}`);
   check('Search bar hidden on curriculum', !(await page.locator('#btn-toggle-search').isVisible()));
 
+  // Collapsible "How completion is counted" legend (issue #15)
+  {
+    check('Curriculum legend starts collapsed (issue #15)',
+      await page.locator('#curriculum-legend.is-collapsed').count() === 1);
+    check('Legend body hidden while collapsed',
+      !(await page.locator('#curriculum-legend-body').isVisible()));
+    await page.locator('#curriculum-legend-toggle').click();
+    await page.waitForTimeout(200);
+    check('Legend expands on toggle click',
+      await page.locator('#curriculum-legend.is-collapsed').count() === 0 &&
+      await page.locator('#curriculum-legend-body').isVisible());
+    const persisted = await page.evaluate(() => localStorage.getItem('flowmd.curriculumLegendCollapsed'));
+    check('Legend collapse state persisted (expanded)', persisted === '0', String(persisted));
+    await page.locator('#curriculum-legend-toggle').click();
+    await page.waitForTimeout(200);
+    check('Legend collapses again',
+      await page.locator('#curriculum-legend.is-collapsed').count() === 1);
+  }
+
   // Subject detail
   if (curriculumSubjects > 0) {
     await page.locator('.curriculum-sub-row').first().click();
@@ -389,6 +408,11 @@ async function run() {
     const tasksText = await page.locator('#app-main').innerText();
     check('Dashboard shows Daily Tasks section', tasksText.includes('Daily Tasks'));
     check('No Daily Quests label remains', !tasksText.includes('Daily Quests'));
+    // Today's total-hours goal (issue #15) — rendered once a plan with a
+    // daily pace is configured.
+    check('Daily Tasks header shows total hours goal (or hides when no plan)',
+      tasksText.includes('h today') || !(await page.locator('.dash-today-hours').count()),
+      tasksText.split('\n').find(l => l.includes('Daily Tasks')) || '');
     check('Auto mode is default', await page.locator('.spc-mode-opt[data-mode="auto"].active').count() === 1);
     await page.locator('.spc-mode-opt[data-mode="manual"]').click();
     await page.waitForTimeout(400);
@@ -461,26 +485,41 @@ async function run() {
     await page.waitForTimeout(300);
   }
 
-  // Theme toggle
-  const themeBtn = await page.locator('#theme-toggle-btn').count();
-  check('Theme toggle present', themeBtn > 0);
-  const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-  await page.locator('#theme-toggle-btn').click();
-  await page.waitForTimeout(200);
-  const themeAfter = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-  check('Theme switching works', themeBefore === 'dark' && themeAfter === 'light');
+  // UI/UX 2 (issue #15): topbar decluttered — no theme toggle, no source badge.
+  check('Topbar has no theme toggle (moved to Profile → Settings)',
+    await page.locator('.topbar #theme-toggle-btn').count() === 0);
+  check('Topbar has no edition/source badge', await page.locator('#topbar-source-badge').count() === 0);
+  check('Topbar avatar present', await page.locator('#topbar-user-profile').count() === 1);
 
-  // Source settings modal (via topbar source badge)
-  const srcBadge = await page.locator('#topbar-source-badge').count();
-  check('Source badge present', srcBadge > 0);
-  if (srcBadge) {
-    await page.locator('#topbar-source-badge').click({ force: true }).catch(() => {});
-    await page.waitForTimeout(300);
-    const dynModal = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll('div')).some(el => el.style.zIndex === '99999' && el.style.position === 'fixed');
-    });
-    check('Source settings modal opens (dynamic)', dynModal === true);
-    await dismissOverlays(page);
+  // Theme toggle now lives in Profile → Settings
+  await clickNav(page, 'profile');
+  await page.waitForTimeout(400);
+  const profToggle = await page.locator('#app-main #theme-toggle-btn').count();
+  check('Theme toggle present in Profile → Settings', profToggle > 0);
+  const themeBefore = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  await page.locator('#app-main #theme-toggle-btn').click();
+  await page.waitForTimeout(300);
+  const themeAfter = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  check('Theme switching works from Profile', themeBefore === 'dark' && themeAfter === 'light');
+  // Flip back so later sections start from the default dark theme.
+  await page.locator('#app-main #theme-toggle-btn').click();
+  await page.waitForTimeout(300);
+  check('Theme restored to dark',
+    (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'dark');
+
+  // Source settings modal still reachable from Profile → Settings
+  {
+    const changeBtn = await page.locator('#btn-change-source').count();
+    check('Profile has Study Source change button', changeBtn > 0);
+    if (changeBtn) {
+      await page.locator('#btn-change-source').click({ force: true }).catch(() => {});
+      await page.waitForTimeout(300);
+      const dynModal = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('div')).some(el => el.style.zIndex === '99999' && el.style.position === 'fixed');
+      });
+      check('Source settings modal opens from Profile (dynamic)', dynModal === true);
+      await dismissOverlays(page);
+    }
   }
 
   // Source switch swaps per-edition partitions (v4): Edition 8 keeps its

@@ -14,7 +14,6 @@
   const { getAllPlanQueues, getPlanById } = window.FlowMD.metrics;
   const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey, DAILY_TASKS_MODE_AUTO, DAILY_TASKS_MODE_MANUAL } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
-  const { renderEditionChip } = window.FlowMD.theme;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
   const { renderOnboardingWizard } = window.FlowMD.onboarding;
 
@@ -78,11 +77,13 @@
     const items = manualIds.map(id => byId[id]).filter(Boolean);
     const pending = items.filter(v => !state.completedVideos[v.id]);
     const done = items.length - pending.length;
+    // Hours still left in the manual task list (issue #15)
+    const pendingHours = pending.reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0) / 60;
 
     return `
       <div class="v2-quest-card action-queue-card" id="manual-tasks-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks</div>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks${pendingHours > 0 ? ` <span class="dash-today-hours">· ~${fmtHours(pendingHours)}h left</span>` : ''}</div>
           <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">MANUAL MODE</span>
         </div>
 
@@ -169,6 +170,21 @@
     });
   }
 
+  // Today's total hours goal (issue #15): each plan's daily pace × that
+  // plan's average scoped video length, summed across plans.
+  function planDailyHours(plan) {
+    const pace = parseInt(plan.videosPerDay, 10) || 0;
+    if (!plan.targetSubject || pace <= 0) return 0;
+    const videos = getPlanScopeVideos(plan);
+    if (!videos.length) return 0;
+    const avgMins = videos.reduce((sum, v) => sum + (v.durationMins || 0) + (v.durationSecs || 0) / 60, 0) / videos.length;
+    return (avgMins * pace) / 60;
+  }
+
+  function fmtHours(h) {
+    return h >= 10 ? String(Math.round(h)) : String(Math.round(h * 10) / 10);
+  }
+
   function initManualTasksSection() {
     initDailyTasksModeSwitch();
     document.getElementById('btn-add-task-topic')?.addEventListener('click', () => {
@@ -207,6 +223,7 @@
     plans.forEach(p => {
       totalVidsDay += parseInt(p.videosPerDay, 10) || 0;
     });
+    const totalHoursToday = plans.reduce((sum, p) => sum + planDailyHours(p), 0);
 
     // Helper: render one plan's daily quest block
     function renderPlanQuestBlock(plan, queue) {
@@ -307,7 +324,6 @@
       <div class="fm-feature-card-wrapper">
         <div class="fm-feature-card hero-banner-card">
           <div class="fm-feature-card-header-badges">
-            ${renderEditionChip()}
             ${hasDualPlans ? `
               <span class="v2-hud-badge" style="color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-color: #e11d48;"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-bolt"/></svg> DUAL-TRACK MODE</span>
              ` : ''}
@@ -353,7 +369,7 @@
       ${isManualMode ? renderManualTasksSection() : `
       <div class="v2-quest-card action-queue-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks</div>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks${totalHoursToday > 0 ? ` <span class="dash-today-hours">· ~${fmtHours(totalHoursToday)}h today</span>` : ''}</div>
           <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${hasDualPlans ? 'DUAL TRACK' : `${allQueues[0]?.subjectName || 'All Topics'}`}</span>
         </div>
 

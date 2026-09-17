@@ -1,8 +1,10 @@
 /* ============================================================
    FlowMD Features — Theme & Topbar Chrome
    Theme application (data-theme / data-theme-style attributes),
-   topbar initials/source-badge/offline updates, and the edition
-   chip. Self-contained DOM queries — no shell DOM cache.
+   topbar initials and the offline indicator. The edition badge
+   and edition chips were removed from the chrome in UI/UX 2
+   (issue #15) — the study source is managed from
+   Profile → Settings → Study Source only.
 
    Extracted verbatim from app.js (2026-08-10). Behavior unchanged.
    ============================================================ */
@@ -10,7 +12,6 @@
   'use strict';
 
   const { getState } = window.FlowMD.store;
-  const { getSourceLabel, getEditionShort } = window.FlowMD.sourceData;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -45,24 +46,6 @@
     }
   }
 
-  // --- Active Edition visibility helpers ---
-  function renderEditionChip() {
-    return `
-      <button type="button" class="edition-chip btn-open-source-settings" title="Current study edition — tap to change">
-        <svg class="material-symbols-outlined" style="font-size:15px;"><use href="#fmd-i-auto_stories"/></svg>
-        <span>${getEditionShort()}</span>
-      </button>`;
-  }
-
-  function updateTopbarSource() {
-    const badge = document.getElementById('topbar-source-badge');
-    if (!badge) return;
-    const textEl = badge.querySelector('.edition-badge-text');
-    if (textEl) textEl.textContent = getEditionShort();
-    badge.title = 'Study Source: ' + getSourceLabel(state.activeSource || 'marrow_8') + ' \u2014 tap to change';
-    updateOfflineIndicator();
-  }
-
   function updateOfflineIndicator() {
     const indicator = document.getElementById('topbar-offline-indicator');
     if (!indicator) return;
@@ -77,8 +60,6 @@
   window.FlowMD.theme = {
     applyTheme,
     updateTopbarInitials,
-    updateTopbarSource,
-    updateOfflineIndicator,
-    renderEditionChip
+    updateOfflineIndicator
   };
 })();
