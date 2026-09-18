@@ -36,6 +36,12 @@
 - Known-good flake status: none remaining as of PR #31 (offline icons check fixed).
 
 ## Session Log
+### 2026-09-18 — Auto-log (merged PRs)
+
+- Merged **#36 — fix worklog logger 403 (missing pull-requests:read)** (CI, by RxREAPER) → 21f9076
+  - Files: 1 (.github/workflows/worklog.yml)
+  - The worklog auto-logger failed with HTTP 403 on the PR #35 merge: its API reads (`commits/{sha}/pulls` in the workflow step, `pulls/{n}` in `scripts/log-merged-pr.mjs`) require …
+  - Adds `pull-requests: read` to the workflow's `permissions` block. No behavior change otherwise; deploy is untouched (`[skip-deploy]` semantics preserved).
 ### 2026-09-18 · Session 3 — issues #29 + #32 (manual-goal semantics + UI wave 3)
 - **Decision (issue #29):** manual-mode Goal Pulse targets are now ADDITIVE — the manual topic count adds 1:1 to today's goal and adds the SAME count (never ×7/×30) to the weekly/monthly goals; auto-plan paces keep their ×7/×30 rolling ideals. Sub-heading spells out the source mix ("2 from manual topics + 4 from plans").
 - Issue #32 wave: compact 2-col curriculum cards (no square aspect lock) with hours + module count in the meta line; curriculum-page search box (client-side, persisted in state); per-unit hours in subject detail; 30-day strip 56→132px; Daily Tasks header strip (large hours figure + done-count) and single toolbar row; per-plan stat chips replace the FOCUS/TARGET rows; hero "Current Subject Progress" now measures WHOLE subjects (plan scope ignored — matches curriculum cards); streak moved to a topbar pill left of the avatar; bottom-nav "Plan" label lowered + stronger neon glow.
