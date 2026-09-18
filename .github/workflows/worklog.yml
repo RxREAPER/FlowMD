@@ -15,6 +15,10 @@ on:
 
 permissions:
   contents: write
+  # The logger reads the merged PR (commits/{sha}/pulls + pulls/{n}) —
+  # without this the GitHub API 403s ("Resource not accessible by
+  # integration") and every merge logs a failed run (PR #35, 2026-09-18).
+  pull-requests: read
 
 concurrency:
   group: worklog-${{ github.ref }}
