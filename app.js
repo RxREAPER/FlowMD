@@ -327,6 +327,11 @@
 
     updateTopbarInitials();
     updateOfflineIndicator();
+    // Issue #32: topbar streak pill — refresh on every render (it lives in
+    // the static topbar, outside the re-rendered #app-main).
+    if (window.FlowMD.dashboard && window.FlowMD.dashboard.updateTopbarStreakPill) {
+      window.FlowMD.dashboard.updateTopbarStreakPill();
+    }
     updateShellSurfaces();
     const stats = getSyllabusStats();
 

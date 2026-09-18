@@ -11,7 +11,7 @@
 
   const { getState, getStudyStreak, markStudyActivity, saveState, setDailyTasksMode, addManualTaskVideo, removeManualTaskVideo } = window.FlowMD.store;
   const { getPlanScopeVideos, getScopedChapterNames, getDataset, getVideoCompletedDate } = window.FlowMD.sourceData;
-  const { getAllPlanQueues, getPlanById, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
+  const { getAllPlanQueues, getPlanById, getSubjectOrSyllabusMetricsForPlan, getSubjectOrSyllabusMetrics } = window.FlowMD.metrics;
   const { FLOWMD_ICONS, escapeHtml, DEFAULT_PLAN, PLAN_A_ACCENT, todayKey, DAILY_TASKS_MODE_AUTO, DAILY_TASKS_MODE_MANUAL } = window.FlowMD.constants;
   const { showToast } = window.FlowMD.toast;
   const { focusStudyPlanConfig } = window.FlowMD.planConfig;
@@ -22,6 +22,29 @@
 
   // Shell DOM cache — set on every render via the dispatcher.
   let DOM = {};
+
+  // Plans snapshot for in-place chip refreshes (set in renderDashboardView).
+  let plansRefForChips = [];
+
+  // --- Issue #32: topbar streak pill (left of the profile avatar) ---
+  function updateTopbarStreakPill() {
+    const pill = document.getElementById('topbar-streak-pill');
+    if (!pill) return;
+    const n = getStudyStreak();
+    const numEl = pill.querySelector('.topbar-streak-num');
+    if (numEl) numEl.textContent = String(n);
+    pill.classList.toggle('is-zero', n <= 0);
+    pill.title = n > 0 ? n + '-day study streak — keep it burning!' : 'Complete a topic today to start your streak';
+  }
+
+  function initTopbarStreakPill() {
+    const pill = document.getElementById('topbar-streak-pill');
+    if (!pill) return;
+    updateTopbarStreakPill();
+    pill.addEventListener('click', () => {
+      if (window.FlowMD.shell) window.FlowMD.shell.switchView('profile');
+    });
+  }
 
   // --- Targeted quest checkbox update (no innerHTML rebuild, scroll preserved) ---
   function updateQuestAfterCheck() {
@@ -35,8 +58,16 @@
       const pct = Math.min(100, Math.round((q.totalCompletedToday / q.baseTargetPace) * 100));
       const progressEl = block.querySelector('.plan-quest-progress');
       if (progressEl) progressEl.textContent = q.totalCompletedToday + '/' + q.baseTargetPace + ' • ' + pct + '%';
+      // Issue #32: refresh the compact per-plan stat chips in place.
+      const chip = block.querySelector('.plan-quest-chips');
+      if (chip) {
+        const planRef = plansRefForChips[idx] || {};
+        const scopedNames = getScopedChapterNames(planRef);
+        chip.innerHTML = renderPlanStatChips(q, scopedNames, planRef);
+      }
     });
-    // Update hero streak
+    // Topbar streak pill (issue #32) + dashboard hero badge
+    updateTopbarStreakPill();
     const streakBadge = document.querySelector('.v2-hud-badge:last-child');
     if (streakBadge && streakBadge.textContent.includes('streak')) {
       streakBadge.innerHTML = '<svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-local_fire_department"/></svg> ' + getStudyStreak() + ' day streak';
@@ -85,25 +116,25 @@
     return `
       <div class="v2-quest-card action-queue-card" id="manual-tasks-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks${pendingHours > 0 ? ` <span class="dash-today-hours">· ~${fmtHours(pendingHours)}h left</span>` : ''}</div>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks${pendingHours > 0 ? ` <span class="dash-today-hours dash-today-hours-lg">≈ ${fmtHours(pendingHours)}h left</span>` : ''}</div>
           <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">MANUAL MODE</span>
         </div>
 
-        <div class="spc-mode-toggle">
-          <span class="spc-mode-label">Topics</span>
+        <div class="dt-toolbar">
           <div class="spc-mode-switch" role="group" aria-label="Daily Tasks topic mode" id="daily-tasks-mode-switch">
             <button type="button" class="spc-mode-opt" data-mode="${DAILY_TASKS_MODE_AUTO}">Auto</button>
             <button type="button" class="spc-mode-opt active" data-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
           </div>
+          <button type="button" class="spc-mode-caption-link" id="btn-what-are-modes">How modes work</button>
         </div>
-        <div class="spc-mode-caption">Manual mode &mdash; your picked topics, in your order. <button type="button" class="spc-mode-caption-link" id="btn-what-are-modes">How modes work</button></div>
+        <div class="spc-mode-caption dt-caption">Manual mode &mdash; your picked topics, in your order.</div>
 
         <div class="spc-manual-add">
           <button type="button" class="v2-arcade-btn" id="btn-add-task-topic">
             <svg class="material-symbols-outlined"><use href="#fmd-i-add_task"/></svg>
             <span>Add Topics from Search</span>
           </button>
-          <span class="spc-manual-hint">${items.length} topic${items.length === 1 ? '' : 's'} • ${done} done • ${pending.length} to go</span>
+          <span class="spc-manual-hint">${done} done · ${pending.length} to go</span>
         </div>
 
         ${items.length === 0 ? `
@@ -145,6 +176,28 @@
             <span>All manual topics completed! Add more from search.</span>
           </div>
         ` : ''}
+      </div>
+    `;
+  }
+
+  // Issue #32: compact per-plan stat chips (focus + target + hours), replacing
+  // the tall FOCUS strip + TARGET row. No information lost.
+  function renderPlanStatChips(queue, scopedNames, plan) {
+    const focusTxt = scopedNames.length > 0
+      ? scopedNames.slice(0, 2).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ') + (scopedNames.length > 2 ? '…' : '')
+      : 'All units';
+    return `
+      <div class="pq-chip" title="Focus scope: ${escapeHtml(focusTxt)}">
+        <svg class="material-symbols-outlined"><use href="#fmd-i-filter_alt"/></svg>
+        <span>${escapeHtml(focusTxt)}</span>
+      </div>
+      <div class="pq-chip" title="Daily target pace">
+        <svg class="material-symbols-outlined"><use href="#fmd-i-flag"/></svg>
+        <span>${(queue && queue.baseTargetPace) || 0}/day</span>
+      </div>
+      <div class="pq-chip" title="Estimated study hours at today's pace">
+        <svg class="material-symbols-outlined"><use href="#fmd-i-schedule"/></svg>
+        <span>~${fmtHours(planDailyHours(plan || {}))}h today</span>
       </div>
     `;
   }
@@ -207,15 +260,29 @@
     });
   }
 
-  // "Current Subject Progress" (issues #18 + #28): one track per subject
-  // scoped under Configure Study Plan (Plan A + Plan B), stacked as a segmented
-  // progress bar. Falls back to the overall syllabus figure when no plan target
-  // is configured. Realtime: updateHeroSubjectProgress() re-renders the block
-  // in place after every completion tick, without rebuilding the dashboard.
+  // --- Issue #32: "Current Subject Progress" — WHOLE-SUBJECT completion ---
+  // One segment per subject targeted under Configure Study Plan (Plan A + B),
+  // but the bar measures the ENTIRE subject's videos (every chapter, not just
+  // the plan's focused units) — matching the curriculum card figures. Falls
+  // back to the overall syllabus figure when no plan target is configured.
+  // Realtime: updateHeroSubjectProgress() re-renders the block in place after
+  // every completion tick, without rebuilding the dashboard.
   function buildHeroSubjectProgressInner(plans) {
     const overall = getSubjectOrSyllabusMetricsForPlan({});
     const overallPct = overall.totalVideos > 0 ? Math.round((overall.completedVideos / overall.totalVideos) * 100) : 0;
-    const scoped = (plans || []).filter(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0);
+    // Match the plan's target to a subject on the active dataset, then use the
+    // whole-subject metrics (getSubjectOrSyllabusMetrics(name)) — NOT the
+    // plan-scoped video list. plan.targetSubject may hold the id OR the name.
+    const scoped = (plans || [])
+      .filter(p => p.targetSubject && parseInt(p.videosPerDay, 10) > 0)
+      .map((plan, idx) => {
+        const sub = (getDataset().find(s => s && (s.id === plan.targetSubject || s.subject === plan.targetSubject)) || {});
+        const m = getSubjectOrSyllabusMetricsForPlan({ targetSubject: sub.subject || plan.targetSubject });
+        const pct = m.totalVideos > 0 ? Math.round((m.completedVideos / m.totalVideos) * 100) : 0;
+        const color = plan.accentColor || (idx === 0 ? '#00e5ff' : '#a855f7');
+        return { plan, m, pct, color };
+      })
+      .filter(s => s.m.totalVideos > 0);
     if (!scoped.length) {
       return `
         <div class="hero-mastery-value">${overallPct}<span style="font-size:0.9rem; font-weight:600; opacity:0.7;">%</span></div>
@@ -224,23 +291,18 @@
         </div>
       `;
     }
-    const segData = scoped.map((plan, idx) => {
-      const m = getSubjectOrSyllabusMetricsForPlan(plan);
-      const pct = m.totalVideos > 0 ? Math.round((m.completedVideos / m.totalVideos) * 100) : 0;
-      const color = plan.accentColor || (idx === 0 ? '#00e5ff' : '#a855f7');
-      return { plan, m, pct, color };
-    });
+    const segData = scoped;
     const totalVids = segData.reduce((sum, s) => sum + Math.max(1, s.m.totalVideos), 0);
     const blended = Math.round(segData.reduce((sum, s) => sum + s.pct * Math.max(1, s.m.totalVideos), 0) / Math.max(1, totalVids));
     const segs = segData.map(s => `
-      <div class="hero-subj-seg" style="flex:${Math.max(1, s.m.totalVideos)}; --seg:${s.color};" title="${s.plan.label}: ${escapeHtml(s.plan.targetSubject)} — ${s.pct}% (${s.m.completedVideos}/${s.m.totalVideos} videos)">
+      <div class="hero-subj-seg" style="flex:${Math.max(1, s.m.totalVideos)}; --seg:${s.color};" title="${s.plan.label}: ${escapeHtml(s.m.name || s.plan.targetSubject)} — ${s.pct}% (${s.m.completedVideos}/${s.m.totalVideos} videos, whole subject)">
         <div class="hero-subj-seg-fill" style="width:${s.pct}%;"></div>
       </div>
     `).join('');
     const legend = segData.map(s => `
       <span class="hero-subj-legend-item">
         <span class="hero-subj-dot" style="background:${s.color}; box-shadow:0 0 6px ${s.color};"></span>
-        <span class="hero-subj-legend-name">${escapeHtml(s.plan.targetSubject)}</span>
+        <span class="hero-subj-legend-name">${escapeHtml(s.m.name || s.plan.targetSubject)}</span>
         <b>${s.m.completedVideos}/${s.m.totalVideos}</b>
       </span>
     `).join('');
@@ -319,7 +381,6 @@
     const plans = state.plans && state.plans.length > 0 ? state.plans : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)];
     const hasTargetSet = plans.some(p => p.targetSubject && p.targetSubject !== '');
     const allQueues = getAllPlanQueues();
-    const streakCount = getStudyStreak();
 
     const todayStr = todayKey();
     const todayCompletedCount = (state.dailyHistory && state.dailyHistory[todayStr]) || 0;
@@ -350,21 +411,15 @@
             <span class="plan-quest-progress">${todayDoneForPlan}/${queue.baseTargetPace} • ${dailyPctPlan}%</span>
           </div>
 
-          ${scopedNames.length > 0 ? `
-            <div class="plan-quest-scope">
-              <svg class="material-symbols-outlined" style="font-size:13px;"><use href="#fmd-i-filter_alt"/></svg>
-              FOCUS: ${scopedNames.slice(0, 3).map(n => n.charAt(0) + n.slice(1).toLowerCase()).join(', ')}${scopedNames.length > 3 ? '…' : ''}
-            </div>
-          ` : ''}
+          <!-- Issue #32: compact chip row (focus + pace + hours) replaces the
+               taller FOCUS strip + TARGET row — everything still visible. -->
+          <div class="plan-quest-chips">${renderPlanStatChips(queue, scopedNames, plan)}</div>
 
           <div class="plan-quest-track" aria-hidden="true">
             <div class="plan-quest-track-fill" style="width:${dailyPctPlan}%;"></div>
           </div>
 
           <div class="plan-quest-stats-row">
-            <div class="plan-quest-target-text">
-              TARGET: <strong>${(plan.extraBatchesCompletedToday || 0) > 0 ? '1 VIDEO AT A TIME' : queue.baseTargetPace + ' VIDS/DAY'}</strong>
-            </div>
             <button class="v2-arcade-btn btn-open-queue-subject" data-subject-id="${queue.subjectId}" style="height: 30px; padding: 0 10px; font-size: 0.82rem;">
               <span>Open ${queue.subjectName}</span>
               <svg class="material-symbols-outlined" style="font-size: 14px;"><use href="#fmd-i-arrow_forward"/></svg>
@@ -433,6 +488,11 @@
 
     const allQuestsDone = !isManualMode && allQueues.every(q => q.isDailyTargetMet);
     const hasDualPlans = plans.length >= 2;
+    plansRefForChips = plans;
+    const doneToday = Object.keys(state.completedVideos || {}).filter(id => {
+      const iso = state.completedVideos[id];
+      return typeof iso === 'string' && iso.slice(0, 10) === todayStr;
+    }).length;
 
     DOM.appMain.innerHTML = `
       <!-- Hero Card -->
@@ -442,7 +502,6 @@
             ${hasDualPlans ? `
               <span class="v2-hud-badge" style="color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-color: #e11d48;"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-bolt"/></svg> DUAL-TRACK MODE</span>
              ` : ''}
-            <span class="v2-hud-badge" style="margin-left:auto;"><svg class="material-symbols-outlined" style="font-size:16px;"><use href="#fmd-i-local_fire_department"/></svg> ${streakCount} day streak</span>
           </div>
           <h1 class="fm-feature-card-title">${Object.keys(state.completedVideos).length === 0 ? "Welcome" : "Welcome back"}, ${escapeHtml(docName)}!</h1>
           <p class="fm-feature-card-desc">
@@ -456,6 +515,7 @@
             ${renderHeroSubjectProgress(plans, stats)}
             <!-- Issue #28: "Building momentum" tagline removed — no real function -->
           </div>
+          <!-- Issue #32: streak moved to the topbar pill (left of the avatar) -->
         </div>
       </div>
 
@@ -474,22 +534,24 @@
         </div>
       ` : ''}
 
-      <!-- Daily Tasks -->
+      <!-- Daily Tasks — issue #32 revamp: dense single header strip (mode
+           toggle + hours + progress live on one line), tighter quest blocks.
+           No features removed: same queues, ticking, extra-video flow. -->
       ${isManualMode ? renderManualTasksSection() : `
       <div class="v2-quest-card action-queue-card">
         <div class="anl-report-card-head">
-          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks${totalHoursToday > 0 ? ` <span class="dash-today-hours">· ~${fmtHours(totalHoursToday)}h today</span>` : ''}</div>
-          <span class="v2-hud-badge" style="color:var(--accent-primary); border-color:var(--accent-primary);">${hasDualPlans ? 'DUAL TRACK' : `${allQueues[0]?.subjectName || 'All Topics'}`}</span>
+          <div class="anl-report-card-title"><svg class="material-symbols-outlined mat"><use href="#fmd-i-emoji_events"/></svg> Daily Tasks</div>
+          <span class="dash-today-hours dash-today-hours-lg">${totalHoursToday > 0 ? `≈ ${fmtHours(totalHoursToday)}h today` : ''}${doneToday > 0 ? ` · ${doneToday} done` : ''}</span>
         </div>
 
-        <div class="spc-mode-toggle">
-          <span class="spc-mode-label">Topics</span>
+        <div class="dt-toolbar">
           <div class="spc-mode-switch" role="group" aria-label="Daily Tasks topic mode" id="daily-tasks-mode-switch">
             <button type="button" class="spc-mode-opt active" data-mode="${DAILY_TASKS_MODE_AUTO}">Auto</button>
             <button type="button" class="spc-mode-opt" data-mode="${DAILY_TASKS_MODE_MANUAL}">Manual</button>
           </div>
+          <button type="button" class="spc-mode-caption-link" id="btn-what-are-modes">How modes work</button>
         </div>
-        <div class="spc-mode-caption">Auto mode &mdash; topics follow lecture module order. <button type="button" class="spc-mode-caption-link" id="btn-what-are-modes">How modes work</button></div>
+        <div class="spc-mode-caption dt-caption">Auto mode &mdash; topics follow lecture module order.</div>
 
         <div style="padding-top:4px;">
           ${hasTargetSet
@@ -510,6 +572,7 @@
 
     if (isManualMode) initManualTasksSection();
     initDailyTasksModeSwitch();
+    initTopbarStreakPill();
 
     // Issue #25/#28: "How modes work" opens a dedicated popup with the full
     // Auto-vs-Manual explainer (no longer inside the plan-config sheet).
@@ -626,4 +689,7 @@
   window.FlowMD.views = {
     renderDashboardView
   };
+  // Issue #32: topbar streak pill lives outside #app-main — app.js refreshes
+  // it on every shell render, the dashboard binds its click handler.
+  window.FlowMD.dashboard = { updateTopbarStreakPill };
 })();

@@ -276,11 +276,12 @@ async function run() {
   // Two-column card grid (issue #16)
   check('Curriculum cards use 2-col grid (issue #16)',
     await page.evaluate(() => getComputedStyle(document.querySelector('.curr-grid')).gridTemplateColumns.split(' ').length) === 2);
-  // Issue #28: square Marrow-style cards with subtle metadata strip.
-  check('Curriculum card is square (issue #28)',
+  // Issue #28/#32: compact Marrow-style cards — sized so two truly fit side
+  // by side on a phone (no square aspect lock anymore).
+  check('Curriculum cards are compact (height < width, issue #32)',
     await page.locator('.curr-card').first().evaluate(el => {
       const r = el.getBoundingClientRect();
-      return Math.abs(r.width - r.height) / Math.max(1, r.width) < 0.08;
+      return r.height < r.width && r.height <= 170;
     }));
   check('Curriculum card has icon head + subtle meta + bar (issue #28)',
     await page.locator('.curr-card').first().evaluate(el =>
@@ -297,6 +298,26 @@ async function run() {
       return Math.abs(w / max * 100 - pct) <= 2 || (pct === 0 && w === 0);
     }));
   check('Search bar hidden on curriculum', !(await page.locator('#btn-toggle-search').isVisible()));
+
+  // Issue #32: curriculum-page search box filters subjects client-side.
+  {
+    const first = await page.locator('.curr-card').first().getAttribute('data-subject-id');
+    const probe = await page.evaluate((id) => {
+      const st = window.FlowMD.store.getState();
+      const stats = window.FlowMD.metrics.getSyllabusStats();
+      const sub = stats.subjectsStats.find(s => s.id === id);
+      return (sub ? sub.name : '').split(' ')[0];
+    }, first);
+    await page.locator('#curr-search-input').fill(probe);
+    await page.waitForTimeout(500);
+    const filtered = await page.locator('.curr-card').count();
+    const total = await page.evaluate(() => window.FlowMD.metrics.getSyllabusStats().subjectsStats.length);
+    check('Curriculum search box filters subjects (issue #32)', filtered >= 1 && filtered < total, JSON.stringify({ probe, filtered, total }));
+    await page.locator('#curr-search-clear').click();
+    await page.waitForTimeout(400);
+    check('Curriculum search clear restores all subjects (issue #32)',
+      await page.locator('.curr-card').count() === total);
+  }
 
   // Issue #25: mode captions under the dashboard's Auto/Manual switch.
   await clickNav(page, 'dashboard');
@@ -505,10 +526,13 @@ async function run() {
     await page.waitForTimeout(200);
   }
 
-  // Issue #17: manual-mode daily tasks must drive Goal Pulse. Switch to
-  // manual topics, add 3 videos, complete 1, and verify the daily/weekly/
-  // monthly goals use the manual list as the target (3 / 21 / 30×) and the
-  // completion counts include manual ticks.
+  // Issue #17 (amended by #29): manual-mode topics must drive Goal Pulse —
+  // ADDITIVELY. The manual count adds 1:1 to the plan-derived daily goal and
+  // adds the SAME count (no ×7 / ×30) to the weekly/monthly goals. With the
+  // Plan A pace configured above (3/day → 21/week → 90/month... actual saved
+  // values are read from state) plus 3 manual topics and 1 completion, the
+  // tiles must read 1/6 daily, 1/(week+3) weekly, 1/(month+3) monthly, and
+  // the sub-heading must mention the manual source.
   {
     const manualSetup = await page.evaluate(() => {
       const { setDailyTasksMode, addManualTaskVideo, markStudyActivity } = window.FlowMD.store;
@@ -525,21 +549,25 @@ async function run() {
       ids.forEach((id) => addManualTaskVideo(id));
       markStudyActivity(true, null); // simulate ticking one manual task
       window.FlowMD.shell.render();
-      return { ids };
+      const p = window.FlowMD.store.getState().plans[0];
+      return { ids, day: parseInt(p.videosPerDay, 10) || 0, week: parseInt(p.videosPerWeek, 10) || 0, month: parseInt(p.videosPerMonth, 10) || 0 };
     });
     check('Manual mode set up with 3 topics', manualSetup.ids.length === 3, JSON.stringify(manualSetup.ids.length));
     await clickNav(page, 'analytics');
     await page.waitForTimeout(300);
     const pulseText = await page.locator('#app-main').innerText();
     const pulseOk = pulseText.includes('Goal Pulse') &&
-      /1\/\s*3/.test(pulseText) &&
+      new RegExp(`1\\/\\s*${manualSetup.day + 3}`).test(pulseText) &&
       pulseText.includes('manual topic') &&
       !pulseText.includes('No study target set yet');
-    check('Goal Pulse daily goal uses manual topic count (1/3 done)', pulseOk,
+    check(`Goal Pulse daily goal adds manual topics 1:1 (1/${manualSetup.day + 3} done)`, pulseOk,
       pulseText.slice(pulseText.indexOf('Goal Pulse'), pulseText.indexOf('Goal Pulse') + 260).replace(/\s+/g, ' '));
     const pulseUnits = await page.evaluate(() => Array.from(document.querySelectorAll('.anl-goal-value')).map(el => el.textContent.trim().replace(/\s+/g, ' ')));
-    const weeklyMonthlyOk = pulseUnits.some(u => /1\/\s*21/.test(u)) && pulseUnits.some(u => /1\/\s*90/.test(u));
-    check('Goal Pulse weekly (×7) & monthly (×30) targets derive from manual topics', weeklyMonthlyOk, JSON.stringify(pulseUnits));
+    const weeklyMonthlyOk = pulseUnits.some(u => new RegExp(`1\\/\\s*${manualSetup.week + 3}`).test(u)) && pulseUnits.some(u => new RegExp(`1\\/\\s*${manualSetup.month + 3}`).test(u));
+    check('Goal Pulse weekly & monthly add the manual count once (no ×7/×30)', weeklyMonthlyOk, JSON.stringify(pulseUnits));
+    check('Goal Pulse sub-heading names the manual source (issue #29)',
+      /\d+ from manual topics/.test(pulseText) && /\d+ from plans?/.test(pulseText),
+      pulseText.slice(pulseText.indexOf("Today's Daily Goal"), pulseText.indexOf("Today's Daily Goal") + 200).replace(/\s+/g, ' '));
     // Restore auto mode so later scenarios are unaffected.
     await page.evaluate(() => {
       window.FlowMD.store.setDailyTasksMode('auto');
@@ -603,6 +631,32 @@ async function run() {
       tasksText.includes('h today') || !(await page.locator('.dash-today-hours').count()),
       tasksText.split('\n').find(l => l.includes('Daily Tasks')) || '');
     check('Auto mode is default', await page.locator('.spc-mode-opt[data-mode="auto"].active').count() === 1);
+    // Issue #32: compact Daily Tasks — toolbar row, large hours figure,
+    // per-plan stat chips, streak pill in the topbar.
+    check('Daily Tasks toolbar holds mode switch + help link (issue #32)',
+      await page.locator('.dt-toolbar .spc-mode-switch').count() === 1 &&
+      await page.locator('.dt-toolbar #btn-what-are-modes').count() === 1);
+    check('Total study-hours figure is large (issue #32)',
+      await page.evaluate(() => {
+        const el = document.querySelector('.dash-today-hours-lg');
+        if (!el) return false;
+        return parseFloat(getComputedStyle(el).fontSize) >= 14;
+      }));
+    check('Plan quest blocks show compact stat chips (issue #32)',
+      await page.evaluate(() => {
+        const blocks = document.querySelectorAll('.plan-quest-block');
+        if (!blocks.length) return false;
+        return Array.from(blocks).every(b => b.querySelectorAll('.pq-chip').length === 3);
+      }));
+    check('Streak pill sits in topbar left of avatar (issue #32)',
+      await page.evaluate(() => {
+        const pill = document.getElementById('topbar-streak-pill');
+        const avatar = document.getElementById('topbar-user-profile');
+        if (!pill || !avatar) return false;
+        return pill.nextElementSibling === avatar &&
+          pill.querySelector('.topbar-streak-flame') !== null &&
+          /\d+/.test(pill.querySelector('.topbar-streak-num').textContent);
+      }));
     await page.locator('.spc-mode-opt[data-mode="manual"]').click();
     await page.waitForTimeout(400);
     check('Manual mode shows manual tasks card', await page.locator('#manual-tasks-card').count() === 1);

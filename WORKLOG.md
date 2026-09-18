@@ -36,6 +36,11 @@
 - Known-good flake status: none remaining as of PR #31 (offline icons check fixed).
 
 ## Session Log
+### 2026-09-18 · Session 3 — issues #29 + #32 (manual-goal semantics + UI wave 3)
+- **Decision (issue #29):** manual-mode Goal Pulse targets are now ADDITIVE — the manual topic count adds 1:1 to today's goal and adds the SAME count (never ×7/×30) to the weekly/monthly goals; auto-plan paces keep their ×7/×30 rolling ideals. Sub-heading spells out the source mix ("2 from manual topics + 4 from plans").
+- Issue #32 wave: compact 2-col curriculum cards (no square aspect lock) with hours + module count in the meta line; curriculum-page search box (client-side, persisted in state); per-unit hours in subject detail; 30-day strip 56→132px; Daily Tasks header strip (large hours figure + done-count) and single toolbar row; per-plan stat chips replace the FOCUS/TARGET rows; hero "Current Subject Progress" now measures WHOLE subjects (plan scope ignored — matches curriculum cards); streak moved to a topbar pill left of the avatar; bottom-nav "Plan" label lowered + stronger neon glow.
+- Gotcha: `getPlanScopeVideos(plan)` without `targetUnits` already returns the whole subject — hero whole-subject % is computed by dropping the plan's scope, not by new math.
+
 ### 2026-09-17 — Auto-log (merged PRs)
 
 - Merged **#34 — auto-log merged PRs to WORKLOG.md** (CI, by RxREAPER) → 2973de2

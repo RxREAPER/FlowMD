@@ -2020,9 +2020,13 @@ body {
 .android-nav-item-center .nav-bar-label,
 .android-nav-item-center.active .nav-bar-label {
   color: var(--accent-secondary, #a855f7);
-  text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+  /* Issue #32: drop the label lower so it lines up with the other nav
+     names, with a stronger neon-purple glow. */
+  text-shadow:
+    0 0 6px rgba(168, 85, 247, 0.65),
+    0 0 14px rgba(168, 85, 247, 0.4);
   margin-top: 0;
-  transform: translateY(1px);
+  transform: translateY(7px);
 }
 
 /* Browsers without CSS masking: fall back to the app-colored ring around
@@ -2062,7 +2066,69 @@ body {
   text-shadow: none;
 }
 
-/* --- Daily Tasks header: today's total-hours goal (issue #15) --- */
+/* Issue #32: streak pill in the topbar, left of the profile avatar.
+   Vibrant flame + count on a dark pill; glowing amber ring. Dimmed when
+   the streak is 0 (is-zero class, set from dashboard.js). */
+.topbar-streak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 11px;
+  margin-right: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 146, 60, 0.45);
+  background:
+    radial-gradient(120% 140% at 30% 20%, rgba(251, 146, 60, 0.28), transparent 55%),
+    linear-gradient(135deg, rgba(251, 146, 60, 0.16), rgba(239, 68, 68, 0.14));
+  color: #fdba74;
+  font-family: var(--font-hud, 'Inter', system-ui, sans-serif);
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow:
+    0 0 10px rgba(251, 146, 60, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.topbar-streak-pill:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  box-shadow:
+    0 0 16px rgba(251, 146, 60, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.topbar-streak-pill:active {
+  transform: translateY(0) scale(0.96);
+}
+.topbar-streak-flame {
+  filter: drop-shadow(0 0 4px rgba(251, 146, 60, 0.8));
+}
+.topbar-streak-num {
+  line-height: 1;
+}
+.topbar-streak-pill.is-zero {
+  border-color: var(--border-color);
+  background: var(--bg-surface-raised);
+  color: var(--text-muted);
+  box-shadow: none;
+}
+.topbar-streak-pill.is-zero .topbar-streak-flame {
+  filter: none;
+}
+[data-theme="light"] .topbar-streak-pill {
+  border-color: rgba(234, 88, 12, 0.35);
+  background:
+    radial-gradient(120% 140% at 30% 20%, rgba(251, 146, 60, 0.22), transparent 55%),
+    linear-gradient(135deg, rgba(251, 146, 60, 0.12), rgba(239, 68, 68, 0.10));
+  color: #ea580c;
+}
+[data-theme="light"] .topbar-streak-pill.is-zero {
+  background: var(--bg-surface-raised);
+  color: var(--text-muted);
+}
+
+/* --- Daily Tasks header: today's total-hours goal (issue #15; #32: larger) --- */
 .dash-today-hours {
   font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 0.72rem;
@@ -2071,6 +2137,32 @@ body {
   text-transform: none;
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+/* Issue #32: the total study-hours figure reads at a glance — bigger, in
+   the display font, with the cyan accent and a soft neon glow. */
+.dash-today-hours-lg {
+  font-family: var(--font-display), 'Inter', system-ui, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent-primary) 35%, transparent);
+}
+.dash-today-hours-lg:empty {
+  display: none;
+}
+
+/* Issue #32: single toolbar row for mode switch + help link. */
+.dt-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 0 2px;
+}
+.dt-caption {
+  margin: 0 0 8px;
 }
 
 /* --- Daily Tasks Auto/Manual mode toggle --- */
@@ -3893,12 +3985,45 @@ body {
   transform: translateY(-2px);
 }
 
+/* Issue #32: compact stat chips inside each plan quest block
+   (focus scope · daily pace · est. hours) — one dense row. */
+.plan-quest-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.pq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 28%, transparent);
+  background: color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 8%, transparent);
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  max-width: 100%;
+}
+.pq-chip .material-symbols-outlined {
+  font-size: 12px;
+  color: var(--plan-accent, var(--accent-primary));
+}
+.pq-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .plan-quest-block {
   border-left: 4px solid var(--plan-accent, var(--accent-primary));
   background: color-mix(in srgb, var(--plan-accent, var(--accent-primary)) 6%, transparent);
   border-radius: 12px;
-  padding: 14px 14px 12px 16px;
-  margin-bottom: 12px;
+  padding: 11px 12px 10px 14px;
+  margin-bottom: 10px;
   transition: all 0.2s ease;
 }
 
@@ -4088,11 +4213,66 @@ body {
   color: var(--text-primary);
 }
 
-/* --- Curriculum 2-column card grid (issue #16) --- */
+/* --- Curriculum 2-column card grid (issue #16; compacted #32) --- */
 .curr-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
+}
+
+/* Issue #32: search box on the curriculum page (client-side filter). */
+.curr-search-wrap {
+  margin: 10px 0 12px;
+}
+.curr-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.curr-search-box:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.curr-search-icon {
+  font-size: 18px;
+  color: var(--accent-primary);
+}
+.curr-search-box input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.88rem;
+}
+.curr-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-muted) 14%, transparent);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.curr-search-clear .material-symbols-outlined {
+  font-size: 14px;
+}
+.curr-search-empty {
+  margin-top: 12px;
+}
+.curr-search-empty .onboarding-title {
+  margin-bottom: 6px;
 }
 
 @media (max-width: 380px) {
@@ -4101,13 +4281,13 @@ body {
   }
 }
 
-/* Square Marrow-style subject cards (issue #28): aspect-ratio locked,
-   icon-led, subtle metadata line instead of bold stat columns. */
+/* Square Marrow-style subject cards (issue #28), compacted for a true
+   2-col layout on phones (issue #32): no aspect lock, smaller icon/type. */
 .curr-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  aspect-ratio: 1 / 1;
+  min-height: 108px;
   border-radius: 12px;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
@@ -4134,8 +4314,8 @@ body {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 8px;
-  padding: 14px 14px 10px;
+  gap: 5px;
+  padding: 10px 10px 8px;
   background: linear-gradient(135deg, color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 14%, transparent), transparent 75%);
 }
 
@@ -4143,22 +4323,22 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   background: color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 15%, transparent);
   border: 1px solid color-mix(in srgb, var(--sub-accent, var(--accent-primary)) 30%, transparent);
   color: var(--sub-accent, var(--accent-primary));
 }
 
 .curr-card-icon .material-symbols-outlined {
-  font-size: 22px;
+  font-size: 17px;
 }
 
 .curr-card-name {
   width: 100%;
   font-family: var(--font-display), monospace;
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   font-weight: 600;
   line-height: 1.25;
   color: var(--text-primary);
@@ -4170,7 +4350,7 @@ body {
 
 .curr-card-pct {
   font-family: var(--font-hud);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.03em;
@@ -4180,12 +4360,12 @@ body {
   color: var(--success);
 }
 
-/* Subtle metadata strip: "12/204 videos · 0/90 modules" (Marrow-style). */
+/* Subtle metadata strip: "41/204 · 12 mod · 88.4h" (issue #32 adds hours). */
 .curr-card-meta {
-  padding: 8px 14px;
+  padding: 6px 10px;
   border-top: 1px solid var(--border-color);
   font-family: var(--font-hud);
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   font-weight: 400;
   letter-spacing: 0.02em;
   color: var(--text-muted);
@@ -7639,8 +7819,9 @@ body.onboarding-fullscreen .app-main {
   display: flex;
   align-items: flex-end;
   gap: 3px;
-  height: 56px;
-  padding: 8px;
+  /* Issue #32: vertically bigger chart (was 56px). */
+  height: 132px;
+  padding: 10px;
   border-radius: 10px;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border-color);
