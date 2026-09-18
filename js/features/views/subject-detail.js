@@ -315,7 +315,7 @@ function renderFacultyCard(faculty, subjectId) {
                 </label>
                 <div class="unit-title-wrap">
                   <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name}</div>
-                  <div class="unit-done-meta">${chapAllDone && chapDoneWhen ? chapDone + '/' + chapTotal + ' done · Completed ' + chapDoneWhen : chapDone + '/' + chapTotal + ' done'}</div>
+                  <div class="unit-done-meta">${chapAllDone && chapDoneWhen ? chapDone + '/' + chapTotal + ' done · Completed ' + chapDoneWhen : chapDone + '/' + chapTotal + ' done'} · ${chapHours}h</div>
                 </div>
               </div>
               <div class="unit-head-actions">

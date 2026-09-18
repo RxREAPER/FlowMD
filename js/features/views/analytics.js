@@ -96,14 +96,15 @@
       totalVidsMonth += parseInt(p.videosPerMonth, 10) || 0;
     });
 
-    // Effective targets: manual mode swaps the parked plan pace for the
-    // manual list size (daily pace ⇒ ×7/×30 rolling ideals, same math as
-    // plan mode). Completion counts already include manual ticks because
-    // they flow through markStudyActivity → dailyHistory.
+    // Issue #29: manual-mode targets add 1:1 — the manual list size adds to
+    // TODAY'S daily goal, and the SAME count adds to the weekly and monthly
+    // goals (no ×7 / ×30 multiplication: a manual list is a dynamic
+    // day-by-day representation, not a fixed daily pace). Auto-mode plan
+    // paces keep their ×7 / ×30 rolling ideals.
     const hasManualGoal = manualCount > 0;
-    const effectiveDayTarget = hasManualGoal ? manualCount : totalVidsDay;
-    const ideal7DaysTarget = effectiveDayTarget * 7;
-    const ideal30DaysTarget = effectiveDayTarget * 30;
+    const effectiveDayTarget = totalVidsDay + manualCount;
+    const ideal7DaysTarget = totalVidsWeek + manualCount;
+    const ideal30DaysTarget = totalVidsMonth + manualCount;
     const hasAnyTarget = hasTarget || hasManualGoal;
     const paceDelta = actual7DaysCount - ideal7DaysTarget;
     const lectureDeficit = Math.abs(paceDelta);
@@ -173,11 +174,17 @@
 
     const todayPct = effectiveDayTarget > 0 ? Math.min(100, Math.round((todayDone / effectiveDayTarget) * 100)) : 0;
     const todayMet = effectiveDayTarget > 0 && todayDone >= effectiveDayTarget;
-    // In manual mode the per-plan queue breakdown is meaningless (the auto
-    // queue is parked) — the manual list is the goal instead.
-    const todayDesc = hasManualGoal
-      ? `${manualCount} manual topic${manualCount === 1 ? '' : 's'} today`
-      : `combined videos today${hasDualPlans ? '<br>' + plans.map((p, i) => `${p.label}: ${allQueues[i].queueCompletedInBatch}/${p.videosPerDay}`).join('<br>') : ''}`;
+    // Issue #29: sub-heading spells out where today's goal comes from —
+    // e.g. "2 from manual topics · 4 from plans" — so the user can see the
+    // manual additions inside the combined target.
+    const parts = [];
+    if (hasManualGoal) parts.push(`${manualCount} from manual topics`);
+    if (totalVidsDay > 0) parts.push(`${totalVidsDay} from plan${plans.length > 1 ? 's' : ''}`);
+    const todayDesc = parts.length > 0
+      ? parts.join(' + ')
+      : (hasDualPlans
+        ? plans.map((p, i) => `${p.label}: ${allQueues[i].queueCompletedInBatch}/${p.videosPerDay}`).join('<br>')
+        : 'combined videos today');
     const todayTile = goalTile({
       color: '#0ea5e9',
       icon: 'today',

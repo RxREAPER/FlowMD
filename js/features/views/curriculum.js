@@ -16,6 +16,7 @@
 
   const { getState } = window.FlowMD.store;
   const { getSubjectCompletedDate } = window.FlowMD.sourceData;
+  const { escapeHtml } = window.FlowMD.constants;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -25,14 +26,34 @@
 
   function renderCurriculumView(dom, stats) {
     DOM = dom;
-    let filteredSubjects = stats.subjectsStats;
     const legendCollapsed = isLegendCollapsed();
+    // Issue #32: curriculum-page search box (client-side filter, like the
+    // dashboard heatmap filters — no new origins, offline by construction).
+    let filteredSubjects = stats.subjectsStats;
+    const q = (state.curriculumSearchQuery || '').trim().toLowerCase();
+    if (q) {
+      filteredSubjects = filteredSubjects.filter(s =>
+        (s.name || '').toLowerCase().includes(q) ||
+        (s.faculty || '').toLowerCase().includes(q)
+      );
+    }
 
     DOM.appMain.innerHTML = `
       <div class="section-title-row">
-        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum & Subjects</h2>
+        <h2 class="section-title" style="font-family: var(--font-display);">Curriculum &amp; Subjects</h2>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span class="v2-hud-badge">${filteredSubjects.length} SUBJECTS</span>
+        </div>
+      </div>
+
+      <!-- Issue #32: curriculum search box -->
+      <div class="curr-search-wrap">
+        <div class="curr-search-box">
+          <svg class="material-symbols-outlined curr-search-icon"><use href="#fmd-i-search"/></svg>
+          <input type="text" id="curr-search-input" placeholder="Search subjects or faculty…" value="${escapeHtml(state.curriculumSearchQuery || '')}" autocomplete="off">
+          ${q ? `<button type="button" class="curr-search-clear" id="curr-search-clear" aria-label="Clear search">
+            <svg class="material-symbols-outlined"><use href="#fmd-i-close"/></svg>
+          </button>` : ''}
         </div>
       </div>
 
@@ -62,9 +83,8 @@
         </div>
       </div>
 
-      <!-- Square Marrow-style subject cards (issue #28): icon-led, subtle
-           metadata strip, hairline progress bar. Completion date (issue #28)
-           appears in the meta line once every video is ticked. -->
+      <!-- Issue #32: compact 2-col subject cards — hours + module count in
+           the meta line, completion date once every video is ticked. -->
       <div class="curr-grid">
         ${filteredSubjects.map(sub => {
           const pct = sub.percentage || 0;
@@ -77,13 +97,19 @@
               <span class="curr-card-name">${sub.name}</span>
               <span class="curr-card-pct">${pct}%</span>
             </div>
-            <div class="curr-card-meta">${sub.completedVideos}/${sub.totalVideos} videos · ${chapCount} module${chapCount === 1 ? '' : 's'}${doneWhen ? ` · <b>Completed ${doneWhen}</b>` : ''}</div>
+            <div class="curr-card-meta">${sub.completedVideos}/${sub.totalVideos} · ${chapCount} mod · <b>${sub.totalHours}h</b>${doneWhen ? ` · <b>✓ ${doneWhen}</b>` : ''}</div>
             <div class="curr-card-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
               <div class="curr-card-bar-fill" style="width:${pct}%;"></div>
             </div>
           </div>
         `;}).join('')}
       </div>
+      ${filteredSubjects.length === 0 ? `
+        <div class="onboarding-empty-cta curr-search-empty">
+          <div class="onboarding-title">No subjects match “${escapeHtml(state.curriculumSearchQuery || '')}”</div>
+          <div class="onboarding-sub">Try a shorter name, or clear the search.</div>
+        </div>
+      ` : ''}
     `;
 
     document.querySelectorAll('.curr-card').forEach(card => {
@@ -95,6 +121,26 @@
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
       });
+    });
+
+    // Issue #32: curriculum search — live filter, persisted per session.
+    const searchInput = document.getElementById('curr-search-input');
+    if (searchInput) {
+      let debounce = null;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          state.curriculumSearchQuery = searchInput.value;
+          renderCurriculumView(DOM, stats);
+          const again = document.getElementById('curr-search-input');
+          if (again) { again.focus(); const L = again.value.length; again.setSelectionRange(L, L); }
+        }, 180);
+      });
+    }
+    document.getElementById('curr-search-clear')?.addEventListener('click', () => {
+      state.curriculumSearchQuery = '';
+      renderCurriculumView(DOM, stats);
+      document.getElementById('curr-search-input')?.focus();
     });
 
     // Collapsible "How completion is counted" legend (collapsed by default,
