@@ -686,9 +686,9 @@
 // --- View 2: Curriculum View — Nested Mobile Tabs ---
 
   // Expose
-  window.FlowMD.views = {
+  window.FlowMD.views = Object.assign(window.FlowMD.views || {}, {
     renderDashboardView
-  };
+  });
   // Issue #32: topbar streak pill lives outside #app-main — app.js refreshes
   // it on every shell render, the dashboard binds its click handler.
   window.FlowMD.dashboard = { updateTopbarStreakPill };

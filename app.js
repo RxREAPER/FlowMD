@@ -40,7 +40,7 @@
     renderSpotlightResults
   } = window.FlowMD.search;
 
-  const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
+  const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderQBankView, renderMCQPracticeView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
 
   // --- App State ---
   // Shared state object — owned by js/core/state-store.js
@@ -345,6 +345,8 @@
     }
     else if (state.currentView === 'curriculum') safeRender(() => renderCurriculumView(DOM, stats), 'curriculum', stats);
     else if (state.currentView === 'subject_detail') safeRender(() => renderSubjectDetailView(DOM, stats), 'subject_detail', stats);
+    else if (state.currentView === 'qbank') safeRender(() => renderQBankView(DOM, stats), 'qbank', stats);
+    else if (state.currentView === 'mcq_practice') safeRender(() => renderMCQPracticeView(DOM, stats), 'mcq_practice', stats);
     else if (state.currentView === 'analytics') safeRender(() => renderAnalyticsView(DOM, stats), 'analytics', stats);
     else safeRender(() => renderProfileView(DOM, stats), 'profile', stats);
   }
