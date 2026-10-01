@@ -7,18 +7,24 @@
 (function () {
   'use strict';
 
-  const { getState } = window.FlowMD.store;
-  const { escapeHtml } = window.FlowMD.constants;
-  const { getSubjectQBank } = window.FlowMD.qbankData;
-  const { getTopicProgress, saveTopicAnswer, toggleTopicBookmark, completeTopicTest, resetTopicTest } = window.FlowMD.qbankStore;
-  const { showToast } = window.FlowMD.toast;
+  function getDeps() {
+    return {
+      store: window.FlowMD.store || { getState: () => ({}) },
+      constants: window.FlowMD.constants || { escapeHtml: s => s },
+      qbankData: window.FlowMD.qbankData || { getSubjectQBank: () => ({ chapters: [] }) },
+      qbankStore: window.FlowMD.qbankStore || { getTopicProgress: () => ({}), saveTopicAnswer: () => {}, toggleTopicBookmark: () => {}, completeTopicTest: () => {}, resetTopicTest: () => {} },
+      toast: window.FlowMD.toast || { showToast: () => {} }
+    };
+  }
 
   let currentQuestionIdx = 0;
   let isPaletteOpen = false;
   let isResultsMode = false;
 
   function findTopic(subjectId, topicId) {
-    const qbData = getSubjectQBank(subjectId);
+    const deps = getDeps();
+    const getSubjectQBank = deps.qbankData.getSubjectQBank || (() => ({ chapters: [] }));
+    const qbData = getSubjectQBank(subjectId) || { chapters: [] };
     for (const chap of (qbData.chapters || [])) {
       for (const top of (chap.topics || [])) {
         if (top.id === topicId) {
@@ -33,7 +39,16 @@
   }
 
   function renderMCQPracticeView(dom, stats) {
-    const state = getState();
+    const deps = getDeps();
+    const state = deps.store.getState();
+    const escapeHtml = deps.constants.escapeHtml || (s => s);
+    const getTopicProgress = deps.qbankStore.getTopicProgress || (() => ({ answers: {}, bookmarks: {}, status: 'unattempted', score: 0 }));
+    const saveTopicAnswer = deps.qbankStore.saveTopicAnswer || (() => {});
+    const toggleTopicBookmark = deps.qbankStore.toggleTopicBookmark || (() => {});
+    const completeTopicTest = deps.qbankStore.completeTopicTest || (() => {});
+    const resetTopicTest = deps.qbankStore.resetTopicTest || (() => {});
+    const showToast = deps.toast.showToast || (() => {});
+
     const subjectId = state.activeQBankSubjectId || state.activeSubjectId || 'radiology';
     const topicId = state.activeQBankTopicId || 'rad_t1_fundamentals_of_imaging';
 

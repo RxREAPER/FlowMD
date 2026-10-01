@@ -6,21 +6,35 @@
 (function () {
   'use strict';
 
-  const { getState } = window.FlowMD.store;
-  const { escapeHtml } = window.FlowMD.constants;
-  const { getSubjectQBank } = window.FlowMD.qbankData;
-  const { getTopicProgress, getSubjectQBankStats } = window.FlowMD.qbankStore;
-  const { getSubjectColor, getSubjectName, getSubjectFaculty, getSubjectSvgIcon } = window.FlowMD.subjects;
+  function getDeps() {
+    return {
+      store: window.FlowMD.store || { getState: () => ({}) },
+      constants: window.FlowMD.constants || { escapeHtml: s => s },
+      qbankData: window.FlowMD.qbankData || { getSubjectQBank: () => ({ chapters: [] }) },
+      qbankStore: window.FlowMD.qbankStore || { getTopicProgress: () => ({}), getSubjectQBankStats: () => ({}) },
+      subjects: window.FlowMD.subjects || { getSubjectColor: () => '#3b82f6', getSubjectName: s => s, getSubjectFaculty: () => '', getSubjectSvgIcon: () => '' }
+    };
+  }
 
   let activeFilter = 'ALL'; // 'ALL' | 'PAUSED' | 'COMPLETED' | 'UNATTEMPTED' | 'FREE'
   let activeSort = 'topics'; // 'topics' | 'mcqs' | 'progress' | 'alpha'
   let isIndexOpen = false;
 
   function renderQBankView(dom, stats) {
-    const state = getState();
+    const deps = getDeps();
+    const state = deps.store.getState();
+    const escapeHtml = deps.constants.escapeHtml || (s => s);
+    const getSubjectQBank = deps.qbankData.getSubjectQBank || (() => ({ chapters: [] }));
+    const getTopicProgress = deps.qbankStore.getTopicProgress || (() => ({}));
+    const getSubjectQBankStats = deps.qbankStore.getSubjectQBankStats || (() => ({ attemptedQuestions: 0, totalQuestions: 0, completedTopics: 0, totalTopics: 0, percentage: 0 }));
+    const getSubjectColor = deps.subjects.getSubjectColor || (() => '#3b82f6');
+    const getSubjectName = deps.subjects.getSubjectName || (s => s);
+    const getSubjectFaculty = deps.subjects.getSubjectFaculty || (() => 'Marrow Faculty');
+    const getSubjectSvgIcon = deps.subjects.getSubjectSvgIcon || (() => '');
+
     const subjectId = state.activeQBankSubjectId || state.activeSubjectId || 'radiology';
-    const qbData = getSubjectQBank(subjectId);
-    const qbStats = getSubjectQBankStats(subjectId);
+    const qbData = getSubjectQBank(subjectId) || { chapters: [] };
+    const qbStats = getSubjectQBankStats(subjectId) || { attemptedQuestions: 0, totalQuestions: 0, completedTopics: 0, totalTopics: 0, percentage: 0 };
     const subColor = getSubjectColor(subjectId) || qbData.accentColor || '#3b82f6';
     const subName = qbData.name || getSubjectName(subjectId);
     const faculty = qbData.faculty || getSubjectFaculty(subjectId);
