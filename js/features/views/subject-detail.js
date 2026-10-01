@@ -17,6 +17,7 @@
   const { getSyllabusStats, getSubjectOrSyllabusMetricsForPlan } = window.FlowMD.metrics;
   const { getSubjectColor, getSubjectName, getSubjectFaculty } = window.FlowMD.subjects;
   const { showToast } = window.FlowMD.toast;
+  const { escapeHtml } = window.FlowMD.constants;
 
   // Same live object reference app.js uses — mutations are in-place.
   const state = getState();
@@ -231,9 +232,84 @@ function renderFacultyCard(faculty, subjectId) {
     // once every video is ticked.
     const subjectDoneWhen = getSubjectCompletedDate(subObj.id);
 
-    const sectionHeadingText = `${subObj.raw.chapters ? subObj.raw.chapters.length : 0} UNITS / CHAPTERS`;
+    // Dual mode: 'videos' (default) or 'mcqs' (Q-Bank tracking add-on).
+    const mode = state.subjectDetailMode === 'mcqs' ? 'mcqs' : 'videos';
+    const qbSubj = (mode === 'mcqs' && window.FlowMD.qbTrackerData)
+      ? (window.FlowMD.qbTrackerData.subjects.find(x => x.id === subObj.id) || null)
+      : null;
+    const qbTrackerApi = window.FlowMD.qbTracker;
+    const qbStats = (mode === 'mcqs' && qbTrackerApi)
+      ? (qbSubj ? qbTrackerApi.getSubjectStats(subObj.id) : { totalTopics: 0, totalMcqs: 0, doneTopics: 0, doneMcqs: 0, percentage: 0 })
+      : null;
 
-    let chaptersContentHtml = (subObj.raw.chapters ? subObj.raw.chapters.map((chap, chapIdx) => {
+    const sectionHeadingText = mode === 'mcqs'
+      ? (qbSubj ? `${qbSubj.units.length} UNITS / CHAPTERS` : 'Q-BANK')
+      : `${subObj.raw.chapters ? subObj.raw.chapters.length : 0} UNITS / CHAPTERS`;
+
+    // ---- Q-Bank mode: same unit/accordion/row design as videos, ticks track topics ----
+    function buildQbChaptersHtml() {
+      if (!qbSubj) {
+        return `<div class="onboarding-empty-cta" style="margin-top:16px;">
+          <div class="onboarding-title">No Q-Bank for this subject</div>
+          <div class="onboarding-sub">Switch back to Videos, or pick a subject with a Q-Bank.</div>
+        </div>`;
+      }
+      return qbSubj.units.map((unit, ui) => {
+        const us = qbTrackerApi.getUnitStats(subObj.id, unit);
+        const allDone = us.doneTopics === us.topics;
+        const unitExpanded = state.expandedChapters[unit.name] === true;
+        const serialNum = ui + 1;
+        const rows = unit.topics.map(t => {
+          const p = qbTrackerApi.getTopicProgress(subObj.id, t.s);
+          const isDone = !!p.done;
+          return `
+                      <div class="v2-quest-row ${isDone ? 'completed' : ''}">
+                        <label class="v2-pixel-checkbox-label">
+                          <input type="checkbox" class="qb-topic-check" data-qb-serial="${t.s}" data-qb-mcqs="${t.m}" ${isDone ? 'checked' : ''}>
+                          <span class="v2-pixel-checkbox-box"></span>
+                          <div>
+                            <div class="v2-quest-title"><span style="color: var(--accent-primary); font-family: var(--font-hud); margin-right: 4px;">#${t.s}</span> ${escapeHtml(t.n)}</div>
+                            <div class="mv-meta"><span class="mv-time"><svg class="material-symbols-outlined"><use href="#fmd-i-quiz"/></svg> ${t.m} MCQs</span></div>
+                          </div>
+                        </label>
+                        <span class="mv-tile" aria-hidden="true" style="background:${window.FlowMD.constants.mvTileColor('qb' + subObj.id + t.s)};">${t.m}</span>
+                      </div>`;
+        }).join('');
+        return `
+          <div class="chapt-node ${unitExpanded ? 'is-open' : ''} ${allDone ? 'is-done' : ''}">
+            <div class="chapt-rail">
+              <div class="chapt-node-dot unit-num ${allDone ? 'is-done' : ''}" aria-hidden="true">${serialNum}</div>
+              <div class="chapt-rail-line" aria-hidden="true"></div>
+            </div>
+            <div class="chapt-node-body">
+              <div class="accordion-header ${unitExpanded ? 'active' : ''}" data-chap-name="${unit.name}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;">
+                <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
+                  <div class="unit-title-wrap">
+                    <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${unit.name}</div>
+                    <div class="unit-done-meta">${us.doneTopics}/${us.topics} topics · ${us.doneMcqs}/${us.totalMcqs} MCQs</div>
+                  </div>
+                </div>
+                <div class="unit-head-actions">
+                  <button type="button" class="unit-done-btn qb-unit-done ${allDone ? 'is-done' : ''}" data-qb-unit="${ui}" aria-pressed="${allDone}" title="${allDone ? 'Mark unit as not done' : 'Mark every topic in this unit solved'}">
+                    <svg class="material-symbols-outlined"><use href="#fmd-i-${allDone ? 'check_circle' : 'check_box_outline_blank'}"/></svg>
+                    <span>${allDone ? 'Done' : 'Mark done'}</span>
+                  </button>
+                  <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
+                </div>
+              </div>
+
+              <div class="accordion-body ${unitExpanded ? 'active' : ''}">
+                <div class="v2-quest-card" style="padding-top: 14px; margin-top: 4px; margin-bottom: 10px;">
+                  ${rows}
+                </div>
+              </div>
+            </div><!-- /chapt-node-body -->
+          </div><!-- /chapt-node -->
+        `;
+      }).join('');
+    }
+
+    let chaptersContentHtml = mode === 'videos' ? (subObj.raw.chapters ? subObj.raw.chapters.map((chap, chapIdx) => {
         const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
         const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
         const subjectId = subObj.id;
@@ -303,7 +379,7 @@ function renderFacultyCard(faculty, subjectId) {
             </div><!-- /chapt-node-body -->
           </div><!-- /chapt-node -->
         `;
-      }).join('') : '');
+      }).join('') : '') : '';
     DOM.appMain.innerHTML = `
       <div class="pwa-curriculum-scroll">
         <!-- Back Button - separate at top -->
@@ -316,12 +392,43 @@ function renderFacultyCard(faculty, subjectId) {
           <div class="pwa-subject-detail-info">
             <div class="pwa-subject-detail-name">${subObj.name}</div>
             <div class="pwa-subject-detail-faculty">${renderFacultyCard(subObj.faculty || getSubjectFaculty(subObj.id), subObj.id)}</div>
-            <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done</div>
+            <div class="pwa-subject-detail-meta">${mode === 'mcqs' && qbStats ? `${qbStats.doneTopics}/${qbStats.totalTopics} Topics • ${qbStats.doneMcqs}/${qbStats.totalMcqs} MCQs • ${qbStats.percentage}% done` : `${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done`}</div>
             ${subjectDoneWhen ? `<div class="subject-done-banner"><svg class="material-symbols-outlined"><use href="#fmd-i-verified"/></svg> Subject completed ${subjectDoneWhen}</div>` : ''}
           </div>
         </div>
 
+        <!-- Dual Mode Selector Tabs: Videos vs Q-Bank -->
+        <div class="curr-view-tabs curr-view-tabs-detail" role="tablist" aria-label="Subject View Mode">
+          <button type="button" class="curr-view-tab ${mode === 'videos' ? 'is-active' : ''}" id="tab-detail-videos" role="tab" aria-selected="${mode === 'videos'}">
+            <svg class="material-symbols-outlined curr-tab-icon"><use href="#fmd-i-play_circle"/></svg>
+            <span>Videos</span>
+          </button>
+          <button type="button" class="curr-view-tab ${mode === 'mcqs' ? 'is-active' : ''}" id="tab-detail-mcqs" role="tab" aria-selected="${mode === 'mcqs'}">
+            <svg class="material-symbols-outlined curr-tab-icon"><use href="#fmd-i-quiz"/></svg>
+            <span>Q-Bank</span>
+          </button>
+        </div>
+
         <!-- Sub-Subject Analytics -->
+        ${mode === 'mcqs' && qbStats ? `
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; padding: 12px; background: var(--bg-surface-raised); border-radius: 12px; border: 1px solid var(--border-color);">
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Topics</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--success);">${qbStats.doneTopics}/${qbStats.totalTopics}</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">solved</div>
+          </div>
+          <div style="text-align:center;border-left:1px solid var(--border-color);border-right:1px solid var(--border-color);">
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">MCQs</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--accent-primary);">${qbStats.doneMcqs}/${qbStats.totalMcqs}</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">solved</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Mastery</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:${qbStats.percentage >= 75 ? "var(--success)" : qbStats.percentage >= 50 ? "var(--info)" : qbStats.percentage >= 25 ? "var(--warning)" : "var(--danger)"};">${qbStats.percentage}%</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${qbStats.percentage >= 75 ? "Mastered" : qbStats.percentage >= 50 ? "Advanced" : qbStats.percentage >= 25 ? "In Progress" : "Just started"}</div>
+          </div>
+        </div>
+        ` : `
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; padding: 12px; background: var(--bg-surface-raised); border-radius: 12px; border: 1px solid var(--border-color);">
           <div style="text-align:center;">
             <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Completed</div>
@@ -339,6 +446,7 @@ function renderFacultyCard(faculty, subjectId) {
             <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${subObj.percentage >= 75 ? "Mastered" : subObj.percentage >= 50 ? "Advanced" : subObj.percentage >= 25 ? "In Progress" : "Critical"}</div>
           </div>
         </div>
+        `}
 
 
         ${hasFocusScope ? `
@@ -358,7 +466,7 @@ function renderFacultyCard(faculty, subjectId) {
           </button>
         </div>
 
-        ${chaptersContentHtml}
+        ${mode === 'mcqs' ? buildQbChaptersHtml() : chaptersContentHtml}
       </div>
     `;
 
@@ -367,7 +475,7 @@ function renderFacultyCard(faculty, subjectId) {
     document.getElementById('btn-toggle-all-chapters')?.addEventListener('click', () => {
       const isAnyExpanded = Object.values(state.expandedChapters).some(v => v === true);
       const newExpandedState = !isAnyExpanded;
-      const targetChaps = subObj.raw.chapters || [];
+      const targetChaps = mode === 'mcqs' && qbSubj ? qbSubj.units : (subObj.raw.chapters || []);
       targetChaps.forEach(chap => {
         state.expandedChapters[chap.name] = newExpandedState;
       });
@@ -442,6 +550,43 @@ function renderFacultyCard(faculty, subjectId) {
         updateHeaderStats();
       });
     });
+
+    // Q-Bank mode: tab switching
+    document.getElementById('tab-detail-videos')?.addEventListener('click', () => {
+      state.subjectDetailMode = 'videos';
+      saveState();
+      renderSubjectDetailView(DOM, stats);
+    });
+    document.getElementById('tab-detail-mcqs')?.addEventListener('click', () => {
+      state.subjectDetailMode = 'mcqs';
+      saveState();
+      renderSubjectDetailView(DOM, stats);
+    });
+
+    if (mode === 'mcqs' && qbTrackerApi) {
+      // Topic ticks (same row design as video ticks)
+      document.querySelectorAll('.qb-topic-check').forEach(chk => {
+        chk.addEventListener('change', (e) => {
+          const serial = parseInt(e.target.getAttribute('data-qb-serial'), 10);
+          const mcqs = parseInt(e.target.getAttribute('data-qb-mcqs'), 10);
+          qbTrackerApi.setTopicProgress(subObj.id, serial, mcqs, e.target.checked);
+          showToast(e.target.checked ? `Solved: #${serial} (${mcqs} MCQs)` : `Unmarked: #${serial}`, e.target.checked ? 'check_circle' : 'check_box_outline_blank');
+          renderSubjectDetailView(DOM, stats);
+        });
+      });
+      // Unit bulk mark done (same button design as video units)
+      document.querySelectorAll('.qb-unit-done').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const unit = qbSubj.units[parseInt(btn.getAttribute('data-qb-unit'), 10)];
+          const us = qbTrackerApi.getUnitStats(subObj.id, unit);
+          const done = us.doneTopics !== us.topics;
+          qbTrackerApi.setUnitProgress(subObj.id, unit, done);
+          showToast(done ? `Unit "${unit.name}" marked solved (${unit.topics.length} topics)` : `Unit "${unit.name}" unmarked`, done ? 'task_alt' : 'undo');
+          renderSubjectDetailView(DOM, stats);
+        });
+      });
+    }
   }
 
 // --- 7-Day Execution Chart ---

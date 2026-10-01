@@ -40,7 +40,7 @@
     renderSpotlightResults
   } = window.FlowMD.search;
 
-  const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderQbTrackerView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
+  const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
 
   // --- App State ---
   // Shared state object — owned by js/core/state-store.js
@@ -352,13 +352,10 @@
       const fn = views.renderSubjectDetailView || renderSubjectDetailView;
       safeRender(() => fn(DOM, stats), 'subject_detail', stats);
     }
-    else if (state.currentView === 'qbank' || state.currentView === 'mcq_practice') {
-      // Legacy Q-Bank views were removed — land on the tracker instead.
-      state.currentView = 'qb_tracker';
-    }
-    else if (state.currentView === 'qb_tracker') {
-      const fn = views.renderQbTrackerView || renderQbTrackerView;
-      safeRender(() => fn(DOM, stats), 'qb_tracker', stats);
+    else if (state.currentView === 'qbank' || state.currentView === 'mcq_practice' || state.currentView === 'qb_tracker') {
+      // Legacy Q-Bank views were removed — tracker lives inside Curriculum now.
+      state.currentView = 'curriculum';
+      safeRender(() => renderCurriculumView(DOM, stats), 'qb_tracker-legacy', stats);
     }
     else if (state.currentView === 'analytics') {
       const fn = views.renderAnalyticsView || renderAnalyticsView;
