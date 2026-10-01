@@ -6705,7 +6705,7 @@
         }
       ]
     },
-  },
+  };
 
   // --- High-Yield Sample Question Generator for Unexpanded / Dynamic Topics ---
   function populateSampleQuestions(topicId, topicName, count, subjectName, chapterName) {
