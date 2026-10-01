@@ -5410,7 +5410,7 @@
           ]
         }
       ]
-    }
+    },
     obstetrics___gynaecology: {
       id: 'obstetrics___gynaecology',
       name: 'Obstetrics & Gynaecology',
