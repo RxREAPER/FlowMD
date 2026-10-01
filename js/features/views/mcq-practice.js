@@ -52,24 +52,36 @@
     const subjectId = state.activeQBankSubjectId || state.activeSubjectId || 'radiology';
     const topicId = state.activeQBankTopicId || 'rad_t1_fundamentals_of_imaging';
 
-    const { topic, chapter, subject } = findTopic(subjectId, topicId);
-    const questions = topic.questions || [];
-    const totalQ = questions.length || 1;
-
-    // Load progress from store
-    const progress = getTopicProgress(topic.id);
-    if (progress.currentIndex !== undefined && progress.currentIndex >= 0 && progress.currentIndex < totalQ) {
-      if (currentQuestionIdx === undefined || currentQuestionIdx >= totalQ) {
-        currentQuestionIdx = progress.currentIndex;
-      }
-    }
-    if (currentQuestionIdx < 0 || currentQuestionIdx >= totalQ) {
-      currentQuestionIdx = 0;
-    }
-
-    // Check if showing results summary
-    if (isResultsMode || (progress.status === 'completed' && Object.keys(progress.answers || {}).length >= totalQ && isResultsMode !== false)) {
-      renderResultsView(dom, topic, chapter, subject, questions, progress);
+    // Check if showing empty questions state (Metadata-only topic)
+    if (questions.length === 0) {
+      dom.appMain.innerHTML = `
+        <div class="mcq-practice-container" style="--sub-accent: ${subject.accentColor || 'var(--accent-primary)'};">
+          <header class="mcq-top-header">
+            <div class="mcq-header-left">
+              <button type="button" class="mcq-exit-btn" id="btn-mcq-exit" aria-label="Exit to Question Bank">
+                <svg class="material-symbols-outlined"><use href="#fmd-i-arrow_back"/></svg>
+              </button>
+              <div class="mcq-header-info">
+                <span class="mcq-topic-subtitle">${escapeHtml(subject.name || '')} • ${escapeHtml(chapter.name || '')}</span>
+                <h2 class="mcq-topic-title">${escapeHtml(topic.name || '')}</h2>
+              </div>
+            </div>
+          </header>
+          <div class="qbank-empty-state" style="padding: 60px 20px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 16px;">📚</div>
+            <h3 class="qbank-empty-title" style="font-size: 1.3rem; margin-bottom: 8px;">Question Content Coming Soon</h3>
+            <p class="qbank-empty-sub" style="max-width: 480px; margin: 0 auto 24px; color: var(--text-muted);">
+              <strong>${topic.mcqCount || 0} MCQs</strong> are catalogued in the curriculum for <em>${escapeHtml(topic.name)}</em>. Full interactive question item sets will be available in the next dataset update.
+            </p>
+            <button type="button" class="v2-arcade-btn" id="btn-empty-qbank-back" style="min-width: 180px;">Back to Q-Bank</button>
+          </div>
+        </div>
+      `;
+      const backAction = () => {
+        if (window.FlowMD.shell) window.FlowMD.shell.switchView('qbank');
+      };
+      dom.appMain.querySelector('#btn-mcq-exit')?.addEventListener('click', backAction);
+      dom.appMain.querySelector('#btn-empty-qbank-back')?.addEventListener('click', backAction);
       return;
     }
 

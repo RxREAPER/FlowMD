@@ -138,9 +138,6 @@
               <button type="button" class="qbank-tab ${activeFilter === 'UNATTEMPTED' ? 'is-active' : ''}" data-filter="UNATTEMPTED" role="tab" aria-selected="${activeFilter === 'UNATTEMPTED'}">
                 Unattempted
               </button>
-              <button type="button" class="qbank-tab ${activeFilter === 'FREE' ? 'is-active' : ''}" data-filter="FREE" role="tab" aria-selected="${activeFilter === 'FREE'}">
-                Free
-              </button>
             </div>
           </div>
 
@@ -201,7 +198,6 @@
                       <div class="qbank-topic-card ${isDone ? 'card-done' : ''}" data-topic-id="${top.id}" data-subject-id="${subjectId}" role="button" tabindex="0" aria-label="Open ${escapeHtml(top.name)} — ${qCount} MCQs">
                         <div class="qbank-card-thumb" style="--thumb-accent: ${subColor};">
                           <span class="qbank-thumb-icon">${subIcon || '<svg class="material-symbols-outlined"><use href="#fmd-i-quiz"/></svg>'}</span>
-                          ${top.isPro ? `<span class="qbank-pro-badge">PRO</span>` : ''}
                         </div>
 
                         <div class="qbank-card-content">
