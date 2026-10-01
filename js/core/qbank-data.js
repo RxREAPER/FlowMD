@@ -6704,7 +6704,7 @@
           ]
         }
       ]
-    }
+    },
   };
 
   // --- High-Yield Sample Question Generator for Unexpanded / Dynamic Topics ---

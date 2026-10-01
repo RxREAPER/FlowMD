@@ -178,7 +178,11 @@
         state.activeQBankSubjectId = subId;
         state.subjectDetailMode = state.curriculumMode || 'videos';
         if (window.FlowMD.shell) {
-          window.FlowMD.shell.switchView('subject_detail');
+          if (state.curriculumMode === 'mcqs') {
+            window.FlowMD.shell.switchView('qbank');
+          } else {
+            window.FlowMD.shell.switchView('subject_detail');
+          }
         }
       };
       card.addEventListener('click', open);

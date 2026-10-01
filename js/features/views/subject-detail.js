@@ -338,14 +338,14 @@ function renderFacultyCard(faculty, subjectId) {
               <div class="accordion-header ${chapExpanded ? 'active' : ''}" data-chap-name="${chap.name}" data-subject-id="${subObj.id}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;">
                 <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
                   <div class="unit-title-wrap">
-                    <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem; text-transform: uppercase;">${chap.name}</div>
-                    <div class="unit-done-meta" style="font-family: var(--font-hud); font-size: 0.76rem; color: var(--text-muted);">${chapStats.completedTopics}/${chapStats.totalTopics} done • ${chapStats.attemptedQuestions}/${chapStats.totalQuestions} MCQs • <strong style="color: ${chapStats.percentage >= 50 ? 'var(--success)' : 'var(--accent-primary)'};">${chapStats.percentage}% MASTERY</strong></div>
+                    <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name}</div>
+                    <div class="unit-done-meta">${chapAllDone && chapDoneWhen ? chapStats.completedTopics + '/' + chapStats.totalTopics + ' done · Completed ' + chapDoneWhen : chapStats.completedTopics + '/' + chapStats.totalTopics + ' done'} · ${chapStats.totalQuestions} MCQs</div>
                   </div>
                 </div>
                 <div class="unit-head-actions">
                   <button type="button" class="unit-done-btn qbank-chapter-bulk-btn ${chapAllDone ? 'is-done' : ''}" data-chap-name="${chap.name}" aria-pressed="${chapAllDone}" title="${chapAllDone ? 'Mark chapter uncompleted' : 'Mark all topics in chapter completed'}">
                     <svg class="material-symbols-outlined"><use href="#fmd-i-${chapAllDone ? 'check_circle' : 'check_box_outline_blank'}"/></svg>
-                    <span>${chapAllDone ? 'DONE' : 'MARK DONE'}</span>
+                    <span>${chapAllDone ? 'Done' : 'Mark done'}</span>
                   </button>
                   <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
                 </div>
@@ -361,6 +361,7 @@ function renderFacultyCard(faculty, subjectId) {
                     const doneWhen = isDone ? (prog.completedAt ? new Date(prog.completedAt).toLocaleDateString() : 'Today') : '';
                     let vNum = t.videoNumber || ('#' + String(globalTopicCounter).padStart(2, '0'));
                     vNum = '#' + vNum.replace(/^#+/, '');
+                    const tileLabel = (t.videoNumber ? t.videoNumber.replace(/^#+/, '') : String(globalTopicCounter)).padStart(2, '0');
 
                     return `
                       <div class="v2-quest-row ${isDone ? 'completed' : ''}">
@@ -374,11 +375,11 @@ function renderFacultyCard(faculty, subjectId) {
                             </div>
                             <div class="mv-meta">
                               <span class="mv-time"><svg class="material-symbols-outlined"><use href="#fmd-i-quiz"/></svg> ${qCount} MCQs</span>
-                              ${doneWhen ? `<span class="mv-done"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Solved ${doneWhen}</span>` : ''}
+                              ${doneWhen ? `<span class="mv-done"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</span>` : ''}
                             </div>
                           </div>
                         </label>
-                        <button type="button" class="mv-tile qbank-start-mcq-btn" data-topic-id="${t.id}" data-subject-id="${subObj.id}" role="button" tabindex="0" title="Practice ${window.FlowMD.constants.escapeHtml(t.name)} MCQs" aria-label="Practice ${window.FlowMD.constants.escapeHtml(t.name)} MCQs" style="background: color-mix(in srgb, var(--accent-primary, #38bdf8) 22%, var(--bg-surface, #1e293b)); color: var(--accent-primary, #38bdf8); border: 1px solid color-mix(in srgb, var(--accent-primary, #38bdf8) 45%, transparent); font-weight: 800; border-radius: 6px; cursor: pointer; padding: 4px 12px; font-family: var(--font-hud); font-size: 0.8rem; letter-spacing: 0.5px;">MCQ</button>
+                        <span class="mv-tile qbank-start-mcq-btn" data-topic-id="${t.id}" data-subject-id="${subObj.id}" role="button" tabindex="0" title="Practice ${window.FlowMD.constants.escapeHtml(t.name)} MCQs" aria-label="Practice ${window.FlowMD.constants.escapeHtml(t.name)} MCQs" style="background:${window.FlowMD.constants.mvTileColor(t.id)}; cursor: pointer;">${tileLabel}</span>
                       </div>
                     `;
                   }).join('')}
@@ -441,20 +442,26 @@ function renderFacultyCard(faculty, subjectId) {
         ` : `
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; padding: 12px; background: var(--bg-surface-raised); border-radius: 12px; border: 1px solid var(--border-color);">
           <div style="text-align:center;">
-            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Completed Topics</div>
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Completed</div>
             <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--success);">${qbStats.completedTopics}/${qbStats.totalTopics}</div>
             <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">topics</div>
           </div>
           <div style="text-align:center;border-left:1px solid var(--border-color);border-right:1px solid var(--border-color);">
-            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Solved MCQs</div>
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">MCQs</div>
             <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--accent-primary);">${qbStats.attemptedQuestions}/${qbStats.totalQuestions}</div>
-            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">MCQs</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">mcqs</div>
           </div>
           <div style="text-align:center;">
-            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Q-Bank Mastery</div>
+            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Mastery</div>
             <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:${qbStats.percentage >= 75 ? "var(--success)" : qbStats.percentage >= 50 ? "var(--info)" : qbStats.percentage >= 25 ? "var(--warning)" : "var(--danger)"};">${qbStats.percentage}%</div>
-            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${qbStats.percentage >= 75 ? "Mastered" : qbStats.percentage >= 50 ? "Advanced" : qbStats.percentage > 0 ? "In Progress" : "Not Started"}</div>
+            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${qbStats.percentage >= 75 ? "Mastered" : qbStats.percentage >= 50 ? "Advanced" : qbStats.percentage >= 25 ? "In Progress" : "Critical"}</div>
           </div>
+        </div>
+        <div style="margin: -6px 0 14px; display: flex; justify-content: flex-end;">
+          <button type="button" id="btn-open-full-qbank" class="v2-arcade-btn" style="display: flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.8rem;">
+            <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-quiz"/></svg>
+            <span>Open Q-Bank Timeline Mode</span>
+          </button>
         </div>
         `}
 
