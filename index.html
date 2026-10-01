@@ -16,14 +16,14 @@
   <meta name="viewport-fit" content="cover">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-TileColor" content="#0b0f19">
-  <link rel="icon" type="image/svg+xml" href="icon.svg?v=301">
+  <link rel="icon" type="image/svg+xml" href="icon.svg?v=302">
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=301">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=302">
   
   <!-- No Google Fonts — system font stacks + inline SVG icons (zero external font requests) -->
   
   <!-- Unified Mobile-First Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=301">
+  <link rel="stylesheet" href="style.css?v=302">
 </head>
 <body>
   
@@ -70,23 +70,6 @@
       </div>
     </div>
 
-    <!-- Q-banks Coming Soon — Collapsible Update Banner (collapse + dismiss wired in app.js) -->
-    <section class="qb-banner" id="qb-update-banner" aria-label="Q-banks update announcement">
-      <button type="button" class="qb-banner-toggle" id="qb-banner-toggle" aria-expanded="true" aria-controls="qb-banner-body" title="Show / hide update banner">
-        <span class="qb-banner-pill">Coming soon</span>
-        <span class="qb-banner-title">Q-banks are coming to FlowMD</span>
-      </button>
-      <button type="button" class="qb-banner-dismiss" id="qb-banner-dismiss" title="Dismiss update banner" aria-label="Dismiss Q-banks update banner">
-        <svg class="material-symbols-outlined"><use href="#fmd-i-close"/></svg>
-      </button>
-      <div class="qb-banner-body" id="qb-banner-body">
-        <div class="qb-banner-body-inner">
-          <p class="qb-banner-text">
-            Track your <b>MCQ practice</b> along with your videos — includes both <b>Marrow editions</b>.
-          </p>
-        </div>
-      </div>
-    </section>
 
     <!-- Main Content Area -->
     <main class="app-main" id="app-main">
@@ -125,6 +108,14 @@
           </svg>
         </span>
         <span class="nav-bar-label">Plan</span>
+        <span class="nav-ripple"></span>
+      </button>
+      <button class="android-nav-item" data-view="qb_tracker">
+        <svg class="nav-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span class="nav-bar-label">Q-Bank</span>
         <span class="nav-ripple"></span>
       </button>
       <button class="android-nav-item" data-view="analytics">
@@ -288,34 +279,33 @@
   </div>
 
   <!-- Application Data & Logic -->
-  <script src="data.js?v=301"></script>
-  <script src="data_marrow_6_5.js?v=301"></script>
-  <script src="js/core/namespace.js?v=301"></script>
-  <script src="js/core/constants.js?v=301"></script>
-  <script src="js/core/icons.js?v=301"></script>
-  <script src="js/core/state-store.js?v=301"></script>
-  <script src="js/core/source-data.js?v=301"></script>
-  <script src="js/core/subjects.js?v=301"></script>
-  <script src="js/core/metrics.js?v=301"></script>
-  <script src="js/core/qbank-data.js?v=301"></script>
-  <script src="js/core/qbank-store.js?v=301"></script>
-  <script src="js/features/toast.js?v=301"></script>
-  <script src="js/features/theme.js?v=301"></script>
-  <script src="js/features/search.js?v=301"></script>
-  <script src="js/features/onboarding.js?v=301"></script>
-  <script src="js/features/backup.js?v=301"></script>
-  <script src="js/features/study-plan-config.js?v=301"></script>
-  <script src="js/features/source-settings.js?v=301"></script>
-  <script src="js/features/charts.js?v=301"></script>
-  <script src="js/features/pwa-install.js?v=301"></script>
-  <script src="js/features/views/dashboard.js?v=301"></script>
-  <script src="js/features/views/curriculum.js?v=301"></script>
-  <script src="js/features/views/subject-detail.js?v=301"></script>
-  <script src="js/features/views/qbank.js?v=301"></script>
-  <script src="js/features/views/mcq-practice.js?v=301"></script>
-  <script src="js/features/views/analytics.js?v=301"></script>
-  <script src="js/features/views/profile.js?v=301"></script>
-  <script src="app.js?v=301"></script>
+  <script src="data.js?v=302"></script>
+  <script src="data_marrow_6_5.js?v=302"></script>
+  <script src="js/core/namespace.js?v=302"></script>
+  <script src="js/core/constants.js?v=302"></script>
+  <script src="js/core/icons.js?v=302"></script>
+  <script src="js/core/state-store.js?v=302"></script>
+  <script src="js/core/source-data.js?v=302"></script>
+  <script src="js/core/subjects.js?v=302"></script>
+  <script src="js/core/metrics.js?v=302"></script>
+  <script src="js/features/toast.js?v=302"></script>
+  <script src="js/features/theme.js?v=302"></script>
+  <script src="js/features/search.js?v=302"></script>
+  <script src="js/features/onboarding.js?v=302"></script>
+  <script src="js/features/backup.js?v=302"></script>
+  <script src="js/features/study-plan-config.js?v=302"></script>
+  <script src="js/features/source-settings.js?v=302"></script>
+  <script src="js/features/charts.js?v=302"></script>
+  <script src="js/features/pwa-install.js?v=302"></script>
+  <script src="js/features/views/dashboard.js?v=302"></script>
+  <script src="js/features/views/curriculum.js?v=302"></script>
+  <script src="js/features/views/subject-detail.js?v=302"></script>
+  <script src="js/core/qb-tracker-data.js?v=302"></script>
+  <script src="js/core/qb-tracker-store.js?v=302"></script>
+  <script src="js/features/views/analytics.js?v=302"></script>
+  <script src="js/features/views/qb-tracker.js?v=302"></script>
+  <script src="js/features/views/profile.js?v=302"></script>
+  <script src="app.js?v=302"></script>
 
 </body>
 </html>

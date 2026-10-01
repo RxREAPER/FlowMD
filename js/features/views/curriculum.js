@@ -27,22 +27,6 @@
   function renderCurriculumView(dom, stats) {
     DOM = dom;
     const legendCollapsed = isLegendCollapsed();
-    const curriculumMode = state.curriculumMode || 'videos';
-
-    // Helper to calculate Q-Bank / MCQ stats for a subject
-    function getSubjectMcqStats(sub) {
-      if (window.FlowMD.qbankStore && window.FlowMD.qbankStore.getSubjectQBankStats) {
-        const qb = window.FlowMD.qbankStore.getSubjectQBankStats(sub.id);
-        return {
-          totalMcqs: qb.totalQuestions,
-          completedMcqs: qb.attemptedQuestions,
-          completedTopics: qb.completedTopics,
-          totalTopics: qb.totalTopics,
-          percentage: qb.percentage
-        };
-      }
-      return { totalMcqs: 0, completedMcqs: 0, completedTopics: 0, totalTopics: 0, percentage: 0 };
-    }
 
     // Issue #32: curriculum-page search box (client-side filter, like the
     // dashboard heatmap filters — no new origins, offline by construction).
@@ -74,34 +58,13 @@
         </div>
       </div>
 
-      <!-- Dual Mode Selector Tabs: Videos vs MCQ's / Q-Bank (Annotated Reference Design) -->
-      <div class="curr-view-tabs" role="tablist" aria-label="Curriculum View Mode">
-        <button type="button" class="curr-view-tab ${curriculumMode === 'videos' ? 'is-active' : ''}" id="tab-curr-videos" role="tab" aria-selected="${curriculumMode === 'videos'}">
-          <svg class="material-symbols-outlined curr-tab-icon"><use href="#fmd-i-play_circle"/></svg>
-          <span>Videos</span>
-        </button>
-        <button type="button" class="curr-view-tab ${curriculumMode === 'mcqs' ? 'is-active' : ''}" id="tab-curr-mcqs" role="tab" aria-selected="${curriculumMode === 'mcqs'}">
-          <svg class="material-symbols-outlined curr-tab-icon"><use href="#fmd-i-quiz"/></svg>
-          <span>MCQ's / Q-Bank.</span>
-        </button>
-      </div>
-
       <div class="curriculum-legend ${legendCollapsed ? 'is-collapsed' : ''}" id="curriculum-legend">
         <button type="button" class="curriculum-legend-head" id="curriculum-legend-toggle" aria-expanded="${legendCollapsed ? 'false' : 'true'}" aria-controls="curriculum-legend-body" title="Show / hide how completion is counted">
           <svg class="material-symbols-outlined"><use href="#fmd-i-info"/></svg>
-          <span>${curriculumMode === 'videos' ? 'How video completion is counted' : 'How Q-Bank completion is counted'}</span>
+          <span>How video completion is counted</span>
           <svg class="material-symbols-outlined curriculum-legend-chevron"><use href="#fmd-i-expand_more"/></svg>
         </button>
         <div class="curriculum-legend-body" id="curriculum-legend-body">
-          ${curriculumMode === 'videos' ? `
-          <div class="curriculum-legend-row">
-            <span class="curriculum-legend-icon curriculum-legend-icon-count"><svg class="material-symbols-outlined"><use href="#fmd-i-check_box"/></svg></span>
-            <div class="curriculum-legend-text">
-              <div class="curriculum-legend-title">Individual video tick</div>
-              <div class="curriculum-legend-sub">Reflected in Analytics — 7-day chart, weekly pace &amp; daily counts.</div>
-            </div>
-            <span class="v2-hud-badge curriculum-legend-badge curriculum-legend-badge-count">Counts</span>
-          </div>
           <div class="curriculum-legend-row">
             <span class="curriculum-legend-icon curriculum-legend-icon-skip"><svg class="material-symbols-outlined"><use href="#fmd-i-select_all"/></svg></span>
             <div class="curriculum-legend-text">
@@ -110,16 +73,6 @@
             </div>
             <span class="v2-hud-badge curriculum-legend-badge curriculum-legend-badge-skip">Excluded</span>
           </div>
-          ` : `
-          <div class="curriculum-legend-row">
-            <span class="curriculum-legend-icon curriculum-legend-icon-count"><svg class="material-symbols-outlined"><use href="#fmd-i-quiz"/></svg></span>
-            <div class="curriculum-legend-text">
-              <div class="curriculum-legend-title">Q-Bank Topic Check</div>
-              <div class="curriculum-legend-sub">Tick individual topics or entire chapters solved to update your solved MCQ count and streak activity.</div>
-            </div>
-            <span class="v2-hud-badge curriculum-legend-badge curriculum-legend-badge-count">Counts</span>
-          </div>
-          `}
         </div>
       </div>
 
@@ -127,25 +80,6 @@
       <div class="curr-grid">
         ${filteredSubjects.map(sub => {
           const chapCount = sub.raw && sub.raw.chapters ? sub.raw.chapters.length : 0;
-          if (curriculumMode === 'mcqs') {
-            const mcqStats = getSubjectMcqStats(sub);
-            const pct = mcqStats.percentage;
-            const isDone = pct === 100;
-            return `
-              <div class="curr-card ${isDone ? 'is-complete' : ''}" data-subject-id="${sub.id}" role="button" tabindex="0" aria-label="Open ${sub.name} — ${pct}% Q-Bank complete">
-                <div class="curr-card-head" style="--sub-accent: ${sub.accentColor};">
-                  <span class="curr-card-icon" aria-hidden="true">${sub.svgIcon}</span>
-                  <span class="curr-card-name">${sub.name}</span>
-                  <span class="curr-card-pct">${pct}%</span>
-                </div>
-                <div class="curr-card-meta">${mcqStats.completedTopics}/${mcqStats.totalTopics} topics · <b>${mcqStats.completedMcqs}/${mcqStats.totalMcqs} MCQs</b>${isDone ? ' · <b>✓ Done</b>' : ''}</div>
-                <div class="curr-card-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
-                  <div class="curr-card-bar-fill" style="width:${pct}%;"></div>
-                </div>
-              </div>
-            `;
-          }
-
           const pct = sub.percentage || 0;
           const doneWhen = pct === 100 ? getSubjectCompletedDate(sub.id) : '';
           return `
@@ -175,14 +109,9 @@
       const open = () => {
         const subId = card.getAttribute('data-subject-id');
         state.activeSubjectId = subId;
-        state.activeQBankSubjectId = subId;
-        state.subjectDetailMode = state.curriculumMode || 'videos';
+        state.subjectDetailMode = 'videos';
         if (window.FlowMD.shell) {
-          if (state.curriculumMode === 'mcqs') {
-            window.FlowMD.shell.switchView('qbank');
-          } else {
-            window.FlowMD.shell.switchView('subject_detail');
-          }
+          window.FlowMD.shell.switchView('subject_detail');
         }
       };
       card.addEventListener('click', open);
@@ -192,15 +121,6 @@
     });
 
     // Tab mode switcher events: Videos vs MCQ's / Q-Bank
-    document.getElementById('tab-curr-videos')?.addEventListener('click', () => {
-      state.curriculumMode = 'videos';
-      renderCurriculumView(DOM, stats);
-    });
-    document.getElementById('tab-curr-mcqs')?.addEventListener('click', () => {
-      state.curriculumMode = 'mcqs';
-      renderCurriculumView(DOM, stats);
-    });
-
     // Issue #32: curriculum search — live filter, persisted per session.
     const searchInput = document.getElementById('curr-search-input');
     if (searchInput) {

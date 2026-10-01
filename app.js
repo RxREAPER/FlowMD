@@ -40,7 +40,7 @@
     renderSpotlightResults
   } = window.FlowMD.search;
 
-  const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderQBankView, renderMCQPracticeView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
+  const { renderDashboardView, renderCurriculumView, renderSubjectDetailView, renderQbTrackerView, renderAnalyticsView, renderProfileView, openProfileBottomSheet, closeBottomSheet } = window.FlowMD.views;
 
   // --- App State ---
   // Shared state object — owned by js/core/state-store.js
@@ -66,7 +66,6 @@
     applyTheme(state.theme);
     if (window.FlowMD.icons) window.FlowMD.icons.ensureSprite();
     bindEvents();
-    initQbBanner();
     initServiceWorker();
     initOfflineIndicator();
     if (window.FlowMD.pwaInstall) window.FlowMD.pwaInstall.init();
@@ -353,13 +352,13 @@
       const fn = views.renderSubjectDetailView || renderSubjectDetailView;
       safeRender(() => fn(DOM, stats), 'subject_detail', stats);
     }
-    else if (state.currentView === 'qbank') {
-      const fn = views.renderQBankView || renderQBankView;
-      safeRender(() => fn(DOM, stats), 'qbank', stats);
+    else if (state.currentView === 'qbank' || state.currentView === 'mcq_practice') {
+      // Legacy Q-Bank views were removed — land on the tracker instead.
+      state.currentView = 'qb_tracker';
     }
-    else if (state.currentView === 'mcq_practice') {
-      const fn = views.renderMCQPracticeView || renderMCQPracticeView;
-      safeRender(() => fn(DOM, stats), 'mcq_practice', stats);
+    else if (state.currentView === 'qb_tracker') {
+      const fn = views.renderQbTrackerView || renderQbTrackerView;
+      safeRender(() => fn(DOM, stats), 'qb_tracker', stats);
     }
     else if (state.currentView === 'analytics') {
       const fn = views.renderAnalyticsView || renderAnalyticsView;
@@ -408,48 +407,6 @@
   });
   // Fallback: some browsers throttle visibilitychange when tab is backgrounded.
   setInterval(checkQuestDayChange, 60000);
-
-  // --- Q-bank Update Banner: collapsible toggle with persisted state + permanent dismiss ---
-  const QB_BANNER_STORAGE_KEY = 'flowmd.qbBannerCollapsed';
-  const QB_BANNER_DISMISS_KEY = 'flowmd.qbBannerDismissed';
-
-  function initQbBanner() {
-    const banner = document.getElementById('qb-update-banner');
-    if (!banner) return;
-
-    // Restore persisted collapse state (default: expanded). A dismissed
-    // banner is permanently hidden — it must never nag users again.
-    let collapsed = false;
-    try {
-      collapsed = localStorage.getItem(QB_BANNER_STORAGE_KEY) === '1';
-      if (localStorage.getItem(QB_BANNER_DISMISS_KEY) === '1') {
-        banner.hidden = true;
-        return;
-      }
-    } catch (e) { /* storage unavailable (private mode) — stay expanded */ }
-    if (collapsed) banner.classList.add('is-collapsed');
-
-    const toggle = document.getElementById('qb-banner-toggle');
-    if (!toggle) return;
-    toggle.setAttribute('aria-expanded', String(!collapsed));
-
-    toggle.addEventListener('click', () => {
-      const nowCollapsed = banner.classList.toggle('is-collapsed');
-      toggle.setAttribute('aria-expanded', String(!nowCollapsed));
-      try {
-        localStorage.setItem(QB_BANNER_STORAGE_KEY, nowCollapsed ? '1' : '0');
-      } catch (e) { /* non-fatal */ }
-    });
-
-    const dismiss = document.getElementById('qb-banner-dismiss');
-    if (!dismiss) return;
-    dismiss.addEventListener('click', () => {
-      banner.hidden = true;
-      try {
-        localStorage.setItem(QB_BANNER_DISMISS_KEY, '1');
-      } catch (e) { /* non-fatal */ }
-    });
-  }
 
   // --- Run Initialization ---
   if (document.readyState === 'loading') {

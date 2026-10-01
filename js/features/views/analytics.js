@@ -28,6 +28,28 @@
   // Shell DOM cache — set on every render via the dispatcher.
   let DOM = {};
 
+  // Q-Bank tracker summary card (tracking add-on). Rendered inside
+  // Analytics; tapping it opens the full Q-Bank Tracker view.
+  function renderQbAnalyticsCard() {
+    const t = window.FlowMD.qbTracker;
+    if (!t) return '';
+    const o = t.getOverallStats();
+    const bar = `
+      <div class="curr-card-bar" role="progressbar" aria-valuenow="${o.percentage}" aria-valuemin="0" aria-valuemax="100" style="margin-top:10px;">
+        <div class="curr-card-bar-fill" style="width:${o.percentage};"></div>
+      </div>`;
+    return `
+      <div style="padding:14px; background:var(--bg-surface-raised); border-radius:14px; border:1px solid var(--border-color); cursor:pointer;" id="qb-analytics-open" role="button" tabindex="0" aria-label="Open Q-Bank Tracker — ${o.percentage}% solved">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <svg class="material-symbols-outlined" style="font-size:20px; color:var(--accent-primary);"><use href="#fmd-i-quiz"/></svg>
+          <span style="font-family:var(--font-display); font-weight:700; font-size:0.95rem;">Q-Bank Progress</span>
+          <span style="margin-left:auto; font-family:var(--font-hud); font-size:0.8rem; color:var(--text-muted);">${o.doneTopics}/${o.totalTopics} topics · ${o.doneMcqs}/${o.totalMcqs} MCQs</span>
+          <span style="font-family:var(--font-display); font-weight:700; color:var(--success);">${o.percentage}%</span>
+        </div>
+        ${bar}
+      </div>`;
+  }
+
   function renderAnalyticsView(dom, stats) {
     DOM = dom;
     const plans = (state.plans && state.plans.length > 0) ? state.plans : [DEFAULT_PLAN('plan_a', 'Plan A', PLAN_A_ACCENT)];
@@ -347,6 +369,11 @@
         ${renderPixelSubjectHeatmap(stats)}
       </div>
 
+      <!-- Q-Bank Tracker Summary -->
+      <div style="margin-top:20px;" id="qb-analytics-card">
+        ${renderQbAnalyticsCard()}
+      </div>
+
     `;
 
     document.getElementById('btn-share-report')?.addEventListener('click', () => {
@@ -377,6 +404,11 @@
     }
 
     document.getElementById('btn-analytics-open-goals')?.addEventListener('click', focusStudyPlanConfig);
+
+    // Q-Bank tracker card → open the tracker view
+    document.getElementById('qb-analytics-open')?.addEventListener('click', () => {
+      if (window.FlowMD.shell) window.FlowMD.shell.switchView('qb_tracker');
+    });
     document.getElementById('btn-analytics-set-target')?.addEventListener('click', focusStudyPlanConfig);
 
     // Heatmap tier filter buttons (mirrors dashboard.js handlers)

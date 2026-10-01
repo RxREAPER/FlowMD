@@ -55,16 +55,25 @@ js/features/views/analytics.js: color:${monthlyPct >= 100 ? 'var(--success)' : '
 js/features/views/analytics.js: color:${o.deltaColor || 'var(--text-muted)'};
 js/features/views/analytics.js: color:${weeklyPct >= 100 ? 'var(--success)' : 'var(--warning)'}; border-color:${weeklyPct 
 js/features/views/analytics.js: color:var(--accent-primary); border-color:var(--accent-primary);
+js/features/views/analytics.js: display:flex; align-items:center; gap:8px; margin-bottom:8px;
+js/features/views/analytics.js: font-family:var(--font-display); font-weight:700; color:var(--success);
+js/features/views/analytics.js: font-family:var(--font-display); font-weight:700; font-size:0.95rem;
 js/features/views/analytics.js: font-size:14px;
 js/features/views/analytics.js: font-size:16px;
 js/features/views/analytics.js: font-size:18px; color:var(--accent-primary);
 js/features/views/analytics.js: font-size:18px;vertical-align:middle;
+js/features/views/analytics.js: font-size:20px; color:var(--accent-primary);
 js/features/views/analytics.js: height:${h}%
 js/features/views/analytics.js: height:34px; padding:0 14px; font-size:0.82rem; background:var(--accent-gradient);
 js/features/views/analytics.js: height:38px; padding:0 16px;
+js/features/views/analytics.js: margin-left:auto; font-family:var(--font-hud); font-size:0.8rem; color:var(--text-muted);
+js/features/views/analytics.js: margin-top:10px;
 js/features/views/analytics.js: margin-top:20px;
+js/features/views/analytics.js: margin-top:20px;
+js/features/views/analytics.js: padding:14px; background:var(--bg-surface-raised); border-radius:14px; border:1px solid va
 js/features/views/analytics.js: text-align:right;
 js/features/views/analytics.js: width:${o.pct}%; --fill:${o.color};
+js/features/views/analytics.js: width:${o.percentage};
 js/features/views/analytics.js: width:100%;
 js/features/views/curriculum.js: --sub-accent: ${sub.accentColor};
 js/features/views/curriculum.js: display: flex; align-items: center; gap: 8px;
@@ -82,15 +91,12 @@ js/features/views/dashboard.js: color: #a855f7;
 js/features/views/dashboard.js: color: #ffffff; background: linear-gradient(135deg, #e11d48 0%, #f97316 100%); border-colo
 js/features/views/dashboard.js: color: var(--accent-success, #10b981);
 js/features/views/dashboard.js: color:var(--accent-primary); border-color:var(--accent-primary);
-js/features/views/dashboard.js: color:var(--accent-primary); border-color:var(--accent-primary);
 js/features/views/dashboard.js: display:flex; flex-direction:column; gap: 2px;
 js/features/views/dashboard.js: flex:${Math.max(1, s.m.totalVideos)}; --seg:${s.color};
 js/features/views/dashboard.js: font-size: 14px;
 js/features/views/dashboard.js: font-size:0.7rem; font-weight:600; color:var(--text-muted); font-family: var(--font-hud);
 js/features/views/dashboard.js: font-size:0.9rem; font-weight:600; opacity:0.7;
 js/features/views/dashboard.js: font-size:0.9rem; font-weight:600; opacity:0.7;
-js/features/views/dashboard.js: font-size:13px;
-js/features/views/dashboard.js: font-size:16px;
 js/features/views/dashboard.js: font-size:16px;
 js/features/views/dashboard.js: font-size:16px;
 js/features/views/dashboard.js: font-size:16px;vertical-align:middle;
@@ -102,7 +108,6 @@ js/features/views/dashboard.js: margin-bottom: 8px;
 js/features/views/dashboard.js: margin-bottom: 8px; border-color: var(--accent-secondary, #a855f7);
 js/features/views/dashboard.js: margin-bottom:6px;
 js/features/views/dashboard.js: margin-bottom:6px;
-js/features/views/dashboard.js: margin-left:auto;
 js/features/views/dashboard.js: padding-top:4px;
 js/features/views/dashboard.js: text-align:center; padding:14px; color:var(--success); font-family:var(--font-display); fo
 js/features/views/dashboard.js: width:${dailyPctPlan}%;

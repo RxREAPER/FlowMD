@@ -231,21 +231,9 @@ function renderFacultyCard(faculty, subjectId) {
     // once every video is ticked.
     const subjectDoneWhen = getSubjectCompletedDate(subObj.id);
 
-    const activeMode = state.subjectDetailMode || state.curriculumMode || 'videos';
-    const qbData = (window.FlowMD.qbankData && window.FlowMD.qbankData.getSubjectQBank)
-      ? window.FlowMD.qbankData.getSubjectQBank(subObj.id)
-      : null;
-    const qbStats = (window.FlowMD.qbankStore && window.FlowMD.qbankStore.getSubjectQBankStats)
-      ? window.FlowMD.qbankStore.getSubjectQBankStats(subObj.id)
-      : { totalTopics: 0, completedTopics: 0, totalQuestions: 0, attemptedQuestions: 0, percentage: 0 };
+    const sectionHeadingText = `${subObj.raw.chapters ? subObj.raw.chapters.length : 0} UNITS / CHAPTERS`;
 
-    const qbChapters = (qbData && qbData.chapters) ? qbData.chapters : [];
-    const sectionHeadingText = `${activeMode === 'videos' ? (subObj.raw.chapters ? subObj.raw.chapters.length : 0) : qbChapters.length} UNITS / CHAPTERS`;
-
-    let chaptersContentHtml = '';
-
-    if (activeMode === 'videos') {
-      chaptersContentHtml = (subObj.raw.chapters ? subObj.raw.chapters.map((chap, chapIdx) => {
+    let chaptersContentHtml = (subObj.raw.chapters ? subObj.raw.chapters.map((chap, chapIdx) => {
         const isFocused = !hasFocusScope || focusedChapterSet.has(chap.name);
         const dimStyle = hasFocusScope && !isFocused ? ' opacity: 0.5; filter: grayscale(0.5);' : '';
         const subjectId = subObj.id;
@@ -316,81 +304,6 @@ function renderFacultyCard(faculty, subjectId) {
           </div><!-- /chapt-node -->
         `;
       }).join('') : '');
-    } else {
-      let globalTopicCounter = 0;
-      chaptersContentHtml = qbChapters.map((chap, chapIdx) => {
-        const serialNum = chapIdx + 1;
-        const chapExpanded = state.expandedChapters[chap.name] === true;
-        const topics = chap.topics || [];
-        const chapStats = window.FlowMD.qbankStore 
-          ? window.FlowMD.qbankStore.getChapterQBankStats(subObj.id, chap.name)
-          : { completedTopics: 0, totalTopics: topics.length, attemptedQuestions: 0, totalQuestions: 0, percentage: 0, allDone: false };
-        const chapAllDone = chapStats.allDone;
-        const chapDoneWhen = chapAllDone ? getChapterCompletedDate(subObj.id, chap.name) || 'Today' : '';
-
-        return `
-          <div class="chapt-node ${chapExpanded ? 'is-open' : ''} ${chapAllDone ? 'is-done' : ''}">
-            <div class="chapt-rail">
-              <div class="chapt-node-dot unit-num ${chapAllDone ? 'is-done' : ''}" aria-hidden="true">${serialNum}</div>
-              <div class="chapt-rail-line" aria-hidden="true"></div>
-            </div>
-            <div class="chapt-node-body">
-              <div class="accordion-header ${chapExpanded ? 'active' : ''}" data-chap-name="${chap.name}" data-subject-id="${subObj.id}" style="border: 2px solid var(--v2-ink, #161310); margin-bottom: 6px; cursor: pointer; user-select: none;">
-                <div class="accordion-title-wrap" style="display: flex; align-items: center; gap: 8px;">
-                  <div class="unit-title-wrap">
-                    <div class="accordion-title" style="font-family: var(--font-display); font-size: 0.95rem;">${chap.name}</div>
-                    <div class="unit-done-meta">${chapAllDone && chapDoneWhen ? chapStats.completedTopics + '/' + chapStats.totalTopics + ' done · Completed ' + chapDoneWhen : chapStats.completedTopics + '/' + chapStats.totalTopics + ' done'} · ${chapStats.totalQuestions} MCQs</div>
-                  </div>
-                </div>
-                <div class="unit-head-actions">
-                  <button type="button" class="unit-done-btn qbank-chapter-bulk-btn ${chapAllDone ? 'is-done' : ''}" data-chap-name="${chap.name}" aria-pressed="${chapAllDone}" title="${chapAllDone ? 'Mark chapter uncompleted' : 'Mark all topics in chapter completed'}">
-                    <svg class="material-symbols-outlined"><use href="#fmd-i-${chapAllDone ? 'check_circle' : 'check_box_outline_blank'}"/></svg>
-                    <span>${chapAllDone ? 'Done' : 'Mark done'}</span>
-                  </button>
-                  <svg class="material-symbols-outlined accordion-icon"><use href="#fmd-i-expand_more"/></svg>
-                </div>
-              </div>
-
-              <div class="accordion-body ${chapExpanded ? 'active' : ''}">
-                <div class="v2-quest-card" style="padding-top: 14px; margin-top: 4px; margin-bottom: 10px;">
-                  ${topics.map(t => {
-                    globalTopicCounter++;
-                    const prog = window.FlowMD.qbankStore ? window.FlowMD.qbankStore.getTopicProgress(t.id) : { status: 'unattempted' };
-                    const isDone = prog.status === 'completed';
-                    const qCount = t.mcqCount || (t.questions ? t.questions.length : 15);
-                    const doneWhen = isDone ? (prog.completedAt ? new Date(prog.completedAt).toLocaleDateString() : 'Today') : '';
-                    let vNum = t.videoNumber || ('#' + String(globalTopicCounter).padStart(2, '0'));
-                    vNum = '#' + vNum.replace(/^#+/, '');
-                    const tileLabel = (t.videoNumber ? t.videoNumber.replace(/^#+/, '') : String(globalTopicCounter)).padStart(2, '0');
-
-                    return `
-                      <div class="v2-quest-row ${isDone ? 'completed' : ''}">
-                        <label class="v2-pixel-checkbox-label">
-                          <input type="checkbox" class="qbank-topic-checkbox" data-topic-id="${t.id}" data-topic-name="${window.FlowMD.constants.escapeHtml(t.name)}" data-mcq-count="${qCount}" data-chap-name="${chap.name}" ${isDone ? 'checked' : ''}>
-                          <span class="v2-pixel-checkbox-box"></span>
-                          <div>
-                            <div class="v2-quest-title">
-                              <span style="color: var(--accent-primary); font-family: var(--font-hud); margin-right: 4px;">${vNum}</span>
-                              ${t.name}
-                            </div>
-                            <div class="mv-meta">
-                              <span class="mv-time"><svg class="material-symbols-outlined"><use href="#fmd-i-quiz"/></svg> ${qCount} MCQs</span>
-                              ${doneWhen ? `<span class="mv-done"><svg class="material-symbols-outlined"><use href="#fmd-i-check_circle"/></svg> Completed ${doneWhen}</span>` : ''}
-                            </div>
-                          </div>
-                        </label>
-                        <span class="mv-tile qbank-start-mcq-btn" data-topic-id="${t.id}" data-subject-id="${subObj.id}" role="button" tabindex="0" title="Practice ${window.FlowMD.constants.escapeHtml(t.name)} MCQs" aria-label="Practice ${window.FlowMD.constants.escapeHtml(t.name)} MCQs" style="background:${window.FlowMD.constants.mvTileColor(t.id)}; cursor: pointer;">${tileLabel}</span>
-                      </div>
-                    `;
-                  }).join('')}
-                </div>
-              </div>
-            </div><!-- /chapt-node-body -->
-          </div><!-- /chapt-node -->
-        `;
-      }).join('');
-    }
-
     DOM.appMain.innerHTML = `
       <div class="pwa-curriculum-scroll">
         <!-- Back Button - separate at top -->
@@ -403,25 +316,12 @@ function renderFacultyCard(faculty, subjectId) {
           <div class="pwa-subject-detail-info">
             <div class="pwa-subject-detail-name">${subObj.name}</div>
             <div class="pwa-subject-detail-faculty">${renderFacultyCard(subObj.faculty || getSubjectFaculty(subObj.id), subObj.id)}</div>
-            <div class="pwa-subject-detail-meta">${activeMode === 'videos' ? `${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done` : `${qbChapters.length} Chapters • ${qbStats.completedTopics}/${qbStats.totalTopics} Topics • ${qbStats.percentage}% done`}</div>
+            <div class="pwa-subject-detail-meta">${subObj.raw.chapters ? subObj.raw.chapters.length : 0} Chapters • ${subObj.totalVideos} Videos • ${subObj.percentage}% done</div>
             ${subjectDoneWhen ? `<div class="subject-done-banner"><svg class="material-symbols-outlined"><use href="#fmd-i-verified"/></svg> Subject completed ${subjectDoneWhen}</div>` : ''}
           </div>
         </div>
 
-        <!-- Dual Mode Selector Tabs: Videos vs MCQ's / Q-Bank -->
-        <div class="curr-view-tabs curr-view-tabs-detail" role="tablist" aria-label="Subject View Mode">
-          <button type="button" class="curr-view-tab ${activeMode === 'videos' ? 'is-active' : ''}" id="tab-detail-videos" role="tab" aria-selected="${activeMode === 'videos'}">
-            <svg class="material-symbols-outlined curr-tab-icon"><use href="#fmd-i-play_circle"/></svg>
-            <span>Videos</span>
-          </button>
-          <button type="button" class="curr-view-tab ${activeMode === 'mcqs' ? 'is-active' : ''}" id="tab-detail-mcqs" role="tab" aria-selected="${activeMode === 'mcqs'}">
-            <svg class="material-symbols-outlined curr-tab-icon"><use href="#fmd-i-quiz"/></svg>
-            <span>MCQ's / Q-Bank.</span>
-          </button>
-        </div>
-
         <!-- Sub-Subject Analytics -->
-        ${activeMode === 'videos' ? `
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; padding: 12px; background: var(--bg-surface-raised); border-radius: 12px; border: 1px solid var(--border-color);">
           <div style="text-align:center;">
             <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Completed</div>
@@ -439,31 +339,7 @@ function renderFacultyCard(faculty, subjectId) {
             <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${subObj.percentage >= 75 ? "Mastered" : subObj.percentage >= 50 ? "Advanced" : subObj.percentage >= 25 ? "In Progress" : "Critical"}</div>
           </div>
         </div>
-        ` : `
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; padding: 12px; background: var(--bg-surface-raised); border-radius: 12px; border: 1px solid var(--border-color);">
-          <div style="text-align:center;">
-            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Completed</div>
-            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--success);">${qbStats.completedTopics}/${qbStats.totalTopics}</div>
-            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">topics</div>
-          </div>
-          <div style="text-align:center;border-left:1px solid var(--border-color);border-right:1px solid var(--border-color);">
-            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">MCQs</div>
-            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--accent-primary);">${qbStats.attemptedQuestions}/${qbStats.totalQuestions}</div>
-            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">mcqs</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-family:var(--font-hud);font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;">Mastery</div>
-            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:${qbStats.percentage >= 75 ? "var(--success)" : qbStats.percentage >= 50 ? "var(--info)" : qbStats.percentage >= 25 ? "var(--warning)" : "var(--danger)"};">${qbStats.percentage}%</div>
-            <div style="font-family:var(--font-hud);font-size:0.7rem;color:var(--text-muted);">${qbStats.percentage >= 75 ? "Mastered" : qbStats.percentage >= 50 ? "Advanced" : qbStats.percentage >= 25 ? "In Progress" : "Critical"}</div>
-          </div>
-        </div>
-        <div style="margin: -6px 0 14px; display: flex; justify-content: flex-end;">
-          <button type="button" id="btn-open-full-qbank" class="v2-arcade-btn" style="display: flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.8rem;">
-            <svg class="material-symbols-outlined" style="font-size: 18px;"><use href="#fmd-i-quiz"/></svg>
-            <span>Open Q-Bank Timeline Mode</span>
-          </button>
-        </div>
-        `}
+
 
         ${hasFocusScope ? `
           <div class="pwa-focus-banner">
@@ -491,7 +367,7 @@ function renderFacultyCard(faculty, subjectId) {
     document.getElementById('btn-toggle-all-chapters')?.addEventListener('click', () => {
       const isAnyExpanded = Object.values(state.expandedChapters).some(v => v === true);
       const newExpandedState = !isAnyExpanded;
-      const targetChaps = activeMode === 'videos' ? (subObj.raw.chapters || []) : qbChapters;
+      const targetChaps = subObj.raw.chapters || [];
       targetChaps.forEach(chap => {
         state.expandedChapters[chap.name] = newExpandedState;
       });
@@ -519,98 +395,7 @@ function renderFacultyCard(faculty, subjectId) {
       });
     });
 
-    // Mode switcher: Videos vs MCQ's / Q-Bank in Subject Detail
-    document.getElementById('tab-detail-videos')?.addEventListener('click', () => {
-      state.subjectDetailMode = 'videos';
-      saveState();
-      renderSubjectDetailView(DOM, stats);
-    });
-    document.getElementById('tab-detail-mcqs')?.addEventListener('click', () => {
-      state.subjectDetailMode = 'mcqs';
-      saveState();
-      renderSubjectDetailView(DOM, stats);
-    });
-    document.getElementById('btn-open-full-qbank')?.addEventListener('click', () => {
-      state.activeQBankSubjectId = subObj.id;
-      if (window.FlowMD.shell) {
-        window.FlowMD.shell.switchView('qbank');
-      }
-    });
-
-    // Start Interactive MCQ Practice for Topic
-    document.querySelectorAll('.qbank-start-mcq-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        const topicId = btn.getAttribute('data-topic-id');
-        const subjectId = btn.getAttribute('data-subject-id');
-        state.activeQBankSubjectId = subjectId;
-        state.activeQBankTopicId = topicId;
-        if (window.FlowMD.shell) {
-          window.FlowMD.shell.switchView('mcq_practice');
-        }
-      });
-    });
-
-    // Q-Bank individual topic checkboxes
-    document.querySelectorAll('.qbank-topic-checkbox').forEach(chk => {
-      chk.addEventListener('change', (e) => {
-        const topicId = e.target.getAttribute('data-topic-id');
-        const topicName = e.target.getAttribute('data-topic-name') || 'Topic';
-        const mcqCount = parseInt(e.target.getAttribute('data-mcq-count') || '15', 10);
-        const isChecked = e.target.checked;
-
-        if (window.FlowMD.qbankStore) {
-          if (isChecked) {
-            window.FlowMD.qbankStore.completeTopicTest(topicId, mcqCount);
-            if (typeof markStudyActivity === 'function') markStudyActivity(true);
-            showToast(`Completed: ${topicName} (${mcqCount} MCQs)`, 'check_circle');
-          } else {
-            window.FlowMD.qbankStore.resetTopicTest(topicId);
-            if (typeof markStudyActivity === 'function') markStudyActivity(false);
-            showToast(`Unmarked: ${topicName}`, 'check_box_outline_blank');
-          }
-        }
-        saveState();
-        renderSubjectDetailView(DOM, stats);
-      });
-    });
-
-    // Q-Bank Chapter Bulk Mark Done
-    document.querySelectorAll('.qbank-chapter-bulk-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const chapName = btn.getAttribute('data-chap-name');
-        const chap = qbChapters.find(c => c.name === chapName);
-        if (!chap || !chap.topics || !window.FlowMD.qbankStore) return;
-
-        const allDone = chap.topics.every(t => {
-          const p = window.FlowMD.qbankStore.getTopicProgress(t.id);
-          return p.status === 'completed';
-        });
-
-        if (!allDone) {
-          chap.topics.forEach(t => {
-            const qCount = t.mcqCount || (t.questions ? t.questions.length : 15);
-            window.FlowMD.qbankStore.completeTopicTest(t.id, qCount);
-          });
-          if (typeof markStudyActivity === 'function') markStudyActivity(true);
-          showToast(`Chapter "${chapName}" marked complete!`, 'check_circle');
-        } else {
-          chap.topics.forEach(t => {
-            window.FlowMD.qbankStore.resetTopicTest(t.id);
-          });
-          if (typeof markStudyActivity === 'function') markStudyActivity(false);
-          showToast(`Chapter "${chapName}" unmarked`, 'check_box_outline_blank');
-        }
-
-        saveState();
-        renderSubjectDetailView(DOM, stats);
-      });
-    });
-
-    // Bulk (unit) completion for Videos
-    document.querySelectorAll('.unit-done-btn:not(.qbank-chapter-bulk-btn)').forEach(btn => {
+    document.querySelectorAll('.unit-done-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation(); // prevent accordion toggle
         const bulkKey = btn.getAttribute('data-bulk-key');

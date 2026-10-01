@@ -64,16 +64,8 @@ async function run() {
   await page.waitForLoadState('networkidle').catch(() => {});
   await page.waitForTimeout(400);
 
-  // --- Update banner (Q-banks announcement) ---
-  const banner = page.locator('.update-banner');
-  check('Update banner present', await banner.count() === 1);
-  check('Update banner sits above the header', await banner.evaluate(
-    (el) => el.nextElementSibling && el.nextElementSibling.classList.contains('site-header')));
-  check('Update banner text mentions Q-banks', (await banner.locator('.update-banner-text').textContent()).includes('Q-bank'));
-  check('Update banner copy says track (not practice in-app)', /track/i.test(await banner.locator('.update-banner-text').textContent())
-    && !/practice (questions|them) (in|on) (the )?app/i.test(await banner.locator('.update-banner-text').textContent()));
-  check('Update banner has a "Coming soon" tag', (await banner.locator('.update-banner-tag').textContent()).trim() === 'Coming soon');
-  check('Update banner link targets the repo', (await banner.locator('.update-banner-link').getAttribute('href')) === 'https://github.com/mohammedsafi0414/FlowMD');
+  // --- Update banner REMOVED (Q-Bank shipped as a tracking add-on) ---
+  check('Update banner fully removed', await page.locator('.update-banner').count() === 0);
 
   // --- Head / meta ---
   check('Title matches', await page.title() === 'FlowMD — NEET-PG Study Planner', await page.title());
